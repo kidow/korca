@@ -259,15 +259,15 @@ export function AiCommitPrSettingsCard(): JSX.Element | null {
       <div className="space-y-2.5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="text-[15px] font-semibold leading-tight text-foreground">AI author</div>
+            <div className="text-[15px] font-semibold leading-tight text-foreground">AI 작성자</div>
           </div>
-          <SettingsSwitch checked={config.enabled} label="Enable AI author" onToggle={toggleAi} />
+          <SettingsSwitch checked={config.enabled} label="AI 작성자 사용" onToggle={toggleAi} />
         </div>
 
         {config.enabled ? (
           <div className="flex flex-col gap-2.5">
             <div className="grid grid-cols-[92px_minmax(0,1fr)] items-center gap-3">
-              <Label className="text-xs">Agent</Label>
+              <Label className="text-xs">에이전트</Label>
               <Select value={agentSelectValue} onValueChange={onAgentChange}>
                 <SelectTrigger size="sm" className="h-8 w-full text-xs">
                   <span
@@ -286,13 +286,13 @@ export function AiCommitPrSettingsCard(): JSX.Element | null {
                     ) : isCustom ? (
                       <>
                         <Terminal className="size-3.5" />
-                        <span>Custom</span>
+                        <span>사용자 지정</span>
                       </>
                     ) : (
                       <span className="truncate">
                         {unsupportedAgentLabel
-                          ? `${unsupportedAgentLabel} unsupported`
-                          : 'Not configured'}
+                          ? `${unsupportedAgentLabel}은 지원되지 않습니다`
+                          : '미설정'}
                       </span>
                     )}
                   </span>
@@ -313,21 +313,21 @@ export function AiCommitPrSettingsCard(): JSX.Element | null {
                   <SelectItem value={CUSTOM_AGENT_ID} className="cursor-pointer">
                     <span className="flex items-center gap-2">
                       <Terminal className="size-3.5" />
-                      <span>Custom</span>
+                  <span>사용자 지정</span>
                     </span>
                   </SelectItem>
                 </SelectContent>
               </Select>
               {unsupportedAgentLabel ? (
                 <p className="col-start-2 text-[11px] leading-snug text-muted-foreground">
-                  {unsupportedAgentLabel} unsupported. Choose Claude, Codex, or Custom.
+                  {unsupportedAgentLabel}은 지원되지 않습니다. Claude, Codex 또는 사용자 지정을 선택하세요.
                 </p>
               ) : null}
             </div>
 
             {activeCapability && activeModel ? (
               <div className="grid grid-cols-[92px_minmax(0,1fr)] items-center gap-3">
-                <Label className="text-xs">Model</Label>
+                <Label className="text-xs">모델</Label>
                 <Select value={activeModel.id} onValueChange={onModelChange}>
                   <SelectTrigger size="sm" className="h-8 w-full text-xs">
                     <SelectValue />
@@ -345,7 +345,7 @@ export function AiCommitPrSettingsCard(): JSX.Element | null {
 
             {activeModel?.thinkingLevels && activeThinking ? (
               <div className="grid grid-cols-[92px_minmax(0,1fr)] items-center gap-3">
-                <Label className="text-xs">Thinking effort</Label>
+                <Label className="text-xs">추론 강도</Label>
                 <Select value={activeThinking} onValueChange={onThinkingChange}>
                   <SelectTrigger size="sm" className="h-8 w-full text-xs">
                     <SelectValue />
@@ -364,13 +364,13 @@ export function AiCommitPrSettingsCard(): JSX.Element | null {
             {isCustom ? (
               <div className="space-y-1.5">
                 <Label htmlFor="feature-wall-ai-commit-custom-command" className="text-xs">
-                  Custom command
+                  사용자 지정 명령
                 </Label>
                 <Input
                   id="feature-wall-ai-commit-custom-command"
                   value={config.customAgentCommand}
                   onChange={(event) => writeConfig({ customAgentCommand: event.target.value })}
-                  placeholder={`e.g. ollama run llama3.1 ${CUSTOM_PROMPT_PLACEHOLDER}`}
+                  placeholder={`예: ollama run llama3.1 ${CUSTOM_PROMPT_PLACEHOLDER}`}
                   spellCheck={false}
                   className="h-8 font-mono text-xs"
                 />

@@ -42,8 +42,8 @@ describe('RepoStep', () => {
     const html = renderRepoStep()
 
     expect(html).not.toContain('Project already added')
-    expect(html).toContain('Open a folder')
-    expect(html).toContain('Clone a repo')
+    expect(html).toContain('폴더 열기')
+    expect(html).toContain('저장소 복제')
   })
 
   it('disables nested import actions when no repositories are selected', () => {
@@ -63,8 +63,8 @@ describe('RepoStep', () => {
       nestedGroupName: 'platform'
     })
 
-    expect(html).toContain('Import separately')
-    expect(html).toContain('Import as project group')
+    expect(html).toContain('개별로 가져오기')
+    expect(html).toContain('프로젝트 그룹으로 가져오기')
     expect(html.match(/disabled=""/g)?.length).toBeGreaterThanOrEqual(2)
   })
 
@@ -87,8 +87,8 @@ describe('RepoStep', () => {
       nestedGroupName: 'platform'
     })
 
-    expect(html).toContain('Scanning... Found 1 git repository in this folder.')
-    expect(html).toContain('aria-label="Stop scan"')
+    expect(html).toContain('스캔 중... 이 폴더에서 git 저장소 1개를 찾았습니다.')
+    expect(html).toContain('aria-label="스캔 중지"')
     expect(html).toContain('Showing partial scan results.')
     expect(html.match(/disabled=""/g)?.length).toBeGreaterThanOrEqual(3)
   })

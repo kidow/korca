@@ -233,7 +233,7 @@ export function ThemeStep({ theme, onThemeChange, settings, updateSettings }: Th
         <Settings2 className="size-3.5" />
         <span>
           More terminal options, including font, cursor, and palette, in{' '}
-          <span className="font-medium text-foreground">Settings → Terminal</span>
+          <span className="font-medium text-foreground">설정 → 터미널</span>
         </span>
       </div>
     </div>
@@ -262,7 +262,7 @@ function GhosttyDiscoveryRow({
     return (
       <div className="flex items-center gap-2.5 rounded-lg border border-dashed border-border bg-transparent px-3.5 py-2.5 text-[12px] text-muted-foreground">
         <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/60" />
-        Looking for a Ghostty config…
+        Ghostty 설정을 찾는 중…
       </div>
     )
   }
@@ -272,7 +272,7 @@ function GhosttyDiscoveryRow({
       <div className="flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.07] px-3.5 py-2.5 text-[12px] text-foreground">
         <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" strokeWidth={3} />
         <span className="flex-1">
-          <span className="font-medium">Imported from Ghostty.</span>
+          <span className="font-medium">Ghostty에서 가져옴.</span>
           {discovery.fields.length > 0 && (
             <span className="text-muted-foreground"> {discovery.fields.join(' · ')}</span>
           )}
@@ -287,9 +287,9 @@ function GhosttyDiscoveryRow({
       <img src={ghosttyIcon} alt="" className="size-4 shrink-0" />
       <div className="min-w-0 flex-1">
         <div className="text-[12px] text-foreground">
-          <span className="font-medium">Ghostty config detected.</span>{' '}
+          <span className="font-medium">Ghostty 설정이 감지되었습니다.</span>{' '}
           <span className="text-muted-foreground">
-            Import {fields.length > 0 ? fields.map((f) => f.toLowerCase()).join(', ') : 'settings'}?
+            {fields.length > 0 ? fields.map((f) => f.toLowerCase()).join(', ') : '설정'} 가져올까요?
           </span>
         </div>
         {preview.configPath && (
@@ -306,7 +306,7 @@ function GhosttyDiscoveryRow({
         disabled={importing || disabled}
         onClick={() => onImport(preview)}
       >
-        {importing ? 'Importing…' : 'Import'}
+        {importing ? '가져오는 중…' : '가져오기'}
       </button>
     </div>
   )

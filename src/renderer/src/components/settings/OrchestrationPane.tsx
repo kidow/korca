@@ -66,17 +66,16 @@ export function OrchestrationPane(): React.JSX.Element {
 
   return (
     <SearchableSetting
-      title="Agent Orchestration"
-      description="Coordinate multiple coding agents via messaging, task DAGs, dispatch, and decision gates."
+      title="에이전트 조정"
+      description="메시지, 작업 DAG, 배정, 의사결정 게이트를 통해 여러 코딩 에이전트를 조정합니다."
       keywords={ORCHESTRATION_PANE_SEARCH_ENTRIES[0].keywords}
       className="space-y-3 py-2"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 shrink space-y-0.5">
-          <Label>Agent Orchestration</Label>
+          <Label>에이전트 조정</Label>
           <p className="text-xs text-muted-foreground">
-            Coordinate multiple coding agents with messaging, task DAGs, dispatch with preamble
-            injection, decision gates, and coordinator loops.
+            메시지, 작업 DAG, preamble 삽입이 포함된 배정, 의사결정 게이트, 조정 루프로 여러 코딩 에이전트를 조정합니다.
           </p>
         </div>
         <button
@@ -97,11 +96,11 @@ export function OrchestrationPane(): React.JSX.Element {
 
       {orchestrationEnabled ? (
         <AgentSkillSetupPanel
-          title="Orchestration skill"
-          description="Enables agents to hand off context and coordinate work through Orca."
+          title="조정 스킬"
+          description="에이전트가 컨텍스트를 넘기고 Orca를 통해 작업을 조정할 수 있게 합니다."
           command={ORCHESTRATION_SKILL_INSTALL_COMMAND}
-          terminalTitle="Orchestration setup"
-          terminalAriaLabel="Orchestration skill install terminal"
+          terminalTitle="조정 설정"
+          terminalAriaLabel="조정 스킬 설치 터미널"
           terminalWorktreeId="settings-orchestration-skill-terminal"
           installed={orchestrationSkillDetected}
           loading={orchestrationSkillLoading}

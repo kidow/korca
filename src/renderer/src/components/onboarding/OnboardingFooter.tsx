@@ -33,7 +33,7 @@ export function OnboardingFooter({
           disabled={Boolean(busyLabel)}
           onClick={onSkipToRepo}
         >
-          Skip to project setup
+          프로젝트 설정으로 건너뛰기
         </button>
       ) : (
         <span />
@@ -46,7 +46,7 @@ export function OnboardingFooter({
             onClick={onBack}
           >
             <ChevronLeft className="size-4" />
-            Back
+            뒤로
           </button>
         )}
         {showPrimary && (

@@ -52,23 +52,27 @@ type CreatePullRequestDialogProps = {
 
 function reviewCopy(provider: HostedReviewProvider): {
   shortLabel: 'PR' | 'MR'
-  reviewLabel: 'pull request' | 'merge request'
-  titleLabel: 'Pull Request' | 'Merge Request'
+  reviewLabel: '풀 리퀘스트' | '병합 요청'
+  titleLabel: '풀 리퀘스트' | '병합 요청'
   providerName: 'GitHub' | 'GitLab'
 } {
   return provider === 'gitlab'
     ? {
         shortLabel: 'MR',
-        reviewLabel: 'merge request',
-        titleLabel: 'Merge Request',
+        reviewLabel: '병합 요청',
+        titleLabel: '병합 요청',
         providerName: 'GitLab'
       }
     : {
         shortLabel: 'PR',
-        reviewLabel: 'pull request',
-        titleLabel: 'Pull Request',
+        reviewLabel: '풀 리퀘스트',
+        titleLabel: '풀 리퀘스트',
         providerName: 'GitHub'
-      }
+    }
+}
+
+function withObjectParticle(label: '풀 리퀘스트' | '병합 요청'): string {
+  return label === '병합 요청' ? `${label}을` : `${label}를`
 }
 
 function formatCreateError(
@@ -81,7 +85,7 @@ function formatCreateError(
   }
   if (pushed) {
     const prefix = new RegExp(`^Create ${shortLabel} failed:\\s*`, 'i')
-    return `Push succeeded, but ${shortLabel} creation failed: ${result.error.replace(prefix, '')}`
+    return `푸시에는 성공했지만 ${shortLabel} 생성에 실패했습니다: ${result.error.replace(prefix, '')}`
   }
   return result.error
 }
@@ -281,7 +285,7 @@ export function CreatePullRequestDialog({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <div className="flex min-w-0 items-center justify-between gap-2 pr-8">
-            <DialogTitle className="min-w-0 truncate">Create {copy.titleLabel}</DialogTitle>
+            <DialogTitle className="min-w-0 truncate">새 {copy.titleLabel}</DialogTitle>
             {aiGenerationEnabled ? (
               <div className="shrink-0">
                 {generating ? (
@@ -292,16 +296,16 @@ export function CreatePullRequestDialog({
                         variant="outline"
                         size="sm"
                         onClick={handleCancelGenerate}
-                        title="Stop generating"
-                        aria-label={`Stop generating ${copy.reviewLabel} details`}
+                        title="생성 중지"
+                        aria-label={`${copy.reviewLabel} 세부 정보 생성 중지`}
                       >
                         <RefreshCw className="size-4 animate-spin" />
-                        Generating…
+                        생성 중…
                         <Square className="size-3 fill-current" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="left" sideOffset={6}>
-                      Generating {copy.shortLabel} details. Click to stop.
+                      {copy.shortLabel} 세부 정보를 생성하는 중입니다. 클릭하면 중지합니다.
                     </TooltipContent>
                   </Tooltip>
                 ) : (
@@ -311,25 +315,24 @@ export function CreatePullRequestDialog({
                     size="sm"
                     disabled={generateDisabled}
                     onClick={() => void handleGenerate()}
-                    title={generateDisabledReason ?? `Generate ${copy.reviewLabel} details with AI`}
-                    aria-label={`Generate ${copy.reviewLabel} details with AI`}
+                    title={generateDisabledReason ?? `AI로 ${copy.reviewLabel} 세부 정보 생성`}
+                    aria-label={`AI로 ${copy.reviewLabel} 세부 정보 생성`}
                   >
                     <Sparkles className="size-4" />
-                    Generate with AI
+                    AI로 생성
                   </Button>
                 )}
               </div>
             ) : null}
           </div>
           <DialogDescription>
-            Confirm the target branch and {copy.shortLabel} details before creating the hosted
-            review.
+            호스티드 리뷰를 만들기 전에 대상 브랜치와 {copy.shortLabel} 세부 정보를 확인하세요.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-1">
-            <Label>Head branch</Label>
+            <Label>헤드 브랜치</Label>
             <div className="inline-flex max-w-full items-center rounded-full border border-border bg-muted px-2 py-1 text-xs font-medium text-foreground">
               <span className="truncate">{branch}</span>
             </div>
@@ -337,7 +340,7 @@ export function CreatePullRequestDialog({
 
           <div className="space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="create-pr-base">Base branch</Label>
+              <Label htmlFor="create-pr-base">기준 브랜치</Label>
               <p className="text-xs text-muted-foreground">
                 Search remote branches or enter a branch name.
               </p>
@@ -387,23 +390,23 @@ export function CreatePullRequestDialog({
               id="create-pr-title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              placeholder="Title"
+              placeholder="제목"
               aria-invalid={!title.trim()}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="create-pr-body">Description</Label>
+            <Label htmlFor="create-pr-body">설명</Label>
             <textarea
               id="create-pr-body"
               value={body}
               onChange={(event) => setBody(event.target.value)}
               rows={6}
-              placeholder="Description (optional)"
+              placeholder="설명(선택)"
               className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-ring"
             />
             <p className="text-xs text-muted-foreground">
-              Supports Markdown formatting. Use Generate with AI to auto-fill from your changes.
+              Markdown 형식을 지원합니다. 변경 내용으로 자동 채우려면 AI로 생성 버튼을 사용하세요.
             </p>
           </div>
 
@@ -414,12 +417,12 @@ export function CreatePullRequestDialog({
               onChange={(event) => setDraft(event.target.checked)}
               className="size-4 shrink-0 rounded border-border accent-primary"
             />
-            <span className="min-w-0 flex-1 truncate">Create as draft</span>
+            <span className="min-w-0 flex-1 truncate">초안으로 만들기</span>
           </label>
 
           {stripBaseRef(base).toLowerCase() === stripBaseRef(branch).toLowerCase() ? (
             <p className="text-xs text-destructive">
-              Choose a different base branch before creating a {copy.reviewLabel}.
+              {withObjectParticle(copy.reviewLabel)} 만들기 전에 다른 기준 브랜치를 선택하세요.
             </p>
           ) : null}
           {generateError ? <p className="text-xs text-destructive">{generateError}</p> : null}
@@ -432,7 +435,7 @@ export function CreatePullRequestDialog({
           </Button>
           <Button onClick={() => void handleSubmit()} disabled={submitDisabled}>
             {submitting ? <Loader2 className="size-4 animate-spin" /> : null}
-            {pushBeforeCreate ? `Push & Create ${copy.shortLabel}` : `Create ${copy.shortLabel}`}
+            {pushBeforeCreate ? `${copy.shortLabel} 전 푸시 후 생성` : `${copy.shortLabel} 생성`}
           </Button>
         </DialogFooter>
       </DialogContent>

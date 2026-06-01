@@ -19,10 +19,10 @@ describe('AgentFeatureSetupStep', () => {
       />
     )
 
-    expect(html).toContain('Agent Browser Use')
-    expect(html).toContain('Computer Use')
-    expect(html).toContain('Agent Orchestration')
-    expect(html).toContain('Enable capabilities')
+    expect(html).toContain('에이전트 브라우저 사용')
+    expect(html).toContain('컴퓨터 사용')
+    expect(html).toContain('에이전트 조정')
+    expect(html).toContain('기능 켜기')
     expect(html).toContain('role="checkbox"')
   })
 })

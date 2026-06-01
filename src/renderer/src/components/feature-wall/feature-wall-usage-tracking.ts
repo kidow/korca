@@ -22,12 +22,12 @@ export function getFeatureWallUsageProviderConnection(args: {
   provider: ProviderRateLimits | null
 }): FeatureWallUsageProviderConnection {
   if (args.managedAccountCount > 0) {
-    return { connected: true, label: `Connected · ${args.managedAccountCount}` }
+    return { connected: true, label: `연결됨 · ${args.managedAccountCount}` }
   }
   if (hasFeatureWallProviderUsageTracking(args.provider)) {
-    return { connected: true, label: 'Connected · System default' }
+    return { connected: true, label: '연결됨 · 시스템 기본값' }
   }
-  return { connected: false, label: 'Tracking not set up' }
+  return { connected: false, label: '추적이 설정되지 않음' }
 }
 
 export function hasFeatureWallUsageTracking(args: {

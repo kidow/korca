@@ -166,7 +166,7 @@ function WindowControls(): React.JSX.Element {
     <div className="window-controls">
       <button
         className="window-controls-btn"
-        aria-label="Minimize"
+        aria-label="최소화"
         onClick={() => window.api.ui.minimize()}
       >
         <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
@@ -175,7 +175,7 @@ function WindowControls(): React.JSX.Element {
       </button>
       <button
         className="window-controls-btn"
-        aria-label={maximized ? 'Restore' : 'Maximize'}
+        aria-label={maximized ? '복원' : '최대화'}
         onClick={() => window.api.ui.maximize()}
       >
         {maximized ? (
@@ -192,7 +192,7 @@ function WindowControls(): React.JSX.Element {
       </button>
       <button
         className="window-controls-btn window-controls-close"
-        aria-label="Close"
+        aria-label="닫기"
         // Why: IPC to main so the BrowserWindow 'close' event fires, which
         // sends 'window:close-requested' back to the renderer and keeps the
         // terminal-running confirmation guard active. window.close() is
@@ -243,7 +243,7 @@ function applyRemoteWorkspacePatchStatus(
       revision: result.snapshot.revision,
       updatedAt: result.snapshot.updatedAt,
       lastSyncedAt: Date.now(),
-      message: 'Workspace uploaded'
+      message: '작업 공간 업로드됨'
     })
     return
   }
@@ -256,8 +256,8 @@ function applyRemoteWorkspacePatchStatus(
     message:
       result.message ??
       (result.reason === 'stale-revision'
-        ? 'Workspace changed on another device'
-        : 'Remote workspace sync unavailable')
+        ? '다른 기기에서 작업 공간이 변경되었습니다'
+        : '원격 작업 공간 동기화를 사용할 수 없습니다')
   })
 }
 
@@ -792,13 +792,13 @@ function App(): React.JSX.Element {
           // a no-op. The "Restart now" action calls app.relaunch (defined in
           // src/main/ipc/app.ts) so the user can recover with one click instead
           // of having to find a quit/relaunch path themselves.
-          toast.error('Session restore failed', {
+          toast.error('세션 복원 실패', {
             description:
-              "Changes won't be saved until restart. Your previous tabs are safe on disk.",
+              '다시 시작할 때까지 변경 사항은 저장되지 않습니다. 이전 탭은 디스크에 안전하게 남아 있습니다.',
             duration: Infinity,
             dismissible: true,
             action: {
-              label: 'Restart now',
+              label: '지금 다시 시작',
               onClick: () => {
                 void window.api.app.relaunch()
               }
@@ -947,7 +947,7 @@ function App(): React.JSX.Element {
                 useAppStore.getState().setRemoteWorkspaceSyncStatus(targetId, {
                   phase: 'error',
                   direction: 'push',
-                  message: err instanceof Error ? err.message : 'Workspace upload failed'
+                  message: err instanceof Error ? err.message : '작업 공간 업로드 실패'
                 })
               }
             })
@@ -1449,14 +1449,14 @@ function App(): React.JSX.Element {
               <TooltipTrigger asChild>
                 <button
                   className="titlebar-icon-button"
-                  aria-label="Application menu"
+                  aria-label="애플리케이션 메뉴"
                   onClick={() => window.api.ui.popupMenu()}
                 >
                   <MoreHorizontal size={14} />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={6}>
-                Application menu
+                애플리케이션 메뉴
               </TooltipContent>
             </Tooltip>
           </>
@@ -1472,13 +1472,13 @@ function App(): React.JSX.Element {
                     <span className="titlebar-app-name-main">Orca</span>
                   </div>
                 </ContextMenuTrigger>
-                <ContextMenuContent>
+                  <ContextMenuContent>
                   <ContextMenuItem
                     onSelect={() => {
                       void actions.updateSettings({ showTitlebarAppName: false })
                     }}
                   >
-                    Hide App Name
+                    앱 이름 숨기기
                   </ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>
@@ -1491,13 +1491,13 @@ function App(): React.JSX.Element {
               <button
                 className="sidebar-toggle"
                 onClick={actions.toggleSidebar}
-                aria-label="Toggle sidebar"
+                aria-label="사이드바 전환"
               >
                 <PanelLeft size={16} />
               </button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              {`Toggle sidebar (${leftSidebarShortcutLabel})`}
+              {`사이드바 전환 (${leftSidebarShortcutLabel})`}
             </TooltipContent>
           </Tooltip>
         )}
@@ -1515,13 +1515,13 @@ function App(): React.JSX.Element {
                 className="sidebar-toggle sidebar-toggle-compact"
                 onClick={() => useAppStore.getState().goBackWorktree()}
                 disabled={!canGoBackWorktree}
-                aria-label="Go back"
+                aria-label="뒤로 이동"
               >
                 <ArrowLeft size={12} />
               </button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              {`Go back (${historyBackShortcutLabel})`}
+              {`뒤로 이동 (${historyBackShortcutLabel})`}
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -1530,13 +1530,13 @@ function App(): React.JSX.Element {
                 className="sidebar-toggle sidebar-toggle-compact"
                 onClick={() => useAppStore.getState().goForwardWorktree()}
                 disabled={!canGoForwardWorktree}
-                aria-label="Go forward"
+                aria-label="앞으로 이동"
               >
                 <ArrowRight size={12} />
               </button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              {`Go forward (${historyForwardShortcutLabel})`}
+              {`앞으로 이동 (${historyForwardShortcutLabel})`}
             </TooltipContent>
           </Tooltip>
         </div>
@@ -1550,13 +1550,13 @@ function App(): React.JSX.Element {
         <button
           className="sidebar-toggle mr-2"
           onClick={actions.toggleRightSidebar}
-          aria-label="Toggle right sidebar"
+          aria-label="오른쪽 사이드바 전환"
         >
           <PanelRight size={16} />
         </button>
       </TooltipTrigger>
       <TooltipContent side="bottom" sideOffset={6}>
-        {`Toggle right sidebar (${rightSidebarShortcutLabel})`}
+        {`오른쪽 사이드바 전환 (${rightSidebarShortcutLabel})`}
       </TooltipContent>
     </Tooltip>
   ) : null
@@ -1588,8 +1588,8 @@ function App(): React.JSX.Element {
             boundaryId="app.workspace-shell"
             surface="workspace-shell"
             resetKey={`${activeView}:${activeWorktreeId ?? 'none'}`}
-            title="The workspace shell hit an error."
-            description="The app is still running. Retry the shell or use the menu to report the crash details."
+            title="작업 공간 셸에 오류가 발생했습니다."
+            description="앱은 계속 실행 중입니다. 셸을 다시 시도하거나 메뉴에서 충돌 상세를 보고하세요."
           >
             <div className="flex flex-row flex-1 min-h-0 overflow-hidden">
               {/* Why: the non-workspace titlebar lives inside this left+center
@@ -1624,14 +1624,14 @@ function App(): React.JSX.Element {
                           <button
                             className="titlebar-icon-button"
                             onClick={handleToggleExpand}
-                            aria-label="Collapse pane"
+                            aria-label="패널 접기"
                             disabled={!activeTabCanExpand}
                           >
                             <Minimize2 size={14} />
                           </button>
                         </TooltipTrigger>
                         <TooltipContent side="bottom" sideOffset={6}>
-                          Collapse pane
+                          패널 접기
                         </TooltipContent>
                       </Tooltip>
                     )}
@@ -1693,8 +1693,8 @@ function App(): React.JSX.Element {
                             boundaryId="sidebar.worktrees"
                             surface="sidebar"
                             resetKey={`${activeView}:${activeWorktreeId ?? 'none'}`}
-                            title="The workspace list hit an error."
-                            description="The active workspace remains open. Retry the list or switch views."
+                            title="작업 공간 목록에 오류가 발생했습니다."
+                            description="현재 작업 공간은 열려 있습니다. 목록을 다시 시도하거나 화면을 전환하세요."
                           >
                             <Sidebar
                               worktreeScrollOffsetRef={worktreeSidebarScrollOffsetRef}
@@ -1708,8 +1708,8 @@ function App(): React.JSX.Element {
                         boundaryId="sidebar.worktrees"
                         surface="sidebar"
                         resetKey={`${activeView}:${activeWorktreeId ?? 'none'}`}
-                        title="The workspace list hit an error."
-                        description="The active page remains open. Retry the list or switch views."
+                        title="작업 공간 목록에 오류가 발생했습니다."
+                        description="현재 페이지는 열려 있습니다. 목록을 다시 시도하거나 화면을 전환하세요."
                       >
                         <Sidebar
                           worktreeScrollOffsetRef={worktreeSidebarScrollOffsetRef}
@@ -1757,8 +1757,8 @@ function App(): React.JSX.Element {
                           boundaryId="terminal.workbench"
                           surface="terminal-workbench"
                           resetKey={activeWorktreeId ?? 'none'}
-                          title="The workspace workbench hit an error."
-                          description="Terminal, browser, or editor rendering failed in this workspace. Retry to remount it."
+                          title="작업 공간 작업대에 오류가 발생했습니다."
+                          description="이 작업 공간에서 터미널, 브라우저 또는 편집기 렌더링에 실패했습니다. 다시 마운트해 보세요."
                         >
                           <Terminal />
                         </RecoverableRenderErrorBoundary>
@@ -1768,8 +1768,8 @@ function App(): React.JSX.Element {
                           boundaryId={`page.${activeView}`}
                           surface="page"
                           resetKey={`${activeView}:${activeWorktreeId ?? 'none'}`}
-                          title="This page hit an error."
-                          description="Retry the page or navigate to another Orca surface."
+                          title="이 페이지에 오류가 발생했습니다."
+                          description="페이지를 다시 시도하거나 다른 Orca 화면으로 이동하세요."
                         >
                           {activeView === 'settings' ? <Settings /> : null}
                           {activeView === 'skills' ? <SkillsPage /> : null}
@@ -1801,8 +1801,8 @@ function App(): React.JSX.Element {
                   boundaryId="right-sidebar"
                   surface="right-sidebar"
                   resetKey={`${activeWorktreeId ?? 'none'}:${rightSidebarTab}`}
-                  title="The right sidebar hit an error."
-                  description="Retry the sidebar or switch tabs to reload this surface."
+                  title="오른쪽 사이드바에 오류가 발생했습니다."
+                  description="사이드바를 다시 시도하거나 탭을 전환해 이 화면을 다시 불러오세요."
                 >
                   <RightSidebar />
                 </RecoverableRenderErrorBoundary>
@@ -1815,8 +1815,8 @@ function App(): React.JSX.Element {
               surface="overlay"
               resetKey={floatingTerminalOpen}
               compact
-              title="The floating workspace hit an error."
-              description="Retry the floating workspace or close and reopen it."
+              title="플로팅 작업 공간에 오류가 발생했습니다."
+              description="플로팅 작업 공간을 다시 시도하거나 닫았다가 다시 여세요."
             >
               <FloatingTerminalPanel
                 open={floatingTerminalOpen}
@@ -1829,8 +1829,8 @@ function App(): React.JSX.Element {
             surface="overlay"
             resetKey={activeView}
             compact
-            title="The status bar hit an error."
-            description="Retry the status bar to remount its controls."
+            title="상태 표시줄에 오류가 발생했습니다."
+            description="상태 표시줄을 다시 시도해 컨트롤을 다시 마운트하세요."
           >
             <StatusBar floatingTerminalOpen={floatingTerminalOpen} />
           </RecoverableRenderErrorBoundary>
@@ -1984,8 +1984,8 @@ function App(): React.JSX.Element {
             reportAsCrash={false}
             resetKey={activeModal}
             compact
-            title="The crash report dialog hit an error."
-            description="Use the Help menu after retrying if you still need diagnostics."
+            title="충돌 보고 대화상자에 오류가 발생했습니다."
+            description="다시 시도한 뒤에도 진단 정보가 필요하면 도움말 메뉴를 사용하세요."
           >
             <CrashReportDialog />
           </RecoverableRenderErrorBoundary>
@@ -1995,8 +1995,8 @@ function App(): React.JSX.Element {
                 boundaryId="modal.onboarding"
                 surface="modal"
                 resetKey={onboardingSettingsDetourActive}
-                title="Onboarding hit an error."
-                description="Retry onboarding or close it and continue in the app."
+                title="온보딩에 오류가 발생했습니다."
+                description="온보딩을 다시 시도하거나 닫고 앱에서 계속하세요."
               >
                 <OnboardingFlow
                   onboarding={onboarding}

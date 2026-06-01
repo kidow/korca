@@ -230,7 +230,7 @@ function formatBranchEntryMeta(entry: MobileGitBranchChangeEntry): string | null
       ? `+${entry.added ?? 0} -${entry.removed ?? 0}`
       : null
   if (entry.oldPath) {
-    return stats ? `from ${entry.oldPath}; ${stats}` : `from ${entry.oldPath}`
+    return stats ? `${entry.oldPath}에서 변경됨; ${stats}` : `${entry.oldPath}에서 변경됨`
   }
   return stats
 }
@@ -438,7 +438,7 @@ export default function MobileSourceControlScreen() {
             if (isMobileGitUnavailable(response.error?.code, response.error?.message)) {
               setScreenState({
                 kind: 'unavailable',
-                message: 'Update Orca desktop to use Source Control on mobile.'
+                message: '모바일에서 소스 컨트롤을 사용하려면 Orca 데스크톱을 업데이트하세요.'
               })
               return false
             }
@@ -452,13 +452,13 @@ export default function MobileSourceControlScreen() {
               }
               continue
             }
-            throw new Error(response.error?.message || 'Unable to load source control')
+            throw new Error(response.error?.message || '소스 컨트롤을 불러올 수 없습니다')
           }
         } catch (err) {
           if (!isCurrentLoad()) {
             return false
           }
-          const message = err instanceof Error ? err.message : 'Unable to load source control'
+          const message = err instanceof Error ? err.message : '소스 컨트롤을 불러올 수 없습니다'
           setScreenState((prev) => {
             // Why: git mutations can succeed while the immediate status refresh
             // races a desktop abort; keep the last good screen instead of flashing
@@ -569,7 +569,7 @@ export default function MobileSourceControlScreen() {
     async (message: string): Promise<GitCommitResult> => {
       const result = await sendGitRequest<GitCommitResult>('git.commit', { message })
       if (!result || result.success !== true) {
-        throw new Error(result?.error || 'Commit failed')
+        throw new Error(result?.error || '커밋에 실패했습니다')
       }
       return result
     },
@@ -965,12 +965,12 @@ export default function MobileSourceControlScreen() {
     const behind = upstream?.behind ?? 0
     const busy = busyAction !== null || openingPath !== null || openingBranchPath !== null
     const commitHint = !hasStaged
-      ? 'Stage at least one file'
+      ? '최소 한 파일을 스테이징하세요'
       : !hasMessage
-        ? 'Enter a commit message'
+        ? '커밋 메시지를 입력하세요'
         : undefined
     const remoteHint = !upstreamKnown
-      ? 'Checking branch status...'
+      ? '브랜치 상태를 확인하는 중...'
       : hasUpstream
         ? undefined
         : 'Publish Branch first'
@@ -978,7 +978,7 @@ export default function MobileSourceControlScreen() {
 
     return [
       {
-        label: 'Commit',
+        label: '커밋',
         icon: Check,
         disabled: busy || !!commitHint,
         hint: commitHint,
@@ -987,7 +987,7 @@ export default function MobileSourceControlScreen() {
         onPress: () => void runActionSheetCommit()
       },
       {
-        label: 'Commit & Push',
+        label: '커밋 후 푸시',
         icon: ArrowUp,
         disabled: busy || !!commitHint || !upstreamKnown || !hasUpstream,
         hint: commitHint ?? remoteHint,
@@ -996,7 +996,7 @@ export default function MobileSourceControlScreen() {
         onPress: () => void runActionSheetCommitSequence('commit-push', [{ method: 'git.push' }])
       },
       {
-        label: 'Commit & Sync',
+        label: '커밋 후 동기화',
         icon: ArrowDownUp,
         disabled: busy || !!commitHint || !upstreamKnown || !hasUpstream || behind === 0,
         hint:
@@ -1004,60 +1004,60 @@ export default function MobileSourceControlScreen() {
           (!upstreamKnown || !hasUpstream
             ? remoteHint
             : behind === 0
-              ? 'Nothing to pull'
+              ? '가져올 변경 사항이 없습니다'
               : undefined),
         loading: busyAction === 'commit-sync',
         skipAutoClose: true,
         onPress: () => void runActionSheetCommitSync()
       },
       {
-        label: ahead > 0 ? `Push (${ahead})` : 'Push',
+        label: ahead > 0 ? `푸시 (${ahead})` : '푸시',
         icon: ArrowUp,
         disabled: busy || !upstreamKnown || !hasUpstream || ahead === 0,
-        hint: !hasUpstream ? remoteHint : ahead === 0 ? 'Nothing to push' : undefined,
+        hint: !hasUpstream ? remoteHint : ahead === 0 ? '푸시할 변경 사항이 없습니다' : undefined,
         loading: busyAction === 'push',
         skipAutoClose: true,
         onPress: () => void runActionSheetGitSequence('push', [{ method: 'git.push' }])
       },
       {
-        label: 'Create PR',
+        label: 'PR 생성',
         icon: GitPullRequest,
         disabled: true,
         hint: createPrHint,
         onPress: () => {}
       },
       {
-        label: 'Push & Create PR',
+        label: '푸시 후 PR 생성',
         icon: GitPullRequest,
         disabled: true,
         hint: createPrHint,
         onPress: () => {}
       },
       {
-        label: behind > 0 ? `Pull (${behind})` : 'Pull',
+        label: behind > 0 ? `풀 (${behind})` : '풀',
         icon: ArrowDown,
         disabled: busy || !upstreamKnown || !hasUpstream || behind === 0,
-        hint: !hasUpstream ? remoteHint : behind === 0 ? 'Nothing to pull' : undefined,
+        hint: !hasUpstream ? remoteHint : behind === 0 ? '가져올 변경 사항이 없습니다' : undefined,
         loading: busyAction === 'pull',
         skipAutoClose: true,
         onPress: () => void runActionSheetGitSequence('pull', [{ method: 'git.pull' }])
       },
       {
-        label: ahead > 0 || behind > 0 ? `Sync (↓${behind} ↑${ahead})` : 'Sync',
+        label: ahead > 0 || behind > 0 ? `동기화 (↓${behind} ↑${ahead})` : '동기화',
         icon: ArrowDownUp,
         disabled: busy || !upstreamKnown || !hasUpstream || (ahead === 0 && behind === 0),
         hint:
           !upstreamKnown || !hasUpstream
             ? remoteHint
             : ahead === 0 && behind === 0
-              ? 'Branch is up to date'
+              ? '브랜치가 최신 상태입니다'
               : undefined,
         loading: busyAction === 'sync',
         skipAutoClose: true,
         onPress: () => void runActionSheetGitSync()
       },
       {
-        label: 'Fetch',
+        label: '가져오기',
         icon: RefreshCw,
         disabled: busy,
         loading: busyAction === 'fetch',
@@ -1065,13 +1065,13 @@ export default function MobileSourceControlScreen() {
         onPress: () => void runActionSheetGitSequence('fetch', [{ method: 'git.fetch' }])
       },
       {
-        label: 'Publish Branch',
+        label: '브랜치 게시',
         icon: CloudUpload,
         disabled: busy || !upstreamKnown || hasUpstream,
         hint: !upstreamKnown
-          ? 'Checking branch status...'
+          ? '브랜치 상태를 확인하는 중...'
           : hasUpstream
-            ? 'Branch is already published'
+            ? '브랜치가 이미 게시되었습니다'
             : undefined,
         loading: busyAction === 'publish',
         skipAutoClose: true,
@@ -1120,7 +1120,7 @@ export default function MobileSourceControlScreen() {
           ]}
           onPress={() => void openFile(item)}
           disabled={rowDisabled}
-          accessibilityLabel={`Open changed file ${item.path}`}
+          accessibilityLabel={`변경된 파일 열기 ${item.path}`}
         >
           <View style={styles.statusBadge}>
             <Text style={[styles.statusBadgeText, { color: statusColor(item.status) }]}>
@@ -1141,11 +1141,11 @@ export default function MobileSourceControlScreen() {
             </Text>
             {item.oldPath ? (
               <Text style={styles.fileMeta} numberOfLines={1}>
-                from {item.oldPath}
+                {item.oldPath}에서 변경됨
               </Text>
             ) : item.conflictStatus === 'unresolved' ? (
               <Text style={styles.fileMeta} numberOfLines={1}>
-                Unresolved conflict
+                해결되지 않은 충돌
               </Text>
             ) : null}
           </View>
@@ -1164,7 +1164,7 @@ export default function MobileSourceControlScreen() {
                 void runGitAction(item.unstageActionId, 'git.unstage', { filePath: item.path })
               }
               hitSlop={8}
-              accessibilityLabel={`Unstage ${item.path}`}
+              accessibilityLabel={`스테이징 해제 ${item.path}`}
             >
               <Minus size={16} color={colors.textSecondary} strokeWidth={2.2} />
             </Pressable>
@@ -1185,7 +1185,7 @@ export default function MobileSourceControlScreen() {
                     void runGitAction(item.stageActionId, 'git.stage', { filePath: item.path })
                   }
                   hitSlop={8}
-                  accessibilityLabel={`Stage ${item.path}`}
+                  accessibilityLabel={`스테이징 ${item.path}`}
                 >
                   <Plus size={16} color={colors.textSecondary} strokeWidth={2.2} />
                 </Pressable>
@@ -1203,7 +1203,7 @@ export default function MobileSourceControlScreen() {
                   }
                   onPress={() => setDiscardTarget(item)}
                   hitSlop={8}
-                  accessibilityLabel={`Discard ${item.path}`}
+                  accessibilityLabel={`폐기 ${item.path}`}
                 >
                   <Trash2 size={16} color={colors.statusRed} strokeWidth={2.1} />
                 </Pressable>
@@ -1240,7 +1240,7 @@ export default function MobileSourceControlScreen() {
       <View style={styles.branchCompareBlock}>
         <View style={styles.sectionHeader}>
           <View style={styles.branchSectionTitleBlock}>
-            <Text style={styles.sectionTitle}>Committed on Branch</Text>
+            <Text style={styles.sectionTitle}>브랜치에 커밋됨</Text>
             {branchCompareSummaryText ? (
               <Text style={styles.branchSectionSubtitle} numberOfLines={1}>
                 {branchCompareSummaryText}
@@ -1252,7 +1252,7 @@ export default function MobileSourceControlScreen() {
         {branchCompareState.kind === 'loading' ? (
           <View style={styles.branchStateRow}>
             <ActivityIndicator size="small" color={colors.textSecondary} />
-            <Text style={styles.branchStateText}>Loading committed changes...</Text>
+            <Text style={styles.branchStateText}>커밋된 변경 사항을 불러오는 중...</Text>
           </View>
         ) : branchCompareState.kind === 'error' ? (
           <View style={styles.branchStateRow}>
@@ -1261,7 +1261,7 @@ export default function MobileSourceControlScreen() {
         ) : branchCompareResult && branchCompareResult.summary.status !== 'ready' ? (
           <View style={styles.branchStateRow}>
             <Text style={styles.branchStateText}>
-              {branchCompareResult.summary.errorMessage ?? 'Committed changes unavailable.'}
+              {branchCompareResult.summary.errorMessage ?? '커밋된 변경 사항을 사용할 수 없습니다.'}
             </Text>
           </View>
         ) : (
@@ -1284,7 +1284,7 @@ export default function MobileSourceControlScreen() {
                 ]}
                 onPress={() => void openBranchDiff(entry)}
                 disabled={rowDisabled}
-                accessibilityLabel={`Open committed change ${entry.path}`}
+                accessibilityLabel={`커밋된 변경 사항 열기 ${entry.path}`}
               >
                 <View style={styles.statusBadge}>
                   <Text style={[styles.statusBadgeText, { color: statusColor(entry.status) }]}>
@@ -1348,14 +1348,14 @@ export default function MobileSourceControlScreen() {
             <Text style={styles.diffDrawerMeta} numberOfLines={1}>
               {branchDiffPreview.kind === 'ready'
                 ? `${branchDiffPreview.summary.baseRef}..HEAD`
-                : 'Committed on branch'}
+                : '브랜치에 커밋됨'}
             </Text>
           </View>
           <Pressable
             style={({ pressed }) => [styles.diffCloseButton, pressed && styles.iconButtonPressed]}
             onPress={() => setBranchDiffPreview(null)}
             hitSlop={8}
-            accessibilityLabel="Close committed diff preview"
+            accessibilityLabel="커밋된 diff 미리보기 닫기"
           >
             <X size={18} color={colors.textSecondary} strokeWidth={2.1} />
           </Pressable>
@@ -1367,13 +1367,13 @@ export default function MobileSourceControlScreen() {
           </View>
         ) : branchDiffPreview.kind === 'error' ? (
           <View style={styles.diffState}>
-            <Text style={styles.stateTitle}>Unable to Load Diff</Text>
+            <Text style={styles.stateTitle}>diff를 불러올 수 없습니다</Text>
             <Text style={styles.stateText}>{branchDiffPreview.message}</Text>
           </View>
         ) : (
           <View style={styles.diffLines}>
             {branchDiffPreview.truncated ? (
-              <Text style={styles.diffTruncatedText}>Diff truncated for mobile preview.</Text>
+              <Text style={styles.diffTruncatedText}>모바일 미리보기를 위해 diff를 잘랐습니다.</Text>
             ) : null}
             {branchDiffPreview.lines.map((line, index) => (
               <View
@@ -1403,13 +1403,13 @@ export default function MobileSourceControlScreen() {
             style={({ pressed }) => [styles.backButton, pressed && styles.backButtonPressed]}
             onPress={() => router.back()}
             hitSlop={8}
-            accessibilityLabel="Back to session"
+            accessibilityLabel="세션으로 돌아가기"
           >
             <ChevronLeft size={22} color={colors.textSecondary} strokeWidth={2.2} />
           </Pressable>
           <View style={styles.titleBlock}>
             <Text style={styles.title} numberOfLines={1}>
-              Source Control
+              소스 컨트롤
             </Text>
             <Text style={styles.meta} numberOfLines={1}>
               {worktreeLabel}
@@ -1425,7 +1425,7 @@ export default function MobileSourceControlScreen() {
             onPress={() => void loadStatus()}
             disabled={busyAction !== null || openingPath !== null || openingBranchPath !== null}
             hitSlop={8}
-            accessibilityLabel="Refresh source control"
+            accessibilityLabel="소스 컨트롤 새로고침"
           >
             <RefreshCw size={18} color={colors.textSecondary} strokeWidth={2.1} />
           </Pressable>
@@ -1439,12 +1439,12 @@ export default function MobileSourceControlScreen() {
       ) : screenState.kind === 'error' || screenState.kind === 'unavailable' ? (
         <View style={styles.state}>
           <Text style={styles.stateTitle}>
-            {screenState.kind === 'unavailable' ? 'Source Control Unavailable' : 'Unable to Load'}
+            {screenState.kind === 'unavailable' ? '소스 컨트롤을 사용할 수 없음' : '불러올 수 없음'}
           </Text>
           <Text style={styles.stateText}>{screenState.message}</Text>
           {screenState.kind === 'error' ? (
             <Pressable style={styles.retryButton} onPress={() => void loadStatus()}>
-              <Text style={styles.retryText}>Retry</Text>
+              <Text style={styles.retryText}>다시 시도</Text>
             </Pressable>
           ) : null}
         </View>
@@ -1461,10 +1461,10 @@ export default function MobileSourceControlScreen() {
               {syncLabel ? <Text style={styles.syncText}>{syncLabel}</Text> : null}
             </View>
             <View style={styles.countRow}>
-              <Text style={styles.countText}>{unstagedCount} changed</Text>
-              <Text style={styles.countText}>{stagedCount} staged</Text>
+              <Text style={styles.countText}>변경됨 {unstagedCount}</Text>
+              <Text style={styles.countText}>스테이징됨 {stagedCount}</Text>
               {branchEntries.length > 0 ? (
-                <Text style={styles.countText}>{branchEntries.length} on branch</Text>
+                <Text style={styles.countText}>브랜치에 {branchEntries.length}</Text>
               ) : null}
               {status && status.conflictOperation !== 'unknown' ? (
                 <Text style={styles.conflictText}>{status.conflictOperation}</Text>
@@ -1501,7 +1501,7 @@ export default function MobileSourceControlScreen() {
                 ) : (
                   <Plus size={15} color={colors.textPrimary} strokeWidth={2.2} />
                 )}
-                <Text style={styles.bulkButtonText}>Stage All</Text>
+                <Text style={styles.bulkButtonText}>모두 스테이징</Text>
               </Pressable>
               <Pressable
                 style={({ pressed }) => [
@@ -1526,7 +1526,7 @@ export default function MobileSourceControlScreen() {
                 ) : (
                   <Minus size={15} color={colors.textPrimary} strokeWidth={2.2} />
                 )}
-                <Text style={styles.bulkButtonText}>Unstage All</Text>
+                <Text style={styles.bulkButtonText}>모두 스테이징 해제</Text>
               </Pressable>
               <Pressable
                 style={({ pressed }) => [
@@ -1538,7 +1538,7 @@ export default function MobileSourceControlScreen() {
                 onPress={() => setShowActionSheet(true)}
                 disabled={busyAction !== null || openingPath !== null || openingBranchPath !== null}
                 hitSlop={8}
-                accessibilityLabel="Open source control actions"
+                accessibilityLabel="소스 컨트롤 동작 열기"
               >
                 <MoreHorizontal size={18} color={colors.textPrimary} strokeWidth={2.1} />
               </Pressable>
@@ -1547,8 +1547,8 @@ export default function MobileSourceControlScreen() {
 
           {!hasVisibleChanges ? (
             <View style={styles.state}>
-              <Text style={styles.stateTitle}>No Changes</Text>
-              <Text style={styles.stateText}>Working tree is clean.</Text>
+              <Text style={styles.stateTitle}>변경 사항 없음</Text>
+              <Text style={styles.stateText}>작업 트리가 깨끗합니다.</Text>
             </View>
           ) : (
             <SectionList
@@ -1578,16 +1578,16 @@ export default function MobileSourceControlScreen() {
                   style={[styles.commitInput, styles.commitInputDisabled]}
                   accessibilityRole="text"
                   accessibilityState={{ disabled: true }}
-                  accessibilityLabel="Commit message disabled. No staged files."
+                  accessibilityLabel="커밋 메시지 비활성화. 스테이징된 파일이 없습니다."
                 >
-                  <Text style={styles.commitInputDisabledText}>No staged files</Text>
+                  <Text style={styles.commitInputDisabledText}>스테이징된 파일이 없습니다</Text>
                 </View>
               ) : (
                 <TextInput
                   style={styles.commitInput}
                   value={commitMessage}
                   onChangeText={setCommitMessage}
-                  placeholder="Commit message"
+                  placeholder="커밋 메시지"
                   placeholderTextColor={colors.textMuted}
                   editable={
                     busyAction === null && openingPath === null && openingBranchPath === null
@@ -1619,7 +1619,7 @@ export default function MobileSourceControlScreen() {
                 {busyAction === 'commit' ? (
                   <ActivityIndicator size="small" color={colors.bgBase} />
                 ) : (
-                  <Text style={styles.commitButtonText}>Commit</Text>
+                  <Text style={styles.commitButtonText}>커밋</Text>
                 )}
               </Pressable>
             </View>
@@ -1631,7 +1631,7 @@ export default function MobileSourceControlScreen() {
 
       <ActionSheetModal
         visible={showActionSheet}
-        title="Source Control"
+        title="소스 컨트롤"
         message={branchLabel}
         actions={actionSheetActions}
         onClose={() => setShowActionSheet(false)}
@@ -1639,13 +1639,13 @@ export default function MobileSourceControlScreen() {
 
       <ConfirmModal
         visible={discardTarget !== null}
-        title="Discard Change"
+        title="변경 사항 폐기"
         message={
           discardTarget
-            ? `Discard changes to "${discardTarget.path}"? This cannot be undone.`
+            ? `"${discardTarget.path}"의 변경 사항을 폐기하시겠습니까? 이 작업은 되돌릴 수 없습니다.`
             : undefined
         }
-        confirmLabel="Discard"
+        confirmLabel="폐기"
         destructive
         onConfirm={() => {
           if (discardTarget) {

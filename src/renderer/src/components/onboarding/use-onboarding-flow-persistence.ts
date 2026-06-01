@@ -233,17 +233,17 @@ export function usePersistCurrentStep({
             }
             const firstWarning = setupResult.warnings[0]
             if (firstWarning) {
-              toast.warning('Some feature setup needs attention', {
+              toast.warning('일부 기능 설정에 주의가 필요합니다', {
                 description: firstWarning.message
               })
             }
             if (setupResult.skillCommandsCopied) {
-              toast.success('Feature setup ready', {
-                description: 'Skill command copied and inserted below for review.'
+              toast.success('기능 설정 준비 완료', {
+                description: '스킬 명령을 복사해 아래에 검토용으로 넣었습니다.'
               })
             }
             if (setupResult.computerUsePermissionsOpened) {
-              toast.message('Opened Computer Use permissions')
+              toast.message('Computer Use 권한 설정을 열었습니다')
             }
           }
           onOnboardingChange(await persistStep(4))

@@ -73,7 +73,7 @@ describe('resolveDropdownItems', () => {
     expect(byKind.commit.disabled).toBe(true)
     expect(byKind.commit_push.disabled).toBe(true)
     expect(byKind.commit_sync.disabled).toBe(true)
-    expect(byKind.commit.title).toBe('Stage all changes before committing partially staged files')
+    expect(byKind.commit.title).toBe('부분적으로 스테이징된 파일을 커밋하기 전에 모든 변경 사항을 스테이징하세요')
   })
 
   it('disables push actions but keeps Fetch enabled when branch has no upstream', () => {
@@ -112,9 +112,9 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.push.label).toBe('Push (3)')
-    expect(byKind.pull.label).toBe('Pull (2)')
-    expect(byKind.sync.label).toBe('Sync (↓2 ↑3)')
+    expect(byKind.push.label).toBe('푸시 (3)')
+    expect(byKind.pull.label).toBe('가져오기 (2)')
+    expect(byKind.sync.label).toBe('동기화 (↓2 ↑3)')
   })
 
   it('disables push-only actions on diverged branches so users sync first', () => {
@@ -130,9 +130,9 @@ describe('resolveDropdownItems', () => {
     )
 
     expect(byKind.push.disabled).toBe(true)
-    expect(byKind.push.title).toBe('Sync first to pull remote changes before pushing')
+    expect(byKind.push.title).toBe('푸시 전에 동기화해 원격 변경 사항을 먼저 가져오세요')
     expect(byKind.commit_push.disabled).toBe(true)
-    expect(byKind.commit_push.title).toBe('Use Commit & Sync to pull remote changes before pushing')
+    expect(byKind.commit_push.title).toBe('커밋 후 동기화를 사용해 원격 변경 사항을 먼저 가져오세요')
     expect(byKind.sync.disabled).toBe(false)
     expect(byKind.commit_sync.disabled).toBe(false)
   })
@@ -163,31 +163,31 @@ describe('resolveDropdownItems', () => {
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
 
-    expect(byKind.push.label).toBe('Force Push (4)')
+    expect(byKind.push.label).toBe('강제 푸시 (4)')
     expect(byKind.push.disabled).toBe(false)
     expect(byKind.push.title).toBe(
-      'Remote only has older copies of local commits. Force push 4 branch commits with lease to update origin/feature.'
+      '원격에는 로컬 커밋의 더 오래된 복사본만 있습니다. 4개의 브랜치 커밋을 lease와 함께 강제 푸시하여 origin/feature를 업데이트하세요.'
     )
-    expect(byKind.commit_push.label).toBe('Commit & Force Push')
+    expect(byKind.commit_push.label).toBe('커밋 후 강제 푸시')
     expect(byKind.commit_push.disabled).toBe(false)
-    expect(byKind.commit_push.title).toBe('Commit staged changes and force push with lease')
+    expect(byKind.commit_push.title).toBe('스테이징된 변경 사항을 커밋하고 lease와 함께 강제 푸시')
     expect(byKind.pull.disabled).toBe(true)
     expect(byKind.pull.title).toBe(
-      'Nothing new to pull — remote only has older copies of local commits'
+      '가져올 새 내용이 없습니다. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.'
     )
     expect(byKind.fast_forward.disabled).toBe(true)
     expect(byKind.fast_forward.title).toBe(
-      'Nothing new to fast-forward — remote only has older copies of local commits'
+      '빠른 병합할 새 내용이 없습니다. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.'
     )
-    expect(byKind.commit_sync.label).toBe('Commit & Sync')
+    expect(byKind.commit_sync.label).toBe('커밋 후 동기화')
     expect(byKind.commit_sync.disabled).toBe(true)
     expect(byKind.commit_sync.title).toBe(
-      'Use Commit & Force Push — remote only has older copies of local commits'
+      '커밋 후 강제 푸시를 사용하세요. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.'
     )
     expect(byKind.sync.disabled).toBe(true)
-    expect(byKind.sync.title).toBe('Use Force Push — remote only has older copies of local commits')
-    expect(byKind.create_pr.hint).toBe('Force Push first')
-    expect(byKind.push_create_pr.label).toBe('Force Push before PR')
+    expect(byKind.sync.title).toBe('강제 푸시를 사용하세요. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.')
+    expect(byKind.create_pr.hint).toBe('먼저 강제 푸시')
+    expect(byKind.push_create_pr.label).toBe('PR 전 강제 푸시')
     expect(byKind.push_create_pr.disabled).toBe(false)
   })
 
@@ -198,9 +198,9 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.push.label).toBe('Push')
-    expect(byKind.pull.label).toBe('Pull')
-    expect(byKind.sync.label).toBe('Sync')
+    expect(byKind.push.label).toBe('푸시')
+    expect(byKind.pull.label).toBe('가져오기')
+    expect(byKind.sync.label).toBe('동기화')
   })
 
   it('locks every item while a remote op is running', () => {
@@ -281,11 +281,11 @@ describe('resolveDropdownItems', () => {
 
     expect(abortMerge).toMatchObject({
       disabled: true,
-      title: 'Operation in progress…'
+      title: '작업 진행 중…'
     })
     expect(abortRebase).toMatchObject({
       disabled: true,
-      title: 'Operation in progress…'
+      title: '작업 진행 중…'
     })
   })
 
@@ -307,7 +307,7 @@ describe('resolveDropdownItems', () => {
     for (const entry of items) {
       if (entry.kind !== 'separator') {
         expect(entry.disabled).toBe(true)
-        expect(entry.title).toBe('Hosted review operation in progress…')
+        expect(entry.title).toBe('호스티드 리뷰 작업 진행 중…')
       }
     }
   })
@@ -334,7 +334,7 @@ describe('resolveDropdownItems', () => {
     ] as const
     for (const kind of loadingBlocked) {
       expect(byKind[kind].disabled).toBe(true)
-      expect(byKind[kind].title).toBe('Checking branch status…')
+      expect(byKind[kind].title).toBe('브랜치 상태 확인 중…')
     }
     // Commit itself does not depend on upstream — it remains enabled when
     // staged + message are present and no commit is in flight.
@@ -351,13 +351,13 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.push.title).toBe('Publish the branch first to push commits')
-    expect(byKind.pull.title).toBe('Publish the branch first to pull commits')
-    expect(byKind.fast_forward.title).toBe('Publish the branch first to fast-forward')
-    expect(byKind.sync.title).toBe('Publish the branch first to sync commits')
-    expect(byKind.fetch.title).toBe('Fetch from remote without merging')
+    expect(byKind.push.title).toBe('커밋을 푸시하려면 먼저 브랜치를 게시하세요')
+    expect(byKind.pull.title).toBe('커밋을 가져오려면 먼저 브랜치를 게시하세요')
+    expect(byKind.fast_forward.title).toBe('빠른 병합하려면 먼저 브랜치를 게시하세요')
+    expect(byKind.sync.title).toBe('커밋을 동기화하려면 먼저 브랜치를 게시하세요')
+    expect(byKind.fetch.title).toBe('병합하지 않고 원격에서 가져오기')
     expect(byKind.fetch.disabled).toBe(false)
-    expect(byKind.publish.title).toBe('Publish this branch to origin')
+    expect(byKind.publish.title).toBe('이 브랜치를 origin에 게시')
     expect(byKind.publish.disabled).toBe(false)
   })
 
@@ -372,9 +372,9 @@ describe('resolveDropdownItems', () => {
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
 
-    expect(byKind.rebase_base.label).toBe('Rebase from origin/main')
+    expect(byKind.rebase_base.label).toBe('origin/main에서 리베이스')
     expect(byKind.rebase_base.title).toBe(
-      'Rebase current branch with latest commits from origin/main'
+      'origin/main의 최신 커밋으로 현재 브랜치를 리베이스'
     )
     expect(byKind.rebase_base.disabled).toBe(false)
   })
@@ -392,7 +392,7 @@ describe('resolveDropdownItems', () => {
     )
 
     expect(byKind.rebase_base.disabled).toBe(true)
-    expect(byKind.rebase_base.title).toBe('Commit or stash local changes before rebasing')
+    expect(byKind.rebase_base.title).toBe('리베이스하기 전에 로컬 변경 사항을 커밋하거나 스태시하세요')
   })
 
   it('does not show Publish Branch when an unpublished branch has no commits ahead', () => {
@@ -405,8 +405,8 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.publish.label).toBe('No Branch Changes')
-    expect(byKind.publish.title).toBe('Nothing to publish')
+    expect(byKind.publish.label).toBe('브랜치 변경 사항 없음')
+    expect(byKind.publish.title).toBe('게시할 내용이 없습니다')
     expect(byKind.publish.disabled).toBe(true)
   })
 
@@ -421,8 +421,8 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.publish.label).toBe('Commit Changes First')
-    expect(byKind.publish.title).toBe('Commit changes before publishing the branch')
+    expect(byKind.publish.label).toBe('먼저 변경 사항을 커밋')
+    expect(byKind.publish.title).toBe('브랜치를 게시하기 전에 변경 사항을 커밋하세요')
     expect(byKind.publish.disabled).toBe(true)
   })
 
@@ -436,12 +436,12 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.push.title).toBe('PR is already merged')
-    expect(byKind.pull.title).toBe('PR is already merged')
-    expect(byKind.fast_forward.title).toBe('PR is already merged')
-    expect(byKind.sync.title).toBe('PR is already merged')
-    expect(byKind.publish.label).toBe('PR Status')
-    expect(byKind.publish.title).toBe('PR is already merged')
+    expect(byKind.push.title).toBe('PR이 이미 병합되었습니다')
+    expect(byKind.pull.title).toBe('PR이 이미 병합되었습니다')
+    expect(byKind.fast_forward.title).toBe('PR이 이미 병합되었습니다')
+    expect(byKind.sync.title).toBe('PR이 이미 병합되었습니다')
+    expect(byKind.publish.label).toBe('PR 상태')
+    expect(byKind.publish.title).toBe('PR이 이미 병합되었습니다')
     expect(byKind.publish.disabled).toBe(true)
   })
 
@@ -455,8 +455,8 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.publish.label).toBe('PR Status')
-    expect(byKind.publish.title).toBe('Checking PR status…')
+    expect(byKind.publish.label).toBe('PR 상태')
+    expect(byKind.publish.title).toBe('PR 상태 확인 중…')
     expect(byKind.publish.disabled).toBe(true)
   })
 
@@ -474,11 +474,11 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.commit_push.label).toBe('Commit & Push')
-    expect(byKind.commit_sync.label).toBe('Commit & Sync')
+    expect(byKind.commit_push.label).toBe('커밋 후 푸시')
+    expect(byKind.commit_sync.label).toBe('커밋 후 동기화')
     // Sanity check: plain counterparts still carry counts.
-    expect(byKind.push.label).toBe('Push (2)')
-    expect(byKind.sync.label).toBe('Sync (↓3 ↑2)')
+    expect(byKind.push.label).toBe('푸시 (2)')
+    expect(byKind.sync.label).toBe('동기화 (↓3 ↑2)')
   })
 
   it('enables fast-forward only when the branch is behind with no local commits', () => {
@@ -495,11 +495,11 @@ describe('resolveDropdownItems', () => {
       diverged.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
 
-    expect(behindOnlyByKind.fast_forward.label).toBe('Fast-forward (2)')
-    expect(behindOnlyByKind.fast_forward.title).toBe('Fast-forward 2 commits')
+    expect(behindOnlyByKind.fast_forward.label).toBe('빠른 병합 (2)')
+    expect(behindOnlyByKind.fast_forward.title).toBe('빠른 병합 2개 커밋')
     expect(behindOnlyByKind.fast_forward.disabled).toBe(false)
     expect(divergedByKind.fast_forward.disabled).toBe(true)
-    expect(divergedByKind.fast_forward.title).toBe('Local commits prevent a fast-forward pull')
+    expect(divergedByKind.fast_forward.title).toBe('로컬 커밋이 있어 빠른 병합 가져오기를 할 수 없습니다')
   })
 
   it('enables the push-before-PR recovery action when review creation is only blocked by unpushed commits', () => {
@@ -519,8 +519,8 @@ describe('resolveDropdownItems', () => {
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
     expect(byKind.create_pr.disabled).toBe(true)
-    expect(byKind.create_pr.hint).toBe('Push first')
-    expect(byKind.push_create_pr.label).toBe('Push before PR')
+    expect(byKind.create_pr.hint).toBe('먼저 푸시하세요')
+    expect(byKind.push_create_pr.label).toBe('PR 전 푸시')
     expect(byKind.push_create_pr.disabled).toBe(false)
   })
 
@@ -540,10 +540,10 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.create_pr.label).toBe('Create MR')
-    expect(byKind.create_pr.hint).toBe('Push first')
-    expect(byKind.push_create_pr.label).toBe('Push before MR')
-    expect(byKind.push_create_pr.title).toBe('Push local commits before creating a merge request')
+    expect(byKind.create_pr.label).toBe('MR 생성')
+    expect(byKind.create_pr.hint).toBe('먼저 푸시하세요')
+    expect(byKind.push_create_pr.label).toBe('MR 전 푸시')
+    expect(byKind.push_create_pr.title).toBe('병합 요청을 생성하기 전에 로컬 커밋을 푸시')
     expect(byKind.push_create_pr.disabled).toBe(false)
   })
 
@@ -563,6 +563,6 @@ describe('resolveDropdownItems', () => {
     const byKind = Object.fromEntries(
       items.filter((e) => e.kind !== 'separator').map((e) => [e.kind, e])
     )
-    expect(byKind.create_pr.hint).toBe('Run glab auth login in this environment')
+    expect(byKind.create_pr.hint).toBe('이 환경에서 glab auth login을 실행하세요')
   })
 })

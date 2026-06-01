@@ -273,9 +273,9 @@ function Settings(): React.JSX.Element {
       return true
     }
     const shouldDiscard = await confirm({
-      title: 'Discard unsaved Source Control AI prompt changes?',
-      description: 'You have unsaved Source Control AI prompt changes. Leaving will discard them.',
-      confirmLabel: 'Discard',
+      title: '저장되지 않은 소스 컨트롤 AI 프롬프트 변경 사항을 버리시겠습니까?',
+      description: '저장되지 않은 소스 컨트롤 AI 프롬프트 변경 사항이 있습니다. 이동하면 내용이 버려집니다.',
+      confirmLabel: '버리기',
       confirmVariant: 'destructive'
     })
     if (shouldDiscard) {
@@ -921,8 +921,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="git"
-                  title="Git & Source Control"
-                  description="Branch naming, base refs, attribution, and Source Control AI."
+                  title="Git 및 소스 컨트롤"
+                  description="브랜치 이름, 기준 브랜치, 작성자 정보, 소스 컨트롤 AI."
                   searchEntries={getSectionSearchEntries('git')}
                   forceVisible={hasUnsavedSourceControlAiPromptChanges}
                 >

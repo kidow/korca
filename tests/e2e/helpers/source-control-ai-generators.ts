@@ -41,8 +41,8 @@ export async function installDelayedPrGenerator(
       'setTimeout(() => {',
       '  console.log(JSON.stringify({',
       `    base: ${JSON.stringify(base)},`,
-      "    title: 'Generated PR title after switch',",
-      "    body: 'Generated PR body after switch',",
+      "    title: '스위치 후 생성된 PR 제목',",
+      "    body: '스위치 후 생성된 PR 본문',",
       '    draft: false',
       '  }))',
       `  fs.appendFileSync(${JSON.stringify(callLogPath)}, 'finish\\n')`,
@@ -63,9 +63,9 @@ export async function installDelayedCommitMessageGenerator(
       "const fs = require('fs')",
       `fs.appendFileSync(${JSON.stringify(callLogPath)}, 'start\\n')`,
       'setTimeout(() => {',
-      "  console.log('Generated commit message after switch')",
+      "  console.log('스위치 후 생성된 커밋 메시지')",
       "  console.log('')",
-      "  console.log('Generated from staged e2e-commit-message-generation.txt after switching worktrees')",
+      "  console.log('작업 공간을 전환한 뒤 staged e2e-commit-message-generation.txt에서 생성됨')",
       `  fs.appendFileSync(${JSON.stringify(callLogPath)}, 'finish\\n')`,
       '}, 1500)'
     ].join('\n')

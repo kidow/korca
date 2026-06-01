@@ -40,7 +40,7 @@ export function AgentFeatureSetupStep({
             onClick={onStartFeatureSetup}
           >
             {setupBusyLabel ? <Loader2 className="size-4 animate-spin" /> : null}
-            {setupBusyLabel ?? 'Enable capabilities'}
+            {setupBusyLabel ?? '기능 켜기'}
           </Button>
         </div>
       ) : null}

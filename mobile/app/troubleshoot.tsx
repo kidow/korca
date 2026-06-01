@@ -51,51 +51,51 @@ const sections: TroubleshootSection[] = [
   {
     id: 'wifi',
     icon: <WifiOff size={16} color={colors.textSecondary} />,
-    title: 'Different WiFi Networks',
+    title: '서로 다른 WiFi 네트워크',
     steps: [
-      'Both devices must be on the same local network.',
-      'Ethernet and WiFi must share the same subnet.',
-      'Try reconnecting WiFi on both devices.'
+      '두 기기는 같은 로컬 네트워크에 있어야 합니다.',
+      '유선과 WiFi가 같은 서브넷을 사용해야 합니다.',
+      '두 기기에서 WiFi를 다시 연결해 보세요.'
     ]
   },
   {
     id: 'firewall',
     icon: <Shield size={16} color={colors.textSecondary} />,
-    title: 'Firewall Blocking Port 6768',
+    title: '방화벽이 6768 포트를 차단함',
     steps: [
-      'macOS: System Settings → Network → Firewall — allow Orca.',
-      'Windows: Defender Firewall → Allow app — enable Orca for Private networks.',
+      'macOS: 시스템 설정 → 네트워크 → 방화벽에서 Orca를 허용하세요.',
+      'Windows: Defender 방화벽 → 앱 허용에서 비공개 네트워크용 Orca를 켜세요.',
       'Linux: sudo ufw allow 6768',
-      'Corporate/school networks may block P2P — try a personal hotspot.'
+      '회사/학교 네트워크는 P2P를 막을 수 있습니다. 개인 핫스팟을 사용해 보세요.'
     ]
   },
   {
     id: 'desktop',
     icon: <Monitor size={16} color={colors.textSecondary} />,
-    title: 'Desktop App Not Running',
+    title: '데스크톱 앱이 실행 중이 아님',
     steps: [
-      'Orca must be open on your desktop to accept connections.',
-      'Try restarting Orca — the companion server starts on launch.',
-      'After an update, you may need to re-pair via QR code.'
+      '연결을 받으려면 데스크톱에서 Orca가 열려 있어야 합니다.',
+      'Orca를 다시 시작해 보세요. 동반 서버는 실행 시 시작됩니다.',
+      '업데이트 후에는 QR 코드로 다시 페어링해야 할 수 있습니다.'
     ]
   },
   {
     id: 'timeout',
     icon: <Clock size={16} color={colors.textSecondary} />,
-    title: 'Connection Timeout',
+    title: '연결 시간 초과',
     steps: [
-      'Check WiFi signal strength on your phone.',
-      'Go back to the host list and tap your host to retry.',
-      'Restart both apps if timeouts persist.'
+      '휴대폰의 WiFi 신호 세기를 확인하세요.',
+      '호스트 목록으로 돌아가 해당 호스트를 다시 눌러 보세요.',
+      '시간 초과가 계속되면 두 앱을 모두 다시 시작하세요.'
     ]
   },
   {
     id: 'vpn',
     icon: <Globe size={16} color={colors.textSecondary} />,
-    title: 'VPN Interference',
+    title: 'VPN 간섭',
     steps: [
-      'VPNs can route local traffic through a remote server.',
-      'Disable the VPN or enable split tunneling / "Allow LAN".'
+      'VPN은 로컬 트래픽을 원격 서버로 우회시킬 수 있습니다.',
+      'VPN을 끄거나 분할 터널링 / "LAN 허용"을 켜세요.'
     ]
   }
 ]
@@ -153,11 +153,11 @@ export default function TroubleshootScreen() {
       const hosts = await loadHosts()
       results.push(
         hosts.length > 0
-          ? { label: 'Paired hosts', status: 'pass', detail: `${hosts.length} paired` }
-          : { label: 'Paired hosts', status: 'fail', detail: 'None — scan a QR to pair' }
+          ? { label: '페어링된 호스트', status: 'pass', detail: `${hosts.length}개 페어링됨` }
+          : { label: '페어링된 호스트', status: 'fail', detail: '없음 - QR을 스캔해 페어링하세요' }
       )
     } catch {
-      results.push({ label: 'Paired hosts', status: 'warn', detail: 'Could not read host data' })
+      results.push({ label: '페어링된 호스트', status: 'warn', detail: '호스트 데이터를 읽을 수 없음' })
     }
 
     if (!isCurrentRun()) {
@@ -176,14 +176,14 @@ export default function TroubleshootScreen() {
       }
       results.push(
         resp.ok
-          ? { label: 'Internet', status: 'pass', detail: 'Connected' }
-          : { label: 'Internet', status: 'warn', detail: 'Unexpected response' }
+          ? { label: '인터넷', status: 'pass', detail: '연결됨' }
+          : { label: '인터넷', status: 'warn', detail: '예상치 못한 응답' }
       )
     } catch {
       if (!isCurrentRun()) {
         return
       }
-      results.push({ label: 'Internet', status: 'fail', detail: 'No connection' })
+      results.push({ label: '인터넷', status: 'fail', detail: '연결 없음' })
     } finally {
       internetCheck.dispose()
       if (activeInternetCheckRef.current === internetCheck) {
@@ -210,13 +210,13 @@ export default function TroubleshootScreen() {
           label: host.name,
           status: reachable ? 'pass' : 'fail',
           detail: reachable
-            ? `Reachable at ${formatEndpoint(host.endpoint)}`
-            : `Cannot reach ${formatEndpoint(host.endpoint)}`
+            ? `${formatEndpoint(host.endpoint)}에서 연결 가능`
+            : `${formatEndpoint(host.endpoint)}에 연결할 수 없음`
         })
         setChecks([...results])
       }
     } catch {
-      results.push({ label: 'Hosts', status: 'warn', detail: 'Could not test' })
+      results.push({ label: '호스트', status: 'warn', detail: '테스트할 수 없음' })
     }
 
     if (!isCurrentRun()) {
@@ -224,7 +224,7 @@ export default function TroubleshootScreen() {
     }
 
     results.push({
-      label: 'Platform',
+      label: '플랫폼',
       status: 'pass',
       detail: `${Platform.OS} ${Platform.Version ?? ''}`
     })
@@ -242,7 +242,7 @@ export default function TroubleshootScreen() {
         <Pressable style={styles.backButton} onPress={() => router.back()}>
           <ChevronLeft size={22} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.heading}>Troubleshooting</Text>
+        <Text style={styles.heading}>문제 해결</Text>
       </View>
 
       <ScrollView
@@ -266,10 +266,10 @@ export default function TroubleshootScreen() {
           )}
           <Text style={styles.diagnosticButtonLabel}>
             {diagnosticStatus === 'running'
-              ? 'Running…'
+              ? '실행 중…'
               : diagnosticStatus === 'done'
-                ? 'Run again'
-                : 'Run diagnostics'}
+                ? '다시 실행'
+                : '진단 실행'}
           </Text>
         </Pressable>
 
@@ -292,7 +292,7 @@ export default function TroubleshootScreen() {
           </View>
         )}
 
-        <Text style={styles.sectionHeading}>Common issues</Text>
+        <Text style={styles.sectionHeading}>일반적인 문제</Text>
 
         <View style={styles.section}>
           {sections.map((section, i) => (

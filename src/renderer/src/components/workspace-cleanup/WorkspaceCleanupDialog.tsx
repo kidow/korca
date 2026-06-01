@@ -45,33 +45,33 @@ import {
 } from './workspace-cleanup-view-selection'
 
 const TIER_LABELS: Record<WorkspaceCleanupTier, string> = {
-  ready: 'Suggested cleanup',
-  review: 'Needs a closer look',
-  protected: 'Not suggested for cleanup'
+  ready: '정리 제안',
+  review: '더 살펴봐야 함',
+  protected: '정리 비추천'
 }
 
 const BLOCKER_LABELS: Record<WorkspaceCleanupBlocker, string> = {
-  'main-worktree': 'Main workspace',
-  'folder-repo': 'Folder project',
-  pinned: 'Pinned',
-  'active-workspace': 'Active workspace',
-  'running-terminal': 'Running terminal process',
-  'terminal-liveness-unknown': 'Terminal liveness unknown',
-  'dirty-editor-buffer': 'Unsaved editor buffer',
-  'volatile-local-context': 'Volatile local context',
-  'recent-visible-context': 'Recently visited tabs',
-  'live-agent': 'Active agent',
-  'ssh-disconnected': 'Remote unavailable',
-  'git-status-error': 'Git status unavailable',
-  'dirty-files': 'Changed files',
-  'unpushed-commits': 'Unpushed commits',
-  'unknown-base': 'Could not verify unpushed commits',
-  dismissed: 'Ignored'
+  'main-worktree': '기본 작업 공간',
+  'folder-repo': '폴더 프로젝트',
+  pinned: '고정됨',
+  'active-workspace': '활성 작업 공간',
+  'running-terminal': '실행 중인 터미널 프로세스',
+  'terminal-liveness-unknown': '터미널 상태 확인 불가',
+  'dirty-editor-buffer': '저장되지 않은 에디터 버퍼',
+  'volatile-local-context': '휘발성 로컬 컨텍스트',
+  'recent-visible-context': '최근 방문한 탭',
+  'live-agent': '활성 에이전트',
+  'ssh-disconnected': '원격 사용 불가',
+  'git-status-error': 'git 상태 확인 불가',
+  'dirty-files': '변경된 파일',
+  'unpushed-commits': '푸시되지 않은 커밋',
+  'unknown-base': '푸시되지 않은 커밋을 확인할 수 없음',
+  dismissed: '무시됨'
 }
 
 function formatRelativeTime(timestamp: number): string {
   if (!timestamp) {
-    return 'Never'
+    return '없음'
   }
   const deltaMs = Date.now() - timestamp
   if (deltaMs < 60_000) {
@@ -108,7 +108,7 @@ function formatScanNoticeMessage(
   if (visibleErrors.length === 1) {
     const error = visibleErrors[0]
     const repoName = formatScanErrorRepoName(error, repoNameById)
-    return `Could not check ${repoName}: ${formatScanErrorReason(error.message)}. Some inactive workspaces may be missing. Refresh to try again.`
+    return `다음 저장소를 확인하지 못했습니다: ${repoName}(${formatScanErrorReason(error.message)}). 일부 비활성 작업 공간이 빠졌을 수 있습니다. 다시 새로고침하세요.`
   }
   const repoNames = visibleErrors
     .slice(0, 3)
@@ -116,7 +116,7 @@ function formatScanNoticeMessage(
     .join(', ')
   const moreCount = visibleErrors.length - 3
   const suffix = moreCount > 0 ? `, +${moreCount} more` : ''
-  return `Could not check ${visibleErrors.length} repositories (${repoNames}${suffix}). Some inactive workspaces may be missing. Refresh to try again.`
+  return `저장소 ${visibleErrors.length}개(${repoNames}${suffix})를 확인하지 못했습니다. 일부 비활성 작업 공간이 빠졌을 수 있습니다. 다시 새로고침하세요.`
 }
 
 function formatScanErrorRepoName(
@@ -203,7 +203,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
       setActiveView('ready')
       void scanWorkspaceCleanup().catch((err: unknown) => {
         if (mountedRef.current) {
-          toast.error('Workspace cleanup scan failed', {
+          toast.error('작업 공간 정리 스캔에 실패했습니다', {
             description: err instanceof Error ? err.message : String(err)
           })
         }
@@ -345,7 +345,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
     setRowFailures({})
     void scanWorkspaceCleanup().catch((err: unknown) => {
       if (mountedRef.current) {
-        toast.error('Workspace cleanup scan failed', {
+        toast.error('작업 공간 정리 스캔에 실패했습니다', {
           description: err instanceof Error ? err.message : String(err)
         })
       }
@@ -421,7 +421,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
       if (result.removedIds.length > 0) {
         if (mountedRef.current) {
           toast.success(
-            `Removed ${result.removedIds.length} workspace${result.removedIds.length === 1 ? '' : 's'}`
+        `${result.removedIds.length}개의 작업 공간을 제거했습니다`
           )
         }
       }
@@ -456,9 +456,9 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
             <DialogHeader className="border-b border-border px-5 py-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <DialogTitle className="text-base">Delete Inactive Workspaces</DialogTitle>
+                  <DialogTitle className="text-base">비활성 작업 공간 삭제</DialogTitle>
                   <DialogDescription className="mt-1 text-xs">
-                    Review inactive workspaces before deleting their local files and Orca state.
+                    로컬 파일과 Orca 상태를 삭제하기 전에 비활성 작업 공간을 검토하세요.
                   </DialogDescription>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
@@ -467,7 +467,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                       <Button
                         variant="outline"
                         size="icon-sm"
-                        aria-label="Refresh"
+                        aria-label="새로고침"
                         onClick={refresh}
                         disabled={loading}
                       >
@@ -475,13 +475,13 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom" sideOffset={4}>
-                      Refresh
+                      새로고침
                     </TooltipContent>
                   </Tooltip>
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    aria-label="Close"
+                    aria-label="닫기"
                     onClick={() => closeModal()}
                     disabled={removing}
                   >
@@ -496,29 +496,29 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                 <Loader2 className="mt-0.5 size-3.5 shrink-0 animate-spin text-muted-foreground" />
                 <div className="min-w-0">
                   <div className="text-xs font-medium text-foreground">
-                    Checking workspace safety
+                    작업 공간 안전성 확인 중
                   </div>
                   <div className="mt-0.5 text-xs text-muted-foreground">
-                    Scanning worktrees and git state, then combining open tab, terminal, live agent,
-                    and remote availability signals before suggesting deletions.
+                    작업 공간과 git 상태를 검사한 뒤, 열려 있는 탭, 터미널, 활성 에이전트,
+                    원격 사용 가능 상태를 함께 고려해 삭제를 제안합니다.
                   </div>
                 </div>
               </div>
             ) : hasAnyCandidates ? (
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/25 px-4 py-2.5">
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
-                  <div className="min-w-0 text-sm font-medium text-foreground">
-                    {selectedCount} selected
+                    <div className="min-w-0 text-sm font-medium text-foreground">
+                    {selectedCount}개 선택됨
                   </div>
-                  <StatusPill>{inactiveCount} inactive</StatusPill>
+                  <StatusPill>{inactiveCount}개 비활성</StatusPill>
                   {readyCount > 0 ? (
-                    <StatusPill tone="ready">{readyCount} safe to remove</StatusPill>
+                    <StatusPill tone="ready">{readyCount}개 제거 가능</StatusPill>
                   ) : null}
                   {groups.review.length > 0 ? (
-                    <StatusPill tone="review">{groups.review.length} need review</StatusPill>
+                    <StatusPill tone="review">{groups.review.length}개 검토 필요</StatusPill>
                   ) : null}
                   {protectedCount > 0 ? (
-                    <StatusPill>{protectedCount} not suggested</StatusPill>
+                    <StatusPill>{protectedCount}개 비추천</StatusPill>
                   ) : null}
                 </div>
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
@@ -540,7 +540,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                     disabled={selectedCount === 0}
                   >
                     <Trash2 className="size-3.5" />
-                    Delete selected
+                    선택 항목 삭제
                   </Button>
                 </div>
               </div>
@@ -575,8 +575,8 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                         }
                         aria-label={
                           allActiveQueueableSelected
-                            ? `Unselect all in ${TIER_LABELS[resolvedActiveView]}`
-                            : `Select all in ${TIER_LABELS[resolvedActiveView]}`
+                            ? `${TIER_LABELS[resolvedActiveView]} 전체 선택 해제`
+                            : `${TIER_LABELS[resolvedActiveView]} 전체 선택`
                         }
                         onClick={toggleActiveSelection}
                         className="flex size-4 shrink-0 items-center justify-center rounded border border-border bg-background text-primary hover:bg-accent"
@@ -590,7 +590,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                     ) : null}
                     <div className="min-w-0 truncate text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
                       {resolvedActiveView === 'hidden'
-                        ? 'Ignored cleanup suggestions'
+                        ? '무시한 정리 제안'
                         : TIER_LABELS[resolvedActiveView]}
                     </div>
                   </div>
@@ -601,11 +601,11 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                       className="h-auto shrink-0 px-0 text-xs"
                       onClick={() => void resetDismissals()}
                     >
-                      Restore ignored suggestions
+                      무시한 제안 복원
                     </Button>
                   ) : (
                     <div className="shrink-0 text-xs text-muted-foreground">
-                      Sorted by oldest activity
+                      오래된 활동 순으로 정렬
                     </div>
                   )}
                 </div>
@@ -613,17 +613,17 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                   <div>
                     {initialLoading ? <SkeletonRows /> : null}
                     {!loading && scan && candidates.length === 0 && !scanNoticeMessage ? (
-                      <EmptyState title="No inactive workspaces to delete." />
+                        <EmptyState title="삭제할 비활성 작업 공간이 없습니다." />
                     ) : null}
                     {!loading && scan && candidates.length === 0 && scanNoticeMessage ? (
-                      <EmptyState title="No inactive workspaces found in checked repositories." />
+                        <EmptyState title="확인한 저장소에서 비활성 작업 공간을 찾지 못했습니다." />
                     ) : null}
                     {!loading &&
                     scan &&
                     candidates.length > 0 &&
                     filteredCandidates.length === 0 ? (
                       <EmptyState
-                        title="No inactive workspaces match the selected repos."
+                        title="선택한 저장소와 일치하는 비활성 작업 공간이 없습니다."
                         actionLabel="Show all repos"
                         onAction={() => setRepoSelection(new Set(eligibleRepoIds))}
                       />
@@ -715,10 +715,10 @@ function CleanupViewNav({
   onViewChange: (view: WorkspaceCleanupView) => void
 }): React.JSX.Element {
   const items: { view: WorkspaceCleanupView; label: string }[] = [
-    { view: 'ready', label: 'Suggested' },
-    { view: 'review', label: 'Needs review' },
-    { view: 'protected', label: 'Not suggested' },
-    { view: 'hidden', label: 'Ignored' }
+    { view: 'ready', label: '제안됨' },
+    { view: 'review', label: '검토 필요' },
+    { view: 'protected', label: '비추천' },
+    { view: 'hidden', label: '무시됨' }
   ]
 
   return (
@@ -795,9 +795,9 @@ function CandidateRow({
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <span className="min-w-0 truncate text-sm font-medium">{candidate.displayName}</span>
             <StatusPill tone={status.tone}>{status.label}</StatusPill>
-            <span className="text-xs text-muted-foreground">
-              Last active {formatRelativeTime(candidate.lastActivityAt)}
-            </span>
+        <span className="text-xs text-muted-foreground">
+          마지막 활동 {formatRelativeTime(candidate.lastActivityAt)}
+        </span>
             {blockers.length > 0 ? (
               <span className="min-w-0 truncate text-xs text-muted-foreground">
                 {blockers.slice(0, 2).join(', ')}
@@ -829,14 +829,14 @@ function CandidateRow({
               <Button
                 variant="ghost"
                 size="icon-xs"
-                aria-label={`View ${candidate.displayName}`}
+                aria-label={`${candidate.displayName} 보기`}
                 onClick={() => onView(candidate)}
               >
                 <Search className="size-3.5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="top" sideOffset={4}>
-              View
+              보기
             </TooltipContent>
           </Tooltip>
           {!ignored ? (
@@ -845,14 +845,14 @@ function CandidateRow({
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  aria-label={`Ignore ${candidate.displayName}`}
+                aria-label={`${candidate.displayName} 무시`}
                   onClick={() => onIgnore(candidate)}
                 >
                   <EyeOff className="size-3.5" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Ignore
+                무시
               </TooltipContent>
             </Tooltip>
           ) : null}
@@ -862,7 +862,7 @@ function CandidateRow({
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  aria-label={`Remove ${candidate.displayName}`}
+                aria-label={`${candidate.displayName} 삭제`}
                   className="text-destructive hover:text-destructive"
                   onClick={() => onRemove(candidate)}
                 >
@@ -870,7 +870,7 @@ function CandidateRow({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Remove
+                삭제
               </TooltipContent>
             </Tooltip>
           ) : null}
@@ -885,34 +885,34 @@ function getCandidateStatus(candidate: WorkspaceCleanupCandidate): {
   tone: 'neutral' | 'ready' | 'review' | 'destructive'
 } {
   if (candidate.blockers.includes('dismissed')) {
-    return { label: 'Ignored', tone: 'neutral' }
+    return { label: '무시됨', tone: 'neutral' }
   }
   if (candidate.tier === 'ready') {
-    return { label: candidate.reasons.includes('archived') ? 'Archived' : 'Clean', tone: 'ready' }
+    return { label: candidate.reasons.includes('archived') ? '보관됨' : '정리됨', tone: 'ready' }
   }
   if (candidate.blockers.length > 0) {
     return { label: BLOCKER_LABELS[candidate.blockers[0]], tone: 'neutral' }
   }
   if (candidate.git.upstreamAhead && candidate.git.upstreamAhead > 0) {
-    return { label: 'Unpushed commits', tone: 'review' }
+    return { label: '푸시되지 않은 커밋', tone: 'review' }
   }
   if (candidate.git.clean === false) {
-    return { label: 'Dirty', tone: 'review' }
+    return { label: '변경 있음', tone: 'review' }
   }
   if (candidate.tier === 'review') {
-    return { label: 'Review', tone: 'review' }
+    return { label: '검토 필요', tone: 'review' }
   }
-  return { label: 'Not suggested', tone: 'neutral' }
+  return { label: '추천되지 않음', tone: 'neutral' }
 }
 
 function formatGitStatus(candidate: WorkspaceCleanupCandidate): string {
   if (candidate.git.clean === true) {
-    return 'Clean git'
+    return '정리된 git'
   }
   if (candidate.git.clean === false) {
-    return 'Dirty git'
+    return '변경된 git'
   }
-  return 'Git unknown'
+  return 'git 상태 알 수 없음'
 }
 
 function formatBranchSafetyDetails(candidate: WorkspaceCleanupCandidate): string[] {
@@ -920,8 +920,8 @@ function formatBranchSafetyDetails(candidate: WorkspaceCleanupCandidate): string
   if (candidate.git.upstreamAhead !== null) {
     details.push(
       candidate.git.upstreamAhead === 0
-        ? 'No unpushed commits'
-        : `${candidate.git.upstreamAhead} unpushed commit${
+        ? '푸시되지 않은 커밋 없음'
+        : `${candidate.git.upstreamAhead}개의 푸시되지 않은 커밋${
             candidate.git.upstreamAhead === 1 ? '' : 's'
           }`
     )
@@ -933,35 +933,35 @@ function formatContextDetails(candidate: WorkspaceCleanupCandidate): string | nu
   const parts: string[] = []
   if (candidate.localContext.terminalTabCount > 0) {
     parts.push(
-      `${candidate.localContext.terminalTabCount} terminal tab${
+      `${candidate.localContext.terminalTabCount}개 터미널 탭${
         candidate.localContext.terminalTabCount === 1 ? '' : 's'
       }`
     )
   }
   if (candidate.localContext.cleanEditorTabCount > 0) {
     parts.push(
-      `${candidate.localContext.cleanEditorTabCount} editor tab${
+      `${candidate.localContext.cleanEditorTabCount}개 에디터 탭${
         candidate.localContext.cleanEditorTabCount === 1 ? '' : 's'
       }`
     )
   }
   if (candidate.localContext.browserTabCount > 0) {
     parts.push(
-      `${candidate.localContext.browserTabCount} browser tab${
+      `${candidate.localContext.browserTabCount}개 브라우저 탭${
         candidate.localContext.browserTabCount === 1 ? '' : 's'
       }`
     )
   }
   if (candidate.localContext.diffCommentCount > 0) {
     parts.push(
-      `${candidate.localContext.diffCommentCount} diff note${
+      `${candidate.localContext.diffCommentCount}개 차이점 메모${
         candidate.localContext.diffCommentCount === 1 ? '' : 's'
       }`
     )
   }
   if (candidate.localContext.retainedDoneAgentCount > 0) {
     parts.push(
-      `${candidate.localContext.retainedDoneAgentCount} completed agent${
+      `${candidate.localContext.retainedDoneAgentCount}개 완료된 에이전트${
         candidate.localContext.retainedDoneAgentCount === 1 ? '' : 's'
       }`
     )
@@ -981,7 +981,6 @@ function ConfirmRemove({
   onConfirm: () => void
 }): React.JSX.Element {
   const count = candidates.length
-  const noun = count === 1 ? 'workspace' : 'workspaces'
   return (
     <>
       <DialogHeader className="border-b border-border px-5 py-4">
@@ -991,10 +990,10 @@ function ConfirmRemove({
           </div>
           <div className="min-w-0">
             <DialogTitle className="text-base">
-              Delete {count} {noun}?
+              {count}개의 작업 공간 삭제?
             </DialogTitle>
             <DialogDescription className="mt-1.5 text-xs leading-5">
-              This permanently deletes their local files. You can&apos;t undo this.
+              로컬 파일이 영구 삭제됩니다. 되돌릴 수 없습니다.
             </DialogDescription>
           </div>
         </div>
@@ -1002,9 +1001,9 @@ function ConfirmRemove({
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="flex items-center justify-between border-b border-border px-5 py-2.5">
           <div className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
-            {count} {noun} to delete
+            삭제할 {count}개의 작업 공간
           </div>
-          <div className="text-xs text-muted-foreground">Sorted by oldest activity</div>
+          <div className="text-xs text-muted-foreground">오래된 활동 순으로 정렬</div>
         </div>
         <ScrollArea className="min-h-0 flex-1">
           {candidates.map((candidate, index) => (
@@ -1018,11 +1017,11 @@ function ConfirmRemove({
       </div>
       <DialogFooter className="border-t border-border px-5 py-3">
         <Button variant="outline" onClick={onCancel} disabled={removing}>
-          Cancel
+          취소
         </Button>
         <Button variant="destructive" onClick={onConfirm} disabled={removing || count === 0}>
           {removing ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
-          Delete {count} {noun}
+          {count}개의 작업 공간 삭제
         </Button>
       </DialogFooter>
     </>
@@ -1043,7 +1042,7 @@ function ConfirmRemoveRow({
       <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
         <span className="min-w-0 truncate text-sm font-medium">{candidate.displayName}</span>
         <span className="text-xs text-muted-foreground">
-          Last active {formatRelativeTime(candidate.lastActivityAt)}
+          마지막 활동 {formatRelativeTime(candidate.lastActivityAt)}
         </span>
         {dirtyLabel ? <StatusPill tone="destructive">{dirtyLabel}</StatusPill> : null}
       </div>

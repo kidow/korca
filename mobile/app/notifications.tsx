@@ -68,8 +68,8 @@ export default function NotificationsScreen() {
   const switchEnabled = pushEnabled && permissionState.granted
   const notificationsBlocked = permissionState.status === 'denied'
   const hint = notificationsBlocked
-    ? 'Notifications are disabled in system settings.'
-    : 'Receive notifications when an agent task completes on your desktop.'
+    ? '시스템 설정에서 알림이 꺼져 있습니다.'
+    : '데스크톱에서 에이전트 작업이 완료되면 알림을 받습니다.'
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + spacing.sm }]}>
@@ -77,12 +77,12 @@ export default function NotificationsScreen() {
         <Pressable style={styles.backButton} onPress={() => router.back()}>
           <ChevronLeft size={22} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.heading}>Notifications</Text>
+        <Text style={styles.heading}>알림</Text>
       </View>
 
       <View style={styles.section}>
         <View style={styles.row}>
-          <Text style={styles.rowLabel}>Push Notifications</Text>
+          <Text style={styles.rowLabel}>푸시 알림</Text>
           <Switch
             value={switchEnabled}
             disabled={notificationsBlocked}
@@ -100,7 +100,7 @@ export default function NotificationsScreen() {
             ]}
             onPress={() => void Linking.openSettings()}
           >
-            <Text style={styles.settingsButtonText}>Open Settings</Text>
+            <Text style={styles.settingsButtonText}>설정 열기</Text>
           </Pressable>
         )}
       </View>

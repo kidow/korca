@@ -88,14 +88,14 @@ type NewWorkspaceComposerCardProps = {
 }
 
 const SSH_STATUS_LABELS: Record<SshConnectionStatus, string> = {
-  disconnected: 'SSH not connected',
-  connecting: 'Connecting SSH...',
-  'auth-failed': 'SSH authentication failed',
-  'deploying-relay': 'Preparing SSH connection...',
-  connected: 'Connected',
-  reconnecting: 'Reconnecting SSH...',
-  'reconnection-failed': 'SSH reconnection failed',
-  error: 'SSH connection error'
+  disconnected: 'SSH 연결 안 됨',
+  connecting: 'SSH 연결 중...',
+  'auth-failed': 'SSH 인증 실패',
+  'deploying-relay': 'SSH 연결을 준비하는 중...',
+  connected: '연결됨',
+  reconnecting: 'SSH 재연결 중...',
+  'reconnection-failed': 'SSH 재연결 실패',
+  error: 'SSH 연결 오류'
 }
 
 function SetupCommandPreview({
@@ -123,7 +123,7 @@ function SetupCommandPreview({
     <div className="rounded-2xl border border-border/60 bg-muted/35 px-4 py-3 shadow-inner">
       <div className="mb-2 flex items-center justify-between gap-3">
         <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-          {setupConfig.source === 'both' ? 'Combined setup command' : 'Local setup command'}
+          {setupConfig.source === 'both' ? '통합 설정 명령' : '로컬 설정 명령'}
         </div>
         {headerAction}
       </div>
@@ -673,8 +673,8 @@ export default function NewWorkspaceComposerCard({
                       {!setupDecision ? (
                         <div className="text-xs text-muted-foreground">
                           {shouldWaitForSetupCheck
-                            ? 'Checking setup configuration...'
-                            : 'Choose whether to run setup before creating this workspace.'}
+                            ? '설정 구성을 확인하는 중...'
+                            : '이 작업공간을 만들기 전에 설정을 실행할지 선택하세요.'}
                         </div>
                       ) : null}
                     </div>

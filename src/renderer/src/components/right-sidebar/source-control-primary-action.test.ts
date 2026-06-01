@@ -32,8 +32,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'commit',
-      label: 'Commit',
-      title: 'Commit in progress…',
+      label: '커밋',
+      title: '커밋 진행 중…',
       disabled: true
     })
   })
@@ -47,8 +47,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'pull',
-      label: 'Pull',
-      title: 'Remote operation in progress…',
+      label: '가져오기',
+      title: '원격 작업 진행 중…',
       disabled: true
     })
   })
@@ -69,8 +69,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'sync',
-      label: 'Sync',
-      title: 'Sync in progress…',
+      label: '동기화',
+      title: '동기화 진행 중…',
       disabled: true
     })
   })
@@ -84,8 +84,8 @@ describe('resolvePrimaryAction', () => {
       })
     )
     expect(result.kind).toBe('pull')
-    expect(result.label).toBe('Pull')
-    expect(result.title).toBe('Pull in progress…')
+    expect(result.label).toBe('가져오기')
+    expect(result.title).toBe('가져오기 진행 중…')
     expect(result.disabled).toBe(true)
   })
 
@@ -101,8 +101,8 @@ describe('resolvePrimaryAction', () => {
       })
     )
     expect(result.kind).toBe('publish')
-    expect(result.label).toBe('Publish Branch')
-    expect(result.title).toBe('Remote operation in progress…')
+    expect(result.label).toBe('브랜치 게시')
+    expect(result.title).toBe('원격 작업 진행 중…')
     expect(result.disabled).toBe(true)
   })
 
@@ -120,8 +120,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'push',
-      label: 'Push',
-      title: 'Remote operation in progress…',
+      label: '푸시',
+      title: '원격 작업 진행 중…',
       disabled: true
     })
   })
@@ -132,8 +132,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'commit',
-      label: 'Commit',
-      title: 'Resolve conflicts before committing',
+      label: '커밋',
+      title: '커밋하기 전에 충돌을 해결하세요',
       disabled: true
     })
   })
@@ -157,7 +157,7 @@ describe('resolvePrimaryAction', () => {
         inputs({ stagedCount: 1, hasMessage: true, upstreamStatus })
       )
       expect(result.kind).toBe('commit')
-      expect(result.label).toBe('Commit')
+      expect(result.label).toBe('커밋')
       expect(result.disabled).toBe(false)
     }
   })
@@ -166,8 +166,8 @@ describe('resolvePrimaryAction', () => {
     const result = resolvePrimaryAction(inputs({ stagedCount: 1, hasMessage: false }))
     expect(result).toEqual({
       kind: 'commit',
-      label: 'Commit',
-      title: 'Enter a commit message to commit',
+      label: '커밋',
+      title: '커밋하려면 커밋 메시지를 입력하세요',
       disabled: true
     })
   })
@@ -178,8 +178,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'publish',
-      label: 'Publish Branch',
-      title: 'Publish this branch to origin',
+      label: '브랜치 게시',
+      title: '이 브랜치를 origin에 게시',
       disabled: false
     })
   })
@@ -190,20 +190,20 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'commit',
-      label: 'Commit',
-      title: 'Nothing to commit. Branch has no changes to publish.',
+      label: '커밋',
+      title: '커밋할 내용이 없습니다. 브랜치에 게시할 변경 사항이 없습니다.',
       disabled: true
     })
   })
 
   it.each([
-    [{ prState: 'merged' as const }, 'Nothing to commit. PR is already merged.'],
-    [{ isPRStateLoading: true }, 'Checking PR status…']
+    [{ prState: 'merged' as const }, '커밋할 내용이 없습니다. PR이 이미 병합되었습니다.'],
+    [{ isPRStateLoading: true }, 'PR 상태 확인 중…']
   ])('does not offer Publish Branch when linked PR state blocks it', (overrides, title) => {
     const result = resolvePrimaryAction(
       inputs({ upstreamStatus: { hasUpstream: false, ahead: 0, behind: 0 }, ...overrides })
     )
-    expect(result).toEqual({ kind: 'commit', label: 'Commit', title, disabled: true })
+    expect(result).toEqual({ kind: 'commit', label: '커밋', title, disabled: true })
   })
 
   it('returns Sync when clean + tracked + diverged both ways', () => {
@@ -212,8 +212,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'sync',
-      label: 'Sync',
-      title: 'Pull 3, push 2',
+      label: '동기화',
+      title: '가져오기 3, 푸시 2',
       disabled: false
     })
   })
@@ -233,9 +233,9 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'push',
-      label: 'Force Push',
+      label: '강제 푸시',
       title:
-        'Remote only has older copies of local commits. Force push 4 branch commits with lease to update origin/feature.',
+        '원격에는 로컬 커밋의 더 오래된 복사본만 있습니다. 4개의 브랜치 커밋을 lease와 함께 강제 푸시하여 origin/feature를 업데이트하세요.',
       disabled: false
     })
   })
@@ -245,15 +245,15 @@ describe('resolvePrimaryAction', () => {
       inputs({ upstreamStatus: { hasUpstream: true, ahead: 0, behind: 4 } })
     )
     expect(result.kind).toBe('pull')
-    expect(result.label).toBe('Pull')
-    expect(result.title).toBe('Pull 4 commits')
+    expect(result.label).toBe('가져오기')
+    expect(result.title).toBe('가져오기 4개 커밋')
   })
 
   it('uses singular copy for a single-commit pull', () => {
     const result = resolvePrimaryAction(
       inputs({ upstreamStatus: { hasUpstream: true, ahead: 0, behind: 1 } })
     )
-    expect(result.title).toBe('Pull 1 commit')
+    expect(result.title).toBe('가져오기 1개 커밋')
   })
 
   it('returns Push when clean + ahead-only', () => {
@@ -262,8 +262,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'push',
-      label: 'Push',
-      title: 'Push 3 commits',
+      label: '푸시',
+      title: '푸시 3개 커밋',
       disabled: false
     })
   })
@@ -272,8 +272,8 @@ describe('resolvePrimaryAction', () => {
     const result = resolvePrimaryAction(inputs({ upstreamStatus: upstreamInSync }))
     expect(result).toEqual({
       kind: 'commit',
-      label: 'Commit',
-      title: 'Nothing to commit. Branch is up to date.',
+      label: '커밋',
+      title: '커밋할 내용이 없습니다. 브랜치가 최신입니다.',
       disabled: true
     })
   })
@@ -292,8 +292,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'stage',
-      label: 'Stage All',
-      title: 'Stage all changes',
+      label: '모두 스테이징',
+      title: '모든 변경 사항을 스테이징',
       disabled: false
     })
   })
@@ -306,7 +306,7 @@ describe('resolvePrimaryAction', () => {
       })
     )
     expect(result.kind).toBe('stage')
-    expect(result.label).toBe('Stage All')
+    expect(result.label).toBe('모두 스테이징')
     expect(result.disabled).toBe(false)
   })
 
@@ -339,7 +339,7 @@ describe('resolvePrimaryAction', () => {
       })
     )
     expect(result.kind).toBe('stage')
-    expect(result.label).toBe('Stage All')
+    expect(result.label).toBe('모두 스테이징')
     expect(result.disabled).toBe(false)
   })
 
@@ -363,7 +363,7 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result.kind).toBe('commit')
     expect(result.disabled).toBe(true)
-    expect(result.title).toBe('Enter a commit message to commit')
+    expect(result.title).toBe('커밋하려면 커밋 메시지를 입력하세요')
   })
 
   it('returns Stage All when unstaged changes exist on an in-sync branch', () => {
@@ -372,8 +372,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'stage',
-      label: 'Stage All',
-      title: 'Stage all changes',
+      label: '모두 스테이징',
+      title: '모든 변경 사항을 스테이징',
       disabled: false
     })
   })
@@ -382,8 +382,8 @@ describe('resolvePrimaryAction', () => {
     const result = resolvePrimaryAction(inputs())
     expect(result).toEqual({
       kind: 'commit',
-      label: 'Commit',
-      title: 'Stage at least one file to commit',
+      label: '커밋',
+      title: '커밋하려면 파일 하나 이상을 스테이징하세요',
       disabled: true
     })
   })
@@ -403,8 +403,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'create_pr',
-      label: 'Create PR',
-      title: 'Create a pull request for this branch',
+      label: 'PR 생성',
+      title: '이 브랜치에 대한 풀 리퀘스트를 생성',
       disabled: false
     })
   })
@@ -424,8 +424,8 @@ describe('resolvePrimaryAction', () => {
     )
     expect(result).toEqual({
       kind: 'create_pr',
-      label: 'Create MR',
-      title: 'Create a merge request for this branch',
+      label: 'MR 생성',
+      title: '이 브랜치에 대한 병합 요청을 생성',
       disabled: false
     })
   })

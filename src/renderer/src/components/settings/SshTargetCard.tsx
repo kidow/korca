@@ -21,14 +21,14 @@ import { isSshTargetConnecting, type SshTargetBusyAction } from './ssh-target-ac
 // ── Shared status helpers ────────────────────────────────────────────
 
 export const STATUS_LABELS: Record<SshConnectionStatus, string> = {
-  disconnected: 'Disconnected',
-  connecting: 'Connecting\u2026',
-  'auth-failed': 'Auth failed',
-  'deploying-relay': 'Deploying relay\u2026',
-  connected: 'Connected',
-  reconnecting: 'Reconnecting\u2026',
-  'reconnection-failed': 'Reconnection failed',
-  error: 'Error'
+  disconnected: '연결 끊김',
+  connecting: '연결 중…',
+  'auth-failed': '인증 실패',
+  'deploying-relay': '릴레이 배포 중…',
+  connected: '연결됨',
+  reconnecting: '재연결 중…',
+  'reconnection-failed': '재연결 실패',
+  error: '오류'
 }
 
 export function statusColor(status: SshConnectionStatus): string {

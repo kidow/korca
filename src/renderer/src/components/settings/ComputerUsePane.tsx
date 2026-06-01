@@ -41,14 +41,14 @@ type PermissionDefinition = {
 const PERMISSIONS: PermissionDefinition[] = [
   {
     id: 'accessibility',
-    label: 'Accessibility',
-    description: 'Read app interface trees and perform requested actions.',
+    label: '접근성',
+    description: '앱 인터페이스 트리를 읽고 요청한 동작을 수행합니다.',
     icon: <Accessibility className="size-4" />
   },
   {
     id: 'screenshots',
-    label: 'Screenshots',
-    description: 'Capture app windows so agents can inspect visual state.',
+    label: '스크린샷',
+    description: '앱 창을 캡처해 에이전트가 시각 상태를 살펴볼 수 있게 합니다.',
     icon: <Camera className="size-4" />
   }
 ]
@@ -56,12 +56,12 @@ const PERMISSIONS: PermissionDefinition[] = [
 function statusLabel(status: ComputerUsePermissionStatus | undefined): string {
   switch (status) {
     case 'granted':
-      return 'Granted'
+      return '허용됨'
     case 'unsupported':
-      return 'macOS only'
+      return 'macOS 전용'
     case 'not-granted':
     case undefined:
-      return 'Not enabled'
+      return '사용 안 함'
   }
 }
 
@@ -105,21 +105,19 @@ export function ComputerUsePane(): React.JSX.Element {
   const resetAccessDisabled =
     resetting || loading || states.length === 0 || pendingId !== null || setupUnavailable
   const summaryTitle = checking
-    ? 'Checking Computer Use access.'
+    ? 'Computer Use 접근 권한을 확인하는 중입니다.'
     : setupUnavailable
-      ? 'Computer Use is unavailable.'
+      ? 'Computer Use를 사용할 수 없습니다.'
       : allGranted
-        ? 'Computer Use is ready.'
-        : 'Finish setup to use local apps.'
+        ? 'Computer Use를 사용할 준비가 됐습니다.'
+        : '로컬 앱을 사용하려면 설정을 완료하세요.'
   const summaryDescription = checking
-    ? 'Orca is checking macOS privacy permissions for the Computer Use helper.'
+    ? 'Orca가 Computer Use 도우미의 macOS 개인정보 보호 권한을 확인하고 있습니다.'
     : setupUnavailable
-      ? `Computer Use permissions are unavailable because ${helperUnavailableReason}.`
+      ? `Computer Use 권한을 사용할 수 없는 이유: ${helperUnavailableReason}.`
       : allGranted
-        ? 'Agents can inspect and operate app windows when you ask.'
-        : `${PERMISSIONS.length - grantedCount} permission${
-            PERMISSIONS.length - grantedCount === 1 ? '' : 's'
-          } required before agents can operate app windows.`
+        ? '요청하면 에이전트가 앱 창을 살펴보고 조작할 수 있습니다.'
+        : `에이전트가 앱 창을 조작하려면 권한 ${PERMISSIONS.length - grantedCount}개가 더 필요합니다.`
 
   useEffect(() => {
     mountedRef.current = true
@@ -152,7 +150,7 @@ export function ComputerUsePane(): React.JSX.Element {
         return
       }
       toast.error(
-        error instanceof Error ? error.message : 'Could not load Computer Use permissions'
+        error instanceof Error ? error.message : 'Computer Use 권한을 불러오지 못했습니다'
       )
     } finally {
       if (operationId === permissionOperationSequence.current && mountedRef.current) {
@@ -184,18 +182,18 @@ export function ComputerUsePane(): React.JSX.Element {
         return
       }
       if (result.launchedHelper) {
-        toast.message('Opened macOS Privacy & Security')
+        toast.message('macOS 개인정보 보호 및 보안을 열었습니다')
       } else {
         toast.message(
           result.platform === 'darwin'
-            ? 'Computer Use setup is already complete'
-            : 'Computer Use permissions are only required on macOS'
+            ? 'Computer Use 설정이 이미 완료되었습니다'
+            : 'Computer Use 권한은 macOS에서만 필요합니다'
         )
       }
     } catch (error) {
       if (mountedRef.current) {
         toast.error(
-          error instanceof Error ? error.message : 'Could not open Computer Use permissions'
+          error instanceof Error ? error.message : 'Computer Use 권한을 열지 못했습니다'
         )
       }
     } finally {
@@ -224,13 +222,13 @@ export function ComputerUsePane(): React.JSX.Element {
       setPlatform(result.platform)
       setStates(result.permissions)
       setHelperUnavailableReason(result.helperUnavailableReason)
-      toast.message('Reset Computer Use access')
+      toast.message('Computer Use 접근 권한을 초기화했습니다')
     } catch (error) {
       if (operationId !== permissionOperationSequence.current || !mountedRef.current) {
         return
       }
       toast.error(
-        error instanceof Error ? error.message : 'Could not reset Computer Use permissions'
+        error instanceof Error ? error.message : 'Computer Use 권한을 초기화하지 못했습니다'
       )
     } finally {
       if (operationId === permissionOperationSequence.current && mountedRef.current) {
@@ -257,7 +255,7 @@ export function ComputerUsePane(): React.JSX.Element {
                     variant="outline"
                     className="border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
                   >
-                    Ready
+                    준비됨
                   </Badge>
                 ) : null}
               </div>
@@ -271,7 +269,7 @@ export function ComputerUsePane(): React.JSX.Element {
               onClick={() => void refresh()}
             >
               <RefreshCw className={`size-3.5 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
+              새로고침
             </Button>
           </div>
 
@@ -316,7 +314,7 @@ export function ComputerUsePane(): React.JSX.Element {
                         className="gap-1.5"
                       >
                         <ExternalLink className="size-3.5" />
-                        Open
+                        열기
                       </Button>
                     </div>
                   </div>
@@ -329,18 +327,18 @@ export function ComputerUsePane(): React.JSX.Element {
               onClick={() => void resetAccess()}
               className="ml-auto mr-4 block w-28 text-right text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
             >
-              {resetting ? 'Resetting access...' : 'Reset access'}
+              {resetting ? '권한 초기화 중...' : '권한 초기화'}
             </button>
           </div>
         </>
       ) : null}
 
       <AgentSkillSetupPanel
-        title="Computer Use skill"
-        description="Enables agents to inspect and operate local desktop apps."
+        title="Computer Use 스킬"
+        description="에이전트가 로컬 데스크톱 앱을 살펴보고 조작할 수 있게 합니다."
         command={COMPUTER_USE_SKILL_INSTALL_COMMAND}
-        terminalTitle="Computer Use setup"
-        terminalAriaLabel="Computer Use skill install terminal"
+        terminalTitle="Computer Use 설정"
+        terminalAriaLabel="Computer Use 스킬 설치 터미널"
         terminalWorktreeId="settings-computer-use-skill-terminal"
         installed={computerUseSkillDetected}
         loading={computerUseSkillLoading}

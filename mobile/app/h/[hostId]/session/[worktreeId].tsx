@@ -356,8 +356,8 @@ type MobileDisplayMode = 'auto' | 'phone' | 'desktop'
 const STATUS_LABELS: Record<ConnectionState, string> = {
   connecting: 'Connecting',
   handshaking: 'Securing',
-  connected: 'Connected',
-  disconnected: 'Disconnected',
+  connected: '연결됨',
+  disconnected: '연결 끊김',
   reconnecting: 'Reconnecting',
   'auth-failed': 'Auth failed'
 }

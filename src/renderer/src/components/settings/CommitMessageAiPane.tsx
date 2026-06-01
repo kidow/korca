@@ -831,25 +831,25 @@ export function CommitMessageAiPane({
 
   if (
     matchesSettingsSearch(searchQuery, {
-      title: 'Enable Source Control AI',
+      title: '소스 컨트롤 AI 사용',
       description:
-        'Adds AI generation to Source Control commit, pull request, and branch-name flows.',
+        '소스 컨트롤의 커밋, 풀 리퀘스트, 브랜치 이름 흐름에 AI 생성을 추가합니다.',
       keywords: ['ai', 'commit', 'message', 'generate', 'agent', 'enabled']
     })
   ) {
     sections.push(
       <SearchableSetting
         key="enabled"
-        title="Enable Source Control AI"
-        description="Adds AI generation to Source Control commit, pull request, and branch-name flows."
+        title="소스 컨트롤 AI 사용"
+        description="소스 컨트롤의 커밋, 풀 리퀘스트, 브랜치 이름 흐름에 AI 생성을 추가합니다."
         keywords={['ai', 'commit', 'message', 'generate', 'agent', 'enabled']}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Enable Source Control AI</Label>
+          <Label>소스 컨트롤 AI 사용</Label>
           <p className="text-xs text-muted-foreground">
-            Adds Generate controls for commit messages and pull request details. Runs the selected
-            agent CLI where the worktree is hosted.
+            커밋 메시지와 풀 리퀘스트 세부 정보에 생성 버튼을 추가합니다. 워크트리가 있는
+            위치에서 선택한 에이전트 CLI를 실행합니다.
           </p>
         </div>
         <button
@@ -873,31 +873,31 @@ export function CommitMessageAiPane({
   if (
     config.enabled &&
     matchesSettingsSearch(searchQuery, {
-      title: 'Agent',
-      description: 'Which agent to invoke for Source Control text generation.',
+      title: '에이전트',
+      description: '소스 컨트롤 텍스트 생성을 위해 호출할 에이전트입니다.',
       keywords: ['agent', 'claude', 'codex', 'opencode', 'gemini', 'cursor']
     })
   ) {
     sections.push(
       <SearchableSetting
         key="agent"
-        title="Agent"
-        description="Which agent to invoke for Source Control text generation."
+        title="에이전트"
+        description="소스 컨트롤 텍스트 생성을 위해 호출할 에이전트입니다."
         keywords={['agent', 'claude', 'codex', 'opencode', 'gemini', 'cursor']}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Agent</Label>
+          <Label>에이전트</Label>
           <p className="text-xs text-muted-foreground">
-            Orca invokes this CLI in the background for commit messages and pull request details. It
-            must be installed where the worktree is hosted - your computer for local worktrees, or
-            the SSH host for remote ones.
+            Orca는 이 CLI를 백그라운드에서 실행해 커밋 메시지와 풀 리퀘스트 세부 정보를
+            생성합니다. 워크트리가 있는 위치에 설치되어 있어야 합니다. 로컬 워크트리는
+            내 컴퓨터, 원격 워크트리는 SSH 호스트여야 합니다.
           </p>
         </div>
         <div className="flex flex-col items-end gap-1">
           <Select value={activeAgentSelectValue} onValueChange={onAgentChange}>
             <SelectTrigger size="sm" className="h-8 w-[260px] shrink-0 text-xs">
-              <SelectValue placeholder="Not configured" />
+            <SelectValue placeholder="미설정" />
             </SelectTrigger>
             <SelectContent>
               {agentCapabilities.map((capability) => {
@@ -918,30 +918,30 @@ export function CommitMessageAiPane({
                   <span className="flex items-center gap-2">
                     <AgentIcon agent={agent.id} size={14} />
                     <span>{agent.label}</span>
-                    <span className="text-[11px] text-muted-foreground">Coming soon</span>
+                    <span className="text-[11px] text-muted-foreground">출시 예정</span>
                   </span>
                 </SelectItem>
               ))}
               <SelectItem value={CUSTOM_AGENT_ID} className="cursor-pointer">
                 <span className="flex items-center gap-2">
                   <Terminal className="size-3.5" />
-                  <span>Custom</span>
+                  <span>사용자 지정</span>
                 </span>
               </SelectItem>
             </SelectContent>
           </Select>
           {unsupportedDefaultAgentLabel ? (
             <p className="max-w-[260px] text-right text-[11px] text-muted-foreground">
-              Your default agent is {unsupportedDefaultAgentLabel}, which does not support Source
-              Control AI yet. Choose a supported agent or Custom.
+              기본 에이전트가 {unsupportedDefaultAgentLabel}이며, 아직 소스 컨트롤 AI를
+              지원하지 않습니다. 지원되는 에이전트나 사용자 지정을 선택하세요.
             </p>
           ) : null}
           {unsupportedSelectedAgentLabel ? (
             <p className="max-w-[260px] text-right text-[11px] text-muted-foreground">
               {unsupportedSelectedAgentIsComingSoon
-                ? `${unsupportedSelectedAgentLabel} Source Control AI is coming soon.`
-                : `${unsupportedSelectedAgentLabel} does not support Source Control AI yet.`}{' '}
-              Choose a supported agent or Custom.
+                ? `${unsupportedSelectedAgentLabel}의 소스 컨트롤 AI는 곧 지원됩니다.`
+                : `${unsupportedSelectedAgentLabel}은 아직 소스 컨트롤 AI를 지원하지 않습니다.`}{' '}
+              지원되는 에이전트나 사용자 지정을 선택하세요.
             </p>
           ) : null}
         </div>
@@ -953,32 +953,32 @@ export function CommitMessageAiPane({
     config.enabled &&
     isCustom &&
     matchesSettingsSearch(searchQuery, {
-      title: 'Custom command',
-      description: 'Command line Orca runs to generate source-control text.',
+      title: '사용자 지정 명령',
+      description: '소스 컨트롤 텍스트 생성을 위해 Orca가 실행하는 명령행입니다.',
       keywords: ['custom', 'command', 'cli', 'binary', 'prompt', 'placeholder']
     })
   ) {
     sections.push(
       <SearchableSetting
         key="custom-command"
-        title="Custom command"
-        description="Command line Orca runs to generate source-control text."
+        title="사용자 지정 명령"
+        description="소스 컨트롤 텍스트 생성을 위해 Orca가 실행하는 명령행입니다."
         keywords={['custom', 'command', 'cli', 'binary', 'prompt', 'placeholder']}
         className="space-y-2 py-2"
       >
         <div className="space-y-0.5">
-          <Label htmlFor="commit-message-ai-custom-command">Custom command</Label>
+          <Label htmlFor="commit-message-ai-custom-command">사용자 지정 명령</Label>
           <p className="text-xs text-muted-foreground">
-            Use{' '}
+            프롬프트를 대체할 위치에{' '}
             <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">
               {CUSTOM_PROMPT_PLACEHOLDER}
-            </code>{' '}
-            where the prompt should be substituted (passed as a single argument). Omit it and the
-            prompt is piped via stdin instead - useful for CLIs like{' '}
-            <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">claude -p</code>. Quoting
-            is for grouping arguments only; we never invoke a shell, so{' '}
-            <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">$VAR</code> and backticks
-            are not expanded.
+            </code>
+            를 사용하세요. 프롬프트는 하나의 인자로 전달됩니다. 이 값을 빼면 프롬프트는
+            stdin으로 전달됩니다.{' '}
+            <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">claude -p</code> 같은
+            CLI에 유용합니다. 따옴표는 인자 묶기 용도일 뿐이며, 셸을 실행하지 않으므로{' '}
+            <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">$VAR</code>와 백틱은
+            확장되지 않습니다.
           </p>
         </div>
         <input
@@ -1001,25 +1001,25 @@ export function CommitMessageAiPane({
     activeCapability &&
     activeModel &&
     matchesSettingsSearch(searchQuery, {
-      title: 'Default model',
-      description: 'Which model Source Control AI uses unless an operation override exists.',
+      title: '기본 모델',
+      description: '작업별 재정의가 없을 때 소스 컨트롤 AI가 사용하는 모델입니다.',
       keywords: ['model', 'haiku', 'sonnet', 'opus', 'gpt']
     })
   ) {
     sections.push(
       <SearchableSetting
         key="model"
-        title="Default model"
-        description="Which model Source Control AI uses unless an operation override exists."
+        title="기본 모델"
+        description="작업별 재정의가 없을 때 소스 컨트롤 AI가 사용하는 모델입니다."
         keywords={['model', 'haiku', 'sonnet', 'opus', 'gpt']}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Default model</Label>
+          <Label>기본 모델</Label>
           <p className="text-xs text-muted-foreground">
             {activeCapability.modelSource === 'dynamic'
-              ? 'Refreshes from the selected CLI when the CLI exposes model discovery.'
-              : 'This agent does not expose model discovery, so Orca uses a manual catalog.'}
+              ? '선택한 CLI가 모델 탐색을 지원하면 그 목록을 새로고침합니다.'
+              : '이 에이전트는 모델 탐색을 제공하지 않으므로 Orca는 수동 카탈로그를 사용합니다.'}
           </p>
           {activeDiscovery?.status === 'error' && (
             <p className="text-xs text-destructive">{activeDiscovery.error}</p>
@@ -1031,8 +1031,8 @@ export function CommitMessageAiPane({
               type="button"
               onClick={() => void refreshModels(activeCapability.id)}
               disabled={activeDiscovery?.status === 'loading'}
-              title="Refresh models"
-              aria-label="Refresh models"
+              title="모델 새로고침"
+              aria-label="모델 새로고침"
               className="inline-flex size-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
               <RefreshCw
@@ -1062,23 +1062,23 @@ export function CommitMessageAiPane({
     activeModel?.thinkingLevels &&
     activeThinking &&
     matchesSettingsSearch(searchQuery, {
-      title: 'Thinking effort',
-      description: 'Reasoning effort level for the selected model. Higher levels are slower.',
+      title: '추론 강도',
+      description: '선택한 모델의 추론 강도입니다. 값이 높을수록 느립니다.',
       keywords: ['thinking', 'effort', 'reasoning']
     })
   ) {
     sections.push(
       <SearchableSetting
         key="thinking"
-        title="Thinking effort"
-        description="Reasoning effort level for the selected model. Higher levels are slower."
+        title="추론 강도"
+        description="선택한 모델의 추론 강도입니다. 값이 높을수록 느립니다."
         keywords={['thinking', 'effort', 'reasoning']}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Thinking effort</Label>
+          <Label>추론 강도</Label>
           <p className="text-xs text-muted-foreground">
-            Higher effort produces more careful messages but takes longer and costs more tokens.
+            강도가 높을수록 더 신중한 결과를 얻지만 시간이 더 걸리고 토큰도 더 사용합니다.
           </p>
         </div>
         <Select value={activeThinking} onValueChange={onThinkingChange}>
@@ -1102,9 +1102,9 @@ export function CommitMessageAiPane({
     activeCapability &&
     activeModel &&
     matchesSettingsSearch(searchQuery, {
-      title: 'Advanced model overrides',
-      description: 'Optional per-operation model choices for commit messages and PR details.',
-      keywords: ['model', 'override', 'commit', 'pull request', 'pr', 'thinking']
+      title: '고급 모델 재정의',
+      description: '커밋 메시지와 PR 세부 정보에 대해 작업별로 다른 모델을 선택할 수 있습니다.',
+      keywords: ['모델', '재정의', '커밋', '풀 리퀘스트', 'PR', '추론']
     })
   ) {
     const operationRows: {
@@ -1114,28 +1114,27 @@ export function CommitMessageAiPane({
     }[] = [
       {
         operation: 'commitMessage',
-        label: 'Commit message model',
-        description: 'Use a different model for commit message generation.'
+        label: '커밋 메시지 모델',
+        description: '커밋 메시지 생성에 다른 모델을 사용합니다.'
       },
       {
         operation: 'pullRequest',
-        label: 'PR details model',
-        description: 'Use a different model for pull request title and description generation.'
+        label: 'PR 세부 정보 모델',
+        description: '풀 리퀘스트 제목과 설명 생성에 다른 모델을 사용합니다.'
       }
     ]
     sections.push(
       <SearchableSetting
         key="model-overrides"
-        title="Advanced model overrides"
-        description="Optional per-operation model choices for commit messages and PR details."
-        keywords={['model', 'override', 'commit', 'pull request', 'pr', 'thinking']}
+        title="고급 모델 재정의"
+        description="커밋 메시지와 PR 세부 정보에 대해 작업별로 다른 모델을 선택할 수 있습니다."
+        keywords={['모델', '재정의', '커밋', '풀 리퀘스트', 'PR', '추론']}
         className="space-y-3 px-1 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Advanced model overrides</Label>
+          <Label>고급 모델 재정의</Label>
           <p className="text-xs text-muted-foreground">
-            Leave these inherited unless commit messages or PR details need different model
-            behavior.
+            커밋 메시지나 PR 세부 정보에 다른 모델 동작이 필요할 때만 변경하세요.
           </p>
         </div>
         <div className="space-y-3">
@@ -1174,7 +1173,7 @@ export function CommitMessageAiPane({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={INHERIT_MODEL_SELECT_VALUE} className="cursor-pointer">
-                        Use default model
+                        기본 모델 사용
                       </SelectItem>
                       {activeCapability.models.map((model) => (
                         <SelectItem key={model.id} value={model.id} className="cursor-pointer">
@@ -1186,7 +1185,7 @@ export function CommitMessageAiPane({
                 </div>
                 {selectedModel?.thinkingLevels && selectedThinking ? (
                   <div className="flex items-center justify-end gap-2">
-                    <span className="text-[11px] text-muted-foreground">Thinking</span>
+                    <span className="text-[11px] text-muted-foreground">추론</span>
                     <Select
                       value={selectedThinking}
                       onValueChange={(value) =>
@@ -1218,25 +1217,25 @@ export function CommitMessageAiPane({
     (config.enabled || isCommitPromptDirty) &&
     (isCommitPromptDirty ||
       matchesSettingsSearch(searchQuery, {
-        title: 'Commit message prompt',
-        description: 'Additional prompt text appended only when generating commit messages.',
-        keywords: ['prompt', 'conventional commits', 'gitmoji', 'style']
+        title: '커밋 메시지 프롬프트',
+        description: '커밋 메시지를 생성할 때만 추가되는 프롬프트 텍스트입니다.',
+        keywords: ['프롬프트', 'Conventional Commits', 'gitmoji', '스타일']
       }))
   ) {
     sections.push(
       <SearchableSetting
         key="commit-prompt"
-        title="Commit message prompt"
-        description="Additional prompt text appended only when generating commit messages."
-        keywords={['prompt', 'conventional commits', 'gitmoji', 'style']}
+        title="커밋 메시지 프롬프트"
+        description="커밋 메시지를 생성할 때만 추가되는 프롬프트 텍스트입니다."
+        keywords={['프롬프트', 'Conventional Commits', 'gitmoji', '스타일']}
         forceVisible={isCommitPromptDirty}
         className="space-y-2 px-1 py-2"
       >
         <div className="space-y-0.5">
-          <Label htmlFor="source-control-ai-commit-prompt">Commit message prompt</Label>
+          <Label htmlFor="source-control-ai-commit-prompt">커밋 메시지 프롬프트</Label>
           <p className="text-xs text-muted-foreground">
-            This prompt is appended only when generating commit messages. Use it for Conventional
-            Commits, ticket prefixes, or any other commit style your team prefers.
+            이 프롬프트는 커밋 메시지를 생성할 때만 추가됩니다. Conventional Commits,
+            티켓 접두사, 팀이 선호하는 다른 커밋 스타일에 사용할 수 있습니다.
           </p>
         </div>
         <textarea
@@ -1244,12 +1243,12 @@ export function CommitMessageAiPane({
           rows={4}
           value={commitPromptDraft}
           onChange={(e) => updateInstructionDraft('commitMessage', e.target.value)}
-          placeholder="Use Conventional Commits format (feat:, fix:, ...). Reference the ticket key when present."
+          placeholder="Conventional Commits 형식(feat:, fix:, ...)을 사용하세요. 있으면 티켓 키를 적으세요."
           className="w-full resize-y rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-ring"
         />
         <div className="flex items-center justify-between gap-3">
           <p className="text-[11px] text-muted-foreground">
-            {isCommitPromptDirty ? 'Unsaved changes' : 'Saved'}
+            {isCommitPromptDirty ? '저장되지 않은 변경 사항' : '저장됨'}
           </p>
           <div className="flex items-center gap-2">
             {isCommitPromptDirty ? (
@@ -1260,7 +1259,7 @@ export function CommitMessageAiPane({
                 onClick={() => onDiscardPrompt('commitMessage')}
                 disabled={isSavingPrompt}
               >
-                Discard
+                변경 취소
               </Button>
             ) : null}
             <Button
@@ -1270,7 +1269,7 @@ export function CommitMessageAiPane({
               onClick={() => void onSavePrompt('commitMessage')}
               disabled={!isCommitPromptDirty || isSavingPrompt}
             >
-              {isSavingPrompt ? 'Saving...' : 'Save'}
+              {isSavingPrompt ? '저장 중...' : '저장'}
             </Button>
           </div>
         </div>
@@ -1282,25 +1281,25 @@ export function CommitMessageAiPane({
     (config.enabled || isPullRequestPromptDirty) &&
     (isPullRequestPromptDirty ||
       matchesSettingsSearch(searchQuery, {
-        title: 'Pull request prompt',
-        description: 'Additional prompt text appended only when generating pull request details.',
-        keywords: ['prompt', 'pull request', 'pr', 'description', 'template']
+        title: '풀 리퀘스트 프롬프트',
+        description: '풀 리퀘스트 세부 정보를 생성할 때만 추가되는 프롬프트 텍스트입니다.',
+        keywords: ['프롬프트', '풀 리퀘스트', 'PR', '설명', '템플릿']
       }))
   ) {
     sections.push(
       <SearchableSetting
         key="pull-request-prompt"
-        title="Pull request prompt"
-        description="Additional prompt text appended only when generating pull request details."
-        keywords={['prompt', 'pull request', 'pr', 'description', 'template']}
+        title="풀 리퀘스트 프롬프트"
+        description="풀 리퀘스트 세부 정보를 생성할 때만 추가되는 프롬프트 텍스트입니다."
+        keywords={['프롬프트', '풀 리퀘스트', 'PR', '설명', '템플릿']}
         forceVisible={isPullRequestPromptDirty}
         className="space-y-2 px-1 py-2"
       >
         <div className="space-y-0.5">
-          <Label htmlFor="source-control-ai-pr-prompt">Pull request prompt</Label>
+          <Label htmlFor="source-control-ai-pr-prompt">풀 리퀘스트 프롬프트</Label>
           <p className="text-xs text-muted-foreground">
-            This prompt is appended only when generating pull request titles, descriptions, draft
-            state, and base suggestions. It never affects commit messages.
+            이 프롬프트는 풀 리퀘스트 제목, 설명, 초안 상태, 기준 브랜치 제안을 생성할 때만
+            추가됩니다. 커밋 메시지에는 영향을 주지 않습니다.
           </p>
         </div>
         <textarea
@@ -1308,12 +1307,12 @@ export function CommitMessageAiPane({
           rows={4}
           value={pullRequestPromptDraft}
           onChange={(e) => updateInstructionDraft('pullRequest', e.target.value)}
-          placeholder="Summarize user-visible changes first, then list reviewer notes and testing evidence."
+          placeholder="사용자에게 보이는 변경 사항을 먼저 요약하고, 검토자 메모와 테스트 증거를 적으세요."
           className="w-full resize-y rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-ring"
         />
         <div className="flex items-center justify-between gap-3">
           <p className="text-[11px] text-muted-foreground">
-            {isPullRequestPromptDirty ? 'Unsaved changes' : 'Saved'}
+            {isPullRequestPromptDirty ? '저장되지 않은 변경 사항' : '저장됨'}
           </p>
           <div className="flex items-center gap-2">
             {isPullRequestPromptDirty ? (
@@ -1324,7 +1323,7 @@ export function CommitMessageAiPane({
                 onClick={() => onDiscardPrompt('pullRequest')}
                 disabled={isSavingPrompt}
               >
-                Discard
+                변경 취소
               </Button>
             ) : null}
             <Button
@@ -1334,7 +1333,7 @@ export function CommitMessageAiPane({
               onClick={() => void onSavePrompt('pullRequest')}
               disabled={!isPullRequestPromptDirty || isSavingPrompt}
             >
-              {isSavingPrompt ? 'Saving...' : 'Save'}
+              {isSavingPrompt ? '저장 중...' : '저장'}
             </Button>
           </div>
         </div>
@@ -1345,9 +1344,9 @@ export function CommitMessageAiPane({
   if (
     config.enabled &&
     matchesSettingsSearch(searchQuery, {
-      title: 'PR creation defaults',
-      description: 'Defaults used when the Create PR composer opens.',
-      keywords: ['pull request', 'pr', 'draft', 'template', 'generate', 'open']
+      title: 'PR 생성 기본값',
+      description: 'PR 작성 화면이 열릴 때 적용되는 기본값입니다.',
+      keywords: ['풀 리퀘스트', 'PR', '초안', '템플릿', '생성', '열기']
     })
   ) {
     const prDefaults = config.prCreationDefaults ?? {}
@@ -1358,38 +1357,38 @@ export function CommitMessageAiPane({
     }[] = [
       {
         key: 'draft',
-        label: 'Draft by default',
-        description: 'Start new pull requests as drafts.'
+        label: '기본으로 초안',
+        description: '새 풀 리퀘스트를 초안으로 시작합니다.'
       },
       {
         key: 'useTemplate',
-        label: 'Use PR template when available',
-        description: 'Prefer repository pull request templates when no description is set.'
+        label: '사용 가능할 때 PR 템플릿 사용',
+        description: '설명이 없을 때 저장소의 풀 리퀘스트 템플릿을 우선 사용합니다.'
       },
       {
         key: 'generateDetailsOnOpen',
-        label: 'Generate details when opening Create PR',
-        description: 'Run pull-request detail generation once when the composer opens.'
+        label: 'PR 열 때 세부 정보 생성',
+        description: '작성 화면이 열릴 때 한 번 풀 리퀘스트 세부 정보를 생성합니다.'
       },
       {
         key: 'openAfterCreate',
-        label: 'Open PR after creation',
-        description: 'Open the created hosted review in your browser after submit.'
+        label: '생성 후 PR 열기',
+        description: '제출 후 생성된 호스티드 리뷰를 브라우저에서 엽니다.'
       }
     ]
     sections.push(
       <SearchableSetting
         key="pr-creation-defaults"
-        title="PR creation defaults"
-        description="Defaults used when the Create PR composer opens."
-        keywords={['pull request', 'pr', 'draft', 'template', 'generate', 'open']}
+        title="PR 생성 기본값"
+        description="PR 작성 화면이 열릴 때 적용되는 기본값입니다."
+        keywords={['풀 리퀘스트', 'PR', '초안', '템플릿', '생성', '열기']}
         className="space-y-3 px-1 py-2"
       >
         <div className="space-y-0.5">
-          <Label>PR creation defaults</Label>
+          <Label>PR 생성 기본값</Label>
           <p className="text-xs text-muted-foreground">
-            Provider-neutral defaults for the Create PR composer. Repo settings can override each
-            field independently.
+            제공자에 관계없는 PR 작성 화면의 기본값입니다. 저장소 설정에서 각 항목을 개별로
+            덮어쓸 수 있습니다.
           </p>
         </div>
         <div className="space-y-2">
@@ -1432,9 +1431,9 @@ export function CommitMessageAiPane({
       className="space-y-4 border-t border-border/40 pt-4"
     >
       <div className="space-y-0.5">
-        <h3 className="text-sm font-semibold">Source Control AI</h3>
+        <h3 className="text-sm font-semibold">소스 컨트롤 AI</h3>
         <p className="text-xs text-muted-foreground">
-          Generate commit messages and pull request details using one background agent CLI.
+          하나의 백그라운드 에이전트 CLI로 커밋 메시지와 풀 리퀘스트 세부 정보를 생성합니다.
         </p>
       </div>
       {sections}

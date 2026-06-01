@@ -22,23 +22,23 @@ type FeatureSetupRow = {
 const FEATURE_SETUP_ROWS: readonly FeatureSetupRow[] = [
   {
     id: 'browserUse',
-    title: 'Agent Browser Use',
-    description: 'Agents can navigate sites, inspect pages, and work through browser tasks.',
-    setupSummary: 'Enables browser use, prepares orca-cli, and leaves cookies for Settings.',
+    title: '에이전트 브라우저 사용',
+    description: '에이전트가 사이트를 탐색하고, 페이지를 살피고, 브라우저 작업을 처리할 수 있습니다.',
+    setupSummary: '브라우저 사용을 켜고, orca-cli를 준비하며, 설정용 쿠키를 남깁니다.',
     icon: <Globe2 className="size-4" />
   },
   {
     id: 'computerUse',
-    title: 'Computer Use',
-    description: 'Agents can inspect app windows and operate local apps when you ask.',
-    setupSummary: 'Registers the Orca CLI, opens permissions, and prepares the skill.',
+    title: '컴퓨터 사용',
+    description: '에이전트가 앱 창을 살펴보고, 요청하면 로컬 앱을 조작할 수 있습니다.',
+    setupSummary: 'Orca CLI를 등록하고, 권한을 열고, 스킬을 준비합니다.',
     icon: <MonitorCog className="size-4" />
   },
   {
     id: 'orchestration',
-    title: 'Agent Orchestration',
-    description: 'Agents can message each other, take tasks, and coordinate handoffs.',
-    setupSummary: 'Registers the Orca CLI, enables orchestration, and prepares the skill.',
+    title: '에이전트 조정',
+    description: '에이전트끼리 메시지를 주고받고, 작업을 맡고, 인수인계를 조율할 수 있습니다.',
+    setupSummary: 'Orca CLI를 등록하고, 조정을 켜고, 스킬을 준비합니다.',
     icon: <Workflow className="size-4" />
   }
 ]

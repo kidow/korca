@@ -56,33 +56,33 @@ function overallDotColor(status: 'connected' | 'partial' | 'disconnected' | 'con
 function overallLabel(status: 'connected' | 'partial' | 'disconnected' | 'connecting'): string {
   switch (status) {
     case 'connected':
-      return 'Connected'
+      return '연결됨'
     case 'partial':
-      return 'Partial'
+      return '부분 연결'
     case 'connecting':
-      return 'Connecting…'
+      return '연결 중…'
     case 'disconnected':
-      return 'Disconnected'
+      return '연결 끊김'
   }
 }
 
 function syncStatusLabel(status: RemoteWorkspaceSyncStatus | undefined): string {
   switch (status?.phase) {
     case 'pulling':
-      return 'Sync pulling'
+      return '동기화 가져오는 중'
     case 'pushing':
-      return 'Sync pushing'
+      return '동기화 푸시 중'
     case 'synced':
-      return status.direction === 'pull' ? 'Sync pulled' : 'Sync uploaded'
+      return status.direction === 'pull' ? '동기화 가져옴' : '동기화 업로드됨'
     case 'conflict':
-      return 'Sync conflict'
+      return '동기화 충돌'
     case 'error':
-      return 'Sync error'
+      return '동기화 오류'
     case 'offline':
-      return 'Sync unavailable'
+      return '동기화 사용할 수 없음'
     case 'idle':
     case undefined:
-      return 'Sync idle'
+      return '동기화 대기'
   }
 }
 

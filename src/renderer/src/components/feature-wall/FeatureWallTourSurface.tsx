@@ -57,8 +57,8 @@ export function FeatureWallTourSurface({
   onDone,
   className,
   panelClassName,
-  doneLabel = 'Done',
-  footerText = 'Reopen any time from Help > Explore Orca.',
+  doneLabel = '완료',
+  footerText = '도움말 > Orca 둘러보기에서 언제든 다시 열 수 있습니다.',
   enableKeyboardShortcut = true,
   compactRail = false,
   detachedFooter = false,
@@ -290,7 +290,7 @@ export function FeatureWallTourSurface({
         : workbenchStepIndex < workbenchSteps.length - 1)) ||
     (selected.id === 'review' &&
       (reviewStepIndex < 0 ? reviewSteps.length > 0 : reviewStepIndex < reviewSteps.length - 1))
-  const continueLabel = isLastWorkflow && !hasNextSubStep ? doneLabel : 'Continue'
+  const continueLabel = isLastWorkflow && !hasNextSubStep ? doneLabel : '계속'
   const handleContinue = useCallback((): void => {
     markWorkflowVisited(selected.id)
     if (selected.id === 'agents-orchestration') {

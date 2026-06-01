@@ -71,7 +71,7 @@ export function OnboardingTourStep({
         isOpen
         source="onboarding"
         onDone={onCompleteTour}
-        doneLabel="Continue to project setup"
+        doneLabel="프로젝트 설정으로 계속"
         footerText={null}
         compactRail
         onTourDepthSummaryChange={onTourDepthSummaryChange}
@@ -84,7 +84,7 @@ export function OnboardingTourStep({
             disabled={Boolean(busyLabel)}
             onClick={onExitTour}
           >
-            Exit tour
+            둘러보기 종료
           </button>
         }
       />
@@ -95,7 +95,7 @@ export function OnboardingTourStep({
     <div className="flex flex-col gap-5">
       <FeatureTourPreview />
       <Button onClick={handleStartTour} disabled={Boolean(busyLabel)} className="gap-2 self-start">
-        Take the tour
+        둘러보기 시작
         <ArrowRight className="size-4" />
       </Button>
     </div>

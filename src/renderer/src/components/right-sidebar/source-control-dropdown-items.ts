@@ -41,19 +41,19 @@ export type DropdownSeparator = { kind: 'separator' }
 export type DropdownEntry = DropdownItem | DropdownSeparator
 
 function describePushCount(ahead: number): string {
-  return `Push ${ahead} commit${ahead === 1 ? '' : 's'}`
+  return `푸시 ${ahead}개 커밋`
 }
 
 function describePullCount(behind: number): string {
-  return `Pull ${behind} commit${behind === 1 ? '' : 's'}`
+  return `가져오기 ${behind}개 커밋`
 }
 
 function describeFastForwardCount(behind: number): string {
-  return `Fast-forward ${behind} commit${behind === 1 ? '' : 's'}`
+  return `빠른 병합 ${behind}개 커밋`
 }
 
 function describeSyncCounts(ahead: number, behind: number): string {
-  return `Pull ${behind}, push ${ahead}`
+  return `가져오기 ${behind}, 푸시 ${ahead}`
 }
 
 function formatCountLabel(base: string, count: number): string {
@@ -70,9 +70,9 @@ function formatSyncLabel(base: string, ahead: number, behind: number): string {
 function formatForcePushTitle(branchCommitsAhead: number | undefined, upstreamName?: string) {
   const countText =
     branchCommitsAhead && branchCommitsAhead > 0
-      ? `${branchCommitsAhead} branch commit${branchCommitsAhead === 1 ? '' : 's'}`
-      : 'this branch'
-  return `Remote only has older copies of local commits. Force push ${countText} with lease to update ${upstreamName ?? 'the remote branch'}.`
+      ? `${branchCommitsAhead}개의 브랜치 커밋`
+      : '이 브랜치'
+  return `원격에는 로컬 커밋의 더 오래된 복사본만 있습니다. ${countText}을 lease와 함께 강제 푸시하여 ${upstreamName ?? '원격 브랜치'}를 업데이트하세요.`
 }
 
 function formatRebaseBaseRef(baseRef: string): string {
@@ -83,23 +83,27 @@ function reviewCopy(
   provider: NonNullable<PrimaryActionInputs['hostedReviewCreation']>['provider'] | undefined
 ): {
   shortLabel: 'PR' | 'MR'
-  reviewLabel: 'pull request' | 'merge request'
+  reviewLabel: '풀 리퀘스트' | '병합 요청'
   providerName: 'GitHub' | 'GitLab'
   authCommand: 'gh auth login' | 'glab auth login'
 } {
   return provider === 'gitlab'
     ? {
         shortLabel: 'MR',
-        reviewLabel: 'merge request',
+        reviewLabel: '병합 요청',
         providerName: 'GitLab',
         authCommand: 'glab auth login'
       }
     : {
         shortLabel: 'PR',
-        reviewLabel: 'pull request',
+        reviewLabel: '풀 리퀘스트',
         providerName: 'GitHub',
         authCommand: 'gh auth login'
-      }
+    }
+}
+
+function withObjectParticle(label: '풀 리퀘스트' | '병합 요청'): string {
+  return label === '병합 요청' ? `${label}을` : `${label}를`
 }
 
 /**
@@ -155,24 +159,24 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
 
   const commitDisabledReason = (() => {
     if (hasUnresolvedConflicts) {
-      return 'Resolve conflicts before committing'
+      return '커밋하기 전에 충돌을 해결하세요'
     }
     if (!hasStaged) {
-      return 'Stage at least one file to commit'
+      return '커밋하려면 파일 하나 이상을 스테이징하세요'
     }
     if (hasPartiallyStagedChanges) {
-      return 'Stage all changes before committing partially staged files'
+      return '부분적으로 스테이징된 파일을 커밋하기 전에 모든 변경 사항을 스테이징하세요'
     }
     if (!hasMessage) {
-      return 'Enter a commit message to commit'
+      return '커밋하려면 커밋 메시지를 입력하세요'
     }
     return null
   })()
   const canCommit = !globalBusy && commitDisabledReason === null
   const commitItem: DropdownItem = {
     kind: 'commit',
-    label: 'Commit',
-    title: commitDisabledReason ?? 'Commit staged changes',
+    label: '커밋',
+    title: commitDisabledReason ?? '스테이징된 변경 사항을 커밋',
     disabled: !canCommit
   }
 
@@ -184,22 +188,22 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
   // Commit & Push becomes enabled. Tooltips mirror pushItem/syncItem copy
   // so the "publish first" instruction is consistent across the menu.
   const commitPushTitle = upstreamLoading
-    ? 'Checking branch status…'
+    ? '브랜치 상태 확인 중…'
     : publishBlockedByPRLoading
-      ? 'Checking PR status…'
+      ? 'PR 상태 확인 중…'
       : publishBlockedByMergedPR
-        ? 'PR is already merged'
+        ? 'PR이 이미 병합되었습니다'
         : !hasUpstream
-          ? 'Publish the branch first to push commits'
+          ? '커밋을 푸시하려면 먼저 브랜치를 게시하세요'
           : (commitDisabledReason ??
             (shouldForcePushWithLease
-              ? 'Commit staged changes and force push with lease'
+              ? '스테이징된 변경 사항을 커밋하고 lease와 함께 강제 푸시'
               : behind > 0
-                ? 'Use Commit & Sync to pull remote changes before pushing'
-                : 'Commit staged changes and push'))
+                ? '커밋 후 동기화를 사용해 원격 변경 사항을 먼저 가져오세요'
+                : '스테이징된 변경 사항을 커밋하고 푸시'))
   const commitPushItem: DropdownItem = {
     kind: 'commit_push',
-    label: shouldForcePushWithLease ? 'Commit & Force Push' : 'Commit & Push',
+    label: shouldForcePushWithLease ? '커밋 후 강제 푸시' : '커밋 후 푸시',
     title: commitPushTitle,
     disabled:
       globalBusy ||
@@ -213,34 +217,34 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
 
   const commitSyncTitle = (() => {
     if (upstreamLoading) {
-      return 'Checking branch status…'
+      return '브랜치 상태 확인 중…'
     }
     if (publishBlockedByPRLoading) {
-      return 'Checking PR status…'
+      return 'PR 상태 확인 중…'
     }
     if (publishBlockedByMergedPR) {
-      return 'PR is already merged'
+      return 'PR이 이미 병합되었습니다'
     }
     if (!hasUpstream) {
       // Why: mirror pushItem/syncItem — direct the user to Publish Branch
       // (the primary action on an unpublished branch) rather than naming a
       // nonexistent compound action.
-      return 'Publish the branch first to sync commits'
+      return '커밋을 동기화하려면 먼저 브랜치를 게시하세요'
     }
     if (shouldForcePushWithLease) {
       return (
         commitDisabledReason ??
-        'Use Commit & Force Push — remote only has older copies of local commits'
+        '커밋 후 강제 푸시를 사용하세요. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.'
       )
     }
     if (behind === 0) {
-      return 'Nothing to pull — use Commit & Push instead'
+      return '가져올 내용이 없습니다. 대신 커밋 후 푸시를 사용하세요.'
     }
-    return commitDisabledReason ?? 'Commit, then pull and push'
+    return commitDisabledReason ?? '커밋 후 가져오기와 푸시'
   })()
   const commitSyncItem: DropdownItem = {
     kind: 'commit_sync',
-    label: 'Commit & Sync',
+    label: '커밋 후 동기화',
     title: commitSyncTitle,
     disabled:
       globalBusy ||
@@ -253,21 +257,21 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
 
   const pushItem: DropdownItem = {
     kind: 'push',
-    label: formatCountLabel(shouldForcePushWithLease ? 'Force Push' : 'Push', pushLabelCount),
+    label: formatCountLabel(shouldForcePushWithLease ? '강제 푸시' : '푸시', pushLabelCount),
     title: upstreamLoading
-      ? 'Checking branch status…'
+      ? '브랜치 상태 확인 중…'
       : publishBlockedByPRLoading
-        ? 'Checking PR status…'
+        ? 'PR 상태 확인 중…'
         : publishBlockedByMergedPR
-          ? 'PR is already merged'
+          ? 'PR이 이미 병합되었습니다'
           : !hasUpstream
-            ? 'Publish the branch first to push commits'
+            ? '커밋을 푸시하려면 먼저 브랜치를 게시하세요'
             : shouldForcePushWithLease
               ? forcePushTitle
               : behind > 0 && ahead > 0
-                ? 'Sync first to pull remote changes before pushing'
+                ? '푸시 전에 동기화해 원격 변경 사항을 먼저 가져오세요'
                 : ahead === 0
-                  ? `Nothing to push${upstreamStatus?.upstreamName ? ` to ${upstreamStatus.upstreamName}` : ''}`
+                  ? `푸시할 내용이 없습니다${upstreamStatus?.upstreamName ? `: ${upstreamStatus.upstreamName}` : ''}`
                   : describePushCount(ahead),
     disabled:
       globalBusy ||
@@ -279,19 +283,19 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
 
   const pullItem: DropdownItem = {
     kind: 'pull',
-    label: formatCountLabel('Pull', behind),
+    label: formatCountLabel('가져오기', behind),
     title: upstreamLoading
-      ? 'Checking branch status…'
+      ? '브랜치 상태 확인 중…'
       : publishBlockedByPRLoading
-        ? 'Checking PR status…'
+        ? 'PR 상태 확인 중…'
         : publishBlockedByMergedPR
-          ? 'PR is already merged'
+          ? 'PR이 이미 병합되었습니다'
           : !hasUpstream
-            ? 'Publish the branch first to pull commits'
+            ? '커밋을 가져오려면 먼저 브랜치를 게시하세요'
             : shouldForcePushWithLease
-              ? 'Nothing new to pull — remote only has older copies of local commits'
+              ? '가져올 새 내용이 없습니다. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.'
               : behind === 0
-                ? 'Nothing to pull'
+                ? '가져올 내용이 없습니다'
                 : describePullCount(behind),
     disabled:
       globalBusy || upstreamLoading || !hasUpstream || behind === 0 || shouldForcePushWithLease
@@ -299,21 +303,21 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
 
   const fastForwardItem: DropdownItem = {
     kind: 'fast_forward',
-    label: formatCountLabel('Fast-forward', behind),
+    label: formatCountLabel('빠른 병합', behind),
     title: upstreamLoading
-      ? 'Checking branch status…'
+      ? '브랜치 상태 확인 중…'
       : publishBlockedByPRLoading
-        ? 'Checking PR status…'
+        ? 'PR 상태 확인 중…'
         : publishBlockedByMergedPR
-          ? 'PR is already merged'
+          ? 'PR이 이미 병합되었습니다'
           : !hasUpstream
-            ? 'Publish the branch first to fast-forward'
+            ? '빠른 병합하려면 먼저 브랜치를 게시하세요'
             : shouldForcePushWithLease
-              ? 'Nothing new to fast-forward — remote only has older copies of local commits'
+              ? '빠른 병합할 새 내용이 없습니다. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.'
               : behind === 0
-                ? 'Nothing to fast-forward'
+                ? '빠른 병합할 내용이 없습니다'
                 : ahead > 0
-                  ? 'Local commits prevent a fast-forward pull'
+                  ? '로컬 커밋이 있어 빠른 병합 가져오기를 할 수 없습니다'
                   : describeFastForwardCount(behind),
     disabled:
       globalBusy ||
@@ -326,19 +330,19 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
 
   const syncItem: DropdownItem = {
     kind: 'sync',
-    label: formatSyncLabel('Sync', ahead, behind),
+    label: formatSyncLabel('동기화', ahead, behind),
     title: upstreamLoading
-      ? 'Checking branch status…'
+      ? '브랜치 상태 확인 중…'
       : publishBlockedByPRLoading
-        ? 'Checking PR status…'
+        ? 'PR 상태 확인 중…'
         : publishBlockedByMergedPR
-          ? 'PR is already merged'
+          ? 'PR이 이미 병합되었습니다'
           : !hasUpstream
-            ? 'Publish the branch first to sync commits'
+            ? '커밋을 동기화하려면 먼저 브랜치를 게시하세요'
             : shouldForcePushWithLease
-              ? 'Use Force Push — remote only has older copies of local commits'
+              ? '강제 푸시를 사용하세요. 원격에는 로컬 커밋의 더 오래된 복사본만 있습니다.'
               : ahead === 0 && behind === 0
-                ? 'Branch is up to date'
+                ? '브랜치가 최신입니다'
                 : describeSyncCounts(ahead, behind),
     disabled:
       globalBusy ||
@@ -352,18 +356,18 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
   const hasRemoteBaseRef = rebaseBaseLabel?.includes('/') === true
   const rebaseItem: DropdownItem = {
     kind: 'rebase_base',
-    label: rebaseBaseLabel ? `Rebase from ${rebaseBaseLabel}` : 'Rebase from Base',
+    label: rebaseBaseLabel ? `${rebaseBaseLabel}에서 리베이스` : '기준 브랜치에서 리베이스',
     title: (() => {
       if (!rebaseBaseLabel || !hasRemoteBaseRef) {
-        return 'Choose a remote base branch to rebase from'
+        return '리베이스할 원격 기준 브랜치를 선택하세요'
       }
       if (hasUnresolvedConflicts) {
-        return 'Resolve conflicts before rebasing'
+        return '리베이스하기 전에 충돌을 해결하세요'
       }
       if (hasDirtyLocalChanges) {
-        return 'Commit or stash local changes before rebasing'
+        return '리베이스하기 전에 로컬 변경 사항을 커밋하거나 스태시하세요'
       }
-      return `Rebase current branch with latest commits from ${rebaseBaseLabel}`
+      return `${rebaseBaseLabel}의 최신 커밋으로 현재 브랜치를 리베이스`
     })(),
     disabled:
       globalBusy ||
@@ -375,8 +379,8 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
 
   const fetchItem: DropdownItem = {
     kind: 'fetch',
-    label: 'Fetch',
-    title: upstreamLoading ? 'Checking branch status…' : 'Fetch from remote without merging',
+    label: '가져오기',
+    title: upstreamLoading ? '브랜치 상태 확인 중…' : '병합하지 않고 원격에서 가져오기',
     disabled: globalBusy || upstreamLoading
   }
 
@@ -384,25 +388,25 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
     kind: 'publish',
     label:
       publishBlockedByMergedPR || publishBlockedByPRLoading
-        ? 'PR Status'
-        : publishBlockedByUncommittedChanges
-          ? 'Commit Changes First'
+      ? 'PR 상태'
+      : publishBlockedByUncommittedChanges
+          ? '먼저 변경 사항을 커밋'
           : publishBlockedByNoBranchCommits
-            ? 'No Branch Changes'
-            : 'Publish Branch',
+            ? '브랜치 변경 사항 없음'
+            : '브랜치 게시',
     title: upstreamLoading
-      ? 'Checking branch status…'
+      ? '브랜치 상태 확인 중…'
       : publishBlockedByPRLoading
-        ? 'Checking PR status…'
+        ? 'PR 상태 확인 중…'
         : publishBlockedByMergedPR
-          ? 'PR is already merged'
+          ? 'PR이 이미 병합되었습니다'
           : publishBlockedByUncommittedChanges
-            ? 'Commit changes before publishing the branch'
+            ? '브랜치를 게시하기 전에 변경 사항을 커밋하세요'
             : publishBlockedByNoBranchCommits
-              ? 'Nothing to publish'
+              ? '게시할 내용이 없습니다'
               : hasUpstream
-                ? 'Branch is already published'
-                : 'Publish this branch to origin',
+                ? '브랜치가 이미 게시되었습니다'
+                : '이 브랜치를 origin에 게시',
     disabled:
       globalBusy ||
       upstreamLoading ||
@@ -415,36 +419,36 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
   const createBlockedHint = (() => {
     switch (hostedReviewCreation?.blockedReason) {
       case 'dirty':
-        return 'Commit changes first'
+        return '먼저 변경 사항을 커밋'
       case 'detached_head':
-        return 'Check out a branch first'
+        return '먼저 브랜치를 체크아웃하세요'
       case 'default_branch':
-        return 'Switch to a feature branch'
+        return '기능 브랜치로 전환하세요'
       case 'no_upstream':
-        return 'Publish Branch'
+        return '브랜치 게시'
       case 'needs_push':
-        return 'Push first'
+        return '먼저 푸시하세요'
       case 'needs_sync':
-        return shouldForcePushWithLease ? 'Force Push first' : 'Sync first'
+        return shouldForcePushWithLease ? '먼저 강제 푸시' : '먼저 동기화'
       case 'auth_required':
-        return `Run ${createReviewCopy.authCommand} in this environment`
+        return `이 환경에서 ${createReviewCopy.authCommand}를 실행하세요`
       case 'unsupported_provider':
-        return 'Unsupported provider'
+        return '지원되지 않는 제공자'
       case 'existing_review':
-        return `A ${createReviewCopy.reviewLabel} already exists`
+        return `이미 ${createReviewCopy.reviewLabel}가 있습니다`
       case 'fork_head_unsupported':
-        return 'Fork head unsupported'
+        return '포크 헤드는 지원되지 않습니다'
       case null:
       case undefined:
-        return upstreamLoading ? 'Checking branch status…' : 'Branch is not ready'
+        return upstreamLoading ? '브랜치 상태 확인 중…' : '브랜치가 준비되지 않았습니다'
     }
   })()
 
   const createPRItem: DropdownItem = {
     kind: 'create_pr',
-    label: `Create ${createReviewCopy.shortLabel}`,
+    label: `${createReviewCopy.shortLabel} 생성`,
     title: hostedReviewCreation?.canCreate
-      ? `Create a ${createReviewCopy.reviewLabel} for this branch`
+      ? `이 브랜치에 대한 ${withObjectParticle(createReviewCopy.reviewLabel)} 생성`
       : createBlockedHint,
     hint: hostedReviewCreation?.canCreate ? undefined : createBlockedHint,
     disabled: globalBusy || upstreamLoading || !hostedReviewCreation?.canCreate
@@ -459,12 +463,12 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
   const pushCreatePRItem: DropdownItem = {
     kind: 'push_create_pr',
     label: shouldForcePushWithLease
-      ? `Force Push before ${createReviewCopy.shortLabel}`
-      : `Push before ${createReviewCopy.shortLabel}`,
+      ? `${createReviewCopy.shortLabel} 전 강제 푸시`
+      : `${createReviewCopy.shortLabel} 전 푸시`,
     title: canPushAndCreate
       ? shouldForcePushWithLease
-        ? `Force push with lease before creating a ${createReviewCopy.reviewLabel}`
-        : `Push local commits before creating a ${createReviewCopy.reviewLabel}`
+        ? `${withObjectParticle(createReviewCopy.reviewLabel)} 생성하기 전에 lease와 함께 강제 푸시`
+        : `${withObjectParticle(createReviewCopy.reviewLabel)} 생성하기 전에 로컬 커밋을 푸시`
       : createBlockedHint,
     hint: canPushAndCreate ? undefined : createBlockedHint,
     disabled: !canPushAndCreate
@@ -487,13 +491,13 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
   ]
   if (conflictOperation === 'merge' || conflictOperation === 'rebase') {
     const isRebase = conflictOperation === 'rebase'
-    const label = isRebase ? 'Abort rebase' : 'Abort merge'
+    const label = isRebase ? '리베이스 중단' : '병합 중단'
     entries.push(
       { kind: 'separator' },
       {
         kind: isRebase ? 'abort_rebase' : 'abort_merge',
         label,
-        title: globalBusy ? 'Operation in progress…' : `Abort the ${conflictOperation} in progress`,
+        title: globalBusy ? '작업 진행 중…' : `진행 중인 ${conflictOperation}를 중단`,
         disabled: globalBusy,
         variant: 'destructive'
       }
@@ -507,7 +511,7 @@ export function resolveDropdownItems(inputs: DropdownActionInputs): DropdownEntr
       ? entry
       : {
           ...entry,
-          title: 'Hosted review operation in progress…',
+          title: '호스티드 리뷰 작업 진행 중…',
           disabled: true
         }
   )

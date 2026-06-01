@@ -31,18 +31,18 @@ describe('OnboardingFlow', () => {
       />
     )
 
-    expect(html).toContain('Explore Orca')
-    expect(html).toContain('Take a 60-second tour of Orca&#x27;s advanced features.')
-    expect(html).toContain('Take the tour')
+    expect(html).toContain('Orca 둘러보기')
+    expect(html).toContain('Orca의 고급 기능을 60초 만에 살펴보세요.')
+    expect(html).toContain('둘러보기 시작')
     // Why: the prior intro carried a redundant lead, a four-item checklist, and
     // a help-menu footnote. The tour animation already conveys all of that, so
     // the body is now just the preview + a single CTA — guard against drift.
     expect(html).not.toContain('Preview the core workflow.')
     expect(html).not.toContain('Run agents in isolated worktrees.')
     expect(html).not.toContain('Available later under Help')
-    expect(html).toContain('Continue')
-    expect(html).toContain('Skip to project setup')
-    expect(html).not.toContain('Skip the tour')
+    expect(html).toContain('계속')
+    expect(html).toContain('프로젝트 설정으로 건너뛰기')
+    expect(html).not.toContain('둘러보기 건너뛰기')
   })
 
   it('keeps agent setup actions out of the footer', () => {
@@ -56,11 +56,11 @@ describe('OnboardingFlow', () => {
       />
     )
 
-    expect(html).toContain('Set up Orca for agents')
-    expect(html).toContain('Turn on advanced Orca capabilities for agents.')
-    expect(html).toContain('Enable capabilities')
-    expect(html).toContain('Continue')
-    expect(html).toContain('Skip to project setup')
+    expect(html).toContain('에이전트용 Orca를 설정하세요')
+    expect(html).toContain('에이전트가 쓸 고급 Orca 기능을 켜세요.')
+    expect(html).toContain('기능 켜기')
+    expect(html).toContain('계속')
+    expect(html).toContain('프로젝트 설정으로 건너뛰기')
     expect(html).not.toContain('>Skip</button>')
   })
 
@@ -83,9 +83,9 @@ describe('OnboardingFlow', () => {
       />
     )
 
-    expect(html).toContain('Explore Orca')
-    expect(html).not.toContain('Set up GitHub tasks')
-    expect(html).not.toContain('Connect your task sources')
+    expect(html).toContain('Orca 둘러보기')
+    expect(html).not.toContain('GitHub 작업을 설정하세요')
+    expect(html).not.toContain('작업 소스를 연결하세요')
   })
 
   it('shows only GitHub on the task setup page when the GitHub CLI is missing', () => {
@@ -107,8 +107,8 @@ describe('OnboardingFlow', () => {
       />
     )
 
-    expect(html).toContain('Set up GitHub tasks')
-    expect(html).toContain('Install the GitHub CLI to:')
+    expect(html).toContain('GitHub 작업을 설정하세요')
+    expect(html).toContain('GitHub CLI를 설치하면 다음을 할 수 있습니다:')
     expect(html).toContain('GitHub')
     expect(html).not.toContain(
       '<h3 class="text-[15px] font-semibold leading-tight text-foreground">Linear</h3>'
@@ -135,10 +135,10 @@ describe('OnboardingFlow', () => {
 
   it('renders concise skip confirmation copy', () => {
     expect(ONBOARDING_SKIP_CONFIRMATION_COPY).toEqual({
-      title: 'Skip onboarding?',
-      description: "It won't take long!",
-      skipLabel: 'Skip',
-      keepGoingLabel: 'No, keep going'
+      title: '온보딩을 건너뛸까요?',
+      description: '오래 걸리지 않습니다!',
+      skipLabel: '건너뛰기',
+      keepGoingLabel: '아니요, 계속 진행'
     })
   })
 })

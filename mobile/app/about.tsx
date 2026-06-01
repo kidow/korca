@@ -46,13 +46,13 @@ export default function AboutScreen() {
         <Pressable style={styles.backButton} onPress={() => router.back()}>
           <ChevronLeft size={22} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.heading}>About</Text>
+        <Text style={styles.heading}>정보</Text>
       </View>
 
       <View style={styles.brand}>
         <OrcaLogo size={28} />
         <Text style={styles.brandName}>Orca</Text>
-        <Text style={styles.brandSub}>Open-source agent IDE for 100x builders</Text>
+        <Text style={styles.brandSub}>오픈소스 에이전트 IDE</Text>
       </View>
 
       <View style={styles.section}>

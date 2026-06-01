@@ -70,15 +70,15 @@ function getSystemNotificationSettingsCopy(
 ): SystemNotificationSettingsCopy | null {
   if (platform === 'darwin') {
     return {
-      failureTitle: 'macOS did not show the notification',
-      failureDescription: 'Enable Allow notifications for Orca in System Settings.'
+      failureTitle: 'macOS가 알림을 표시하지 않았습니다',
+      failureDescription: '시스템 설정에서 Orca의 알림 허용을 켜세요.'
     }
   }
 
   if (platform === 'win32') {
     return {
-      failureTitle: 'Windows did not show the notification',
-      failureDescription: 'Enable notifications for Orca in Windows Settings.'
+      failureTitle: 'Windows가 알림을 표시하지 않았습니다',
+      failureDescription: 'Windows 설정에서 Orca의 알림을 켜세요.'
     }
   }
 
@@ -91,7 +91,7 @@ export async function sendNotificationSettingsTestNotification(
 ): Promise<void> {
   const permissionStatus = await window.api.notifications.getPermissionStatus()
   if (!permissionStatus.supported) {
-    toast.error('Notifications are not supported on this system')
+    toast.error('이 시스템에서는 알림을 지원하지 않습니다')
     return
   }
 
@@ -111,17 +111,17 @@ export async function sendNotificationSettingsTestNotification(
           })
         : null
     if (notificationSettings.customSoundId !== 'system' && soundResult && !soundResult.played) {
-      toast.error('Custom notification sound could not be played')
+      toast.error('사용자 지정 알림음을 재생하지 못했습니다')
       return
     }
     const settingsCopy = getSystemNotificationSettingsCopy(permissionStatus.platform)
     if (permissionStatus.platform === 'darwin' && settingsCopy) {
       // Why: Electron's native 'show' event can fire even when macOS silently
       // drops the banner because the per-app Allow notifications switch is off.
-      toast.message('Test notification requested', {
-        description: 'If no macOS banner appeared, enable Allow notifications for Orca.',
+      toast.message('테스트 알림을 요청했습니다', {
+        description: 'macOS 배너가 보이지 않으면 시스템 설정에서 Orca의 알림 허용을 켜세요.',
         action: {
-          label: 'Open Settings',
+          label: '설정 열기',
           onClick: () => {
             void window.api.notifications.openSystemSettings()
           }
@@ -129,7 +129,7 @@ export async function sendNotificationSettingsTestNotification(
       })
       return
     }
-    toast.success('Test notification sent')
+    toast.success('테스트 알림을 보냈습니다')
     return
   }
 
@@ -139,15 +139,15 @@ export async function sendNotificationSettingsTestNotification(
       toast.error(settingsCopy.failureTitle, {
         description: settingsCopy.failureDescription,
         action: {
-          label: 'Open Settings',
+          label: '설정 열기',
           onClick: () => {
             void window.api.notifications.openSystemSettings()
           }
         }
       })
     } else {
-      toast.error('System did not show the notification', {
-        description: 'Check your desktop notification settings for Orca.'
+      toast.error('시스템이 알림을 표시하지 않았습니다', {
+        description: 'Orca의 데스크톱 알림 설정을 확인하세요.'
       })
     }
     return
@@ -155,8 +155,8 @@ export async function sendNotificationSettingsTestNotification(
 
   toast.error(
     result.reason === 'disabled'
-      ? 'Notifications are disabled'
-      : 'Test notification was not delivered'
+      ? '알림이 꺼져 있습니다'
+      : '테스트 알림이 전달되지 않았습니다'
   )
 }
 
@@ -232,7 +232,7 @@ export function NotificationsPane({
       volume: volumeDraft
     })
     if (!result.played) {
-      toast.error('Notification sound could not be played')
+      toast.error('알림음을 재생하지 못했습니다')
     }
   }
 
@@ -266,8 +266,8 @@ export function NotificationsPane({
   return (
     <div className="space-y-1">
       <SettingToggle
-        label="Enable Notifications"
-        description="Native system notifications for background events."
+        label="알림 켜기"
+        description="백그라운드 이벤트를 위한 시스템 알림입니다."
         checked={notificationSettings.enabled}
         onToggle={() => {
           if (!notificationSettings.enabled) {
@@ -281,8 +281,8 @@ export function NotificationsPane({
 
       <SettingToggle
         icon={<Bot className="size-4" />}
-        label="Agent Task Complete"
-        description="A coding agent finishes and becomes idle."
+        label="에이전트 작업 완료"
+        description="코딩 에이전트가 끝나고 대기 상태가 됩니다."
         checked={notificationSettings.agentTaskComplete}
         disabled={!notificationSettings.enabled}
         onToggle={() =>
@@ -294,8 +294,8 @@ export function NotificationsPane({
 
       <SettingToggle
         icon={<Siren className="size-4" />}
-        label="Terminal Bell"
-        description="A background terminal emits a bell character."
+        label="터미널 벨"
+        description="백그라운드 터미널이 벨 문자를 내보냅니다."
         checked={notificationSettings.terminalBell}
         disabled={!notificationSettings.enabled}
         onToggle={() =>
@@ -311,10 +311,10 @@ export function NotificationsPane({
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
             <FileAudio className="size-4" />
-            <Label>Notification Sound</Label>
+            <Label>알림음</Label>
           </div>
           <p className="text-xs text-muted-foreground">
-            Choose the alert Orca plays when a desktop notification is delivered.
+            데스크톱 알림이 도착했을 때 Orca가 재생할 알림음을 고르세요.
           </p>
         </div>
         <Select
@@ -323,7 +323,7 @@ export function NotificationsPane({
           onValueChange={(value) => void handleSoundSelect(value as NotificationSoundSelectValue)}
         >
           <SelectTrigger className="w-full max-w-[360px]" size="sm">
-            <SelectValue placeholder="Choose notification sound" />
+            <SelectValue placeholder="알림음을 선택하세요" />
           </SelectTrigger>
           <SelectContent align="start" className="w-[--radix-select-trigger-width]">
             {soundOptions.map((option) => {
@@ -339,7 +339,7 @@ export function NotificationsPane({
             <SelectItem value={CHOOSE_CUSTOM_SOUND_VALUE}>
               <Upload className="size-4" />
               <span>
-                {notificationSettings.customSoundPath ? 'Change Custom File' : 'Choose Custom File'}
+                {notificationSettings.customSoundPath ? '사용자 파일 변경' : '사용자 파일 선택'}
               </span>
             </SelectItem>
           </SelectContent>
@@ -349,7 +349,7 @@ export function NotificationsPane({
             className="truncate font-mono text-[11px] text-muted-foreground"
             title={notificationSettings.customSoundPath}
           >
-            Custom: {notificationSettings.customSoundPath}
+            사용자 지정: {notificationSettings.customSoundPath}
           </p>
         ) : null}
         {selectedSoundId !== 'system' ? (
@@ -364,7 +364,7 @@ export function NotificationsPane({
               onValueChange={([value]) => setVolumeDraft(value)}
               onValueCommit={([value]) => handleVolumeCommit(value)}
               className="flex-1"
-              aria-label="Notification sound volume"
+              aria-label="알림음 볼륨"
             />
             <span className="w-10 text-right font-mono text-xs tabular-nums text-muted-foreground">
               {volumeDraft}%
@@ -376,8 +376,8 @@ export function NotificationsPane({
       <Separator />
 
       <SettingToggle
-        label="Suppress While Focused"
-        description="Skip notifications when the triggering worktree is already visible."
+        label="집중 중에는 억제"
+        description="알림을 유발한 worktree가 이미 보이는 경우 알림을 건너뜁니다."
         checked={notificationSettings.suppressWhenFocused}
         disabled={!notificationSettings.enabled}
         onToggle={() =>
@@ -396,7 +396,7 @@ export function NotificationsPane({
           className="gap-2"
         >
           <BellRing className="size-3.5" />
-          Send Test Notification
+          테스트 알림 보내기
         </Button>
       </div>
     </div>

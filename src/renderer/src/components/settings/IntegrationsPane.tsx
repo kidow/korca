@@ -144,19 +144,19 @@ export function IntegrationsPane(): React.JSX.Element {
           <div className="min-w-0 flex-1 space-y-0.5">
             <p className="text-sm font-medium">GitHub</p>
             <p className="text-xs text-muted-foreground">
-              Pull requests, issues, and checks via the{' '}
-              <span className="font-mono text-[11px]">gh</span> CLI.
+              <span className="font-mono text-[11px]">gh</span> CLI로 풀 리퀘스트, 이슈, 체크를
+              사용합니다.
             </p>
           </div>
           {ghStatus === 'checking' ? (
             <LoaderCircle className="size-4 shrink-0 animate-spin text-muted-foreground" />
           ) : ghStatus === 'connected' ? (
             <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-              Connected
+              연결됨
             </span>
           ) : (
             <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-300">
-              {ghStatus === 'not-installed' ? 'Not installed' : 'Not authenticated'}
+              {ghStatus === 'not-installed' ? '설치 안 됨' : '인증 안 됨'}
             </span>
           )}
         </div>
@@ -166,7 +166,7 @@ export function IntegrationsPane(): React.JSX.Element {
             {ghStatus === 'not-installed' ? (
               <>
                 <p className="text-xs text-muted-foreground">
-                  Install the GitHub CLI to enable pull requests, issues, and checks.
+                  GitHub CLI를 설치하면 풀 리퀘스트, 이슈, 체크를 사용할 수 있습니다.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -175,17 +175,18 @@ export function IntegrationsPane(): React.JSX.Element {
                     onClick={() => window.api.shell.openUrl('https://cli.github.com')}
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Install GitHub CLI
+                    GitHub CLI 설치
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshGh}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-xs text-muted-foreground">
-                  The GitHub CLI is installed but not authenticated. Run this command in a terminal:
+                  GitHub CLI는 설치되어 있지만 인증되지 않았습니다. 터미널에서 다음 명령을
+                  실행하세요:
                 </p>
                 <div className="flex items-center gap-2 rounded-md bg-muted/50 px-2.5 py-1.5 font-mono text-xs">
                   <Terminal className="size-3.5 shrink-0 text-muted-foreground" />
@@ -200,10 +201,10 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshGh}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
@@ -219,19 +220,19 @@ export function IntegrationsPane(): React.JSX.Element {
           <div className="min-w-0 flex-1 space-y-0.5">
             <p className="text-sm font-medium">GitLab</p>
             <p className="text-xs text-muted-foreground">
-              Merge requests, issues, todos, and pipelines via the{' '}
-              <span className="font-mono text-[11px]">glab</span> CLI.
+              <span className="font-mono text-[11px]">glab</span> CLI로 머지 리퀘스트, 이슈,
+              할 일, 파이프라인을 사용합니다.
             </p>
           </div>
           {glabStatus === 'checking' ? (
             <LoaderCircle className="size-4 shrink-0 animate-spin text-muted-foreground" />
           ) : glabStatus === 'connected' ? (
             <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-              Connected
+              연결됨
             </span>
           ) : (
             <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-300">
-              {glabStatus === 'not-installed' ? 'Not installed' : 'Not authenticated'}
+              {glabStatus === 'not-installed' ? '설치 안 됨' : '인증 안 됨'}
             </span>
           )}
         </div>
@@ -241,7 +242,7 @@ export function IntegrationsPane(): React.JSX.Element {
             {glabStatus === 'not-installed' ? (
               <>
                 <p className="text-xs text-muted-foreground">
-                  Install the GitLab CLI to enable merge requests, issues, and pipelines.
+                  GitLab CLI를 설치하면 머지 리퀘스트, 이슈, 파이프라인을 사용할 수 있습니다.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -252,17 +253,18 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Install GitLab CLI
+                    GitLab CLI 설치
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshGlab}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-xs text-muted-foreground">
-                  The GitLab CLI is installed but not authenticated. Run this command in a terminal:
+                  GitLab CLI는 설치되어 있지만 인증되지 않았습니다. 터미널에서 다음 명령을
+                  실행하세요:
                 </p>
                 <div className="flex items-center gap-2 rounded-md bg-muted/50 px-2.5 py-1.5 font-mono text-xs">
                   <Terminal className="size-3.5 shrink-0 text-muted-foreground" />
@@ -279,10 +281,10 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshGlab}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
@@ -300,20 +302,20 @@ export function IntegrationsPane(): React.JSX.Element {
             <p className="text-xs text-muted-foreground">
               {bitbucketStatus === 'connected'
                 ? bitbucketAccount
-                  ? `${bitbucketAccount} · Pull requests and build statuses`
-                  : 'Pull requests and build statuses'
-                : 'Pull requests and build statuses via Bitbucket Cloud API tokens.'}
+                  ? `${bitbucketAccount} · 풀 리퀘스트 및 빌드 상태`
+                  : '풀 리퀘스트 및 빌드 상태'
+                : 'Bitbucket Cloud API 토큰으로 풀 리퀘스트 및 빌드 상태를 사용합니다.'}
             </p>
           </div>
           {bitbucketStatus === 'checking' ? (
             <LoaderCircle className="size-4 shrink-0 animate-spin text-muted-foreground" />
           ) : bitbucketStatus === 'connected' ? (
             <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-              Connected
+              연결됨
             </span>
           ) : (
             <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-300">
-              {bitbucketStatus === 'not-configured' ? 'Not configured' : 'Auth failed'}
+              {bitbucketStatus === 'not-configured' ? '미설정' : '인증 실패'}
             </span>
           )}
         </div>
@@ -338,18 +340,18 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshBitbucket}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-xs text-muted-foreground">
-                  Bitbucket credentials are configured but could not authenticate. Check the token
-                  and repository permissions, then restart Orca if environment variables changed.
+                  Bitbucket 자격 증명은 설정되어 있지만 인증할 수 없습니다. 토큰과 저장소
+                  권한을 확인하고, 환경 변수를 바꿨다면 Orca를 다시 시작하세요.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -362,10 +364,10 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshBitbucket}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
@@ -383,22 +385,22 @@ export function IntegrationsPane(): React.JSX.Element {
             <p className="text-xs text-muted-foreground">
               {azureDevOpsStatus === 'configured'
                 ? azureDevOpsAccount
-                  ? `${azureDevOpsAccount} · Pull requests and build statuses`
+                  ? `${azureDevOpsAccount} · 풀 리퀘스트 및 빌드 상태`
                   : azureDevOpsBaseUrl
-                    ? `${azureDevOpsBaseUrl} · Pull requests and build statuses`
-                    : 'Pull requests and build statuses for detected Azure Repos'
-                : 'Pull requests and build statuses via Azure DevOps REST API tokens.'}
+                    ? `${azureDevOpsBaseUrl} · 풀 리퀘스트 및 빌드 상태`
+                    : '감지된 Azure Repos의 풀 리퀘스트 및 빌드 상태'
+                : 'Azure DevOps REST API 토큰으로 풀 리퀘스트 및 빌드 상태를 사용합니다.'}
             </p>
           </div>
           {azureDevOpsStatus === 'checking' ? (
             <LoaderCircle className="size-4 shrink-0 animate-spin text-muted-foreground" />
           ) : azureDevOpsStatus === 'configured' ? (
             <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-              {azureDevOpsAccount ? 'Connected' : 'Configured'}
+              {azureDevOpsAccount ? '연결됨' : '설정됨'}
             </span>
           ) : (
             <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-300">
-              {azureDevOpsStatus === 'not-configured' ? 'Not configured' : 'Auth failed'}
+              {azureDevOpsStatus === 'not-configured' ? '미설정' : '인증 실패'}
             </span>
           )}
         </div>
@@ -408,10 +410,9 @@ export function IntegrationsPane(): React.JSX.Element {
             {azureDevOpsStatus === 'not-configured' ? (
               <>
                 <p className="text-xs text-muted-foreground">
-                  Set <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_TOKEN</span>, or set{' '}
-                  <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_ACCESS_TOKEN</span>. Set{' '}
-                  <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_API_BASE_URL</span> only
-                  when Orca cannot derive the API base URL from the git remote.
+                  <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_TOKEN</span>을 설정하거나{' '}
+                  <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_ACCESS_TOKEN</span>을
+                  설정하세요. <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_API_BASE_URL</span>은 Orca가 git 원격에서 API 기본 URL을 추론할 수 없을 때만 설정하세요.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -424,19 +425,18 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshAzureDevOps}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
             ) : (
               <>
                 <p className="text-xs text-muted-foreground">
-                  Azure DevOps credentials are configured but could not authenticate. Check the
-                  token, API base URL, and repository permissions, then restart Orca if environment
-                  variables changed.
+                  Azure DevOps 자격 증명은 설정되어 있지만 인증할 수 없습니다. 토큰, API 기본
+                  URL, 저장소 권한을 확인하고, 환경 변수를 바꿨다면 Orca를 다시 시작하세요.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -449,10 +449,10 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshAzureDevOps}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
@@ -470,22 +470,22 @@ export function IntegrationsPane(): React.JSX.Element {
             <p className="text-xs text-muted-foreground">
               {giteaStatus === 'configured'
                 ? giteaAccount
-                  ? `${giteaAccount} · Pull requests and commit statuses`
+                  ? `${giteaAccount} · 풀 리퀘스트 및 커밋 상태`
                   : giteaBaseUrl
-                    ? `${giteaBaseUrl} · Pull requests and commit statuses`
-                    : 'Pull requests and commit statuses for detected repositories'
-                : 'Pull requests and commit statuses via the Gitea REST API.'}
+                    ? `${giteaBaseUrl} · 풀 리퀘스트 및 커밋 상태`
+                    : '감지된 저장소의 풀 리퀘스트 및 커밋 상태'
+                : 'Gitea REST API로 풀 리퀘스트 및 커밋 상태를 사용합니다.'}
             </p>
           </div>
           {giteaStatus === 'checking' ? (
             <LoaderCircle className="size-4 shrink-0 animate-spin text-muted-foreground" />
           ) : giteaStatus === 'configured' ? (
             <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-              {giteaAccount ? 'Connected' : 'Configured'}
+              {giteaAccount ? '연결됨' : '설정됨'}
             </span>
           ) : (
             <span className="shrink-0 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-300">
-              {giteaStatus === 'not-configured' ? 'Optional setup' : 'Auth failed'}
+              {giteaStatus === 'not-configured' ? '선택 설정' : '인증 실패'}
             </span>
           )}
         </div>
@@ -510,10 +510,10 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshGitea}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
@@ -533,10 +533,10 @@ export function IntegrationsPane(): React.JSX.Element {
                     }
                   >
                     <ExternalLink className="size-3.5 mr-1.5" />
-                    Learn more
+                    자세히 보기
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleRefreshGitea}>
-                    Re-check
+                    다시 확인
                   </Button>
                 </div>
               </>
@@ -553,17 +553,17 @@ export function IntegrationsPane(): React.JSX.Element {
             <p className="text-sm font-medium">Linear</p>
             <p className="text-xs text-muted-foreground">
               {linearStatus.connected
-                ? `${linearWorkspaces.length} workspace${linearWorkspaces.length === 1 ? '' : 's'} connected`
-                : 'Add Linear access to browse and link issues.'}
+                ? `${linearWorkspaces.length}개 작업공간 연결됨`
+                : '이슈를 찾아보고 연결하려면 Linear 접근을 추가하세요.'}
             </p>
           </div>
           {linearStatus.connected ? (
             <div className="flex shrink-0 items-center gap-1.5">
-              <Button variant="outline" size="sm" onClick={() => setLinearDialogOpen(true)}>
-                Add workspace access
+                <Button variant="outline" size="sm" onClick={() => setLinearDialogOpen(true)}>
+                작업공간 접근 추가
               </Button>
               <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-                Connected
+                연결됨
               </span>
             </div>
           ) : (
@@ -571,7 +571,7 @@ export function IntegrationsPane(): React.JSX.Element {
               className="shrink-0 rounded-full border border-border/50 bg-muted/40 px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               onClick={() => setLinearDialogOpen(true)}
             >
-              Add Linear access
+              Linear 접근 추가
             </button>
           )}
         </div>
@@ -644,7 +644,7 @@ export function IntegrationsPane(): React.JSX.Element {
       <LinearApiKeyDialog
         open={linearDialogOpen}
         onOpenChange={setLinearDialogOpen}
-        connectLabel="Add Linear access"
+        connectLabel="Linear 접근 추가"
         onConnected={() => setLinearTestResultByWorkspace({})}
       />
     </div>

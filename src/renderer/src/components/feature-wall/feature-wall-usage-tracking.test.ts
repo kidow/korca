@@ -31,7 +31,7 @@ describe('feature wall usage tracking state', () => {
           }
         })
       })
-    ).toEqual({ connected: true, label: 'Connected · System default' })
+    ).toEqual({ connected: true, label: '연결됨 · 시스템 기본값' })
   })
 
   it('keeps managed accounts connected even before live quota data arrives', () => {
@@ -40,7 +40,7 @@ describe('feature wall usage tracking state', () => {
         managedAccountCount: 2,
         provider: null
       })
-    ).toEqual({ connected: true, label: 'Connected · 2' })
+    ).toEqual({ connected: true, label: '연결됨 · 2' })
   })
 
   it('returns not set up when there are no accounts or quota signals', () => {
@@ -49,7 +49,7 @@ describe('feature wall usage tracking state', () => {
         managedAccountCount: 0,
         provider: null
       })
-    ).toEqual({ connected: false, label: 'Tracking not set up' })
+    ).toEqual({ connected: false, label: '추적이 설정되지 않음' })
   })
 
   it('marks the usage step complete from system-default provider data', () => {

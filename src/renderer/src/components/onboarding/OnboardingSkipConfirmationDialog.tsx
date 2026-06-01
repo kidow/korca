@@ -9,10 +9,10 @@ import {
 } from '@/components/ui/dialog'
 
 export const ONBOARDING_SKIP_CONFIRMATION_COPY = {
-  title: 'Skip onboarding?',
-  description: "It won't take long!",
-  skipLabel: 'Skip',
-  keepGoingLabel: 'No, keep going'
+  title: '온보딩을 건너뛸까요?',
+  description: '오래 걸리지 않습니다!',
+  skipLabel: '건너뛰기',
+  keepGoingLabel: '아니요, 계속 진행'
 } as const
 
 export function OnboardingSkipConfirmationDialog(props: {

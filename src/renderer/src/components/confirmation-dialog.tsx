@@ -87,14 +87,14 @@ export function ConfirmationDialogProvider({
           </DialogHeader>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => settleActiveRequest(false)}>
-              {displayedRequest?.options.cancelLabel ?? 'Cancel'}
+              {displayedRequest?.options.cancelLabel ?? '취소'}
             </Button>
             <Button
               type="button"
               variant={displayedRequest?.options.confirmVariant ?? 'default'}
               onClick={() => settleActiveRequest(true)}
             >
-              {displayedRequest?.options.confirmLabel ?? 'Confirm'}
+              {displayedRequest?.options.confirmLabel ?? '확인'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -106,7 +106,7 @@ export function ConfirmationDialogProvider({
 export function useConfirmationDialog(): ConfirmationDialogContextValue {
   const confirm = useContext(ConfirmationDialogContext)
   if (!confirm) {
-    throw new Error('useConfirmationDialog must be used inside ConfirmationDialogProvider')
+    throw new Error('useConfirmationDialog는 ConfirmationDialogProvider 안에서 사용해야 합니다')
   }
   return confirm
 }

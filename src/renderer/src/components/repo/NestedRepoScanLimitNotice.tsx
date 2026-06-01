@@ -5,17 +5,17 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 function formatTimeout(timeoutMs: number): string {
   if (timeoutMs >= 1000 && timeoutMs % 1000 === 0) {
-    return `${timeoutMs / 1000} seconds`
+    return `${timeoutMs / 1000}초`
   }
-  return `${timeoutMs} ms`
+  return `${timeoutMs}ms`
 }
 
 export function nestedRepoScanLimitText(scan: NestedRepoScanResult): string {
-  const automaticStops = [`${scan.maxDepth} folder levels`, `${scan.maxRepos} repositories`]
+  const automaticStops = [`폴더 깊이 ${scan.maxDepth}단계`, `저장소 ${scan.maxRepos}개`]
   if (scan.timeoutMs !== null) {
     automaticStops.push(formatTimeout(scan.timeoutMs))
   }
-  return `Scan stops after ${automaticStops.join(' or ')}. You can stop scanning early and import repositories found so far.`
+  return `스캔은 ${automaticStops.join(' 또는 ')} 이후 중지됩니다. 미리 중지하고 지금까지 찾은 저장소를 가져올 수 있습니다.`
 }
 
 export function NestedRepoScanLimitNotice({ scan }: { scan: NestedRepoScanResult }) {
@@ -30,12 +30,12 @@ export function NestedRepoScanLimitNotice({ scan }: { scan: NestedRepoScanResult
       onFocusCapture={() => setDetailsOpen(true)}
       onBlurCapture={() => setDetailsOpen(false)}
     >
-      <span>{scan.stopped ? 'Scan stopped early.' : 'Showing partial scan results.'}</span>
+      <span>{scan.stopped ? '스캔이 일찍 중지되었습니다.' : '부분 스캔 결과를 표시하는 중입니다.'}</span>
       <Popover open={detailsOpen} onOpenChange={setDetailsOpen}>
         <PopoverTrigger asChild>
           <button
             type="button"
-            aria-label="Nested repository scan limits"
+            aria-label="중첩 저장소 스캔 제한"
             aria-expanded={detailsOpen}
             title={detailsText}
             className="inline-flex size-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"

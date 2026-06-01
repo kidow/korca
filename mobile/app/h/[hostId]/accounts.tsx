@@ -49,7 +49,7 @@ export default function AccountsScreen() {
       }
       const host = hosts.find((h) => h.id === hostId)
       if (!host) {
-        setError('Host not found')
+        setError('호스트를 찾을 수 없음')
         return
       }
       setHostName(host.name)
@@ -110,7 +110,7 @@ export default function AccountsScreen() {
       try {
         const res = await client.sendRequest(method, { accountId })
         if (!res.ok) {
-          Alert.alert('Could not switch account', res.error.message)
+          Alert.alert('계정을 전환할 수 없음', res.error.message)
         } else {
           // Why: optimistic refresh — the streaming subscription will also
           // emit, but a one-shot keeps the UI responsive even if the stream
@@ -118,7 +118,7 @@ export default function AccountsScreen() {
           await refresh()
         }
       } catch (e) {
-        Alert.alert('Could not switch account', e instanceof Error ? e.message : String(e))
+        Alert.alert('계정을 전환할 수 없음', e instanceof Error ? e.message : String(e))
       } finally {
         setBusyAccountId(null)
       }
@@ -140,15 +140,15 @@ export default function AccountsScreen() {
           <Text style={styles.sectionHeading}>{title}</Text>
         </View>
         <View style={styles.card}>
-          {/* System default row */}
+          {/* 시스템 기본값 행 */}
           <Pressable
             style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
             onPress={() => selectAccount(provider, null)}
             disabled={busyAccountId !== null || connState !== 'connected'}
           >
             <View style={styles.rowMain}>
-              <Text style={styles.rowTitle}>System default</Text>
-              <Text style={styles.rowSubtitle}>Use the agent's own login</Text>
+              <Text style={styles.rowTitle}>시스템 기본값</Text>
+              <Text style={styles.rowSubtitle}>에이전트 자체 로그인 사용</Text>
             </View>
             <View style={styles.rowTrailing}>
               {state.activeAccountId === null ? (

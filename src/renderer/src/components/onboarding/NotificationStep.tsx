@@ -175,10 +175,10 @@ export function NotificationStep({
             <div className="min-w-0 space-y-1">
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <Settings className="size-4" />
-                Allow Orca in macOS
+                macOS에서 Orca 허용
               </div>
               <p className="max-w-[58ch] text-[13px] leading-relaxed text-muted-foreground">
-                Open System Settings and make sure Orca is allowed to send notifications.
+                시스템 설정을 열고 Orca가 알림을 보낼 수 있도록 허용하세요.
               </p>
             </div>
             <Button
@@ -188,7 +188,7 @@ export function NotificationStep({
               onClick={() => void handleMacPermission()}
             >
               <Settings className="size-3.5" />
-              Open Mac Settings
+              Mac 설정 열기
             </Button>
           </div>
         </section>
@@ -196,16 +196,16 @@ export function NotificationStep({
 
       <section className="space-y-3">
         <div className="space-y-1">
-          <h2 className="text-sm font-semibold text-foreground">Choose a sound</h2>
+          <h2 className="text-sm font-semibold text-foreground">소리 선택</h2>
           <p className="text-[13px] leading-relaxed text-muted-foreground">
-            Pick the alert Orca plays after a desktop notification is delivered.
+            데스크톱 알림이 도착한 뒤 Orca가 재생할 알림음을 고르세요.
           </p>
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <FileAudio className="size-4" />
-            Notification Sound
+            알림음
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Select
@@ -216,7 +216,7 @@ export function NotificationStep({
               }
             >
               <SelectTrigger className="w-[360px] max-w-full" size="sm">
-                <SelectValue placeholder="Choose notification sound" />
+                <SelectValue placeholder="알림음을 선택하세요" />
               </SelectTrigger>
               <SelectContent
                 portalContainer={selectPortalRoot}
@@ -235,7 +235,7 @@ export function NotificationStep({
                 <SelectSeparator />
                 <SelectItem value={CHOOSE_CUSTOM_SOUND_VALUE}>
                   <Upload className="size-4" />
-                  <span>{customPath ? 'Change Custom File' : 'Choose Custom File'}</span>
+                  <span>{customPath ? '사용자 파일 변경' : '사용자 파일 선택'}</span>
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -247,7 +247,7 @@ export function NotificationStep({
               onClick={() => void handleSendTestNotification()}
             >
               <BellRing className="size-3.5" />
-              Send Test Notification
+              테스트 알림 보내기
             </Button>
           </div>
         </div>

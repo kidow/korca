@@ -26,9 +26,9 @@ describe('NotificationStep', () => {
       <NotificationStep settings={createSettings()} updateSettings={vi.fn()} />
     )
 
-    expect(html).toContain('Notification Sound')
+    expect(html).toContain('알림음')
     expect(html).toContain('role="combobox"')
-    expect(html).toContain('Send Test Notification')
+    expect(html).toContain('테스트 알림 보내기')
     expect(html).not.toContain('aria-pressed')
     expect(html).not.toContain('Agent task complete')
     expect(html).not.toContain('Terminal bell')
@@ -44,7 +44,7 @@ describe('NotificationStep', () => {
       />
     )
 
-    expect(html).not.toContain('Notification sound volume')
+    expect(html).not.toContain('알림음 볼륨')
     expect(html).not.toContain('80%')
   })
 })

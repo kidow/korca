@@ -337,10 +337,10 @@ export function UpdateCard() {
       ? {
           // Why: title is scoped to the operation that failed so check-time
           // failures (commonly GitHub-side) don't read as a bug in Orca.
-          title: cachedVersion ? 'Update Error' : 'Update Check Failed',
+          title: cachedVersion ? '업데이트 오류' : '업데이트 확인 실패',
           summary: cachedVersion
-            ? 'Could not complete the update.'
-            : 'Could not check for updates.',
+            ? '업데이트를 완료할 수 없습니다.'
+            : '업데이트를 확인할 수 없습니다.',
           message: status.message,
           releaseUrl: releaseUrlForVersion(cachedVersion),
           // Why: check-time failures are often transient (offline, GitHub
@@ -348,11 +348,11 @@ export function UpdateCard() {
           // of forcing the user into the manual fallback.
           primaryAction: cachedVersion
             ? {
-                label: 'Retry Download',
+                label: '다운로드 다시 시도',
                 onClick: handleUpdate
               }
             : {
-                label: 'Re-check',
+                label: '다시 확인',
                 onClick: () => {
                   void window.api.updater.check({ includePrerelease: false })
                 }
@@ -360,12 +360,12 @@ export function UpdateCard() {
         }
       : installError
         ? {
-            title: 'Update Error',
-            summary: 'Could not restart to install the update.',
+            title: '업데이트 오류',
+            summary: '업데이트를 설치하기 위해 다시 시작할 수 없습니다.',
             message: installError,
             releaseUrl: releaseUrlForVersion(cachedVersion),
             primaryAction: {
-              label: 'Try Again',
+              label: '다시 시도',
               onClick: handleInstallRetry
             }
           }
@@ -425,18 +425,18 @@ export function UpdateCard() {
 
   const ariaLabel =
     status.state === 'checking'
-      ? 'Checking for updates'
+      ? '업데이트를 확인하는 중'
       : status.state === 'not-available'
-        ? "You're on the latest version"
-        : status.state === 'available'
-          ? 'Update available'
-          : status.state === 'downloading'
-            ? 'Downloading update'
-            : status.state === 'downloaded'
-              ? 'Update ready to install'
-              : status.state === 'error'
-                ? 'Update error'
-                : 'Update status'
+      ? '최신 버전을 사용 중입니다'
+      : status.state === 'available'
+        ? '업데이트 사용 가능'
+        : status.state === 'downloading'
+          ? '업데이트를 다운로드하는 중'
+          : status.state === 'downloaded'
+            ? '업데이트 설치 준비 완료'
+            : status.state === 'error'
+              ? '업데이트 오류'
+              : '업데이트 상태'
 
   // ── Card wrapper ──────────────────────────────────────────────────
 
@@ -450,11 +450,11 @@ export function UpdateCard() {
     // ── Compact transient states (user-initiated check feedback) ──────
 
     if (status.state === 'checking') {
-      return <CompactCardContent icon="spinner" text="Checking for updates..." />
+      return <CompactCardContent icon="spinner" text="업데이트를 확인하는 중..." />
     }
 
     if (status.state === 'not-available') {
-      return <CompactCardContent icon="check" text="You're on the latest version." />
+      return <CompactCardContent icon="check" text="최신 버전을 사용 중입니다." />
     }
 
     // ── Error states ─────────────────────────────────────────────────
@@ -478,11 +478,11 @@ export function UpdateCard() {
       if (hasStartedDownload.current) {
         return (
           <div className="p-4">
-            <p className="text-sm">Installing...</p>
+            <p className="text-sm">설치 중...</p>
           </div>
         )
       }
-      // Settings-initiated download — show "Ready to install"
+      // Settings-initiated download — show the ready-to-install state.
       return (
         <ReadyToInstallContent
           version={status.version}
@@ -773,14 +773,14 @@ function DownloadingContent({
         {release ? (
           <h3 className="text-sm font-semibold">New: {release.title}</h3>
         ) : (
-          <h3 className="text-sm font-semibold">Downloading Update</h3>
+          <h3 className="text-sm font-semibold">업데이트 다운로드 중</h3>
         )}
         <Button
           variant="ghost"
           size="icon"
           className="size-7 shrink-0 min-w-[44px] min-h-[44px] -m-2"
           onClick={onCollapse}
-          aria-label="Minimize to status bar"
+          aria-label="상태 표시줄로 최소화"
         >
           <Minus className="size-3.5" />
         </Button>
@@ -806,7 +806,7 @@ function DownloadingContent({
       )}
 
       <p className="text-sm text-muted-foreground">
-        {release ? release.description : `Orca v${version} is downloading.`}
+        {release ? release.description : `Orca v${version}을 다운로드하는 중입니다.`}
       </p>
 
       <button
@@ -817,12 +817,12 @@ function DownloadingContent({
           )
         }
       >
-        {release ? 'Read the full release notes' : 'Release notes'}
+        {release ? '전체 릴리스 노트 읽기' : '릴리스 노트'}
       </button>
 
       <div className="flex flex-col gap-2 mt-1">
         <Progress value={percent} className="h-1.5" />
-        <p className="text-xs text-muted-foreground">Downloading... {percent}%</p>
+        <p className="text-xs text-muted-foreground">다운로드 중... {percent}%</p>
       </div>
     </div>
   )
@@ -857,7 +857,7 @@ function ErrorCardContent({
           size="icon"
           className="size-7 shrink-0 min-w-[44px] min-h-[44px] -m-2"
           onClick={onClose}
-          aria-label="Minimize to status bar"
+          aria-label="상태 표시줄로 최소화"
         >
           <Minus className="size-3.5" />
         </Button>
@@ -900,24 +900,24 @@ function ReadyToInstallContent({
   return (
     <div className="flex flex-col gap-3 p-4">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="text-sm font-semibold">Ready to Install</h3>
+        <h3 className="text-sm font-semibold">설치 준비 완료</h3>
         <Button
           variant="ghost"
           size="icon"
           className="size-7 shrink-0 min-w-[44px] min-h-[44px] -m-2"
           onClick={onClose}
-          aria-label="Minimize to status bar"
+          aria-label="상태 표시줄로 최소화"
         >
           <Minus className="size-3.5" />
         </Button>
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Orca v{version} is downloaded. Restart when you&apos;re ready.
+        Orca v{version}을 다운로드했습니다. 준비되면 다시 시작하세요.
       </p>
 
       <Button variant="default" size="sm" onClick={onRestart} className="w-full">
-        Restart to Update
+        업데이트를 위해 다시 시작
       </Button>
     </div>
   )

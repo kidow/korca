@@ -109,11 +109,11 @@ describe('CommitMessageAiPane', () => {
   it('renders only the opt-in control before the feature is enabled', () => {
     const markup = renderPane(buildSettings())
 
-    expect(markup).toContain('Source Control AI')
-    expect(markup).toContain('Enable Source Control AI')
+    expect(markup).toContain('소스 컨트롤 AI')
+    expect(markup).toContain('소스 컨트롤 AI 사용')
     expect(markup).toContain('aria-checked="false"')
-    expect(markup).not.toContain('Orca invokes this CLI')
-    expect(markup).not.toContain('Thinking effort')
+    expect(markup).not.toContain('워크트리가 있는 위치에서')
+    expect(markup).not.toContain('추론 강도')
   })
 
   it('renders model, thinking, and prompt controls for enabled preset agents', () => {
@@ -131,16 +131,16 @@ describe('CommitMessageAiPane', () => {
     )
 
     expect(markup).toContain('aria-checked="true"')
-    expect(markup).toContain('Orca invokes this CLI')
-    expect(markup).toContain('Default model')
-    expect(markup).toContain('Thinking effort')
-    expect(markup).toContain('Commit message model')
-    expect(markup).toContain('PR details model')
-    expect(markup).not.toContain('Branch name model')
-    expect(markup).toContain('Higher effort produces more careful messages')
+    expect(markup).toContain('워크트리가 있는 위치에서')
+    expect(markup).toContain('기본 모델')
+    expect(markup).toContain('추론 강도')
+    expect(markup).toContain('커밋 메시지 모델')
+    expect(markup).toContain('PR 세부 정보 모델')
+    expect(markup).not.toContain('브랜치 이름 모델')
+    expect(markup).toContain('강도가 높을수록 더 신중한 결과를 얻지만')
     expect(markup).toContain('Use Conventional Commits.')
-    expect(markup).toContain('Save')
-    expect(markup).toContain('Saved')
+    expect(markup).toContain('저장')
+    expect(markup).toContain('저장됨')
   })
 
   it('keeps the agent and model selectors aligned for long labels', () => {
@@ -175,8 +175,8 @@ describe('CommitMessageAiPane', () => {
       })
     )
 
-    expect(markup).toContain('Source Control AI')
-    expect(markup).toContain('Custom command')
+    expect(markup).toContain('소스 컨트롤 AI')
+    expect(markup).toContain('사용자 지정 명령')
     expect(markup).toContain('ollama run llama3.1 {prompt}')
   })
 
@@ -195,11 +195,11 @@ describe('CommitMessageAiPane', () => {
       })
     )
 
-    expect(markup).toContain('Not configured')
-    expect(markup).toContain('Your default agent is Aider')
-    expect(markup).toContain('Choose a supported agent or Custom')
-    expect(markup).not.toContain('Which model the selected agent uses')
-    expect(markup).not.toContain('Thinking effort')
+    expect(markup).toContain('미설정')
+    expect(markup).toContain('기본 에이전트가 Aider')
+    expect(markup).toContain('지원되는 에이전트나 사용자 지정을 선택하세요')
+    expect(markup).not.toContain('선택한 에이전트가 사용하는 모델')
+    expect(markup).not.toContain('추론 강도')
   })
 
   it('shows Gemini as coming soon instead of a selectable generator', () => {
@@ -217,13 +217,13 @@ describe('CommitMessageAiPane', () => {
     )
 
     expect(markup).toContain('Gemini')
-    expect(markup).toContain('Gemini Source Control AI is coming soon')
-    expect(markup).not.toContain('Which model Source Control AI uses')
+    expect(markup).toContain('Gemini의 소스 컨트롤 AI는 곧 지원됩니다')
+    expect(markup).not.toContain('작업별 재정의가 없을 때 소스 컨트롤 AI가 사용하는 모델')
   })
 
   it('keeps custom command discoverable in settings search metadata', () => {
     const customCommandEntry = COMMIT_MESSAGE_AI_PANE_SEARCH_ENTRIES.find(
-      (entry) => entry.title === 'Custom command'
+      (entry) => entry.title === '사용자 지정 명령'
     )
 
     expect(customCommandEntry?.keywords).toEqual(

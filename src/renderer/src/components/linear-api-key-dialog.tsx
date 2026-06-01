@@ -58,7 +58,7 @@ export function LinearApiKeyDialog({
   const runtimeTarget = useMemo(() => getActiveRuntimeTarget(settings), [settings])
   const personalKeyUrl = buildLinearPersonalApiKeySettingsUrl(workspace?.organizationUrlKey)
   const workspaceApiUrl = buildLinearWorkspaceApiSettingsUrl(workspace?.organizationUrlKey)
-  const submitLabel = connectLabel ?? (workspace ? 'Update access' : 'Connect')
+  const submitLabel = connectLabel ?? (workspace ? '접근 권한 업데이트' : '연결')
   const resolvedDialogState = resolveLinearApiKeyDialogState(dialogState, open)
   if (resolvedDialogState !== dialogState) {
     // Why: parent-controlled close can race an in-flight connect request; keep
@@ -100,7 +100,7 @@ export function LinearApiKeyDialog({
         setDialogState((current) => ({
           ...current,
           connectState: 'error',
-          connectError: error instanceof Error ? error.message : 'Connection failed'
+        connectError: error instanceof Error ? error.message : '연결에 실패했습니다'
         }))
       }
     }
@@ -108,16 +108,16 @@ export function LinearApiKeyDialog({
 
   const resolvedTitle =
     title ??
-    (workspace ? `Update Linear access for ${workspace.organizationName}` : 'Add Linear access')
+    (workspace ? `${workspace.organizationName}의 Linear 접근 권한 업데이트` : 'Linear 접근 권한 추가')
   const resolvedDescription =
     description ??
     (workspace
-      ? `Paste a Personal API key for ${workspace.organizationName}. If this workspace is already connected, Orca replaces its stored key.`
-      : 'Paste a Personal API key for the Linear workspace you want Orca to use. If that workspace is already connected, Orca replaces its stored key.')
+      ? `${workspace.organizationName}의 Personal API 키를 붙여넣으세요. 이 작업공간이 이미 연결되어 있으면 Orca가 저장된 키를 바꿉니다.`
+      : 'Orca가 사용할 Linear 작업공간의 Personal API 키를 붙여넣으세요. 해당 작업공간이 이미 연결되어 있으면 Orca가 저장된 키를 바꿉니다.')
   const storageCopy =
     runtimeTarget.kind === 'environment'
-      ? 'This key is stored by the active remote runtime.'
-      : 'Local runtime keys are stored on this device using Electron encrypted storage when available.'
+      ? '이 키는 활성 원격 런타임에 저장됩니다.'
+      : '로컬 런타임 키는 가능한 경우 이 기기에서 Electron 암호화 저장소를 사용해 저장됩니다.'
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -138,7 +138,7 @@ export function LinearApiKeyDialog({
         <div className="space-y-3">
           <div className="space-y-2">
             <Label htmlFor={apiKeyInputId} className="text-xs">
-              Personal API key
+              Personal API 키
             </Label>
             <Input
               id={apiKeyInputId}
@@ -166,19 +166,16 @@ export function LinearApiKeyDialog({
           ) : null}
           <div className="space-y-2 text-xs leading-relaxed text-muted-foreground">
             <p>
-              Create a Personal API key from Account &gt; Security &amp; Access.{' '}
+            Account &gt; Security &amp; Access에서 Personal API 키를 만드세요.{' '}
               {!workspace
-                ? 'Use Linear to choose the intended workspace before creating the key.'
+                ? '키를 만들기 전에 Linear에서 대상 작업공간을 선택하세요.'
                 : null}
             </p>
             <p>
-              Prefer full access when Orca should show every team the account can access in that
-              workspace. Restricted keys only expose permitted teams, and private teams require the
-              key owner to have access.
+              Orca가 해당 작업공간에서 계정이 접근할 수 있는 모든 팀을 보여줘야 한다면 전체 접근을 권장합니다. 제한된 키는 허용된 팀만 노출하며, 비공개 팀은 키 소유자에게 접근 권한이 있어야 합니다.
             </p>
             <p>
-              If member API keys are blocked, ask a workspace admin to allow them from workspace API
-              settings.
+              멤버 API 키가 차단되어 있다면 작업공간 관리자에게 workspace API 설정에서 허용해 달라고 요청하세요.
             </p>
             <div className="flex flex-wrap items-center gap-2 pt-1">
               <button
@@ -187,7 +184,7 @@ export function LinearApiKeyDialog({
                 onClick={() => window.api.shell.openUrl(personalKeyUrl)}
               >
                 <ExternalLink className="size-3" />
-                Personal API keys
+                Personal API 키
               </button>
               <span className="text-muted-foreground/60">|</span>
               <button
@@ -196,7 +193,7 @@ export function LinearApiKeyDialog({
                 onClick={() => window.api.shell.openUrl(workspaceApiUrl)}
               >
                 <ExternalLink className="size-3" />
-                Workspace API settings
+                작업공간 API 설정
               </button>
             </div>
           </div>
@@ -211,7 +208,7 @@ export function LinearApiKeyDialog({
             onClick={() => onOpenChange(false)}
             disabled={connectState === 'connecting'}
           >
-            Cancel
+            취소
           </Button>
           <Button
             onClick={() => void handleConnect()}
@@ -220,7 +217,7 @@ export function LinearApiKeyDialog({
             {connectState === 'connecting' ? (
               <>
                 <LoaderCircle className="size-4 animate-spin" />
-                Verifying...
+                확인 중...
               </>
             ) : (
               submitLabel

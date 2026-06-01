@@ -92,27 +92,27 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
   }
 
   const checkForUpdatesItem: Electron.MenuItemConstructorOptions = {
-    label: 'Check for Updates...',
+    label: '업데이트 확인...',
     click: checkForUpdatesClick
   }
 
   const settingsItem: Electron.MenuItemConstructorOptions = {
-    label: `Settings\t${shortcutLabel('app.settings')}`,
+    label: `설정\t${shortcutLabel('app.settings')}`,
     click: () => onOpenSettings()
   }
 
   const featureTourItem: Electron.MenuItemConstructorOptions = {
-    label: 'Explore Orca',
+    label: 'Orca 둘러보기',
     click: (_menuItem, window) => onOpenFeatureTour(window)
   }
 
   const crashReportItem: Electron.MenuItemConstructorOptions = {
-    label: 'Report Crash...',
+    label: '충돌 보고...',
     click: (_menuItem, window) => onOpenCrashReport(window)
   }
 
   const exportPdfItem: Electron.MenuItemConstructorOptions = {
-    label: `Export as PDF...\t${shortcutLabel('file.exportPdf')}`,
+    label: `PDF로 내보내기...\t${shortcutLabel('file.exportPdf')}`,
     click: () => {
       // Why: fire a one-way event into the focused renderer. The renderer
       // owns the knowledge of whether a markdown surface is active and
@@ -149,7 +149,7 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
   }
 
   const fileMenu: Electron.MenuItemConstructorOptions = {
-    label: 'File',
+    label: '파일',
     submenu: [
       exportPdfItem,
       // Why: on Windows/Linux there is no app-named menu, so Settings and
@@ -161,13 +161,13 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
             { type: 'separator' },
             settingsItem,
             { type: 'separator' },
-            { role: 'quit', label: 'Exit' }
+            { role: 'quit', label: '종료' }
           ] satisfies Electron.MenuItemConstructorOptions[]))
     ]
   }
 
   const editMenu: Electron.MenuItemConstructorOptions = {
-    label: 'Edit',
+    label: '편집',
     submenu: [
       { role: 'undo' },
       { role: 'redo' },
@@ -187,7 +187,7 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
   // appearance state through getAppearanceState() and produces a fresh
   // template with accurate `checked` values.
   const appearanceSubmenu: Electron.MenuItemConstructorOptions = {
-    label: 'Appearance',
+    label: '표시',
     submenu: [
       {
         // Why: display-only shortcut hint — not a real accelerator. Cmd/Ctrl+B
@@ -196,35 +196,35 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
         // accelerator here would steal the chord before that carve-out can
         // fire. Sidebar open/closed lives in the renderer store (non-persisted),
         // so we forward a toggle request rather than mirroring state in main.
-        label: `Toggle Left Sidebar\t${shortcutLabel('sidebar.left.toggle')}`,
+        label: `왼쪽 사이드바 전환\t${shortcutLabel('sidebar.left.toggle')}`,
         click: () => onToggleLeftSidebar()
       },
       {
         // Why: display-only shortcut hint for the same reason as above.
-        label: `Toggle Right Sidebar\t${shortcutLabel('sidebar.right.toggle')}`,
+        label: `오른쪽 사이드바 전환\t${shortcutLabel('sidebar.right.toggle')}`,
         click: () => onToggleRightSidebar()
       },
       {
-        label: 'Show Status Bar',
+        label: '상태 표시줄 표시',
         type: 'checkbox',
         checked: appearance.statusBarVisible,
         click: () => onToggleAppearance('statusBarVisible')
       },
       { type: 'separator' },
       {
-        label: 'Show Tasks Button',
+        label: '작업 버튼 표시',
         type: 'checkbox',
         checked: appearance.showTasksButton,
         click: () => onToggleAppearance('showTasksButton')
       },
       {
-        label: 'Show Orca Mobile Button',
+        label: 'Orca 모바일 버튼 표시',
         type: 'checkbox',
         checked: appearance.showMobileButton,
         click: () => onToggleAppearance('showMobileButton')
       },
       {
-        label: 'Show Titlebar App Name',
+        label: '제목 표시줄 앱 이름 표시',
         type: 'checkbox',
         checked: appearance.showTitlebarAppName,
         click: () => onToggleAppearance('showTitlebarAppName')
@@ -233,28 +233,28 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
   }
 
   const viewMenu: Electron.MenuItemConstructorOptions = {
-    label: 'View',
+    label: '보기',
     submenu: [
       {
-        label: 'Reload',
+        label: '다시 로드',
         click: () => reloadFocusedWindow(false)
       },
       {
-        label: `Force Reload\t${shortcutLabel('app.forceReload')}`,
+        label: `강제 다시 로드\t${shortcutLabel('app.forceReload')}`,
         click: () => reloadFocusedWindow(true)
       },
       { role: 'toggleDevTools' },
       { type: 'separator' },
       {
-        label: `Reset Size\t${shortcutLabel('zoom.reset')}`,
+        label: `크기 재설정\t${shortcutLabel('zoom.reset')}`,
         click: () => onZoomReset()
       },
       {
-        label: `Zoom In\t${shortcutLabel('zoom.in')}`,
+        label: `확대\t${shortcutLabel('zoom.in')}`,
         click: () => onZoomIn()
       },
       {
-        label: `Zoom Out\t${shortcutLabel('zoom.out')}`,
+        label: `축소\t${shortcutLabel('zoom.out')}`,
         click: () => onZoomOut()
       },
       { type: 'separator' },
@@ -264,7 +264,7 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
         // before the renderer's keydown handler fires. The overlay
         // mutual-exclusion logic (which runs in the renderer) would be
         // bypassed if this were a real accelerator binding.
-        label: `Open Worktree Palette\t${shortcutLabel('worktree.palette')}`
+        label: `워크트리 팔레트 열기\t${shortcutLabel('worktree.palette')}`
       },
       { type: 'separator' },
       { role: 'togglefullscreen' },
@@ -274,12 +274,12 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
   }
 
   const windowMenu: Electron.MenuItemConstructorOptions = {
-    label: 'Window',
+    label: '창',
     submenu: [{ role: 'minimize' }, { role: 'zoom' }]
   }
 
   const helpMenu: Electron.MenuItemConstructorOptions = {
-    label: 'Help',
+    label: '도움말',
     submenu: [
       crashReportItem,
       { type: 'separator' },

@@ -33,9 +33,9 @@ export function getLocalFileManagerLabel(userAgent?: string): string {
     return 'Finder'
   }
   if (resolvedUserAgent.includes('Windows')) {
-    return 'File Explorer'
+    return '파일 탐색기'
   }
-  return 'File Manager'
+  return '파일 관리자'
 }
 
 export function getWorktreeOpenInEntries(
@@ -56,17 +56,17 @@ export function getWorktreeOpenInEntries(
 
 function showOpenFailureToast(reason: ShellOpenLocalPathFailureReason): void {
   if (reason === 'not-absolute') {
-    toast.error('Workspace path is not a valid local path.')
+    toast.error('작업공간 경로가 올바른 로컬 경로가 아닙니다.')
     return
   }
   if (reason === 'not-found') {
-    toast.error('Workspace folder was not found.', {
-      description: 'It may have been moved or deleted. Refresh workspaces or remove it from Orca.'
+    toast.error('작업공간 폴더를 찾을 수 없습니다.', {
+      description: '이동되었거나 삭제되었을 수 있습니다. 작업공간을 새로고침하거나 Orca에서 제거하세요.'
     })
     return
   }
-  toast.error('Could not open workspace folder.', {
-    description: 'Check the editor command or file manager configuration on this machine.'
+  toast.error('작업공간 폴더를 열 수 없습니다.', {
+    description: '이 기기의 에디터 명령이나 파일 관리자 설정을 확인하세요.'
   })
 }
 
@@ -157,7 +157,7 @@ export function WorktreeOpenInSubMenu({
     <DropdownMenuSub>
       <DropdownMenuSubTrigger disabled={disabled}>
         <FolderOpen className="size-3.5" />
-        Open in
+        열기
       </DropdownMenuSubTrigger>
       <DropdownMenuSubContent
         className="w-52"

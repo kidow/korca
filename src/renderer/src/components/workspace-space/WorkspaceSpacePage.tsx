@@ -57,7 +57,7 @@ export default function WorkspaceSpacePage(): React.JSX.Element {
       <div className="flex shrink-0 items-center gap-3 border-b border-border px-5 py-3">
         <Button variant="outline" size="sm" onClick={closeSpacePage} className="shrink-0 gap-1.5">
           <ArrowLeft className="size-3.5" />
-          Back
+          뒤로
         </Button>
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border bg-muted/30">
@@ -65,11 +65,11 @@ export default function WorkspaceSpacePage(): React.JSX.Element {
           </div>
           <div className="min-w-0">
             <div className="flex min-w-0 items-center gap-2">
-              <h1 className="truncate text-base font-semibold text-foreground">Space</h1>
-              <Badge variant="secondary">Beta</Badge>
+              <h1 className="truncate text-base font-semibold text-foreground">공간</h1>
+              <Badge variant="secondary">베타</Badge>
             </div>
             <p className="truncate text-xs text-muted-foreground">
-              Workspace disk usage and reclaimable worktree storage.
+              작업공간 디스크 사용량과 회수 가능한 worktree 저장 공간입니다.
             </p>
           </div>
         </div>

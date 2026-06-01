@@ -47,21 +47,21 @@ const OPERATIONS: {
 }[] = [
   {
     operation: 'commitMessage',
-    modelLabel: 'Commit message model',
-    instructionLabel: 'Commit message prompt',
-    globalPlaceholder: 'Global commit message prompt is empty.'
+    modelLabel: '커밋 메시지 모델',
+    instructionLabel: '커밋 메시지 프롬프트',
+    globalPlaceholder: '전역 커밋 메시지 프롬프트가 비어 있습니다.'
   },
   {
     operation: 'pullRequest',
-    modelLabel: 'PR details model',
-    instructionLabel: 'Pull request prompt',
-    globalPlaceholder: 'Global pull request prompt is empty.'
+    modelLabel: 'PR 세부 정보 모델',
+    instructionLabel: '풀 리퀘스트 프롬프트',
+    globalPlaceholder: '전역 풀 리퀘스트 프롬프트가 비어 있습니다.'
   },
   {
     operation: 'branchName',
-    modelLabel: 'Branch name model',
-    instructionLabel: 'Branch name prompt',
-    globalPlaceholder: 'Global branch name prompt is empty.'
+    modelLabel: '브랜치 이름 모델',
+    instructionLabel: '브랜치 이름 프롬프트',
+    globalPlaceholder: '전역 브랜치 이름 프롬프트가 비어 있습니다.'
   }
 ]
 
@@ -239,7 +239,7 @@ export function RepositorySourceControlAiSection({
         return
       }
       if (result === false) {
-        setSaveError('Failed to save Source Control AI settings.')
+        setSaveError('소스 컨트롤 AI 설정 저장에 실패했습니다.')
         return
       }
       setDraftState((current) => {
@@ -255,7 +255,7 @@ export function RepositorySourceControlAiSection({
       })
     } catch {
       if (mountedRef.current) {
-        setSaveError('Failed to save Source Control AI settings.')
+        setSaveError('소스 컨트롤 AI 설정 저장에 실패했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -376,10 +376,10 @@ export function RepositorySourceControlAiSection({
   }
 
   const prDefaultRows: { key: PrDefaultKey; label: string }[] = [
-    { key: 'draft', label: 'Draft by default' },
-    { key: 'useTemplate', label: 'Use PR template when available' },
-    { key: 'generateDetailsOnOpen', label: 'Generate details when opening Create PR' },
-    { key: 'openAfterCreate', label: 'Open PR after creation' }
+    { key: 'draft', label: '기본 초안' },
+    { key: 'useTemplate', label: '사용 가능한 경우 PR 템플릿 사용' },
+    { key: 'generateDetailsOnOpen', label: 'PR 생성 화면을 열 때 세부 정보 생성' },
+    { key: 'openAfterCreate', label: '생성 후 PR 열기' }
   ]
 
   return (
@@ -390,15 +390,15 @@ export function RepositorySourceControlAiSection({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-1">
-          <h3 className="text-sm font-semibold">Source Control AI</h3>
+          <h3 className="text-sm font-semibold">소스 컨트롤 AI</h3>
           <p className="text-xs text-muted-foreground">
-            Repo-specific overrides. Each field uses global settings until you set it here.
+            저장소별 재정의입니다. 여기서 값을 지정하기 전까지 각 필드는 전역 설정을 사용합니다.
           </p>
           {saveError ? <p className="text-xs text-destructive">{saveError}</p> : null}
         </div>
         <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
           <span className="text-[11px] text-muted-foreground">
-            {isDirty ? 'Unsaved changes' : 'Saved'}
+            {isDirty ? '저장되지 않은 변경 사항' : '저장됨'}
           </span>
           {isDirty ? (
             <Button
@@ -408,7 +408,7 @@ export function RepositorySourceControlAiSection({
               onClick={discardDraft}
               disabled={isSaving}
             >
-              Discard
+              버리기
             </Button>
           ) : null}
           <Button
@@ -418,7 +418,7 @@ export function RepositorySourceControlAiSection({
             onClick={() => void saveDraft()}
             disabled={!isDirty || isSaving}
           >
-            {isSaving ? 'Saving...' : 'Save'}
+            {isSaving ? '저장 중...' : '저장'}
           </Button>
         </div>
       </div>
@@ -455,7 +455,7 @@ export function RepositorySourceControlAiSection({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={INHERIT_MODEL_VALUE}>Use global model</SelectItem>
+                      <SelectItem value={INHERIT_MODEL_VALUE}>전역 모델 사용</SelectItem>
                       {capability.models.map((model) => (
                         <SelectItem key={model.id} value={model.id}>
                           {model.label}
@@ -466,7 +466,7 @@ export function RepositorySourceControlAiSection({
                 </div>
                 {selectedModel?.thinkingLevels && selectedThinking ? (
                   <div className="flex items-center justify-end gap-2">
-                    <span className="text-[11px] text-muted-foreground">Thinking</span>
+                    <span className="text-[11px] text-muted-foreground">추론</span>
                     <Select
                       value={selectedThinking}
                       onValueChange={(value) =>
@@ -492,8 +492,8 @@ export function RepositorySourceControlAiSection({
         </div>
       ) : (
         <p className="rounded-md border border-border px-3 py-2 text-xs text-muted-foreground">
-          Model overrides are available after a supported global Source Control AI agent is
-          selected.
+          지원되는 전역 소스 컨트롤 AI 에이전트를 선택한 후에만 모델 재정의를 사용할 수
+          있습니다.
         </p>
       )}
 
@@ -514,8 +514,8 @@ export function RepositorySourceControlAiSection({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={PROMPT_MODE_INHERIT}>Use global</SelectItem>
-                    <SelectItem value={PROMPT_MODE_OVERRIDE}>Customize</SelectItem>
+                    <SelectItem value={PROMPT_MODE_INHERIT}>전역 사용</SelectItem>
+                    <SelectItem value={PROMPT_MODE_OVERRIDE}>사용자 지정</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -533,7 +533,7 @@ export function RepositorySourceControlAiSection({
       </div>
 
       <div className="space-y-2">
-        <Label className="text-xs font-medium">PR creation defaults</Label>
+        <Label className="text-xs font-medium">PR 생성 기본값</Label>
         <div className="space-y-2">
           {prDefaultRows.map((row) => (
             <div
@@ -549,9 +549,9 @@ export function RepositorySourceControlAiSection({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="inherit">Use global</SelectItem>
-                  <SelectItem value="on">On</SelectItem>
-                  <SelectItem value="off">Off</SelectItem>
+                  <SelectItem value="inherit">전역 사용</SelectItem>
+                  <SelectItem value="on">켜짐</SelectItem>
+                  <SelectItem value="off">꺼짐</SelectItem>
                 </SelectContent>
               </Select>
             </div>

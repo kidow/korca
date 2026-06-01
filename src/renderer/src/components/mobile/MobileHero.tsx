@@ -29,15 +29,14 @@ export function HeroIntro({ onStart }: { onStart: () => void }): React.JSX.Eleme
   return (
     <div className="mp-intro-shell">
       <div className="mp-eyebrow-row">
-        <span className="mp-eyebrow">Orca Mobile</span>
+        <span className="mp-eyebrow">Orca 모바일</span>
       </div>
-      <h1 className="mp-h1">Your workspaces, in your pocket.</h1>
+      <h1 className="mp-h1">작업공간을 손안에서 바로.</h1>
       <p className="mp-lead">
-        Control Orca from your phone. Check on agents, review changes, and kick off tasks while
-        you&apos;re away from your desk.
+        휴대폰에서 Orca를 제어하세요. 자리를 비운 동안에도 에이전트를 확인하고, 변경 사항을 검토하고, 작업을 시작할 수 있습니다.
       </p>
-      <div className="mp-platform-badges" aria-label="Supported mobile platforms">
-        <span className="mp-platform-label">Available on</span>
+      <div className="mp-platform-badges" aria-label="지원하는 모바일 플랫폼">
+        <span className="mp-platform-label">지원 플랫폼</span>
         <span className="mp-platform-badge">
           <IosBrandIcon />
           iOS
@@ -53,7 +52,7 @@ export function HeroIntro({ onStart }: { onStart: () => void }): React.JSX.Eleme
           className="mp-primary-action mp-flow-primary-action"
           onClick={onStart}
         >
-          Get started
+          시작하기
           <ArrowRight className="size-3.5" />
         </button>
       </div>
@@ -77,13 +76,13 @@ export function HeroPaired({
   return (
     <div>
       <div className="mp-eyebrow-row">
-        <span className="mp-eyebrow">Orca Mobile</span>
+        <span className="mp-eyebrow">Orca 모바일</span>
       </div>
       <h1 className="mp-h1">
-        {devices.length === 1 ? 'Your phone is paired.' : 'Your phones are paired.'}
+        {devices.length === 1 ? '휴대폰이 페어링되었습니다.' : '휴대폰들이 페어링되었습니다.'}
       </h1>
       <p className="mp-lead-sm">
-        Open Orca Mobile to pick up where you left off, or pair another device.
+        Orca 모바일을 열어 작업을 이어가거나 다른 기기를 페어링하세요.
       </p>
       <ul className="mp-paired-list">
         {devices.map((device) => {
@@ -96,7 +95,7 @@ export function HeroPaired({
               <div className="mp-paired-main">
                 <div className="mp-paired-name">{device.name}</div>
                 <div className="mp-paired-meta">
-                  Paired {new Date(device.pairedAt).toLocaleDateString()}
+                  {new Date(device.pairedAt).toLocaleDateString()}에 페어링됨
                 </div>
               </div>
               <button
@@ -104,8 +103,8 @@ export function HeroPaired({
                 className="mp-paired-revoke"
                 onClick={() => onRevoke(device.deviceId)}
                 disabled={revoking}
-                aria-label={`Revoke ${device.name}`}
-                title="Revoke device"
+                aria-label={`${device.name} 해제`}
+                title="기기 해제"
               >
                 <Trash2 className="size-3.5" />
               </button>
@@ -116,7 +115,7 @@ export function HeroPaired({
       <div className="mp-flow-actions">
         <button type="button" className="mp-secondary-action" onClick={onPairAnother}>
           <Smartphone className="size-3.5" />
-          Pair another device
+          다른 기기 페어링
         </button>
         <span />
       </div>
@@ -179,11 +178,11 @@ export function HeroFlow({
             <div className="mp-step2-copy">
               <div className="mp-eyebrow-row">
                 <div className="mp-step-num">{stepIdx + 1}</div>
-                <span className="mp-eyebrow">Step 1 of 2</span>
+                <span className="mp-eyebrow">1 / 2단계</span>
               </div>
-              <h2 className="mp-h2">Get the app.</h2>
+              <h2 className="mp-h2">앱을 받으세요.</h2>
               <p className="mp-lead-sm">
-                Scan the QR with your phone or open the install link to grab Orca Mobile.
+                휴대폰으로 QR을 스캔하거나 설치 링크를 열어 Orca 모바일을 받으세요.
               </p>
               <div className="mp-tab-toggle">
                 <button
@@ -211,12 +210,12 @@ export function HeroFlow({
                 </button>
                 <button type="button" className="mp-text-link" onClick={onCopyInstallUrl}>
                   <Copy className="size-3.5" />
-                  Copy install link
+                  설치 링크 복사
                 </button>
               </div>
             </div>
-            <div className="mp-qr" aria-label="Install QR code">
-              {installQrUrl ? <img src={installQrUrl} alt="Install QR" /> : null}
+            <div className="mp-qr" aria-label="설치 QR 코드">
+              {installQrUrl ? <img src={installQrUrl} alt="설치 QR" /> : null}
             </div>
           </div>
         </div>
@@ -226,15 +225,15 @@ export function HeroFlow({
             <div className="mp-step2-copy">
               <div className="mp-eyebrow-row">
                 <div className="mp-step-num">2</div>
-                <span className="mp-eyebrow">Step 2 of 2</span>
+                <span className="mp-eyebrow">2 / 2단계</span>
               </div>
-              <h2 className="mp-h2">Pair this {getDeviceLabel()}.</h2>
+              <h2 className="mp-h2">이 {getDeviceLabel()}를 페어링하세요.</h2>
               <p className="mp-lead-sm">
-                Open Orca Mobile, tap <strong>Pair Desktop</strong>, and scan the code.
+                Orca 모바일을 열고 <strong>데스크톱 페어링</strong>을 누른 뒤 코드를 스캔하세요.
               </p>
 
               <div className="mp-network-row">
-                <span className="mp-network-label">Network</span>
+                <span className="mp-network-label">네트워크</span>
                 <Select
                   value={selectedAddress ?? ''}
                   onValueChange={onSelectedAddressChange}
@@ -243,9 +242,9 @@ export function HeroFlow({
                   <SelectTrigger
                     size="sm"
                     className="mp-network-select"
-                    aria-label="Network interface to advertise"
+                    aria-label="알릴 네트워크 인터페이스"
                   >
-                    <SelectValue placeholder="No interfaces found" />
+                    <SelectValue placeholder="인터페이스를 찾지 못했습니다" />
                   </SelectTrigger>
                   <SelectContent>
                     {networkInterfaces.map((iface) => (
@@ -260,15 +259,15 @@ export function HeroFlow({
                   className={cn('mp-network-refresh', refreshingNetworkInterfaces && 'is-spinning')}
                   onClick={onRefreshNetworkInterfaces}
                   disabled={refreshingNetworkInterfaces}
-                  aria-label="Refresh network interfaces"
-                  title="Refresh network interfaces"
+                  aria-label="네트워크 인터페이스 새로고침"
+                  title="네트워크 인터페이스 새로고침"
                 >
                   <RefreshCw className="size-3.5" />
                 </button>
               </div>
 
               <div className="mp-inline-actions">
-                <span className="mp-action-divider">Can&apos;t scan?</span>
+                <span className="mp-action-divider">스캔할 수 없나요?</span>
                 <button
                   type="button"
                   className="mp-text-link"
@@ -276,20 +275,20 @@ export function HeroFlow({
                   disabled={!pairingUrl || pairLoading}
                 >
                   <Copy className="size-3.5" />
-                  Copy pairing code
+                  페어링 코드 복사
                 </button>
               </div>
             </div>
             <div className="mp-qr-stack">
               <div
                 className="mp-qr"
-                aria-label="Pairing QR code"
+                aria-label="페어링 QR 코드"
                 aria-busy={pairLoading && !pairQrDataUrl}
               >
                 {pairQrDataUrl ? (
-                  <img src={pairQrDataUrl} alt="Pairing QR" />
+                  <img src={pairQrDataUrl} alt="페어링 QR" />
                 ) : pairLoading ? (
-                  <span className="mp-qr-loading">Generating…</span>
+                  <span className="mp-qr-loading">생성 중…</span>
                 ) : null}
               </div>
               <button
@@ -298,7 +297,7 @@ export function HeroFlow({
                 onClick={onRegeneratePairing}
                 disabled={pairLoading}
               >
-                {pairLoading ? 'Generating…' : pairQrDataUrl ? 'Regenerate code' : 'Generate code'}
+                {pairLoading ? '생성 중…' : pairQrDataUrl ? '코드 다시 생성' : '코드 생성'}
               </button>
             </div>
           </div>
@@ -308,7 +307,7 @@ export function HeroFlow({
       <div className="mp-flow-actions">
         <button type="button" className="mp-flow-back" onClick={onBack}>
           <ArrowLeft className="size-3" />
-          Back
+          뒤로
         </button>
         {isLast ? (
           onDone ? (
@@ -317,7 +316,7 @@ export function HeroFlow({
               className="mp-primary-action mp-flow-primary-action"
               onClick={onDone}
             >
-              Done
+              완료
               <ArrowRight className="size-3.5" />
             </button>
           ) : (
@@ -329,7 +328,7 @@ export function HeroFlow({
             className="mp-flow-continue mp-flow-primary-action"
             onClick={onContinue}
           >
-            Continue
+            계속
             <ArrowRight className="size-3.5" />
           </button>
         )}

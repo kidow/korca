@@ -45,7 +45,7 @@ async function openSourceControl(page: Page, expectedWorktreeId: string): Promis
       { timeout: 5_000 }
     )
     .toBe(true)
-  await expect(page.getByRole('button', { name: /Source Control/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: /소스 컨트롤/ })).toBeVisible()
 }
 
 async function forceCreatePREligibleStatus(
@@ -98,7 +98,7 @@ async function seedCreatePREligibleBranch(
     const branch = worktree.branch.replace(/^refs\/heads\//, '')
     const pr = {
       number: 73,
-      title: 'Create PR from E2E',
+      title: 'E2E에서 풀 리퀘스트 생성',
       state: 'open' as const,
       url: 'https://github.com/acme/orca/pull/73',
       checksStatus: 'pending' as const,
@@ -188,20 +188,20 @@ test.describe('Source Control create pull request', () => {
     await openSourceControl(orcaPage, worktreeId)
     await forceCreatePREligibleStatus(orcaPage, worktreeId, branch)
 
-    const createButton = orcaPage.getByRole('button', { name: 'Create PR' })
+    const createButton = orcaPage.getByRole('button', { name: 'PR 생성' })
     await expect(createButton).toBeVisible({ timeout: 10_000 })
     await expect(createButton).toBeDisabled()
-    const titleInput = orcaPage.getByRole('textbox', { name: 'Pull request title' })
+    const titleInput = orcaPage.getByRole('textbox', { name: '풀 리퀘스트 제목' })
     const descriptionInput = orcaPage.getByRole('textbox', {
-      name: 'Pull request description'
+      name: '풀 리퀘스트 설명'
     })
     await expect(titleInput).toHaveValue('')
-    await expect(orcaPage.getByRole('textbox', { name: 'Pull request base branch' })).toHaveValue(
+    await expect(orcaPage.getByRole('textbox', { name: '풀 리퀘스트 기준 브랜치' })).toHaveValue(
       'main'
     )
     await expect(descriptionInput).toHaveValue('')
-    await titleInput.fill('Create PR from E2E')
-    await descriptionInput.fill('- Initial commit for E2E')
+    await titleInput.fill('E2E에서 풀 리퀘스트 생성')
+    await descriptionInput.fill('- E2E 초기 커밋')
     await expect(createButton).toBeEnabled()
     await createButton.click()
 
@@ -225,8 +225,8 @@ test.describe('Source Control create pull request', () => {
       provider: 'github',
       base: 'main',
       head: branch,
-      title: 'Create PR from E2E',
-      body: '- Initial commit for E2E',
+      title: 'E2E에서 풀 리퀘스트 생성',
+      body: '- E2E 초기 커밋',
       draft: false
     })
   })
@@ -234,7 +234,7 @@ test.describe('Source Control create pull request', () => {
   test('surfaces create failures without clearing the pull request composer', async ({
     orcaPage
   }) => {
-    const failureMessage = 'Create PR failed: GitHub API rate limit exceeded'
+    const failureMessage = 'PR 생성 실패: GitHub API rate limit exceeded'
     const { branch, worktreeId } = await seedCreatePREligibleBranch(orcaPage, {
       createResult: {
         ok: false,
@@ -245,21 +245,21 @@ test.describe('Source Control create pull request', () => {
     await openSourceControl(orcaPage, worktreeId)
     await forceCreatePREligibleStatus(orcaPage, worktreeId, branch)
 
-    const createButton = orcaPage.getByRole('button', { name: 'Create PR' })
-    const titleInput = orcaPage.getByRole('textbox', { name: 'Pull request title' })
+    const createButton = orcaPage.getByRole('button', { name: 'PR 생성' })
+    const titleInput = orcaPage.getByRole('textbox', { name: '풀 리퀘스트 제목' })
     const descriptionInput = orcaPage.getByRole('textbox', {
-      name: 'Pull request description'
+      name: '풀 리퀘스트 설명'
     })
     await expect(createButton).toBeVisible({ timeout: 10_000 })
-    await titleInput.fill('Failing PR from E2E')
-    await descriptionInput.fill('This draft should survive a failed create attempt.')
+    await titleInput.fill('실패하는 풀 리퀘스트')
+    await descriptionInput.fill('이 초안은 생성 실패 후에도 유지되어야 합니다.')
     await expect(createButton).toBeEnabled()
     await createButton.click()
 
     await expect(orcaPage.getByText(failureMessage)).toBeVisible()
-    await expect(titleInput).toHaveValue('Failing PR from E2E')
-    await expect(descriptionInput).toHaveValue('This draft should survive a failed create attempt.')
-    await expect(orcaPage.getByRole('textbox', { name: 'Pull request base branch' })).toHaveValue(
+    await expect(titleInput).toHaveValue('실패하는 풀 리퀘스트')
+    await expect(descriptionInput).toHaveValue('이 초안은 생성 실패 후에도 유지되어야 합니다.')
+    await expect(orcaPage.getByRole('textbox', { name: '풀 리퀘스트 기준 브랜치' })).toHaveValue(
       'main'
     )
     await expect(createButton).toBeEnabled()

@@ -112,17 +112,17 @@ test.describe('Source Control AI commit messages', () => {
         )
         .toBe(true)
 
-      const textarea = orcaPage.getByRole('textbox', { name: 'Commit message' })
+      const textarea = orcaPage.getByRole('textbox', { name: '커밋 메시지' })
       await expect(textarea).toBeVisible({ timeout: 10_000 })
       await expect(textarea).toHaveValue('')
 
-      const generate = orcaPage.getByRole('button', { name: 'Generate commit message with AI' })
+      const generate = orcaPage.getByRole('button', { name: 'AI로 커밋 메시지 생성' })
       await expect(generate).toBeVisible()
       await expect(generate).toBeEnabled()
       await generate.click()
 
       await expect(
-        orcaPage.getByRole('button', { name: 'Stop generating commit message' })
+        orcaPage.getByRole('button', { name: '커밋 메시지 생성 중지' })
       ).toBeVisible()
       await expect(textarea).toHaveValue('Add generated E2E message', { timeout: 10_000 })
     } finally {

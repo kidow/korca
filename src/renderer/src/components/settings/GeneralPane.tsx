@@ -477,7 +477,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
   const visibleSections = [
     matchesSettingsSearch(searchQuery, GENERAL_NAVIGATION_SEARCH_ENTRIES) ? (
       <section key="navigation" className="space-y-4">
-        <SettingsSubsectionHeader title="Navigation" />
+        <SettingsSubsectionHeader title="탐색" />
         <RecentTabOrderControl
           ctrlTabOrderMode={settings.ctrlTabOrderMode ?? 'mru'}
           keywords={GENERAL_NAVIGATION_SEARCH_ENTRIES.flatMap((entry) => [
@@ -492,17 +492,17 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
     matchesSettingsSearch(searchQuery, GENERAL_WORKSPACE_SEARCH_ENTRIES) ? (
       <section key="workspace" className="space-y-4">
         <SettingsSubsectionHeader
-          title="Workspace"
-          description="Configure where new workspaces are created."
+          title="작업 공간"
+          description="새 작업 공간이 만들어질 위치를 설정합니다."
         />
 
         <SearchableSetting
-          title="Workspace Directory"
-          description="Root directory where workspace folders are created."
+          title="작업 공간 디렉터리"
+          description="작업 공간 폴더가 생성될 루트 디렉터리입니다."
           keywords={['workspace', 'folder', 'path', 'worktree']}
           className="space-y-2"
         >
-          <Label>Workspace Directory</Label>
+          <Label>작업 공간 디렉터리</Label>
           <div className="flex gap-2">
             <Input
               value={settings.workspaceDir}
@@ -516,22 +516,22 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
               className="shrink-0 gap-1.5"
             >
               <FolderOpen className="size-3.5" />
-              Browse
+              찾아보기
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Root directory where workspace folders are created.
+            작업 공간 폴더가 생성될 루트 디렉터리입니다.
           </p>
         </SearchableSetting>
 
         <SearchableSetting
-          title="Nest Workspaces"
-          description="Create workspaces inside a repo-named subfolder."
+          title="작업 공간 중첩"
+          description="작업 공간을 저장소 이름의 하위 폴더 안에 만듭니다."
           keywords={['nested', 'subfolder', 'directory']}
         >
           <SettingsSwitchRow
-            label="Nest Workspaces"
-            description="Create workspaces inside a repo-named subfolder."
+            label="작업 공간 중첩"
+            description="작업 공간을 저장소 이름의 하위 폴더 안에 만듭니다."
             checked={settings.nestWorkspaces}
             onChange={() => updateSettings({ nestWorkspaces: !settings.nestWorkspaces })}
           />
@@ -542,13 +542,13 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
             breaks that toast action even though this pane still renders fine. */}
         <div id="general-skip-delete-worktree-confirm" className="scroll-mt-6">
           <SearchableSetting
-            title="Ask Before Deleting Workspaces"
-            description="Show a confirmation dialog before deleting a workspace."
+            title="작업 공간 삭제 전 확인"
+            description="작업 공간을 삭제하기 전에 확인 대화상자를 표시합니다."
             keywords={['delete', 'worktree', 'confirm', 'dialog', 'skip', 'prompt']}
           >
             <SettingsSwitchRow
-              label="Ask Before Deleting Workspaces"
-              description="Show a confirmation before deleting a workspace from the context menu. Failed deletes still surface a Force Delete fallback."
+              label="작업 공간 삭제 전 확인"
+              description="컨텍스트 메뉴에서 작업 공간을 삭제하기 전에 확인을 표시합니다. 삭제 실패 시에는 강제 삭제로 대체됩니다."
               checked={!settings.skipDeleteWorktreeConfirm}
               onChange={() =>
                 updateSettings({
@@ -561,13 +561,13 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
 
         <div id="general-skip-delete-automation-confirm" className="scroll-mt-6">
           <SearchableSetting
-            title="Ask Before Deleting Automations"
-            description="Show a confirmation dialog before deleting an automation and its run history."
+            title="자동화 삭제 전 확인"
+            description="자동화와 실행 기록을 삭제하기 전에 확인 대화상자를 표시합니다."
             keywords={['delete', 'automation', 'confirm', 'dialog', 'skip', 'prompt']}
           >
             <SettingsSwitchRow
-              label="Ask Before Deleting Automations"
-              description="Show a confirmation before deleting automations and their run history."
+              label="자동화 삭제 전 확인"
+              description="자동화와 실행 기록을 삭제하기 전에 확인을 표시합니다."
               checked={!settings.skipDeleteAutomationConfirm}
               onChange={() =>
                 updateSettings({
@@ -579,20 +579,20 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
         </div>
 
         <SearchableSetting
-          title="Open In Menu"
-          description="Add custom launchers to the workspace Open in menu."
+          title="연결 앱 메뉴"
+          description="작업 공간의 연결 앱 메뉴에 사용자 지정 실행기를 추가합니다."
           keywords={['open in', 'editor', 'launcher', 'cursor', 'zed', 'command', 'vscode']}
           className="space-y-3"
         >
           <div className="space-y-1">
-            <Label>Open In Menu</Label>
+            <Label>연결 앱 메뉴</Label>
             <p className="text-xs text-muted-foreground">
-              VS Code is always included first. Add executables to show extra entries in each
-              workspace&apos;s Open in menu.
+              VS Code는 항상 첫 항목으로 포함됩니다. 실행 파일을 추가하면 각 작업 공간의
+              연결 앱 메뉴에 추가 항목이 표시됩니다.
             </p>
             <p className="text-xs text-muted-foreground">
-              Commands are not shell-parsed. Use only an executable command name. For flags, use a
-              wrapper script.
+              명령은 셸 파싱되지 않습니다. 실행 파일 이름만 사용하세요. 플래그가 필요하면
+              래퍼 스크립트를 사용하세요.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -606,7 +606,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                 ])
               }
             >
-              Add Cursor
+              Cursor 추가
             </Button>
             <Button
               variant="outline"
@@ -618,15 +618,15 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                 ])
               }
             >
-              Add Zed
+              Zed 추가
             </Button>
           </div>
           <div className="space-y-2">
             {openInApplicationsDraft.map((app, index) => (
               <div key={app.id} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
-                <Input
-                  value={app.label}
-                  placeholder="Label"
+                  <Input
+                    value={app.label}
+                  placeholder="레이블"
                   onChange={(event) => {
                     const next = [...openInApplicationsDraft]
                     next[index] = { ...app, label: event.target.value }
@@ -639,9 +639,9 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                     }
                   }}
                 />
-                <Input
-                  value={app.command}
-                  placeholder="Executable command"
+                  <Input
+                    value={app.command}
+                  placeholder="실행 명령"
                   onChange={(event) => {
                     const next = [...openInApplicationsDraft]
                     next[index] = { ...app, command: event.target.value }
@@ -663,7 +663,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                     commitOpenInApplications(next)
                   }}
                 >
-                  Remove
+                  제거
                 </Button>
               </div>
             ))}
@@ -676,7 +676,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
             }
             disabled={openInApplicationsDraft.length >= OPEN_IN_APPLICATIONS_MAX}
           >
-            Add Custom Launcher
+            사용자 지정 실행기 추가
           </Button>
         </SearchableSetting>
       </section>
@@ -684,20 +684,20 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
     matchesSettingsSearch(searchQuery, GENERAL_NETWORK_SEARCH_ENTRIES) ? (
       <section key="network" className="space-y-4">
         <SettingsSubsectionHeader
-          title="Network"
-          description="Configure app-level network routing."
+          title="네트워크"
+          description="앱 수준 네트워크 라우팅을 설정합니다."
         />
 
         <SearchableSetting
-          title="HTTP Proxy"
-          description="Proxy URL for Orca network requests and local terminal children."
+          title="HTTP 프록시"
+          description="Orca 네트워크 요청과 로컬 터미널 하위 프로세스에 사용할 프록시 URL입니다."
           keywords={['proxy', 'http_proxy', 'https_proxy', 'network', 'dock', 'launchpad']}
           className="space-y-3"
         >
           <div className="space-y-1">
-            <Label htmlFor="settings-http-proxy-url">HTTP Proxy</Label>
+            <Label htmlFor="settings-http-proxy-url">HTTP 프록시</Label>
             <p className="text-xs text-muted-foreground">
-              Leave empty to use system proxy settings and inherited proxy environment variables.
+              비워 두면 시스템 프록시 설정과 상속된 프록시 환경 변수를 사용합니다.
             </p>
           </div>
           <Input
@@ -724,21 +724,21 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
             <p className="text-xs text-destructive">{httpProxyUrlError}</p>
           ) : (
             <p className="text-xs text-muted-foreground">
-              Supports http, https, socks, socks4, and socks5 URLs.
+              http, https, socks, socks4, socks5 URL을 지원합니다.
             </p>
           )}
         </SearchableSetting>
 
         <SearchableSetting
-          title="Proxy Bypass Rules"
-          description="Hosts that should bypass the configured HTTP proxy."
+          title="프록시 우회 규칙"
+          description="설정된 HTTP 프록시를 우회할 호스트입니다."
           keywords={['proxy', 'bypass', 'no_proxy', 'localhost', 'network']}
           className="space-y-3"
         >
           <div className="space-y-1">
-            <Label htmlFor="settings-http-proxy-bypass-rules">Proxy Bypass Rules</Label>
+            <Label htmlFor="settings-http-proxy-bypass-rules">프록시 우회 규칙</Label>
             <p className="text-xs text-muted-foreground">
-              Optional. Separate hosts with commas, semicolons, or new lines.
+              선택 사항. 호스트를 쉼표, 세미콜론 또는 줄바꿈으로 구분하세요.
             </p>
           </div>
           <Input
@@ -764,34 +764,34 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
     matchesSettingsSearch(searchQuery, GENERAL_EDITOR_SEARCH_ENTRIES) ? (
       <section key="editor" className="space-y-4">
         <SettingsSubsectionHeader
-          title="Editor"
-          description="Configure how Orca persists file edits."
+          title="편집기"
+          description="Orca가 파일 편집 내용을 저장하는 방식을 설정합니다."
         />
 
         <SearchableSetting
-          title="Auto Save Files"
-          description="Save editor and editable diff changes automatically after a short pause."
+          title="파일 자동 저장"
+          description="짧은 대기 후 편집기와 수정 가능한 diff 변경 내용을 자동 저장합니다."
           keywords={['autosave', 'save']}
         >
           <SettingsSwitchRow
-            label="Auto Save Files"
-            description="Save editor and editable diff changes automatically after a short pause."
+            label="파일 자동 저장"
+            description="짧은 대기 후 편집기와 수정 가능한 diff 변경 내용을 자동 저장합니다."
             checked={settings.editorAutoSave}
             onChange={() => updateSettings({ editorAutoSave: !settings.editorAutoSave })}
           />
         </SearchableSetting>
 
         <SearchableSetting
-          title="Auto Save Delay"
-          description="How long Orca waits after your last edit before saving automatically."
+          title="자동 저장 지연"
+          description="마지막 편집 후 자동 저장까지 Orca가 기다리는 시간입니다."
           keywords={['autosave', 'delay', 'milliseconds']}
           className="flex items-center justify-between gap-4 py-2"
         >
           <div className="min-w-0 flex-1 space-y-0.5">
-            <Label>Auto Save Delay</Label>
+            <Label>자동 저장 지연</Label>
             <p className="text-xs text-muted-foreground">
-              How long Orca waits after your last edit before saving automatically. First launch
-              defaults to {DEFAULT_EDITOR_AUTO_SAVE_DELAY_MS} ms.
+              마지막 편집 후 자동 저장까지 Orca가 기다리는 시간입니다. 첫 실행 기본값은{' '}
+              {DEFAULT_EDITOR_AUTO_SAVE_DELAY_MS}ms입니다.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -815,61 +815,61 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
         </SearchableSetting>
 
         <SearchableSetting
-          title="Default Diff View"
-          description="Preferred presentation format for showing git diffs by default."
+          title="기본 diff 보기"
+          description="git diff를 기본으로 표시할 때 선호하는 형식입니다."
           keywords={['diff', 'view', 'inline', 'side-by-side', 'split']}
           className="flex items-center justify-between gap-4 py-2"
         >
           <div className="min-w-0 flex-1 space-y-0.5">
-            <Label>Default Diff View</Label>
+            <Label>기본 diff 보기</Label>
             <p className="text-xs text-muted-foreground">
-              Preferred presentation format for showing git diffs by default.
+              git diff를 기본으로 표시할 때 선호하는 형식입니다.
             </p>
           </div>
           <SettingsSegmentedControl
-            ariaLabel="Default Diff View"
+            ariaLabel="기본 diff 보기"
             value={settings.diffDefaultView}
             onChange={(option) => updateSettings({ diffDefaultView: option })}
             options={[
-              { value: 'inline', label: 'Inline' },
-              { value: 'side-by-side', label: 'Side-by-side' }
+              { value: 'inline', label: '인라인' },
+              { value: 'side-by-side', label: '좌우 비교' }
             ]}
           />
         </SearchableSetting>
 
         <SearchableSetting
-          title="Default Diff File Tree"
-          description="Show or hide the file tree when opening combined diff views."
+          title="기본 diff 파일 트리"
+          description="통합 diff 보기를 열 때 파일 트리를 표시하거나 숨깁니다."
           keywords={['diff', 'tree', 'file tree', 'combined diff', 'sidebar']}
           className="flex items-center justify-between gap-4 py-2"
         >
           <div className="min-w-0 flex-1 space-y-0.5">
-            <Label>Default Diff File Tree</Label>
+            <Label>기본 diff 파일 트리</Label>
             <p className="text-xs text-muted-foreground">
-              Show or hide the file tree when opening combined diff views.
+              통합 diff 보기를 열 때 파일 트리를 표시하거나 숨깁니다.
             </p>
           </div>
           <SettingsSegmentedControl
-            ariaLabel="Default Diff File Tree"
+            ariaLabel="기본 diff 파일 트리"
             value={settings.combinedDiffFileTreeVisibleByDefault ? 'shown' : 'hidden'}
             onChange={(option) =>
               updateSettings({ combinedDiffFileTreeVisibleByDefault: option === 'shown' })
             }
             options={[
-              { value: 'shown', label: 'Shown' },
-              { value: 'hidden', label: 'Hidden' }
+              { value: 'shown', label: '표시' },
+              { value: 'hidden', label: '숨김' }
             ]}
           />
         </SearchableSetting>
 
         <SearchableSetting
-          title="Minimap"
-          description="Show the minimap overview when editing a file."
+          title="미니맵"
+          description="파일을 편집할 때 미니맵 개요를 표시합니다."
           keywords={['minimap', 'overview', 'code', 'scroll']}
         >
           <SettingsSwitchRow
-            label="Minimap"
-            description="Show the minimap overview when editing a file."
+            label="미니맵"
+            description="파일을 편집할 때 미니맵 개요를 표시합니다."
             checked={settings.editorMinimapEnabled}
             onChange={() =>
               updateSettings({ editorMinimapEnabled: !settings.editorMinimapEnabled })
@@ -878,13 +878,13 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
         </SearchableSetting>
 
         <SearchableSetting
-          title="Markdown Review Notes"
-          description="Show local markdown review note controls in rich editor mode."
+          title="Markdown 검토 노트"
+          description="리치 편집기 모드에서 로컬 markdown 검토 노트 컨트롤을 표시합니다."
           keywords={['markdown', 'review', 'notes', 'annotations', 'agents']}
         >
           <SettingsSwitchRow
-            label="Markdown Review Notes"
-            description="Show local markdown note controls in rich editor mode and agent handoff actions."
+            label="Markdown 검토 노트"
+            description="리치 편집기 모드와 에이전트 전달 작업에서 로컬 markdown 노트 컨트롤을 표시합니다."
             checked={settings.markdownReviewToolsEnabled}
             onChange={() =>
               updateSettings({ markdownReviewToolsEnabled: !settings.markdownReviewToolsEnabled })
@@ -902,13 +902,13 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
     matchesSettingsSearch(searchQuery, GENERAL_CACHE_TIMER_SEARCH_ENTRIES) ? (
       <section key="cache-timer" className="space-y-4">
         <SettingsSubsectionHeader
-          title="Prompt Cache Timer"
-          description="Claude caches your conversation to reduce costs. When idle too long the cache expires and the next message resends full context at higher cost. This shows a countdown so you know when to resume."
+          title="프롬프트 캐시 타이머"
+          description="Claude는 대화를 캐시해 비용을 줄입니다. 너무 오래 유휴 상태면 캐시가 만료되고 다음 메시지는 더 큰 비용으로 전체 컨텍스트를 다시 보냅니다. 이 항목은 다시 시작할 시점을 알려주기 위해 카운트다운을 표시합니다."
         />
 
         <SearchableSetting
-          title="Cache Timer"
-          description="Show a countdown after a Claude agent becomes idle."
+          title="캐시 타이머"
+          description="Claude 에이전트가 유휴 상태가 되면 카운트다운을 표시합니다."
           keywords={GENERAL_CACHE_TIMER_SEARCH_ENTRIES.flatMap((entry) => [
             entry.title,
             entry.description ?? '',
@@ -919,14 +919,14 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
           <div className="min-w-0 flex-1 space-y-0.5">
             <div className="flex items-center gap-2">
               <Timer className="size-4 text-muted-foreground" />
-              <Label>Cache Timer</Label>
+              <Label>캐시 타이머</Label>
             </div>
             <p className="text-xs text-muted-foreground">
-              Show a countdown in the sidebar after a Claude agent becomes idle.
+              Claude 에이전트가 유휴 상태가 되면 사이드바에 카운트다운을 표시합니다.
             </p>
           </div>
           <SettingsSwitch
-            ariaLabel="Cache Timer"
+            ariaLabel="캐시 타이머"
             checked={settings.promptCacheTimerEnabled}
             onChange={() => {
               const enabling = !settings.promptCacheTimerEnabled
@@ -940,15 +940,15 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
 
         {settings.promptCacheTimerEnabled && (
           <SearchableSetting
-            title="Timer Duration"
-            description="Match this to your provider's cache TTL."
+            title="타이머 길이"
+            description="제공자의 캐시 TTL에 맞추세요."
             keywords={['cache', 'timer', 'duration', 'ttl']}
             className="flex items-center justify-between gap-4 py-2 pl-7"
           >
             <div className="min-w-0 flex-1 space-y-0.5">
-              <Label>Timer Duration</Label>
-              <p className="text-xs text-muted-foreground">
-                Match this to your provider&apos;s cache TTL. The default is 5 minutes.
+              <Label>타이머 길이</Label>
+            <p className="text-xs text-muted-foreground">
+                제공자의 캐시 TTL에 맞추세요. 기본값은 5분입니다.
               </p>
             </div>
             <Select
@@ -959,8 +959,8 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="300000">5 minutes</SelectItem>
-                <SelectItem value="3600000">1 hour</SelectItem>
+                <SelectItem value="300000">5분</SelectItem>
+                <SelectItem value="3600000">1시간</SelectItem>
               </SelectContent>
             </Select>
           </SearchableSetting>
@@ -970,13 +970,13 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
     matchesSettingsSearch(searchQuery, GENERAL_UPDATE_SEARCH_ENTRIES) ? (
       <section key="updates" className="space-y-4">
         <SettingsSubsectionHeader
-          title="Updates"
-          description={`Current version: ${appVersion ?? '…'}`}
+          title="업데이트"
+          description={`현재 버전: ${appVersion ?? '…'}`}
         />
 
         <SearchableSetting
-          title="Check for Updates"
-          description="Check for app updates and install a newer Orca version."
+          title="업데이트 확인"
+          description="앱 업데이트를 확인하고 더 새로운 Orca 버전을 설치합니다."
           keywords={['update', 'version', 'release notes', 'download']}
           className="space-y-3"
         >
@@ -1000,7 +1000,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
               ) : (
                 <RefreshCw className="size-3.5" />
               )}
-              Check for Updates
+              업데이트 확인
             </Button>
 
             {updateStatus.state === 'available' ? (
@@ -1009,7 +1009,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                 size="sm"
                 onClick={() => {
                   void window.api.updater.download().catch((error) => {
-                    toast.error('Could not start the update download.', {
+                    toast.error('업데이트 다운로드를 시작하지 못했습니다.', {
                       description: String((error as Error)?.message ?? error)
                     })
                   })
@@ -1017,23 +1017,23 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                 className="gap-2"
               >
                 <Download className="size-3.5" />
-                Install Update ({updateStatus.version})
+                업데이트 설치 ({updateStatus.version})
               </Button>
             ) : updateStatus.state === 'downloaded' ? (
               <Button variant="default" size="sm" onClick={handleRestartToUpdate} className="gap-2">
                 <Download className="size-3.5" />
-                Restart to Update ({updateStatus.version})
+                업데이트 적용을 위해 다시 시작 ({updateStatus.version})
               </Button>
             ) : null}
           </div>
 
           <p className="text-xs text-muted-foreground">
-            {updateStatus.state === 'idle' && 'Updates are checked automatically on launch.'}
-            {updateStatus.state === 'checking' && 'Checking for updates...'}
+            {updateStatus.state === 'idle' && '업데이트는 실행 시 자동으로 확인됩니다.'}
+            {updateStatus.state === 'checking' && '업데이트를 확인하는 중...'}
             {updateStatus.state === 'available' && (
               <>
-                Version {updateStatus.version} is available. Click &quot;Install Update&quot; to
-                download and install it.{' '}
+                버전 {updateStatus.version}을 사용할 수 있습니다. &quot;업데이트 설치&quot;를
+                클릭해 다운로드하고 설치하세요.{' '}
                 <a
                   href={
                     updateStatus.releaseUrl ??
@@ -1043,16 +1043,16 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                   rel="noopener noreferrer"
                   className="underline hover:text-foreground"
                 >
-                  Release notes
+                  릴리스 노트
                 </a>
               </>
             )}
-            {updateStatus.state === 'not-available' && 'You\u2019re on the latest version.'}
+            {updateStatus.state === 'not-available' && '이미 최신 버전입니다.'}
             {updateStatus.state === 'downloading' &&
-              `Downloading v${updateStatus.version}... ${updateStatus.percent}%`}
+              `v${updateStatus.version} 다운로드 중... ${updateStatus.percent}%`}
             {updateStatus.state === 'downloaded' && (
               <>
-                Version {updateStatus.version} is ready to install.{' '}
+                버전 {updateStatus.version}을 설치할 준비가 되었습니다.{' '}
                 <a
                   href={
                     updateStatus.releaseUrl ??
@@ -1062,7 +1062,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                   rel="noopener noreferrer"
                   className="underline hover:text-foreground"
                 >
-                  Release notes
+                  릴리스 노트
                 </a>
               </>
             )}
@@ -1073,8 +1073,8 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
               // 'downloaded' state). Label accordingly so a download failure
               // isn't mislabeled as a "check" failure. Mirrors UpdateCard.tsx.
               (updateVersionRef.current
-                ? `Update error. ${updateStatus.message}`
-                : `Update check failed. ${updateStatus.message}`)}
+                ? `업데이트 오류. ${updateStatus.message}`
+                : `업데이트 확인 실패. ${updateStatus.message}`)}
           </p>
         </SearchableSetting>
       </section>
@@ -1134,7 +1134,7 @@ function SupportSection({
         <div className="space-y-8">
           {hasPrecedingSections ? <Separator /> : null}
           <div className="space-y-4">
-            <SettingsSubsectionHeader title="Support Orca" />
+            <SettingsSubsectionHeader title="Orca 지원" />
             {state === 'loading' ? <SupportRowSkeleton /> : null}
             {state !== 'loading' && state !== 'hidden' ? (
               <SupportRow state={state} onStarClick={onStarClick} />
@@ -1170,12 +1170,12 @@ function SupportRow({
   // disabled button.
   return (
     <SearchableSetting
-      title="Star Orca on GitHub"
-      description="Support the project with a GitHub star via the gh CLI."
+      title="GitHub에서 Orca 별점 주기"
+      description="gh CLI를 통해 GitHub 별점으로 프로젝트를 지원합니다."
       keywords={['star', 'github', 'support', 'feedback', 'like']}
       className="flex items-center justify-between gap-4 py-2"
     >
-      <Label>Star Orca on GitHub</Label>
+      <Label>GitHub에서 Orca 별점 주기</Label>
       {state === 'starred' ? (
         <SupportRowThanks />
       ) : (
@@ -1191,7 +1191,7 @@ function SupportRow({
           ) : (
             <Star className="size-3.5" />
           )}
-          {state === 'starring' ? 'Starring…' : state === 'error' ? 'Try Again' : 'Star'}
+          {state === 'starring' ? '별점 주는 중…' : state === 'error' ? '다시 시도' : '별점 주기'}
         </Button>
       )}
     </SearchableSetting>
@@ -1211,7 +1211,7 @@ function SupportRowThanks(): React.JSX.Element {
       aria-live="polite"
     >
       <Star className="size-3.5 fill-amber-400/80 text-amber-400/80" aria-hidden="true" />
-      Thanks for the support!
+      지원해 주셔서 감사합니다!
     </div>
   )
 }

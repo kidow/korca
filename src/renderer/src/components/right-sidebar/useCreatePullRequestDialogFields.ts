@@ -295,7 +295,7 @@ export function useCreatePullRequestDialogFields({
         .catch(() => {
           if (!stale) {
             setBaseResults([])
-            setBaseSearchError('Branch discovery failed.')
+            setBaseSearchError('브랜치 찾기에 실패했습니다.')
           }
         })
     }, 200)
@@ -307,19 +307,19 @@ export function useCreatePullRequestDialogFields({
 
   let generateDisabledReason: string | undefined
   if (submitting) {
-    generateDisabledReason = 'Create PR in progress...'
+    generateDisabledReason = 'PR 생성 진행 중...'
   } else if (!sourceControlAi.enabled) {
-    generateDisabledReason = 'Enable Source Control AI in Settings -> Git.'
+    generateDisabledReason = '설정 > Git에서 Source Control AI를 활성화하세요.'
   } else if (!effectiveCommitMessageAgentId) {
-    generateDisabledReason = 'Pick an agent in Settings -> Git -> Source Control AI.'
+    generateDisabledReason = '설정 > Git > Source Control AI에서 에이전트를 선택하세요.'
   } else if (isCustomAgentId(effectiveCommitMessageAgentId)) {
     const command = sourceControlAi.customAgentCommand?.trim() ?? ''
     if (!command) {
       generateDisabledReason =
-        'Custom command is empty. Add one in Settings -> Git -> Source Control AI.'
+        '사용자 지정 명령이 비어 있습니다. 설정 > Git > Source Control AI에 추가하세요.'
     }
   } else if (!base.trim()) {
-    generateDisabledReason = 'Choose a base branch before generating.'
+    generateDisabledReason = '생성하기 전에 기준 브랜치를 선택하세요.'
   }
   const generateDisabled = !effectiveGenerating && Boolean(generateDisabledReason)
 

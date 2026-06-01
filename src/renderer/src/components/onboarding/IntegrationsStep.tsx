@@ -44,17 +44,17 @@ export function GitHubRow(props: { compact?: boolean } = {}): React.JSX.Element 
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-[15px] font-semibold leading-tight text-foreground">GitHub</h3>
               {state === 'connected' ? (
-                <IntegrationStatusPill tone="connected">Connected</IntegrationStatusPill>
+                <IntegrationStatusPill tone="connected">연결됨</IntegrationStatusPill>
               ) : state === 'not-installed' ? (
-                <IntegrationStatusPill tone="attention">CLI not installed</IntegrationStatusPill>
+                <IntegrationStatusPill tone="attention">CLI 설치 안 됨</IntegrationStatusPill>
               ) : state === 'not-authenticated' ? (
-                <IntegrationStatusPill tone="attention">Sign in needed</IntegrationStatusPill>
+                <IntegrationStatusPill tone="attention">로그인 필요</IntegrationStatusPill>
               ) : (
-                <IntegrationStatusPill tone="neutral">Checking…</IntegrationStatusPill>
+                <IntegrationStatusPill tone="neutral">확인 중…</IntegrationStatusPill>
               )}
             </div>
             <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
-              Pull requests, issues, and check status.
+              풀 리퀘스트, 이슈, 체크 상태를 사용합니다.
             </p>
           </div>
         </div>
@@ -66,7 +66,7 @@ export function GitHubRow(props: { compact?: boolean } = {}): React.JSX.Element 
               onClick={() => window.api.shell.openUrl('https://cli.github.com')}
             >
               <ExternalLink className="size-3.5" />
-              Install gh
+              gh 설치
             </Button>
           ) : null}
           {state === 'not-authenticated' ? (
@@ -77,7 +77,7 @@ export function GitHubRow(props: { compact?: boolean } = {}): React.JSX.Element 
               onClick={() => setGithubTerminalOpen(true)}
             >
               <Terminal className="size-3.5" />
-              {githubTerminalOpen ? 'Signing in' : 'Sign in'}
+              {githubTerminalOpen ? '로그인 중' : '로그인'}
             </Button>
           ) : null}
           {state !== 'connected' ? (
@@ -86,7 +86,7 @@ export function GitHubRow(props: { compact?: boolean } = {}): React.JSX.Element 
               size="sm"
               onClick={() => void refreshPreflightStatus({ force: true })}
             >
-              Re-check
+              다시 확인
             </Button>
           ) : null}
         </div>
@@ -95,9 +95,9 @@ export function GitHubRow(props: { compact?: boolean } = {}): React.JSX.Element 
         <div className={cn(compact ? 'px-4 pb-4' : 'px-5 pb-5')}>
           <OnboardingInlineCommandTerminal
             command="gh auth login"
-            title="GitHub setup"
-            ariaLabel="GitHub sign in command"
-            description="Press Enter to run GitHub CLI auth. Re-check GitHub after the browser or device flow finishes."
+            title="GitHub 설정"
+            ariaLabel="GitHub 로그인 명령"
+            description="Enter를 눌러 GitHub CLI 인증을 실행하세요. 브라우저 또는 기기 흐름이 끝나면 GitHub를 다시 확인하세요."
           />
         </div>
       ) : null}
@@ -126,29 +126,29 @@ export function LinearRow(props: { compact?: boolean } = {}): React.JSX.Element 
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-[15px] font-semibold leading-tight text-foreground">Linear</h3>
                 {linearStatus.connected ? (
-                  <IntegrationStatusPill tone="connected">Connected</IntegrationStatusPill>
+                  <IntegrationStatusPill tone="connected">연결됨</IntegrationStatusPill>
                 ) : null}
               </div>
               <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
                 {linearStatus.connected
-                  ? `${workspaceCount} workspace${workspaceCount === 1 ? '' : 's'} linked. Add another workspace or replace a restricted key any time.`
-                  : 'Add Linear access with a Personal API key. Full-access keys can show every team the key owner can access.'}
+                  ? `${workspaceCount}개 작업공간이 연결되었습니다. 언제든 다른 작업공간을 추가하거나 제한된 키를 교체할 수 있습니다.`
+                  : '개인 API 키로 Linear 접근을 추가하세요. 전체 접근 키는 키 소유자가 접근할 수 있는 모든 팀을 보여줄 수 있습니다.'}
               </p>
             </div>
           </div>
           <div className={cn('flex items-center gap-2', compact ? 'flex-wrap' : 'shrink-0')}>
             {linearStatus.connected ? (
               <Button variant="outline" size="sm" onClick={() => setDialogOpen(true)}>
-                Add workspace access
+                작업공간 접근 추가
               </Button>
             ) : (
               <Button size="sm" onClick={() => setDialogOpen(true)}>
-                Add Linear access
+                Linear 접근 추가
               </Button>
             )}
             {!linearStatus.connected ? (
               <Button variant="ghost" size="sm" onClick={() => void checkLinearConnection(true)}>
-                Re-check
+                다시 확인
               </Button>
             ) : null}
           </div>
@@ -160,17 +160,17 @@ export function LinearRow(props: { compact?: boolean } = {}): React.JSX.Element 
         onOpenChange={setDialogOpen}
         overlayClassName="z-[110]"
         contentClassName="z-[120]"
-        connectLabel="Add Linear access"
+        connectLabel="Linear 접근 추가"
       />
     </>
   )
 }
 
 const CAPABILITIES = [
-  'Start a workspace from any GitHub issue or pull request, prefilled with its title and context',
-  'Browse GitHub issues and pull requests in the Tasks view without leaving Orca',
-  'See issue state, review status, and CI checks on every worktree',
-  'Read, comment on, and merge pull requests without leaving Orca'
+  'GitHub 이슈나 풀 리퀘스트에서 워크스페이스를 시작하고 제목과 문맥을 미리 채웁니다',
+  'Orca를 떠나지 않고 Tasks 보기에서 GitHub 이슈와 풀 리퀘스트를 봅니다',
+  '모든 워크트리에서 이슈 상태, 리뷰 상태, CI 체크를 확인합니다',
+  'Orca를 떠나지 않고 풀 리퀘스트를 읽고, 댓글을 달고, 병합합니다'
 ] as const
 
 export function IntegrationsStep(): React.JSX.Element {
@@ -195,10 +195,9 @@ export function IntegrationsStep(): React.JSX.Element {
         <GitHubRow />
         <div className="mt-4 rounded-xl border border-border bg-muted/10 px-5 py-4">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-[14px] font-medium text-foreground/70">More task sources</span>
+            <span className="text-[14px] font-medium text-foreground/70">추가 작업 소스</span>
             <span className="text-[13px] leading-relaxed text-muted-foreground">
-              Linear, GitLab, Bitbucket, Azure DevOps, Gitea, and Jira live in Settings &gt;
-              Integrations.
+              Linear, GitLab, Bitbucket, Azure DevOps, Gitea, Jira는 설정 &gt; 통합에 있습니다.
             </span>
           </div>
         </div>

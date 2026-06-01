@@ -75,7 +75,7 @@ function hasDisabledAttribute(markup: string): boolean {
 describe('CommitArea AI generation', () => {
   it('does not render the AI generate affordance when the feature is disabled', () => {
     expect(renderCommitArea(baseProps())).not.toContain(
-      'aria-label="Generate commit message with AI"'
+      'aria-label="AI로 커밋 메시지 생성"'
     )
   })
 
@@ -88,7 +88,7 @@ describe('CommitArea AI generation', () => {
       aiAgentConfigured: true
     })
 
-    expect(hasDisabledAttribute(buttonByLabel(markup, 'Generate commit message with AI'))).toBe(
+    expect(hasDisabledAttribute(buttonByLabel(markup, 'AI로 커밋 메시지 생성'))).toBe(
       false
     )
   })
@@ -100,9 +100,9 @@ describe('CommitArea AI generation', () => {
       aiAgentConfigured: true
     })
 
-    const button = buttonByLabel(markup, 'Generate commit message with AI')
+    const button = buttonByLabel(markup, 'AI로 커밋 메시지 생성')
     expect(hasDisabledAttribute(button)).toBe(true)
-    expect(button).toContain('title="Clear the message to regenerate."')
+    expect(button).toContain('title="다시 생성하려면 메시지를 지우세요."')
   })
 
   it('disables AI generation until the configured agent can actually run', () => {
@@ -114,9 +114,9 @@ describe('CommitArea AI generation', () => {
       aiAgentConfigured: false
     })
 
-    const button = buttonByLabel(markup, 'Generate commit message with AI')
+    const button = buttonByLabel(markup, 'AI로 커밋 메시지 생성')
     expect(hasDisabledAttribute(button)).toBe(true)
-    expect(button).toContain('Pick an agent in Settings')
+    expect(button).toContain('설정 > Git > Source Control AI에서 에이전트를 선택하세요.')
   })
 
   it('turns the generating icon into a stop affordance', () => {
@@ -129,8 +129,8 @@ describe('CommitArea AI generation', () => {
       isGenerating: true
     })
 
-    const button = buttonByLabel(markup, 'Stop generating commit message')
-    expect(button).toContain('title="Stop generating"')
+    const button = buttonByLabel(markup, '커밋 메시지 생성 중지')
+    expect(button).toContain('title="생성 중지"')
     expect(button).toContain('lucide-refresh-cw')
     expect(button).toContain('lucide-square')
   })
@@ -152,8 +152,8 @@ describe('CommitArea AI generation', () => {
       aiEnabled: true,
       aiAgentConfigured: true
     })
-    expect(markup).toContain('Commit')
-    expect(markup).toContain('aria-label="Generate commit message with AI"')
+    expect(markup).toContain('커밋')
+    expect(markup).toContain('aria-label="AI로 커밋 메시지 생성"')
   })
 
   it('can hide only the composer while keeping the split action surface visible', () => {
@@ -165,9 +165,9 @@ describe('CommitArea AI generation', () => {
       showComposer: false
     })
 
-    expect(markup).not.toContain('aria-label="Commit message"')
-    expect(markup).not.toContain('aria-label="Generate commit message with AI"')
-    expect(markup).toContain('Nothing to commit')
-    expect(markup).toContain('aria-label="More commit and remote actions"')
+    expect(markup).not.toContain('aria-label="커밋 메시지"')
+    expect(markup).not.toContain('aria-label="AI로 커밋 메시지 생성"')
+    expect(markup).toContain('이 브랜치에 변경 사항이 없습니다')
+    expect(markup).toContain('aria-label="커밋 및 원격 작업 더보기"')
   })
 })

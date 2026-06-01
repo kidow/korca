@@ -106,20 +106,20 @@ test.describe('Settings skill detection', () => {
     const section = orcaPage.locator('[data-settings-section="orchestration"]')
     await section.getByRole('switch').click()
 
-    await expect(section.getByText('Not installed', { exact: true })).toBeVisible()
+    await expect(section.getByText('설치 안 됨', { exact: true })).toBeVisible()
     await expect(
-      section.getByText('Enables agents to hand off context and coordinate work through Orca.')
+      section.getByText('에이전트가 Orca를 통해 문맥을 넘기고 작업을 조율할 수 있게 합니다.')
     ).toBeVisible()
 
     await setMockSkillDiscovery(
       electronApp,
       discoveryResult([makeSkill('home', '/Users/test/.agents/skills/orchestration')])
     )
-    await section.getByRole('button', { name: 'Re-check' }).click()
+    await section.getByRole('button', { name: '다시 확인' }).click()
 
-    await expect(section.getByText('Installed', { exact: true })).toBeVisible()
+    await expect(section.getByText('설치됨', { exact: true })).toBeVisible()
     await expect(
-      section.getByText('Enables agents to hand off context and coordinate work through Orca.')
+      section.getByText('에이전트가 Orca를 통해 문맥을 넘기고 작업을 조율할 수 있게 합니다.')
     ).toBeVisible()
   })
 })

@@ -124,8 +124,8 @@ export default function PairConfirmScreen() {
       setStatus('error')
       setErrorMessage(
         timedOut
-          ? `Couldn't connect within ${PAIRING_OVERALL_TIMEOUT_MS / 1000}s — see log below for where it stalled`
-          : 'Cannot connect — check that your computer is on the same network'
+          ? `${PAIRING_OVERALL_TIMEOUT_MS / 1000}초 안에 연결하지 못했습니다. 어디서 멈췄는지 아래 로그를 확인하세요.`
+          : '연결할 수 없습니다. 컴퓨터가 같은 네트워크에 있는지 확인하세요.'
       )
       return
     }
@@ -137,8 +137,8 @@ export default function PairConfirmScreen() {
       setStatus('error')
       setErrorMessage(
         response.error.code === 'unauthorized'
-          ? 'Authentication failed — token may be expired'
-          : `Server error: ${response.error.message}`
+          ? '인증에 실패했습니다. 토큰이 만료되었을 수 있습니다.'
+          : `서버 오류: ${response.error.message}`
       )
       return
     }
@@ -165,7 +165,7 @@ export default function PairConfirmScreen() {
       console.warn('[pair-confirm] save failed', err)
       setStatus('error')
       setErrorMessage(
-        `Pairing succeeded but couldn't save the host: ${err instanceof Error ? err.message : String(err)}`
+        `페어링에는 성공했지만 호스트를 저장하지 못했습니다: ${err instanceof Error ? err.message : String(err)}`
       )
     }
   }
@@ -181,15 +181,15 @@ export default function PairConfirmScreen() {
       <View style={styles.content}>
         {offer && resolvedStatus === 'awaiting-confirm' && (
           <>
-            <Text style={styles.title}>Pair with this desktop?</Text>
+            <Text style={styles.title}>이 데스크톱과 페어링할까요?</Text>
             <Text style={styles.subtitle}>
-              You opened a pairing link from your desktop. Confirm to add it to your hosts.
+              데스크톱에서 페어링 링크를 열었습니다. 확인하면 호스트에 추가됩니다.
             </Text>
             <Pressable style={styles.primaryButton} onPress={() => void confirm()}>
-              <Text style={styles.primaryButtonText}>Pair</Text>
+              <Text style={styles.primaryButtonText}>페어링</Text>
             </Pressable>
             <Pressable style={styles.secondaryButton} onPress={cancel}>
-              <Text style={styles.secondaryButtonText}>Cancel</Text>
+              <Text style={styles.secondaryButtonText}>취소</Text>
             </Pressable>
           </>
         )}
@@ -197,9 +197,9 @@ export default function PairConfirmScreen() {
         {resolvedStatus === 'connecting' && (
           <>
             <ActivityIndicator size="large" color={colors.textSecondary} />
-            <Text style={styles.connectingText}>Connecting…</Text>
+            <Text style={styles.connectingText}>연결 중…</Text>
             <View style={styles.logSlot}>
-              <ConnectionLog entries={logs} title="Pairing log" />
+              <ConnectionLog entries={logs} title="페어링 로그" />
             </View>
           </>
         )}
@@ -209,11 +209,11 @@ export default function PairConfirmScreen() {
             <Text style={styles.errorText}>{resolvedErrorMessage}</Text>
             {logs.length > 0 && (
               <View style={styles.logSlot}>
-                <ConnectionLog entries={logs} title="Pairing log" />
+                <ConnectionLog entries={logs} title="페어링 로그" />
               </View>
             )}
             <Pressable style={styles.primaryButton} onPress={cancel}>
-              <Text style={styles.primaryButtonText}>Back to home</Text>
+              <Text style={styles.primaryButtonText}>홈으로 돌아가기</Text>
             </Pressable>
           </>
         )}

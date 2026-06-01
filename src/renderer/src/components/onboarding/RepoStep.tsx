@@ -78,7 +78,7 @@ export function RepoStep({
               <FolderTree className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-base font-semibold text-foreground">Import as project group</div>
+              <div className="text-base font-semibold text-foreground">프로젝트 그룹으로 가져오기</div>
               <div className="mt-0.5 flex min-w-0 items-center gap-1.5 text-[13px] text-muted-foreground">
                 {nestedScanInProgress ? (
                   <Tooltip>
@@ -88,8 +88,8 @@ export function RepoStep({
                         variant="ghost"
                         size="icon-xs"
                         className="group text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive focus-visible:ring-destructive/40"
-                        aria-label="Stop scan"
-                        title="Stop scanning"
+                        aria-label="스캔 중지"
+                        title="스캔 중지"
                         onClick={onStopNestedScan}
                       >
                         <Loader2 className="size-3.5 animate-spin text-annotation-highlight group-hover:hidden group-focus-visible:hidden" />
@@ -97,16 +97,12 @@ export function RepoStep({
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={4}>
-                      Scanning repositories. Click to stop.
+                      저장소를 스캔하는 중입니다. 클릭하면 중지합니다.
                     </TooltipContent>
                   </Tooltip>
                 ) : null}
                 <span className="min-w-0 truncate">
-                  {`${nestedScanInProgress ? 'Scanning... ' : ''}Found ${
-                    nestedScan.repos.length
-                  } git ${
-                    nestedScan.repos.length === 1 ? 'repository' : 'repositories'
-                  } in this folder.`}
+                  {`${nestedScanInProgress ? '스캔 중... ' : ''}이 폴더에서 git 저장소 ${nestedScan.repos.length}개를 찾았습니다.`}
                 </span>
               </div>
               <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
@@ -115,7 +111,7 @@ export function RepoStep({
             </div>
           </div>
           <div className="mt-4 min-w-0 shrink-0 space-y-1">
-            <label className="text-[11px] font-medium text-muted-foreground">Group name</label>
+            <label className="text-[11px] font-medium text-muted-foreground">그룹 이름</label>
             <input
               className="w-full min-w-0 rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-foreground/50 focus:ring-2 focus:ring-foreground/15"
               value={nestedGroupName}
@@ -146,7 +142,7 @@ export function RepoStep({
               onClick={onCancelNested}
             >
               <ArrowLeft className="size-3.5" />
-              Back
+              뒤로
             </button>
             <div className="ml-auto flex min-w-0 flex-wrap justify-end gap-2">
               <button
@@ -155,7 +151,7 @@ export function RepoStep({
                 disabled={nestedImportDisabled || nestedSelectedPaths.size === 0}
                 onClick={() => onImportNested('separate')}
               >
-                Import separately
+                개별로 가져오기
               </button>
               <button
                 type="button"
@@ -165,7 +161,7 @@ export function RepoStep({
                 }
                 onClick={() => onImportNested('group')}
               >
-                Import as project group
+                프로젝트 그룹으로 가져오기
               </button>
             </div>
           </div>
@@ -198,9 +194,9 @@ export function RepoStep({
               <FolderOpen className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-base font-semibold text-foreground">Open a server project</div>
+              <div className="text-base font-semibold text-foreground">서버 프로젝트 열기</div>
               <div className="mt-0.5 text-[13px] text-muted-foreground">
-                Enter a path that exists on the runtime server.
+                런타임 서버에 존재하는 경로를 입력하세요.
               </div>
             </div>
           </div>
@@ -218,7 +214,7 @@ export function RepoStep({
               className="shrink-0 rounded-lg bg-primary px-4 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-40"
               disabled={!serverPath.trim() || disabled}
             >
-              Add Git Project
+              Git 프로젝트 추가
             </button>
             <button
               type="button"
@@ -226,7 +222,7 @@ export function RepoStep({
               disabled={!serverPath.trim() || disabled}
               onClick={() => onOpenServerFolder('folder')}
             >
-              Open as Folder
+              폴더로 열기
             </button>
           </div>
         </form>
@@ -242,20 +238,20 @@ export function RepoStep({
               <FolderOpen className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-base font-semibold text-foreground">Open a folder</div>
+              <div className="text-base font-semibold text-foreground">폴더 열기</div>
               <div className="mt-0.5 text-[13px] text-muted-foreground">
-                Choose any local directory, git repo or not.
+                git 저장소 여부와 상관없이 로컬 디렉터리를 선택하세요.
               </div>
             </div>
             <span className="shrink-0 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition group-hover:border-foreground/40">
-              Browse...
+              찾아보기...
             </span>
           </div>
           <div className="ml-[3.75rem] mt-3 flex items-center gap-2 rounded-lg border border-border bg-muted px-3 py-2 text-[12px] text-muted-foreground">
             <span className="grid size-6 shrink-0 place-items-center rounded-md border border-border bg-background text-foreground">
               <Lightbulb className="size-3.5" />
             </span>
-            <span>Want to import many repos at once? Select the parent folder.</span>
+            <span>여러 저장소를 한 번에 가져오려면 상위 폴더를 선택하세요.</span>
           </div>
         </button>
       )}
@@ -272,9 +268,9 @@ export function RepoStep({
             <GitBranch className="size-5" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-base font-semibold text-foreground">Clone a repo</div>
+            <div className="text-base font-semibold text-foreground">저장소 복제</div>
             <div className="mt-0.5 text-[13px] text-muted-foreground">
-              Paste an HTTPS or SSH URL.
+              HTTPS 또는 SSH URL을 붙여넣으세요.
             </div>
           </div>
         </div>
@@ -291,13 +287,13 @@ export function RepoStep({
             className="shrink-0 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-40"
             disabled={!cloneUrl.trim() || (runtimeActive && !cloneDestination.trim()) || disabled}
           >
-            Clone
+            복제
           </button>
         </div>
         {runtimeActive && (
           <div className="mt-2 space-y-1">
             <label className="text-[11px] font-medium text-muted-foreground">
-              Clone into server path
+              서버 경로에 복제
             </label>
             <input
               className="w-full rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm text-foreground outline-none transition focus:border-foreground/50 focus:ring-2 focus:ring-foreground/15"
@@ -313,15 +309,15 @@ export function RepoStep({
 
       <div className="flex flex-wrap items-center justify-between gap-3 px-1 pt-1 text-xs text-muted-foreground">
         <div className="flex min-w-0 items-center gap-2">
-          <span>Workspace</span>
+          <span>작업공간</span>
           <span className="truncate font-mono text-foreground">
-            {runtimeActive ? 'Runtime server' : workspaceDir}
+            {runtimeActive ? '런타임 서버' : workspaceDir}
           </span>
         </div>
         {runtimeActive ? (
           <div className="flex items-center gap-1.5">
             <Server className="size-3.5" />
-            <span>Server paths only</span>
+            <span>서버 경로만</span>
           </div>
         ) : (
           <button
@@ -331,7 +327,7 @@ export function RepoStep({
             onClick={onOpenSshSettings}
           >
             <Server className="size-3.5 shrink-0" />
-            <span className="truncate">SSH? Set hosts up in Settings</span>
+            <span className="truncate">SSH? 설정에서 호스트를 추가하세요</span>
             <ArrowRight className="size-3.5 shrink-0" />
           </button>
         )}
@@ -348,8 +344,8 @@ export function RepoStep({
                   variant="ghost"
                   size="icon-xs"
                   className="group text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive focus-visible:ring-destructive/40"
-                  aria-label="Stop scan"
-                  title="Stop scanning"
+                  aria-label="스캔 중지"
+                  title="스캔 중지"
                   onClick={onStopNestedScan}
                 >
                   <Loader2 className="size-3.5 animate-spin text-annotation-highlight group-hover:hidden group-focus-visible:hidden" />
@@ -357,7 +353,7 @@ export function RepoStep({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Scanning repositories. Click to stop.
+                저장소를 스캔하는 중입니다. 클릭하면 중지합니다.
               </TooltipContent>
             </Tooltip>
           ) : null}

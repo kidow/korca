@@ -33,65 +33,65 @@ type PermissionDefinition = {
 const PERMISSIONS: PermissionDefinition[] = [
   {
     id: 'microphone',
-    label: 'Microphone',
-    description: 'Voice input, transcription, audio recording, sox, ffmpeg, and Whisper CLIs.',
-    actionLabel: 'Request',
+    label: '마이크',
+    description: '음성 입력, 전사, 오디오 녹음, sox, ffmpeg, Whisper CLI용입니다.',
+    actionLabel: '요청',
     icon: <Mic className="size-4" />
   },
   {
     id: 'camera',
-    label: 'Camera',
-    description: 'Webcam capture and camera-driven local test apps.',
-    actionLabel: 'Request',
+    label: '카메라',
+    description: '웹캠 캡처 및 카메라 기반 로컬 테스트 앱용입니다.',
+    actionLabel: '요청',
     icon: <Camera className="size-4" />
   },
   {
     id: 'screen',
-    label: 'Screen Recording',
-    description: 'Screenshot, visual automation, and UI inspection tools.',
-    actionLabel: 'Open Settings',
+    label: '화면 녹화',
+    description: '스크린샷, 비주얼 자동화, UI 검사 도구용입니다.',
+    actionLabel: '설정 열기',
     icon: <MonitorUp className="size-4" />
   },
   {
     id: 'accessibility',
-    label: 'Accessibility',
-    description: 'Keystroke injection, window control, and UI automation tools.',
-    actionLabel: 'Request',
+    label: '손쉬운 사용',
+    description: '키 입력 주입, 창 제어, UI 자동화 도구용입니다.',
+    actionLabel: '요청',
     icon: <Accessibility className="size-4" />
   },
   {
     id: 'full-disk-access',
-    label: 'Full Disk Access',
-    description: 'Persistent access to protected folders from terminal sessions.',
-    actionLabel: 'Open Settings',
+    label: '전체 디스크 접근',
+    description: '터미널 세션에서 보호된 폴더에 영구적으로 접근합니다.',
+    actionLabel: '설정 열기',
     icon: <HardDrive className="size-4" />
   },
   {
     id: 'automation',
-    label: 'Automation',
-    description: 'Apple Events for scripts that control other local apps.',
-    actionLabel: 'Trigger Prompt',
+    label: '자동화',
+    description: '다른 로컬 앱을 제어하는 스크립트용 Apple Events입니다.',
+    actionLabel: '프롬프트 실행',
     icon: <Workflow className="size-4" />
   },
   {
     id: 'local-network',
-    label: 'Local Network',
-    description: 'Discovery and access for development servers on your network.',
-    actionLabel: 'Trigger Prompt',
+    label: '로컬 네트워크',
+    description: '네트워크상의 개발 서버 탐색 및 접근용입니다.',
+    actionLabel: '프롬프트 실행',
     icon: <Network className="size-4" />
   },
   {
     id: 'usb',
-    label: 'USB Devices',
-    description: 'Hardware debugging and device tools that talk to USB devices.',
-    actionLabel: 'Open Settings',
+    label: 'USB 장치',
+    description: 'USB 장치와 통신하는 하드웨어 디버깅 및 장치 도구용입니다.',
+    actionLabel: '설정 열기',
     icon: <Usb className="size-4" />
   },
   {
     id: 'bluetooth',
-    label: 'Bluetooth',
-    description: 'Bluetooth device tools and local hardware experiments.',
-    actionLabel: 'Open Settings',
+    label: '블루투스',
+    description: '블루투스 장치 도구와 로컬 하드웨어 실험용입니다.',
+    actionLabel: '설정 열기',
     icon: <Bluetooth className="size-4" />
   }
 ]
@@ -99,20 +99,20 @@ const PERMISSIONS: PermissionDefinition[] = [
 function statusLabel(status: DeveloperPermissionStatus | undefined): string {
   switch (status) {
     case 'granted':
-      return 'Granted'
+      return '허용됨'
     case 'denied':
-      return 'Denied'
+      return '거부됨'
     case 'not-determined':
-      return 'Not requested'
+      return '요청 안 됨'
     case 'restricted':
-      return 'Restricted'
+      return '제한됨'
     case 'unsupported':
-      return 'macOS only'
+      return 'macOS 전용'
     case 'ready':
-      return 'Entitled'
+      return '권한 있음'
     case 'unknown':
     case undefined:
-      return 'Check manually'
+      return '직접 확인'
   }
 }
 
@@ -157,7 +157,7 @@ export function DeveloperPermissionsPane(): React.JSX.Element {
       }
     } catch {
       if (mountedRef.current && refreshId === refreshSequenceRef.current) {
-        toast.error('Could not load developer permissions')
+        toast.error('개발자 권한을 불러오지 못했습니다')
       }
     } finally {
       if (mountedRef.current && refreshId === refreshSequenceRef.current) {
@@ -194,15 +194,15 @@ export function DeveloperPermissionsPane(): React.JSX.Element {
         return
       }
       if (result.status === 'granted') {
-        toast.success('Permission granted')
+        toast.success('권한이 허용되었습니다')
       } else if (result.openedSystemSettings) {
-        toast.message('Opened macOS Privacy & Security')
+        toast.message('macOS 개인정보 보호 및 보안 화면을 열었습니다')
       } else {
-        toast.message('Permission request sent')
+        toast.message('권한 요청을 보냈습니다')
       }
     } catch {
       if (mountedRef.current) {
-        toast.error('Could not request permission')
+        toast.error('권한을 요청하지 못했습니다')
       }
     } finally {
       if (mountedRef.current) {
@@ -217,16 +217,16 @@ export function DeveloperPermissionsPane(): React.JSX.Element {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-sm font-medium">
             <ShieldCheck className="size-4" />
-            Terminal tools inherit Orca&apos;s macOS privacy envelope.
+            터미널 도구는 Orca의 macOS 개인정보 보호 범위를 그대로 사용합니다.
           </div>
           <p className="text-xs text-muted-foreground">
-            Use these controls when a CLI, local app, or automation tool needs macOS privacy access.
-            Orca does not ask at startup.
+            CLI, 로컬 앱 또는 자동화 도구가 macOS 개인정보 접근을 필요로 할 때 이 컨트롤을
+            사용하세요. Orca는 시작 시 묻지 않습니다.
           </p>
         </div>
         <Button variant="outline" size="sm" className="gap-1.5" onClick={() => void refresh()}>
           <RefreshCw className={`size-3.5 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
+          새로고침
         </Button>
       </div>
 
@@ -261,7 +261,7 @@ export function DeveloperPermissionsPane(): React.JSX.Element {
                 className="shrink-0 gap-1.5"
               >
                 <ExternalLink className="size-3.5" />
-                {pending ? 'Working...' : permission.actionLabel}
+                {pending ? '작업 중...' : permission.actionLabel}
               </Button>
             </div>
           )

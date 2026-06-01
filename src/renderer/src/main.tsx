@@ -30,7 +30,7 @@ applyDocumentTheme('system', { disableTransitions: false })
 const rootElement = document.getElementById('root')
 if (!rootElement) {
   recordRendererCrashBreadcrumb('renderer_root_missing')
-  throw new Error('Renderer root element not found.')
+  throw new Error('렌더러 루트 요소를 찾을 수 없습니다.')
 }
 
 createRoot(rootElement).render(
@@ -38,8 +38,8 @@ createRoot(rootElement).render(
     <RecoverableRenderErrorBoundary
       boundaryId="app.root"
       surface="app-root"
-      title="Orca hit a renderer error."
-      description="The app shell could not finish rendering. Retry to remount it, or relaunch Orca if the error persists."
+      title="Orca 렌더러 오류가 발생했습니다."
+      description="앱 셸을 끝까지 렌더링하지 못했습니다. 다시 마운트해 보거나, 오류가 계속되면 Orca를 다시 실행하세요."
     >
       <App />
     </RecoverableRenderErrorBoundary>

@@ -120,7 +120,7 @@ export function AgentSkillSetupPanel({
         disabled={terminalOpen || installDisabled}
       >
         <Terminal className="size-3.5" />
-        Install
+        설치
       </Button>
       {!installed || showRecheckWhenInstalled ? (
         <Button
@@ -132,7 +132,7 @@ export function AgentSkillSetupPanel({
           disabled={loading}
         >
           <RefreshCw className={cn('size-3.5', loading && 'animate-spin')} />
-          Re-check
+          다시 확인
         </Button>
       ) : null}
     </div>
@@ -159,11 +159,11 @@ export function AgentSkillSetupPanel({
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-[15px] font-semibold leading-tight text-foreground">{title}</h3>
               {loading && !installed ? (
-                <IntegrationStatusPill tone="neutral">Checking...</IntegrationStatusPill>
+                <IntegrationStatusPill tone="neutral">확인 중...</IntegrationStatusPill>
               ) : installed ? (
-                <IntegrationStatusPill tone="connected">Installed</IntegrationStatusPill>
+                <IntegrationStatusPill tone="connected">설치됨</IntegrationStatusPill>
               ) : (
-                <IntegrationStatusPill tone="attention">Not installed</IntegrationStatusPill>
+                <IntegrationStatusPill tone="attention">설치 안 됨</IntegrationStatusPill>
               )}
             </div>
             {error ? <p className="mt-1 text-[12px] text-destructive">{error}</p> : null}

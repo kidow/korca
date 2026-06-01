@@ -67,7 +67,7 @@ export default function PairScanScreen() {
       const offer = decodePairingUrl(data)
       if (!offer) {
         setStatus('error')
-        setErrorMessage('Not a valid Orca QR code')
+        setErrorMessage('유효한 Orca QR 코드가 아닙니다')
         processingRef.current = false
         return
       }
@@ -87,7 +87,7 @@ export default function PairScanScreen() {
     const offer = parsePairingCode(input)
     if (!offer) {
       setStatus('error')
-      setErrorMessage('Not a valid pairing code — copy it from your computer and paste again')
+      setErrorMessage('유효한 페어링 코드가 아닙니다. 컴퓨터에서 다시 복사해 붙여넣으세요')
       processingRef.current = false
       return
     }
@@ -145,8 +145,8 @@ export default function PairScanScreen() {
       setStatus('error')
       setErrorMessage(
         timedOut
-          ? `Couldn't connect within ${PAIRING_OVERALL_TIMEOUT_MS / 1000}s — see log below for where it stalled`
-          : 'Cannot connect — check that your computer is on the same network'
+          ? `${PAIRING_OVERALL_TIMEOUT_MS / 1000}초 안에 연결할 수 없습니다. 어디에서 멈췄는지 아래 로그를 확인하세요`
+          : '연결할 수 없습니다. 컴퓨터가 같은 네트워크에 있는지 확인하세요'
       )
       processingRef.current = false
       return
@@ -158,12 +158,12 @@ export default function PairScanScreen() {
       }
       if (response.error.code === 'unauthorized') {
         setStatus('error')
-        setErrorMessage('Authentication failed — token may be expired')
+        setErrorMessage('인증 실패 - 토큰이 만료되었을 수 있습니다')
         processingRef.current = false
         return
       }
       setStatus('error')
-      setErrorMessage(`Server error: ${response.error.message}`)
+      setErrorMessage(`서버 오류: ${response.error.message}`)
       processingRef.current = false
       return
     }
@@ -190,7 +190,7 @@ export default function PairScanScreen() {
       console.warn('[pair] save failed', err)
       setStatus('error')
       setErrorMessage(
-        `Pairing succeeded but couldn't save the host: ${err instanceof Error ? err.message : String(err)}`
+        `페어링은 성공했지만 호스트를 저장할 수 없습니다: ${err instanceof Error ? err.message : String(err)}`
       )
       processingRef.current = false
     }
@@ -229,12 +229,12 @@ export default function PairScanScreen() {
         </Pressable>
         <View style={styles.centered}>
           <Text style={styles.title}>
-            {canAskAgain ? 'Pair with desktop' : 'Camera Access Disabled'}
+            {canAskAgain ? '데스크톱과 페어링' : '카메라 접근이 비활성화됨'}
           </Text>
           <Text style={styles.subtitle}>
             {canAskAgain
-              ? 'Scan the QR code from Orca on your desktop, or paste the pairing code instead.'
-              : 'Enable camera access in Settings, or paste the pairing code instead.'}
+              ? '데스크톱의 Orca에서 QR 코드를 스캔하거나, 대신 페어링 코드를 붙여넣으세요.'
+              : '설정에서 카메라 접근을 켜거나, 대신 페어링 코드를 붙여넣으세요.'}
           </Text>
           <Pressable
             style={styles.primaryButton}
@@ -242,7 +242,7 @@ export default function PairScanScreen() {
           >
             {canAskAgain && <QrCode size={16} color={colors.bgBase} />}
             <Text style={styles.primaryButtonText}>
-              {canAskAgain ? 'Continue' : 'Open Settings'}
+              {canAskAgain ? '계속' : '설정 열기'}
             </Text>
           </Pressable>
           <Pressable
@@ -250,14 +250,14 @@ export default function PairScanScreen() {
             onPress={() => setPasteVisible(true)}
           >
             <ClipboardIcon size={16} color={colors.textSecondary} />
-            <Text style={styles.pasteButtonText}>Paste code instead</Text>
+            <Text style={styles.pasteButtonText}>대신 코드 붙여넣기</Text>
           </Pressable>
         </View>
         <TextInputModal
           visible={pasteVisible}
-          title="Paste pairing code"
-          message="Copy the code shown under the QR on your computer."
-          placeholder="orca://pair?code=... or paste the code"
+          title="페어링 코드 붙여넣기"
+          message="컴퓨터의 QR 아래에 표시된 코드를 복사하세요."
+          placeholder="orca://pair?code=... 또는 코드를 붙여넣기"
           onSubmit={handlePasteSubmit}
           onCancel={() => setPasteVisible(false)}
         />
@@ -272,9 +272,9 @@ export default function PairScanScreen() {
       </Pressable>
 
       <View style={styles.steps}>
-        <Step number={1} text="Open Orca on your computer" />
-        <Step number={2} text="Go to Settings → Mobile" />
-        <Step number={3} text="Scan the QR code" />
+        <Step number={1} text="컴퓨터에서 Orca를 여세요" />
+        <Step number={2} text="설정 → 모바일로 이동하세요" />
+        <Step number={3} text="QR 코드를 스캔하세요" />
       </View>
 
       {status === 'scanning' && (
@@ -306,7 +306,7 @@ export default function PairScanScreen() {
             onPress={() => setPasteVisible(true)}
           >
             <ClipboardIcon size={16} color={colors.textSecondary} />
-            <Text style={styles.pasteButtonText}>Or paste pairing code</Text>
+            <Text style={styles.pasteButtonText}>또는 페어링 코드 붙여넣기</Text>
           </Pressable>
         </>
       )}
@@ -314,9 +314,9 @@ export default function PairScanScreen() {
       {status === 'connecting' && (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={colors.textSecondary} />
-          <Text style={styles.connectingText}>Connecting…</Text>
+          <Text style={styles.connectingText}>연결 중…</Text>
           <View style={styles.logSlot}>
-            <ConnectionLog entries={logs} title="Pairing log" />
+            <ConnectionLog entries={logs} title="페어링 로그" />
           </View>
         </View>
       )}
@@ -326,12 +326,12 @@ export default function PairScanScreen() {
           <Text style={styles.errorText}>{errorMessage}</Text>
           {logs.length > 0 && (
             <View style={styles.logSlot}>
-              <ConnectionLog entries={logs} title="Pairing log" />
+              <ConnectionLog entries={logs} title="페어링 로그" />
             </View>
           )}
           <View style={styles.errorActions}>
             <Pressable style={styles.primaryButton} onPress={retry}>
-              <Text style={styles.primaryButtonText}>Try Again</Text>
+              <Text style={styles.primaryButtonText}>다시 시도</Text>
             </Pressable>
             <Pressable
               style={({ pressed }) => [
@@ -343,7 +343,7 @@ export default function PairScanScreen() {
                 setPasteVisible(true)
               }}
             >
-              <Text style={styles.secondaryButtonText}>Paste code instead</Text>
+              <Text style={styles.secondaryButtonText}>대신 코드 붙여넣기</Text>
             </Pressable>
           </View>
         </View>
@@ -351,9 +351,9 @@ export default function PairScanScreen() {
 
       <TextInputModal
         visible={pasteVisible}
-        title="Paste pairing code"
-        message="Copy the code shown under the QR on your computer."
-        placeholder="orca://pair?code=... or paste the code"
+        title="페어링 코드 붙여넣기"
+        message="컴퓨터의 QR 아래에 표시된 코드를 복사하세요."
+        placeholder="orca://pair?code=... 또는 코드를 붙여넣기"
         onSubmit={handlePasteSubmit}
         onCancel={() => setPasteVisible(false)}
       />

@@ -71,39 +71,39 @@ export type PrimaryActionInputs = {
 }
 
 const PRIMARY_LABEL_BY_KIND: Record<Exclude<PrimaryActionKind, 'commit'>, string> = {
-  stage: 'Stage All',
-  push: 'Push',
-  pull: 'Pull',
-  sync: 'Sync',
-  publish: 'Publish Branch',
-  create_pr: 'Create PR'
+  stage: '모두 스테이징',
+  push: '푸시',
+  pull: '가져오기',
+  sync: '동기화',
+  publish: '브랜치 게시',
+  create_pr: 'PR 생성'
 }
 
 function reviewCopy(provider: HostedReviewCreationEligibility['provider'] | undefined): {
   shortLabel: 'PR' | 'MR'
-  reviewLabel: 'pull request' | 'merge request'
+  reviewLabel: '풀 리퀘스트' | '병합 요청'
 } {
   return provider === 'gitlab'
-    ? { shortLabel: 'MR', reviewLabel: 'merge request' }
-    : { shortLabel: 'PR', reviewLabel: 'pull request' }
+    ? { shortLabel: 'MR', reviewLabel: '병합 요청' }
+    : { shortLabel: 'PR', reviewLabel: '풀 리퀘스트' }
 }
 
 function describePushCount(ahead: number): string {
-  return `Push ${ahead} commit${ahead === 1 ? '' : 's'}`
+  return `푸시 ${ahead}개 커밋`
 }
 
 function describePullCount(behind: number): string {
-  return `Pull ${behind} commit${behind === 1 ? '' : 's'}`
+  return `가져오기 ${behind}개 커밋`
 }
 
 function describeSyncCounts(ahead: number, behind: number): string {
-  return `Pull ${behind}, push ${ahead}`
+  return `가져오기 ${behind}, 푸시 ${ahead}`
 }
 
 function describeForcePushWithLease(count: number | undefined, upstreamName?: string): string {
   const countText =
-    count && count > 0 ? `${count} branch commit${count === 1 ? '' : 's'}` : 'this branch'
-  return `Remote only has older copies of local commits. Force push ${countText} with lease to update ${upstreamName ?? 'the remote branch'}.`
+    count && count > 0 ? `${count}개의 브랜치 커밋` : '이 브랜치'
+  return `원격에는 로컬 커밋의 더 오래된 복사본만 있습니다. ${countText}을 lease와 함께 강제 푸시하여 ${upstreamName ?? '원격 브랜치'}를 업데이트하세요.`
 }
 
 /**
@@ -147,8 +147,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (isCommitting) {
     return {
       kind: 'commit',
-      label: 'Commit',
-      title: 'Commit in progress…',
+      label: '커밋',
+      title: '커밋 진행 중…',
       disabled: true
     }
   }
@@ -177,7 +177,7 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
       return {
         kind: inFlightRemoteOpKind,
         label,
-        title: `${label} in progress…`,
+        title: `${label} 진행 중…`,
         disabled: true
       }
     }
@@ -189,10 +189,10 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
     // tooltip because resolving them is the only action the user can start
     // while the remote op runs.
     const title = hasUnresolvedConflicts
-      ? 'Resolve conflicts before committing'
+      ? '커밋하기 전에 충돌을 해결하세요'
       : candidate.kind === 'commit'
-        ? 'Remote operation in progress — try again once it finishes'
-        : 'Remote operation in progress…'
+        ? '원격 작업이 진행 중입니다. 끝난 뒤 다시 시도하세요'
+        : '원격 작업 진행 중…'
     return {
       ...candidate,
       title,
@@ -204,8 +204,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (hasUnresolvedConflicts) {
     return {
       kind: 'commit',
-      label: 'Commit',
-      title: 'Resolve conflicts before committing',
+      label: '커밋',
+      title: '커밋하기 전에 충돌을 해결하세요',
       disabled: true
     }
   }
@@ -218,8 +218,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (hasStaged && hasPartiallyStagedChanges) {
     return {
       kind: 'stage',
-      label: 'Stage All',
-      title: 'Stage all changes before committing partially staged files',
+      label: '모두 스테이징',
+      title: '부분적으로 스테이징된 파일을 커밋하기 전에 모든 변경 사항을 스테이징하세요',
       disabled: false
     }
   }
@@ -232,8 +232,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (hasStaged && hasMessage) {
     return {
       kind: 'commit',
-      label: 'Commit',
-      title: 'Commit staged changes',
+      label: '커밋',
+      title: '스테이징된 변경 사항을 커밋',
       disabled: false
     }
   }
@@ -242,8 +242,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (hasStaged && !hasMessage) {
     return {
       kind: 'commit',
-      label: 'Commit',
-      title: 'Enter a commit message to commit',
+      label: '커밋',
+      title: '커밋하려면 커밋 메시지를 입력하세요',
       disabled: true
     }
   }
@@ -256,8 +256,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (!hasStaged && hasUnstagedChanges) {
     return {
       kind: 'stage',
-      label: 'Stage All',
-      title: 'Stage all changes',
+      label: '모두 스테이징',
+      title: '모든 변경 사항을 스테이징',
       disabled: false
     }
   }
@@ -266,8 +266,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (!upstreamStatus) {
     return {
       kind: 'commit',
-      label: 'Commit',
-      title: 'Stage at least one file to commit',
+      label: '커밋',
+      title: '커밋하려면 파일 하나 이상을 스테이징하세요',
       disabled: true
     }
   }
@@ -276,8 +276,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
     if (branchCommitsAhead === 0) {
       return {
         kind: 'commit',
-        label: 'Commit',
-        title: 'Nothing to commit. Branch has no changes to publish.',
+        label: '커밋',
+        title: '커밋할 내용이 없습니다. 브랜치에 게시할 변경 사항이 없습니다.',
         disabled: true
       }
     }
@@ -285,8 +285,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
     if (isPRStateLoading) {
       return {
         kind: 'commit',
-        label: 'Commit',
-        title: 'Checking PR status…',
+        label: '커밋',
+        title: 'PR 상태 확인 중…',
         disabled: true
       }
     }
@@ -294,16 +294,16 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
     if (prState === 'merged') {
       return {
         kind: 'commit',
-        label: 'Commit',
-        title: 'Nothing to commit. PR is already merged.',
+        label: '커밋',
+        title: '커밋할 내용이 없습니다. PR이 이미 병합되었습니다.',
         disabled: true
       }
     }
 
     return {
       kind: 'publish',
-      label: 'Publish Branch',
-      title: 'Publish this branch to origin',
+      label: '브랜치 게시',
+      title: '이 브랜치를 origin에 게시',
       disabled: false
     }
   }
@@ -312,14 +312,14 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
     if (shouldForcePushWithLeaseForUpstream(upstreamStatus)) {
       return {
         kind: 'push',
-        label: 'Force Push',
+        label: '강제 푸시',
         title: describeForcePushWithLease(branchCommitsAhead, upstreamStatus.upstreamName),
         disabled: false
       }
     }
     return {
       kind: 'sync',
-      label: 'Sync',
+      label: '동기화',
       title: describeSyncCounts(upstreamStatus.ahead, upstreamStatus.behind),
       disabled: false
     }
@@ -327,7 +327,7 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (upstreamStatus.behind > 0) {
     return {
       kind: 'pull',
-      label: 'Pull',
+      label: '가져오기',
       title: describePullCount(upstreamStatus.behind),
       disabled: false
     }
@@ -335,7 +335,7 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   if (upstreamStatus.ahead > 0) {
     return {
       kind: 'push',
-      label: 'Push',
+      label: '푸시',
       title: describePushCount(upstreamStatus.ahead),
       disabled: false
     }
@@ -345,8 +345,8 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
     const copy = reviewCopy(hostedReviewCreation.provider)
     return {
       kind: 'create_pr',
-      label: `Create ${copy.shortLabel}`,
-      title: `Create a ${copy.reviewLabel} for this branch`,
+      label: `${copy.shortLabel} 생성`,
+      title: `이 브랜치에 대한 ${copy.reviewLabel}를 생성`,
       disabled: false
     }
   }
@@ -354,11 +354,11 @@ export function resolvePrimaryAction(inputs: PrimaryActionInputs): PrimaryAction
   // Clean + tracked + in sync — distinguish truly clean from work that still
   // needs staging before commit can proceed.
   return {
-    kind: 'commit',
-    label: 'Commit',
-    title: hasUnstagedChanges
-      ? 'Stage at least one file to commit'
-      : 'Nothing to commit. Branch is up to date.',
-    disabled: true
+      kind: 'commit',
+      label: '커밋',
+      title: hasUnstagedChanges
+      ? '커밋하려면 파일 하나 이상을 스테이징하세요'
+      : '커밋할 내용이 없습니다. 브랜치가 최신입니다.',
+      disabled: true
   }
 }

@@ -1289,13 +1289,13 @@ export default function LinearItemDrawer({
                         size="icon"
                         className="size-7"
                         onClick={() => window.api.shell.openUrl(displayed.url)}
-                        aria-label="Open on Linear"
+                        aria-label="Linear에서 열기"
                       >
                         <ExternalLink className="size-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom" sideOffset={6}>
-                      Open on Linear
+                      Linear에서 열기
                     </TooltipContent>
                   </Tooltip>
                   <Tooltip>

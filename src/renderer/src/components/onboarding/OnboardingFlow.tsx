@@ -19,44 +19,44 @@ import logo from '../../../../../resources/logo.svg'
 
 const stepCopy = {
   agent: {
-    title: 'Pick your default agent',
+    title: '기본 에이전트를 선택하세요',
     subtitle:
-      "Orca works with every CLI agent. Choose the one you'll reach for most. Switch any time."
+      'Orca는 모든 CLI 에이전트와 함께 동작합니다. 가장 자주 쓸 에이전트를 고르세요. 언제든 바꿀 수 있습니다.'
   },
   theme: {
-    title: 'Make it feel like home',
-    subtitle: 'Pick the look you want to stare at for hours.'
+    title: '익숙한 모습으로 맞추세요',
+    subtitle: '오래 보게 될 화면 스타일을 고르세요.'
   },
   notifications: {
-    title: 'Set up notifications',
-    subtitle: 'Orca will notify you know when agents are done or need help.'
+    title: '알림을 설정하세요',
+    subtitle: '에이전트 작업이 끝나거나 도움이 필요할 때 Orca가 알려줍니다.'
   },
   agentSetup: {
-    title: 'Set up Orca for agents',
-    subtitle: 'Turn on advanced Orca capabilities for agents.'
+    title: '에이전트용 Orca를 설정하세요',
+    subtitle: '에이전트가 쓸 고급 Orca 기능을 켜세요.'
   },
   integrations: {
-    title: 'Set up GitHub tasks',
-    subtitle: 'Install the GitHub CLI to:'
+    title: 'GitHub 작업을 설정하세요',
+    subtitle: 'GitHub CLI를 설치하면 다음을 할 수 있습니다:'
   },
   tour: {
-    title: 'Explore Orca',
-    subtitle: "Take a 60-second tour of Orca's advanced features."
+    title: 'Orca 둘러보기',
+    subtitle: 'Orca의 고급 기능을 60초 만에 살펴보세요.'
   },
   repo: {
-    title: 'Point Orca at some code',
-    subtitle: 'Open a folder or clone a repo to finish setup.'
+    title: 'Orca가 볼 코드를 지정하세요',
+    subtitle: '폴더를 열거나 저장소를 복제해 설정을 마치세요.'
   }
 } as const
 
 const stepTooltipLabels = {
-  agent: 'Default Agent',
-  theme: 'Appearance',
-  notifications: 'Notifications',
-  agentSetup: 'Agent setup',
-  integrations: 'Integrations',
-  tour: 'Explore Orca',
-  repo: 'Create project'
+  agent: '기본 에이전트',
+  theme: '외형',
+  notifications: '알림',
+  agentSetup: '에이전트 설정',
+  integrations: '연동',
+  tour: 'Orca 둘러보기',
+  repo: '프로젝트 만들기'
 } as const
 
 type OnboardingFlowProps = {
@@ -82,7 +82,7 @@ export default function OnboardingFlow({
   const shouldShowStepHeading = !isInlineTourRunning
   const shouldShowFooterBusy = Boolean(busyLabel) && currentStep.id !== 'agentSetup'
   const footerPrimaryLabel =
-    currentStep.id === 'agentSetup' ? 'Continue' : (busyLabel ?? 'Continue')
+    currentStep.id === 'agentSetup' ? '계속' : (busyLabel ?? '계속')
   const [skipConfirmOpen, setSkipConfirmOpen] = useState(false)
   const skipConfirmAdvancedViaRef = useRef<'button' | 'keyboard'>('button')
   const {
@@ -187,7 +187,7 @@ export default function OnboardingFlow({
       <section
         ref={flow.setLifecycleRootRef}
         role="dialog"
-        aria-label="Orca onboarding"
+        aria-label="Orca 온보딩"
         aria-modal="true"
         data-onboarding-modal
         className={cn(
@@ -233,7 +233,7 @@ export default function OnboardingFlow({
                                 ? 'w-6 bg-muted-foreground/70 hover:bg-foreground/80'
                                 : 'w-6 bg-muted-foreground/25 hover:bg-muted-foreground/45'
                           )}
-                          aria-label={`Go to onboarding step ${visibleIdx + 1}: ${stepCopy[step.id].title}`}
+                          aria-label={`온보딩 ${visibleIdx + 1}단계로 이동: ${stepCopy[step.id].title}`}
                           aria-current={isActive ? 'step' : undefined}
                           onClick={() => flow.jumpToStep(realStepIndex)}
                         />
@@ -246,7 +246,7 @@ export default function OnboardingFlow({
                 })}
               </TooltipProvider>
               <span className="ml-3 text-xs font-medium text-muted-foreground">
-                {flow.visibleStepIndex + 1} of {flow.visibleSteps.length}
+                {flow.visibleStepIndex + 1} / {flow.visibleSteps.length}
               </span>
             </div>
           )}
@@ -255,7 +255,7 @@ export default function OnboardingFlow({
             <div className="mt-8 shrink-0">
               {stepIndex === 0 && (
                 <div className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                  Welcome to Orca
+                  Orca에 오신 것을 환영합니다
                 </div>
               )}
               <h1 className="text-[34px] font-semibold leading-[1.15] tracking-tight text-foreground">

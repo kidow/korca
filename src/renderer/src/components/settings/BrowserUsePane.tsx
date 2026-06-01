@@ -92,7 +92,7 @@ export function BrowserUseSetup({
       handleCliStatusChange(await window.api.cli.getInstallStatus())
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(error instanceof Error ? error.message : 'Failed to load CLI status.')
+        toast.error(error instanceof Error ? error.message : 'CLI 상태를 불러오지 못했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -139,7 +139,7 @@ export function BrowserUseSetup({
         onStatusChange: handleCliStatusChange
       })
       if (mountedRef.current && isOrcaCliAvailableOnPath(next)) {
-        toast.success('Registered the Orca CLI in PATH.')
+        toast.success('PATH에 Orca CLI를 등록했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -159,7 +159,7 @@ export function BrowserUseSetup({
     if (result.ok) {
       const browser = detectedBrowsers.find((b) => b.family === browserFamily)
       toast.success(
-        `Imported ${result.summary.importedCookies} cookies from ${browser?.label ?? browserFamily}${browserProfile ? ` (${browserProfile})` : ''}.`
+        `${browser?.label ?? browserFamily}${browserProfile ? ` (${browserProfile})` : ''}에서 쿠키 ${result.summary.importedCookies}개를 가져왔습니다.`
       )
     } else {
       toast.error(result.reason)
@@ -169,7 +169,7 @@ export function BrowserUseSetup({
   const handleImportFromFile = async (): Promise<void> => {
     const result = await useAppStore.getState().importCookiesToProfile('default')
     if (result.ok) {
-      toast.success(`Imported ${result.summary.importedCookies} cookies from file.`)
+      toast.success(`파일에서 쿠키 ${result.summary.importedCookies}개를 가져왔습니다.`)
     } else if (result.reason !== 'canceled') {
       toast.error(result.reason)
     }
@@ -192,7 +192,7 @@ export function BrowserUseSetup({
     <button
       role="switch"
       aria-checked={browserUseEnabled}
-      aria-label="Enable Agent Browser Use"
+      aria-label="에이전트 브라우저 사용 켜기"
       onClick={() => toggleBrowserUse(!browserUseEnabled)}
       className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors ${
         browserUseEnabled ? 'bg-foreground' : 'bg-muted-foreground/30'
@@ -210,9 +210,9 @@ export function BrowserUseSetup({
     return (
       <div className="flex items-center justify-between gap-4 py-2">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium">Agent Browser Use</p>
+          <p className="text-sm font-medium">에이전트 브라우저 사용</p>
           <p className="text-xs text-muted-foreground">
-            Let coding agents drive this browser with your logins.
+            코딩 에이전트가 로그인된 상태로 이 브라우저를 조작할 수 있습니다.
           </p>
         </div>
         {toggleSwitch}
@@ -224,9 +224,9 @@ export function BrowserUseSetup({
     <div className="space-y-3 rounded-2xl border border-border/60 bg-card/30 p-4">
       <div className="flex items-center justify-between gap-3">
         <div className="space-y-0.5">
-          <p className="text-sm font-semibold">Agent Browser Use</p>
+          <p className="text-sm font-semibold">에이전트 브라우저 사용</p>
           <p className="text-xs text-muted-foreground">
-            Let coding agents drive this browser with your logins. Finish the three steps below.
+            코딩 에이전트가 로그인된 상태로 이 브라우저를 조작할 수 있습니다. 아래 3단계를 완료하세요.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
@@ -247,11 +247,9 @@ export function BrowserUseSetup({
         <div className="rounded-xl border border-border/60 bg-card/50 p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-sm font-medium">Use an existing browser session</p>
+              <p className="text-sm font-medium">기존 브라우저 세션 사용</p>
               <p className="text-xs text-muted-foreground">
-                If cookie import is not the right fit, Computer Use can control local apps and may
-                use existing logged-in browser sessions where applicable. Install the Computer Use
-                skill; macOS also requires privacy permissions.
+                쿠키 가져오기가 맞지 않으면 Computer Use가 로컬 앱을 제어하고, 가능한 경우 이미 로그인된 브라우저 세션을 사용할 수 있습니다. Computer Use 스킬을 설치하세요. macOS에서는 개인정보 보호 권한도 필요합니다.
               </p>
             </div>
             <Button
@@ -262,7 +260,7 @@ export function BrowserUseSetup({
               className="shrink-0 gap-1.5 self-start"
             >
               <MousePointerClick className="size-3.5" />
-              Open Computer Use
+              Computer Use 열기
             </Button>
           </div>
         </div>
@@ -270,8 +268,8 @@ export function BrowserUseSetup({
 
       {showStep1 ? (
         <SearchableSetting
-          title="Enable Orca CLI"
-          description="Register the Orca CLI so agents can drive the browser."
+          title="Orca CLI 켜기"
+          description="에이전트가 브라우저를 조작할 수 있도록 Orca CLI를 등록합니다."
           keywords={BROWSER_USE_PANE_SEARCH_ENTRIES[0].keywords}
           className="rounded-xl border border-border/60 bg-card/50 p-4"
         >
@@ -281,14 +279,13 @@ export function BrowserUseSetup({
               state={cliEnabled ? 'done' : cliBusy ? 'in-progress' : 'pending'}
             />
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-sm font-medium">Enable Orca CLI</p>
+              <p className="text-sm font-medium">Orca CLI 켜기</p>
               <p className="text-xs text-muted-foreground">
-                Registers the Orca CLI command so agents can orchestrate the browser from their
-                shell.
+                에이전트가 셸에서 브라우저를 조작할 수 있도록 Orca CLI 명령을 등록합니다.
               </p>
               {cliStatus?.commandPath && cliEnabled ? (
                 <p className="text-[11px] text-muted-foreground">
-                  Installed at{' '}
+                  설치 위치{' '}
                   <code className="rounded bg-muted px-1 py-0.5">{cliStatus.commandPath}</code>
                 </p>
               ) : null}
@@ -307,12 +304,12 @@ export function BrowserUseSetup({
                       onClick={() => void handleEnableCli()}
                     >
                       {cliBusy
-                        ? 'Registering...'
+                        ? '등록 중...'
                         : cliEnabled
-                          ? 'Enabled'
+                          ? '켜짐'
                           : cliPathNeedsAttention
-                            ? 'Fix PATH'
-                            : 'Enable'}
+                            ? 'PATH 수정'
+                            : '켜기'}
                     </Button>
                   </span>
                 </TooltipTrigger>
@@ -329,8 +326,8 @@ export function BrowserUseSetup({
 
       {showStep2 ? (
         <SearchableSetting
-          title="Install Browser Use Skill"
-          description="Install the Browser Use skill so agents can operate Orca's browser."
+          title="Browser Use 스킬 설치"
+          description="에이전트가 Orca의 브라우저를 조작할 수 있도록 Browser Use 스킬을 설치합니다."
           keywords={BROWSER_USE_PANE_SEARCH_ENTRIES[1].keywords}
           className={`rounded-xl border border-border/60 bg-card/50 p-4 ${
             cliEnabled ? '' : 'opacity-60'
@@ -356,8 +353,8 @@ export function BrowserUseSetup({
 
       {showStep3 ? (
         <SearchableSetting
-          title="Import Browser Cookies"
-          description="Import cookies from Chrome, Edge, or other browsers so agents can reuse your logins."
+          title="브라우저 쿠키 가져오기"
+          description="Chrome, Edge 또는 다른 브라우저의 쿠키를 가져와 에이전트가 로그인 상태를 재사용할 수 있게 합니다."
           keywords={BROWSER_USE_PANE_SEARCH_ENTRIES[2].keywords}
           className={`rounded-xl border border-border/60 bg-card/50 p-4 ${
             cliEnabled && skillDetected ? '' : 'opacity-60'
@@ -369,23 +366,22 @@ export function BrowserUseSetup({
               state={cookiesImported ? 'done' : isImportingDefault ? 'in-progress' : 'pending'}
             />
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-sm font-medium">Import Browser Cookies</p>
+              <p className="text-sm font-medium">브라우저 쿠키 가져오기</p>
               <p className="text-xs text-muted-foreground">
-                Bring your existing logins into Orca so agents can reach authenticated pages.
-                Imports into the default profile.
+                기존 로그인 정보를 Orca에 가져와 에이전트가 인증된 페이지에 접근할 수 있게 합니다. 기본 프로필로 가져옵니다.
               </p>
               {sourceLabel ? (
                 <p className="text-[11px] text-muted-foreground">
-                  Last imported from {sourceLabel}
+                  마지막 가져오기 원본: {sourceLabel}
                 </p>
               ) : null}
               {onConfigureMoreBrowsers ? (
-                <button
+                  <button
                   type="button"
                   onClick={onConfigureMoreBrowsers}
                   className="text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground"
                 >
-                  Manage profiles for separate logins
+                  서로 다른 로그인을 위한 프로필 관리
                 </button>
               ) : null}
             </div>
@@ -410,14 +406,14 @@ export function BrowserUseSetup({
                   ) : (
                     <Import className="size-3.5" />
                   )}
-                  {cookiesImported ? 'Re-import' : 'Import'}
+                  {cookiesImported ? '다시 가져오기' : '가져오기'}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {detectedBrowsers.map((browser) =>
                   browser.profiles.length > 1 ? (
                     <DropdownMenuSub key={browser.family}>
-                      <DropdownMenuSubTrigger>From {browser.label}</DropdownMenuSubTrigger>
+                      <DropdownMenuSubTrigger>{browser.label}에서 가져오기</DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
                         <DropdownMenuSubContent>
                           {browser.profiles.map((bp) => (
@@ -438,13 +434,13 @@ export function BrowserUseSetup({
                       key={browser.family}
                       onSelect={() => void handleImportFromBrowser(browser.family)}
                     >
-                      From {browser.label}
+                      {browser.label}에서 가져오기
                     </DropdownMenuItem>
                   )
                 )}
                 {detectedBrowsers.length > 0 ? <DropdownMenuSeparator /> : null}
-                <DropdownMenuItem onSelect={() => void handleImportFromFile()}>
-                  From File…
+                  <DropdownMenuItem onSelect={() => void handleImportFromFile()}>
+                    파일에서…
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

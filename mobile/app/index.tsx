@@ -643,11 +643,11 @@ export default function HomeScreen() {
         <ListTodo size={18} color={colors.textSecondary} />
       </View>
       <View style={styles.taskHomeMain}>
-        <Text style={styles.taskHomeTitle}>Tasks</Text>
+        <Text style={styles.taskHomeTitle}>작업</Text>
         <Text style={styles.taskHomeSubtitle} numberOfLines={1}>
           {primaryTaskProviders.length > 0
             ? primaryTaskProviders.map((provider) => TASK_PROVIDER_LABELS[provider]).join(' · ')
-            : 'No task sources connected'}
+            : '연결된 작업 소스가 없습니다'}
         </Text>
       </View>
       <View style={styles.taskHomeTrailing}>
@@ -661,7 +661,7 @@ export default function HomeScreen() {
             <Pressable
               key={provider}
               accessibilityRole="button"
-              accessibilityLabel={`Open ${TASK_PROVIDER_LABELS[provider]} tasks`}
+              accessibilityLabel={`${TASK_PROVIDER_LABELS[provider]} 작업 열기`}
               hitSlop={8}
               style={({ pressed }) => [
                 styles.taskHomeProviderButton,
@@ -738,19 +738,18 @@ export default function HomeScreen() {
           ]}
         >
           <View style={styles.emptyHero}>
-            <Text style={styles.emptyTitle}>Connect your desktop</Text>
+            <Text style={styles.emptyTitle}>데스크톱을 연결하세요</Text>
             <Text style={styles.emptyBody}>
-              Pair with Orca on your computer to check on your agents, jump into any terminal, and
-              drive work from your phone.
+              컴퓨터의 Orca와 페어링해 에이전트를 확인하고, 어떤 터미널이든 열고, 휴대폰으로 작업을 진행하세요.
             </Text>
             <Pressable style={styles.primaryButton} onPress={() => router.push('/pair-scan')}>
               <QrCode size={17} color={colors.bgBase} />
-              <Text style={styles.primaryButtonText}>Pair Desktop</Text>
+              <Text style={styles.primaryButtonText}>데스크톱 페어링</Text>
             </Pressable>
           </View>
 
           <View style={styles.stepsSection}>
-            <Text style={styles.sectionHeading}>How it works</Text>
+            <Text style={styles.sectionHeading}>작동 방식</Text>
             {ONBOARDING_STEPS.map((step, i) => (
               <View key={step.title} style={[styles.stepRow, i > 0 && styles.stepRowBorder]}>
                 <View style={styles.stepNum}>
@@ -780,7 +779,7 @@ export default function HomeScreen() {
           ListHeaderComponent={
             <View>
               <View style={styles.hero}>
-                <Text style={styles.heroTitle}>Welcome back</Text>
+                <Text style={styles.heroTitle}>다시 오신 것을 환영합니다</Text>
               </View>
 
               {stats && (
@@ -789,20 +788,20 @@ export default function HomeScreen() {
                     <Text style={styles.statValue}>
                       {stats.totalAgentsSpawned.toLocaleString()}
                     </Text>
-                    <Text style={styles.statLabel}>Agents spawned</Text>
+                    <Text style={styles.statLabel}>생성된 에이전트</Text>
                   </View>
                   <View style={styles.statCard}>
                     <Text style={styles.statValue}>{formatDuration(stats.totalAgentTimeMs)}</Text>
-                    <Text style={styles.statLabel}>Agent time</Text>
+                    <Text style={styles.statLabel}>에이전트 시간</Text>
                   </View>
                   <View style={styles.statCard}>
                     <Text style={styles.statValue}>{stats.totalPRsCreated.toLocaleString()}</Text>
-                    <Text style={styles.statLabel}>PRs created</Text>
+                    <Text style={styles.statLabel}>생성된 PR</Text>
                   </View>
                 </View>
               )}
 
-              <Text style={styles.sectionHeading}>Desktops</Text>
+              <Text style={styles.sectionHeading}>데스크톱</Text>
             </View>
           }
           ItemSeparatorComponent={CardGap}
@@ -863,7 +862,7 @@ export default function HomeScreen() {
               {/* ─── Resume card ─── */}
               {resumeWorktree ? (
                 <>
-                  <Text style={[styles.sectionHeading, styles.sectionHeadingTightTop]}>Resume</Text>
+                  <Text style={[styles.sectionHeading, styles.sectionHeadingTightTop]}>이어가기</Text>
                   <Pressable
                     style={({ pressed }) => [styles.resumeCard, pressed && styles.hostCardPressed]}
                     onPress={() =>
@@ -895,18 +894,18 @@ export default function HomeScreen() {
                     </View>
                     <ChevronRight size={16} color={colors.textMuted} />
                   </Pressable>
-                  <Text style={[styles.sectionHeading, styles.sectionHeadingTightTop]}>Tasks</Text>
+                  <Text style={[styles.sectionHeading, styles.sectionHeadingTightTop]}>작업</Text>
                   {renderTaskHomeCard()}
                 </>
               ) : (
                 <>
-                  <Text style={[styles.sectionHeading, styles.sectionHeadingTightTop]}>Tasks</Text>
+                  <Text style={[styles.sectionHeading, styles.sectionHeadingTightTop]}>작업</Text>
                   {renderTaskHomeCard()}
                 </>
               )}
 
               {/* ─── Quick actions ─── */}
-              <Text style={[styles.sectionHeading, { marginTop: spacing.xl }]}>Quick Actions</Text>
+              <Text style={[styles.sectionHeading, { marginTop: spacing.xl }]}>빠른 작업</Text>
               <View style={styles.quickActions}>
                 <Pressable
                   style={({ pressed }) => [styles.quickAction, pressed && styles.hostCardPressed]}
@@ -915,7 +914,7 @@ export default function HomeScreen() {
                   <View style={styles.quickActionIcon}>
                     <QrCode size={16} color={colors.textSecondary} />
                   </View>
-                  <Text style={styles.quickActionLabel}>Pair Desktop</Text>
+                  <Text style={styles.quickActionLabel}>데스크톱 페어링</Text>
                 </Pressable>
                 <Pressable
                   disabled={!primaryConnectedHost}
@@ -933,7 +932,7 @@ export default function HomeScreen() {
                   <View style={styles.quickActionIcon}>
                     <Plus size={16} color={colors.textSecondary} />
                   </View>
-                  <Text style={styles.quickActionLabel}>New Workspace</Text>
+                  <Text style={styles.quickActionLabel}>새 작업공간</Text>
                 </Pressable>
               </View>
 
@@ -941,7 +940,7 @@ export default function HomeScreen() {
               {accountsHosts.length > 0 ? (
                 <>
                   <Text style={[styles.sectionHeading, { marginTop: spacing.xl }]}>
-                    Account usage
+                    계정 사용량
                   </Text>
                   {accountsHosts.map(({ host, snapshot }) => {
                     const claudeActiveId = snapshot.claude.activeAccountId
@@ -992,7 +991,7 @@ export default function HomeScreen() {
                               </View>
                               <View style={styles.accountsInfo}>
                                 <Text style={styles.accountsEmail} numberOfLines={1}>
-                                  {active?.email ?? 'System default'}
+                                  {active?.email ?? '시스템 기본값'}
                                 </Text>
                                 <View style={styles.accountsBars}>
                                   <UsageBar
@@ -1046,7 +1045,7 @@ export default function HomeScreen() {
           const hasEverConnected = (hostLastConnected[host.id] ?? null) != null
           const items: ActionSheetAction[] = []
           items.push({
-            label: hasEverConnected && isLive ? 'Reconnect' : 'Connect',
+            label: hasEverConnected && isLive ? '다시 연결' : '연결',
             icon: RefreshCw,
             onPress: () => {
               setActionTarget(null)
@@ -1055,7 +1054,7 @@ export default function HomeScreen() {
           })
           if (isLive) {
             items.push({
-              label: 'Disconnect',
+              label: '연결 해제',
               icon: PowerOff,
               onPress: () => {
                 setActionTarget(null)
@@ -1064,7 +1063,7 @@ export default function HomeScreen() {
             })
           }
           items.push({
-            label: 'Rename',
+            label: '이름 변경',
             icon: Edit3,
             onPress: () => {
               setActionTarget(null)
@@ -1072,7 +1071,7 @@ export default function HomeScreen() {
             }
           })
           items.push({
-            label: 'Remove',
+            label: '삭제',
             destructive: true,
             onPress: () => {
               setActionTarget(null)
@@ -1086,19 +1085,19 @@ export default function HomeScreen() {
 
       <TextInputModal
         visible={renameTarget != null}
-        title="Rename Host"
-        message="Enter a new name for this host."
+        title="호스트 이름 변경"
+        message="이 호스트의 새 이름을 입력하세요."
         defaultValue={renameTarget?.name ?? ''}
-        placeholder="Host name"
+        placeholder="호스트 이름"
         onSubmit={(name) => void handleRename(name)}
         onCancel={() => setRenameTarget(null)}
       />
 
       <ConfirmModal
         visible={confirmRemove != null}
-        title="Remove Host"
-        message={`Remove "${confirmRemove?.name}"? You can re-pair later.`}
-        confirmLabel="Remove"
+        title="호스트 삭제"
+        message={`${confirmRemove?.name}을(를) 삭제할까요? 나중에 다시 페어링할 수 있습니다.`}
+        confirmLabel="삭제"
         destructive
         onConfirm={() => void handleRemove()}
         onCancel={() => setConfirmRemove(null)}
@@ -1113,16 +1112,16 @@ function CardGap() {
 
 const ONBOARDING_STEPS = [
   {
-    title: 'Open Orca desktop',
-    desc: 'Go to Settings → Mobile and generate a pairing QR code.'
+    title: 'Orca 데스크톱 열기',
+    desc: '설정 → 모바일로 가서 페어링 QR 코드를 생성하세요.'
   },
   {
-    title: 'Scan the code',
-    desc: 'Tap the button above to open the scanner. Point at the QR code on your screen.'
+    title: '코드 스캔',
+    desc: '위 버튼을 눌러 스캐너를 열고 화면의 QR 코드를 비추세요.'
   },
   {
-    title: "You're connected",
-    desc: 'Your desktop will appear here. Everything is encrypted end-to-end.'
+    title: '연결되었습니다',
+    desc: '데스크톱이 여기에 표시됩니다. 모든 통신은 종단 간 암호화됩니다.'
   }
 ]
 

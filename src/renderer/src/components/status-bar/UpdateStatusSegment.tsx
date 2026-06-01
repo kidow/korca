@@ -26,23 +26,23 @@ export function UpdateStatusSegment({
       return {
         icon: <Download className="size-3 text-muted-foreground" />,
         label: `${pct}%`,
-        tooltip: `Orca v${status.version} downloading… ${pct}%`,
-        ariaLabel: `Update downloading, ${pct} percent. Click to expand.`
+        tooltip: `Orca v${status.version} 다운로드 중… ${pct}%`,
+        ariaLabel: `업데이트 다운로드 중, ${pct}퍼센트. 눌러서 펼치기.`
       }
     }
     if (status.state === 'downloaded') {
       return {
         icon: <CheckCircle2 className="size-3 text-emerald-500" />,
-        label: 'Update ready',
-        tooltip: `Orca v${status.version} ready to install`,
-        ariaLabel: 'Update ready to install. Click to expand.'
+        label: '업데이트 준비됨',
+        tooltip: `Orca v${status.version} 설치 준비 완료`,
+        ariaLabel: '업데이트 설치 준비 완료. 눌러서 펼치기.'
       }
     }
     return {
       icon: <AlertCircle className="size-3 text-yellow-500" />,
-      label: 'Update failed',
-      tooltip: 'Update failed — click to see details',
-      ariaLabel: 'Update failed. Click to expand.'
+      label: '업데이트 실패',
+      tooltip: '업데이트 실패 - 눌러서 세부 정보 보기',
+      ariaLabel: '업데이트 실패. 눌러서 펼치기.'
     }
   })()
 

@@ -45,9 +45,9 @@ export default function PairRedirectScreen() {
     <View style={styles.container}>
       {missingCode ? (
         <>
-          <Text style={styles.errorText}>Missing pairing code</Text>
+          <Text style={styles.errorText}>페어링 코드가 없습니다</Text>
           <Pressable style={styles.primaryButton} onPress={goHome}>
-            <Text style={styles.primaryButtonText}>Back to home</Text>
+            <Text style={styles.primaryButtonText}>홈으로 돌아가기</Text>
           </Pressable>
         </>
       ) : (

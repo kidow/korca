@@ -12,8 +12,8 @@ async function openSourceControl(page: Page): Promise<void> {
     const state = window.__store?.getState()
     state?.setRightSidebarOpen(true)
   })
-  await page.getByRole('button', { name: /Source Control/ }).click()
-  await expect(page.getByPlaceholder(/Filter files/)).toBeVisible()
+  await page.getByRole('button', { name: /소스 컨트롤/ }).click()
+  await expect(page.getByPlaceholder(/파일 필터/)).toBeVisible()
 }
 
 async function seedUntrackedFile(page: Page): Promise<SeededUntrackedFile> {
@@ -88,23 +88,23 @@ test.describe('Source Control discard confirmation', () => {
     await expect(row).toBeVisible()
 
     await row.hover()
-    await row.getByRole('button', { name: 'Delete untracked file' }).click()
+    await row.getByRole('button', { name: '미추적 파일 삭제' }).click()
 
     const dialog = orcaPage.getByRole('dialog', {
-      name: `Delete "${seededFile.fileName}"?`
+      name: `"${seededFile.fileName}"을 삭제하시겠습니까?`
     })
     await expect(dialog).toBeVisible()
     await expect(dialog).toContainText(seededFile.relativePath)
 
-    await dialog.getByRole('button', { name: 'Cancel' }).click()
+    await dialog.getByRole('button', { name: '취소' }).click()
     await expect(dialog).toBeHidden()
     await expect(row).toBeVisible()
 
     await row.hover()
-    await row.getByRole('button', { name: 'Delete untracked file' }).click()
+    await row.getByRole('button', { name: '미추적 파일 삭제' }).click()
     await orcaPage
-      .getByRole('dialog', { name: `Delete "${seededFile.fileName}"?` })
-      .getByRole('button', { name: 'Delete' })
+      .getByRole('dialog', { name: `"${seededFile.fileName}"을 삭제하시겠습니까?` })
+      .getByRole('button', { name: '삭제' })
       .click()
 
     await expect(row).toHaveCount(0, { timeout: 10_000 })
