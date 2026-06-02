@@ -97,7 +97,7 @@ export function ColorPicker({
             style={{ width: '100%', height: 180 }}
           />
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor={inputId}>Hex</Label>
+            <Label htmlFor={inputId}>16진수</Label>
             <span className="font-mono text-xs uppercase text-muted-foreground">{swatchColor}</span>
           </div>
           <Input
@@ -123,7 +123,9 @@ export function ColorPicker({
             aria-invalid={hasInvalidDraft}
             className="font-mono text-xs uppercase"
           />
-          {hasInvalidDraft ? <p className="text-xs text-destructive">Invalid hex color.</p> : null}
+          {hasInvalidDraft ? (
+            <p className="text-xs text-destructive">잘못된 16진수 색상입니다.</p>
+          ) : null}
         </div>
       </PopoverContent>
     </Popover>

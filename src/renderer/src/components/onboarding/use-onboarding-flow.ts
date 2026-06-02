@@ -164,7 +164,7 @@ export async function prepareSkippedOnboardingPreferences({
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     setError(message)
-    toast.error('Could not save progress', { description: message })
+    toast.error('진행 상황을 저장하지 못했습니다.', { description: message })
     return false
   }
 }
@@ -390,7 +390,7 @@ export function useOnboardingFlow(
     // Why: users with gh already on PATH don't need this setup page, but
     // persistence must still resume them at the tour instead of bouncing back.
     void persistStep(currentStep.stepNumber).then(onOnboardingChange, (err) => {
-      toast.error('Could not save progress', {
+      toast.error('진행 상황을 저장하지 못했습니다.', {
         description: err instanceof Error ? err.message : String(err)
       })
     })
@@ -759,12 +759,12 @@ export function useOnboardingFlow(
       if (settings?.activeRuntimeEnvironmentId?.trim()) {
         const path = serverPath.trim()
         if (!path) {
-          const message = 'Enter a server path.'
+          const message = '서버 경로를 입력하세요.'
           setError(message)
           return
         }
         track('onboarding_step4_path_clicked', { path: 'open_folder' })
-        setBusyLabel(kind === 'git' ? 'Scanning for repositories…' : 'Opening folder…')
+        setBusyLabel(kind === 'git' ? '저장소를 검색하는 중…' : '폴더를 여는 중…')
         try {
           if (kind === 'git') {
             const attemptId = createNestedRepoTelemetryAttemptId()
@@ -783,7 +783,7 @@ export function useOnboardingFlow(
               return
             }
           }
-          setBusyLabel(kind === 'git' ? 'Opening project…' : 'Opening folder…')
+          setBusyLabel(kind === 'git' ? '프로젝트를 여는 중…' : '폴더를 여는 중…')
           const repo = await addRepoPath(path, kind)
           if (!repo) {
             track('onboarding_step4_path_failed', { path: 'open_folder', reason: 'invalid_path' })
@@ -806,11 +806,11 @@ export function useOnboardingFlow(
         track('onboarding_step4_path_failed', { path: 'open_folder', reason: 'cancelled' })
         return
       }
-      setBusyLabel('Opening project…')
+      setBusyLabel('프로젝트를 여는 중…')
       try {
         let result = await window.api.repos.add({ path })
         if ('error' in result && result.error.includes('Not a valid git repository')) {
-          setBusyLabel('Scanning for repositories...')
+          setBusyLabel('저장소를 검색하는 중...')
           const attemptId = createNestedRepoTelemetryAttemptId()
           const scanId = createNestedRepoScanId()
           nestedScanIdRef.current = scanId
@@ -890,7 +890,7 @@ export function useOnboardingFlow(
       const selectedCount = nestedSelectedPaths.size
       const runtimeKind = nestedRuntimeKind ?? onboardingNestedRepoRuntimeKind
       setError(null)
-      setBusyLabel('Importing repositories…')
+      setBusyLabel('저장소를 가져오는 중…')
       track(
         'add_repo_nested_import_action',
         buildNestedRepoImportActionTelemetry({
@@ -1046,11 +1046,11 @@ export function useOnboardingFlow(
     const destination =
       target.kind === 'environment' ? cloneDestination.trim() : settings.workspaceDir
     if (!destination) {
-      const message = 'Enter a server path for the clone destination.'
+      const message = '복제 대상 서버 경로를 입력하세요.'
       setError(message)
       return
     }
-    setBusyLabel('Cloning repo…')
+    setBusyLabel('저장소를 복제하는 중…')
     try {
       const repo =
         target.kind === 'environment'
@@ -1070,7 +1070,7 @@ export function useOnboardingFlow(
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
       track('onboarding_step4_path_failed', { path: 'clone_url', reason: 'clone_failed' })
-      toast.error('Clone failed', {
+      toast.error('복제에 실패했습니다.', {
         description: err instanceof Error ? err.message : String(err)
       })
     } finally {
@@ -1084,7 +1084,7 @@ export function useOnboardingFlow(
         return
       }
       setError(null)
-      setBusyLabel('Finishing...')
+      setBusyLabel('마무리하는 중…')
       try {
         const checklist = repos.some((repo) => isGitRepoKind(repo))
           ? { addedRepo: true }
@@ -1155,7 +1155,7 @@ export function useOnboardingFlow(
         }
       },
       (err) => {
-        toast.error('Could not save progress', {
+        toast.error('진행 상황을 저장하지 못했습니다.', {
           description: err instanceof Error ? err.message : String(err)
         })
       }
@@ -1242,7 +1242,7 @@ export function useOnboardingFlow(
           emitTourOutcome('completed_inline', 'button')
         },
         (err) => {
-          toast.error('Could not save tour progress', {
+          toast.error('투어 진행 상황을 저장하지 못했습니다.', {
             description: err instanceof Error ? err.message : String(err)
           })
         }
@@ -1287,7 +1287,7 @@ export function useOnboardingFlow(
         emitTourOutcome('skipped_intro', 'button')
       },
       (err) => {
-        toast.error('Could not save tour progress', {
+        toast.error('투어 진행 상황을 저장하지 못했습니다.', {
           description: err instanceof Error ? err.message : String(err)
         })
       }
@@ -1325,7 +1325,7 @@ export function useOnboardingFlow(
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       setError(message)
-      toast.error('Could not skip agent setup', { description: message })
+      toast.error('에이전트 설정을 건너뛰지 못했습니다.', { description: message })
     }
   }, [
     busyLabel,
@@ -1347,7 +1347,7 @@ export function useOnboardingFlow(
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       setError(message)
-      toast.error('Could not open SSH settings', { description: message })
+      toast.error('SSH 설정을 열지 못했습니다.', { description: message })
       return
     }
     // Why: Settings renders behind the fullscreen onboarding layer; SSH users

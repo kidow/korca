@@ -674,7 +674,7 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => void window.api.shell.openUrl(selectedViewUrl)}
-                aria-label="Open view in GitHub"
+                aria-label="GitHub에서 보기 열기"
               >
                 <ExternalLink className="size-3.5" />
               </Button>
@@ -705,8 +705,8 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
               }}
               disabled={loading}
               aria-busy={loading}
-              aria-label={loading ? 'Refreshing' : 'Refresh'}
-              title={loading ? 'Refreshing' : 'Refresh'}
+              aria-label={loading ? '새로고침 중' : '새로고침'}
+              title={loading ? '새로고침 중' : '새로고침'}
             >
               <RefreshCw className={cn('size-3.5', loading && 'animate-spin')} />
             </Button>
@@ -731,7 +731,7 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
 
       {!activeProject ? (
         <div className="flex flex-1 items-center justify-center p-8 text-sm text-muted-foreground">
-          Choose a project to get started.
+          시작하려면 프로젝트를 선택하세요.
         </div>
       ) : loading && !table ? (
         <ProjectTableSkeleton />
@@ -809,16 +809,16 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Repository not in Korca</DialogTitle>
+            <DialogTitle>저장소가 Korca에 없습니다</DialogTitle>
             <DialogDescription>
               {resolvedMissingRepoDialogs.repoNotInKorca
-                ? `${resolvedMissingRepoDialogs.repoNotInKorca.owner}/${resolvedMissingRepoDialogs.repoNotInKorca.repo} isn't added to Korca. Add it to start work, or open in GitHub.`
+                ? `${resolvedMissingRepoDialogs.repoNotInKorca.owner}/${resolvedMissingRepoDialogs.repoNotInKorca.repo}는 Korca에 추가되어 있지 않습니다. 작업을 시작하려면 추가하거나 GitHub에서 여세요.`
                 : null}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:justify-end">
             <Button variant="ghost" onClick={() => setRepoNotInKorca(null)}>
-              Cancel
+              취소
             </Button>
             {resolvedMissingRepoDialogs.repoNotInKorca?.url ? (
               <Button
@@ -830,7 +830,7 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
                   setRepoNotInKorca(null)
                 }}
               >
-                Open in GitHub
+                GitHub에서 열기
               </Button>
             ) : null}
             <Button
@@ -844,7 +844,7 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
                 await addRepoFromStore()
               }}
             >
-              Add repo
+              저장소 추가
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -940,7 +940,7 @@ function ProjectSearchInput({
             apply(value)
           }
         }}
-        placeholder={viewFilter || 'GitHub search, e.g. assignee:@me is:open'}
+        placeholder={viewFilter || 'GitHub 검색, 예: assignee:@me is:open'}
         title={viewFilter ? `View filter: ${viewFilter}` : undefined}
         className={cn(
           'h-7 rounded-md border-border/50 bg-background pl-8 pr-7 text-[11px]',
@@ -950,7 +950,7 @@ function ProjectSearchInput({
       {value ? (
         <button
           type="button"
-          aria-label="Clear search"
+          aria-label="검색 지우기"
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
             setValue('')
@@ -984,11 +984,7 @@ function ViewTabStrip({
         const supported = v.layout === 'TABLE_LAYOUT'
         const active = v.id === activeViewId
         const layoutLabel =
-          v.layout === 'BOARD_LAYOUT'
-            ? 'Board'
-            : v.layout === 'ROADMAP_LAYOUT'
-              ? 'Roadmap'
-              : 'Table'
+          v.layout === 'BOARD_LAYOUT' ? 'Board' : v.layout === 'ROADMAP_LAYOUT' ? 'Roadmap' : '표'
         const Icon =
           v.layout === 'BOARD_LAYOUT'
             ? KanbanSquare
@@ -1037,7 +1033,7 @@ function ViewTabStrip({
             <HoverCardContent side="bottom" align="start" sideOffset={8} className="w-72 p-3">
               <div className="space-y-2">
                 <p className="text-xs leading-5 text-muted-foreground">
-                  {unsupportedMessage} Switch to a Table view to work with this project in Korca.
+                  {unsupportedMessage} 이 프로젝트를 Korca에서 사용하려면 표 보기로 전환하세요.
                 </p>
                 <Button
                   type="button"
@@ -1076,27 +1072,27 @@ function ErrorState({
           error={error as GitHubProjectViewError & { type: 'auth_required' | 'scope_missing' }}
         />
         <Button size="sm" variant="outline" onClick={onOpenInGitHub}>
-          <ExternalLink className="mr-1 size-3.5" /> Open in GitHub
+          <ExternalLink className="mr-1 size-3.5" /> GitHub에서 열기
         </Button>
       </div>
     )
   }
   const copy =
     error.type === 'too_large'
-      ? `This view has ${totalCount ?? 'many'} items — too large to render in Korca. Narrow the view's filter on GitHub.`
+      ? `이 보기에는 ${totalCount ?? '많은'}개의 항목이 있어 Korca에서 표시하기에 너무 큽니다. GitHub에서 보기 필터를 좁혀 주세요.`
       : error.type === 'unsupported_layout'
-        ? 'Korca only renders table views yet. This is a Board or Roadmap view.'
+        ? 'Korca는 아직 표 형식 보기만 지원합니다. 현재 보기는 보드 또는 로드맵 보기입니다.'
         : error.type === 'not_found'
-          ? 'Could not find this project or view.'
+          ? '이 프로젝트 또는 보기를 찾을 수 없습니다.'
           : error.type === 'schema_drift'
-            ? 'Could not read this project view.'
+            ? '이 프로젝트 보기를 읽을 수 없습니다.'
             : error.message
   return (
     <div className="flex flex-1 flex-col items-start gap-3 p-6 text-sm">
       <div className="text-muted-foreground">{copy}</div>
       <div className="flex gap-2">
         <Button size="sm" variant="outline" onClick={onOpenInGitHub}>
-          <ExternalLink className="mr-1 size-3.5" /> Open in GitHub
+          <ExternalLink className="mr-1 size-3.5" /> GitHub에서 열기
         </Button>
       </div>
     </div>
@@ -1112,7 +1108,7 @@ function ProjectTableSkeleton(): React.JSX.Element {
   return (
     <div
       aria-busy="true"
-      aria-label="Loading project view"
+      aria-label="프로젝트 보기 불러오는 중"
       className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
     >
       <div className="grid items-center gap-3 border-b border-border/60 bg-background/95 px-3 py-2">

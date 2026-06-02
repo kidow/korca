@@ -63,7 +63,7 @@ function lastEnteredDoneAt(agent: DashboardAgentRowData): number | null {
 
 function stateDotTooltipLabel(agent: DashboardAgentRowData, dotState: AgentDotState): string {
   if (agent.entry.interrupted === true) {
-    return 'Interrupted by user'
+    return '사용자에 의해 중단됨'
   }
   return agentStateLabel(dotState)
 }
@@ -425,11 +425,11 @@ const DashboardAgentRow = React.memo(function DashboardAgentRow({
                 'worktree-agent-send-target-button absolute right-0 top-1/2 z-10 inline-flex h-5 -translate-y-1/2 items-center gap-1 rounded-md border px-1.5 text-[10px] font-medium leading-none transition-[background-color,border-color,color,opacity]',
                 sendTargetStatus === 'sending' && 'cursor-progress opacity-75'
               )}
-              aria-label="Send to this agent"
-              title="Send to this agent"
+              aria-label="이 에이전트에게 보내기"
+              title="이 에이전트에게 보내기"
             >
               <Send className="size-3" />
-              <span>Send</span>
+              <span>보내기</span>
             </button>
           )}
           {/* Why: timestamp and dismiss-X share a single slot so passive
@@ -468,8 +468,8 @@ const DashboardAgentRow = React.memo(function DashboardAgentRow({
                   'opacity-0 transition-opacity duration-150',
                   'group-hover/agent-row:opacity-100 focus-visible:opacity-100'
                 )}
-                aria-label="Dismiss agent"
-                title="Dismiss"
+                aria-label="에이전트 닫기"
+                title="닫기"
               >
                 <X className="size-3.5" />
               </button>
@@ -491,8 +491,8 @@ const DashboardAgentRow = React.memo(function DashboardAgentRow({
                 'opacity-0 transition-opacity duration-150',
                 'group-hover/agent-row:opacity-100 focus-visible:opacity-100'
               )}
-              aria-label="Dismiss agent"
-              title="Dismiss"
+              aria-label="에이전트 닫기"
+              title="닫기"
             >
               <X className="size-3.5" />
             </button>
@@ -512,7 +512,7 @@ const DashboardAgentRow = React.memo(function DashboardAgentRow({
               onMouseDown={stopMouseDown}
               onKeyDown={stopKeyDown}
               className="inline-flex shrink-0 items-center justify-center text-muted-foreground/60 hover:text-foreground"
-              aria-label={expanded ? 'Collapse details' : 'Expand details'}
+              aria-label={expanded ? '세부 정보 접기' : '세부 정보 펼치기'}
               aria-expanded={expanded}
             >
               <ChevronDown
@@ -597,7 +597,7 @@ const DashboardAgentRow = React.memo(function DashboardAgentRow({
           {isInterrupted && (
             <span
               className="shrink-0 text-[10px] leading-snug text-muted-foreground/80"
-              aria-label="Interrupted by user"
+              aria-label="사용자에 의해 중단됨"
             >
               interrupted
             </span>

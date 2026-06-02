@@ -38,14 +38,14 @@ function PetStatusSegmentInner(): React.JSX.Element {
   const bundled = isBundledPetId(petId)
   const activeBundled = bundled ? (findBundledPet(petId) ?? BUNDLED_PET) : null
   const activeCustom = bundled ? null : customPets.find((m) => m.id === petId)
-  const activeLabel = activeBundled ? activeBundled.label : (activeCustom?.label ?? 'Pet')
-  const label = petVisible ? activeLabel : `${activeLabel} hidden`
+  const activeLabel = activeBundled ? activeBundled.label : (activeCustom?.label ?? '펫')
+  const label = petVisible ? activeLabel : `${activeLabel} 숨김`
 
   const handleImport = async (): Promise<void> => {
     console.log('[pet-overlay] upload: click')
     if (!window.api?.pet?.import) {
       console.warn('[pet-overlay] upload: window.api.pet.import missing — restart Korca')
-      toast.error('Custom pet upload needs a full app restart (not just reload).')
+      toast.error('사용자 펫 업로드는 전체 앱 재시작이 필요합니다.')
       return
     }
     try {
@@ -61,13 +61,13 @@ function PetStatusSegmentInner(): React.JSX.Element {
       setPetId(model.id)
     } catch (error) {
       console.error('[pet-overlay] upload: error', error)
-      toast.error(error instanceof Error ? error.message : 'Failed to import file')
+      toast.error(error instanceof Error ? error.message : '파일을 가져오지 못했습니다')
     }
   }
 
   const handleImportPetBundle = async (): Promise<void> => {
     if (!window.api?.pet?.importPetBundle) {
-      toast.error('Pet bundle import needs a full app restart (not just reload).')
+      toast.error('펫 번들 가져오기는 전체 앱 재시작이 필요합니다.')
       return
     }
     try {
@@ -82,7 +82,7 @@ function PetStatusSegmentInner(): React.JSX.Element {
       setPetId(model.id)
     } catch (error) {
       console.error('[pet-overlay] pet bundle: error', error)
-      toast.error(error instanceof Error ? error.message : 'Failed to import pet bundle')
+      toast.error(error instanceof Error ? error.message : '펫 번들을 가져오지 못했습니다')
     }
   }
 
@@ -92,7 +92,7 @@ function PetStatusSegmentInner(): React.JSX.Element {
         <button
           type="button"
           className="group inline-flex items-center cursor-pointer pl-1 pr-[6.5rem] py-0.5"
-          aria-label="Pet menu"
+          aria-label="펫 메뉴"
         >
           <span
             className={`rounded px-1 py-0.5 text-[11px] font-medium text-muted-foreground group-hover:bg-accent/70 group-hover:text-foreground ${petVisible ? '' : 'opacity-50'}`}
@@ -102,14 +102,14 @@ function PetStatusSegmentInner(): React.JSX.Element {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" align="end" sideOffset={8} className="min-w-[220px]">
-        <DropdownMenuLabel>Pet</DropdownMenuLabel>
+        <DropdownMenuLabel>펫</DropdownMenuLabel>
         <DropdownMenuItem
           onSelect={(event) => {
             event.preventDefault()
             setPetVisible(!petVisible)
           }}
         >
-          {petVisible ? 'Hide pet' : 'Show pet'}
+          {petVisible ? '펫 숨기기' : '펫 표시'}
         </DropdownMenuItem>
         {/* Why: in-menu range so users can resize the overlay without leaving
             the dropdown — pet sprites can import larger than the default 180px
@@ -122,7 +122,7 @@ function PetStatusSegmentInner(): React.JSX.Element {
           onKeyDown={(e) => e.stopPropagation()}
         >
           <div className="mb-1 flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>Size</span>
+            <span>크기</span>
             <span className="tabular-nums">{petSize}px</span>
           </div>
           <input
@@ -133,11 +133,11 @@ function PetStatusSegmentInner(): React.JSX.Element {
             value={petSize}
             onChange={(e) => setPetSize(Number(e.target.value))}
             className="w-full"
-            aria-label="Pet size"
+            aria-label="펫 크기"
           />
         </div>
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Choose pet</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger>펫 선택</DropdownMenuSubTrigger>
           {/* Why: portal so the submenu escapes the parent Content's overflow
               clipping — without this, the submenu opens inside the scroll
               container and gets clipped. Matches the convention used in
@@ -184,7 +184,7 @@ function PetStatusSegmentInner(): React.JSX.Element {
                     <button
                       type="button"
                       className="ml-2 flex size-5 items-center justify-center rounded text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
-                      aria-label={`Remove ${model.label}`}
+                      aria-label={`${model.label} 제거`}
                       onClick={(event) => {
                         event.stopPropagation()
                         event.preventDefault()
@@ -207,7 +207,7 @@ function PetStatusSegmentInner(): React.JSX.Element {
                 }}
               >
                 <Upload className="size-3.5" aria-hidden />
-                Upload your own…
+                직접 업로드…
               </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => {
@@ -215,7 +215,7 @@ function PetStatusSegmentInner(): React.JSX.Element {
                 }}
               >
                 <PackageOpen className="size-3.5" aria-hidden />
-                Import .codex-pet bundle…
+                .codex-pet 번들 가져오기…
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>

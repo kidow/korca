@@ -72,9 +72,7 @@ export default function CodexRestartChip({
   return (
     <div className="pointer-events-none absolute right-3 top-3 z-20">
       <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-border/80 bg-popover/95 px-2 py-1.5 shadow-lg backdrop-blur-sm">
-        <span className="text-[11px] text-muted-foreground">
-          Codex is using the previous account
-        </span>
+        <span className="text-[11px] text-muted-foreground">Codex가 이전 계정을 사용 중입니다</span>
         <div className="flex items-center gap-1.5">
           <button
             type="button"
@@ -82,14 +80,14 @@ export default function CodexRestartChip({
             className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-2 py-1 text-[11px] font-medium text-background transition-colors hover:opacity-90"
           >
             <RefreshCw className="size-3" />
-            Restart
+            다시 시작
           </button>
           <button
             type="button"
             onClick={() => dismissStaleWorktreePtyIds(staleWorktreePtyIds, clearCodexRestartNotice)}
             className="rounded-md px-1.5 py-1 text-[11px] text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
           >
-            Dismiss
+            닫기
           </button>
         </div>
       </div>

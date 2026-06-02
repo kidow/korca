@@ -294,7 +294,7 @@ function getWorktreeVisibilityMenuLabel(repo: Repo): string {
     repo,
     isLegacyRepoForExternalWorktreeVisibility(repo)
   )
-  return visibility === 'show' ? 'Hide non-Korca worktrees' : 'Show hidden worktrees'
+  return visibility === 'show' ? 'Korca 외 작업 트리 숨기기' : '숨겨진 작업 트리 표시'
 }
 
 const LINEAGE_INDENT = 18
@@ -2618,7 +2618,7 @@ const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktreeViewp
                               }
                             }}
                           >
-                            Rename group
+                            그룹 이름 변경
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             variant="destructive"
@@ -2684,7 +2684,7 @@ const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktreeViewp
                             }}
                           >
                             <Shapes className="size-3.5" />
-                            Change Project Icon
+                            프로젝트 아이콘 변경
                           </DropdownMenuItem>
                           {row.repo && isGitRepoKind(row.repo) ? (
                             <DropdownMenuItem
@@ -2740,7 +2740,7 @@ const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktreeViewp
                               }}
                             >
                               <CircleX className="size-3.5" />
-                              Remove from group
+                              그룹에서 제거
                             </DropdownMenuItem>
                           ) : null}
                           <DropdownMenuSeparator />
@@ -2753,7 +2753,7 @@ const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktreeViewp
                             }}
                           >
                             <Trash2 className="size-3.5" />
-                            Remove Project
+                            프로젝트 제거
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -2789,7 +2789,7 @@ const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktreeViewp
                               size="icon-xs"
                               className="size-5 shrink-0 rounded-md text-muted-foreground hover:bg-accent/70 hover:text-foreground transition-opacity"
                               aria-label={
-                                createState?.ariaLabel ?? `Create workspace for ${row.label}`
+                                createState?.ariaLabel ?? `${row.label}에 작업 공간 만들기`
                               }
                               onKeyDown={stopRepoHeaderKeyboardToggle}
                               onClick={(event) => {
@@ -2805,7 +2805,7 @@ const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktreeViewp
                           )}
                         </TooltipTrigger>
                         <TooltipContent side="bottom" sideOffset={6}>
-                          {createState?.tooltip ?? `Create workspace for ${row.label}`}
+                          {createState?.tooltip ?? `${row.label}에 작업 공간 만들기`}
                         </TooltipContent>
                       </Tooltip>
                     ) : null}
@@ -3034,8 +3034,8 @@ const VirtualizedWorktreeViewport = React.memo(function VirtualizedWorktreeViewp
                               </TooltipTrigger>
                               <TooltipContent side="right" sideOffset={8}>
                                 {child.lineageCollapsed
-                                  ? 'Show child workspaces'
-                                  : 'Hide child workspaces'}
+                                  ? '하위 작업 공간 표시'
+                                  : '하위 작업 공간 숨기기'}
                               </TooltipContent>
                             </Tooltip>
                           </div>
@@ -4188,7 +4188,7 @@ const WorktreeList = React.memo(function WorktreeList({
       <div data-worktree-sidebar-container className="relative min-h-0 flex-1">
         <div className="worktree-sidebar-scrollbar flex h-full flex-col overflow-y-scroll overflow-x-hidden pl-1 scrollbar-sleek pt-px">
           <div className="flex flex-col items-center gap-2 px-4 py-6 text-center text-[11px] text-muted-foreground">
-            <span>No workspaces found</span>
+            <span>워크스페이스를 찾지 못했습니다</span>
             {hasFilters && (
               <button
                 onClick={clearFilters}
@@ -4209,12 +4209,12 @@ const WorktreeList = React.memo(function WorktreeList({
       <ProjectGroupNameDialog
         open={projectGroupNameDialog !== null}
         title={
-          projectGroupNameDialog?.type === 'rename' ? 'Rename Project Group' : 'New Project Group'
+          projectGroupNameDialog?.type === 'rename' ? '프로젝트 그룹 이름 변경' : '새 프로젝트 그룹'
         }
         description={
           projectGroupNameDialog?.type === 'rename'
-            ? 'Update the group name shown in the sidebar.'
-            : 'Create a group and move this project into it.'
+            ? '사이드바에 표시되는 그룹 이름을 수정합니다.'
+            : '그룹을 만들고 이 프로젝트를 그 안으로 옮깁니다.'
         }
         initialName={
           projectGroupNameDialog?.type === 'rename'
@@ -4223,7 +4223,7 @@ const WorktreeList = React.memo(function WorktreeList({
               ? `${projectGroupNameDialog.repo.displayName} group`
               : ''
         }
-        confirmLabel={projectGroupNameDialog?.type === 'rename' ? 'Rename' : 'Create'}
+        confirmLabel={projectGroupNameDialog?.type === 'rename' ? '이름 변경' : '만들기'}
         onOpenChange={(open) => {
           if (!open) {
             setProjectGroupNameDialog(null)

@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils'
 import { ReviewNotesSendMenuContent } from './ReviewNotesSendMenuContent'
 
-const ENABLED_SEND_TOOLTIP = 'Send notes to an agent'
+const ENABLED_SEND_TOOLTIP = '메모를 에이전트에게 보내기'
 
 export type NotesSendMenuScope<TNote> = {
   id: string
@@ -60,7 +60,7 @@ export function NotesSendMenu<TNote>({
   triggerLabel,
   triggerCount,
   actionLabel,
-  disabledTooltip = 'All notes sent',
+  disabledTooltip = '모든 메모를 보냈습니다',
   iconClassName = 'size-3.5',
   align = 'end',
   onDelivered
@@ -156,7 +156,9 @@ export function NotesSendMenu<TNote>({
               )}
               disabled={!hasDeliverableNotes}
               title={hasDeliverableNotes ? ENABLED_SEND_TOOLTIP : disabledTooltip}
-              aria-label={triggerLabel ? `Send ${triggerLabel} to an agent` : ENABLED_SEND_TOOLTIP}
+              aria-label={
+                triggerLabel ? `${triggerLabel}을 에이전트에게 보내기` : ENABLED_SEND_TOOLTIP
+              }
               onMouseDown={(event) => event.stopPropagation()}
               onClick={(event) => event.stopPropagation()}
             >
@@ -189,7 +191,7 @@ export function NotesSendMenu<TNote>({
       >
         {scopes.length > 1 ? (
           <>
-            <DropdownMenuLabel>Send notes</DropdownMenuLabel>
+            <DropdownMenuLabel>노트 전송</DropdownMenuLabel>
             {scopes.map((scope) => (
               <DropdownMenuSub key={scope.id}>
                 <DropdownMenuSubTrigger

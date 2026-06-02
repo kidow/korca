@@ -205,7 +205,7 @@ function WorktreePortRow({ port }: { port: WorkspacePort }): React.JSX.Element {
           </TooltipContent>
         </Tooltip>
         <div className="absolute inset-y-0 right-0 flex items-center gap-0.5 rounded-md border border-border/40 bg-popover/95 px-0.5 opacity-0 shadow-xs transition-opacity group-hover/port:opacity-100 group-focus-within/port:opacity-100">
-          <PortAction label="Open in Browser" onClick={handleOpen}>
+          <PortAction label="브라우저에서 열기" onClick={handleOpen}>
             <ExternalLink className="size-3" />
           </PortAction>
           <PortAction label={`Copy ${address}`} onClick={handleCopy}>
@@ -244,7 +244,7 @@ export function WorktreeCardPortsDetails({
     <WorktreeCardDetailSection>
       <div className="flex items-center gap-1.5 px-1 text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
         <Plug className="size-3" />
-        <span>Live Ports</span>
+        <span>실시간 포트</span>
         <div className="ml-auto flex items-center gap-1">
           <PortAction label="Go to Worktree" onClick={handleGoToWorktree}>
             <FolderOpen className="size-3" />

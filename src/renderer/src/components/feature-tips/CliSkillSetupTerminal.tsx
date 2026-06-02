@@ -9,9 +9,9 @@ export function CliSkillSetupTerminal(): React.JSX.Element {
   const handleCopySkillCommand = async (): Promise<void> => {
     try {
       await window.api.ui.writeClipboardText(KORCA_CLI_ORCHESTRATION_SKILL_INSTALL_COMMAND)
-      toast.success('Copied the skill install command.')
+      toast.success('스킬 설치 명령을 복사했습니다.')
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to copy skill command.')
+      toast.error(error instanceof Error ? error.message : '스킬 명령을 복사하지 못했습니다.')
     }
   }
 
@@ -28,21 +28,21 @@ export function CliSkillSetupTerminal(): React.JSX.Element {
               size="icon-sm"
               className="shrink-0"
               onClick={() => void handleCopySkillCommand()}
-              aria-label="Copy skill install command"
+              aria-label="스킬 설치 명령 복사"
             >
               <Copy className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top" sideOffset={4}>
-            Copy command
+            명령 복사
           </TooltipContent>
         </Tooltip>
       </div>
       <OnboardingInlineCommandTerminal
         command={KORCA_CLI_ORCHESTRATION_SKILL_INSTALL_COMMAND}
-        title="Skill setup"
-        ariaLabel="Korca CLI and orchestration skill install terminal"
-        description="Press Enter to install the Korca CLI orchestration skill for your agents."
+        title="스킬 설정"
+        ariaLabel="Korca CLI 및 오케스트레이션 스킬 설치 터미널"
+        description="엔터를 눌러 에이전트용 Korca CLI 오케스트레이션 스킬을 설치하세요."
         terminalHeightPx={280}
         terminalTopMarginPx={8}
         descriptionPaddingClassName="px-4 py-2"

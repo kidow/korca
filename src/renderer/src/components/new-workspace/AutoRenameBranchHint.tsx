@@ -46,7 +46,7 @@ export default function AutoRenameBranchHint(): React.JSX.Element {
         <div className="space-y-2.5">
           <div className="space-y-1">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-sm font-medium text-foreground">Auto-rename branch</span>
+              <span className="text-sm font-medium text-foreground">브랜치 자동 이름 변경</span>
               <button
                 type="button"
                 role="switch"
@@ -69,8 +69,8 @@ export default function AutoRenameBranchHint(): React.JSX.Element {
               </button>
             </div>
             <p className="text-xs text-muted-foreground">
-              When you leave the name blank, Korca renames the branch to match the work once an agent
-              starts.
+              When you leave the name blank, Korca renames the branch to match the work once an
+              agent starts.
             </p>
           </div>
 

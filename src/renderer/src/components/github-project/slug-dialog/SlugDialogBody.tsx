@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CircleDot, ExternalLink, GitPullRequest, LoaderCircle, X } from 'lucide-react'
 import { toast } from 'sonner'
@@ -174,7 +175,7 @@ export function SlugDialogBody({
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => void window.api.shell.openUrl(url)}
-                aria-label="Open in GitHub"
+                aria-label="GitHub에서 열기"
               >
                 <ExternalLink className="size-3.5" />
               </Button>
@@ -184,7 +185,7 @@ export function SlugDialogBody({
               size="icon"
               className="h-7 w-7"
               onClick={onClose}
-              aria-label="Close"
+              aria-label="닫기"
             >
               <X className="size-3.5" />
             </Button>
@@ -235,7 +236,7 @@ export function SlugDialogBody({
       <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 scrollbar-sleek">
         {loading && !details ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <LoaderCircle className="size-4 animate-spin" /> Loading…
+            <LoaderCircle className="size-4 animate-spin" /> 불러오는 중…
           </div>
         ) : error ? (
           <div className="text-sm text-destructive">{error}</div>
@@ -252,10 +253,10 @@ export function SlugDialogBody({
                   />
                   <div className="flex gap-2">
                     <Button size="sm" onClick={() => void commitBody()}>
-                      Save
+                      저장
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => setEditingBody(false)}>
-                      Cancel
+                      취소
                     </Button>
                   </div>
                 </div>

@@ -94,7 +94,7 @@ export function ProjectGroupNameDialog({
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-1">
             <Label htmlFor={inputId} className="text-[11px] text-muted-foreground">
-              Group Name
+              그룹 이름
             </Label>
             <Input
               id={inputId}
@@ -112,7 +112,7 @@ export function ProjectGroupNameDialog({
               className="text-xs"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              취소
             </Button>
             <Button
               type="submit"
@@ -120,7 +120,7 @@ export function ProjectGroupNameDialog({
               className="text-xs"
               disabled={!trimmedName || submitting}
             >
-              {submitting ? 'Saving...' : confirmLabel}
+              {submitting ? '저장 중...' : confirmLabel}
             </Button>
           </DialogFooter>
         </form>

@@ -39,21 +39,21 @@ export function WorkspaceSpaceCompactPanel({
           <HardDrive className="size-3.5 shrink-0 text-muted-foreground" />
           <div className="min-w-0">
             <div className="flex min-w-0 items-center gap-1.5 text-[11px] font-medium text-foreground">
-              <span className="truncate">Space</span>
+              <span className="truncate">공간</span>
               <Badge variant="secondary" className="px-1.5 py-0 text-[9px]">
-                Beta
+                베타
               </Badge>
             </div>
             <div className="truncate text-[11px] text-muted-foreground">
               {analysis
                 ? isScanning
-                  ? `${progressLabel ?? 'Scanning workspace sizes'} · last result kept`
+                  ? `${progressLabel ?? '작업 공간 크기 검색 중'} · 마지막 결과 유지`
                   : analysis.unavailableWorktreeCount > 0
-                    ? `${formatBytes(analysis.reclaimableBytes)} reclaimable · ${analysis.unavailableWorktreeCount} unavailable`
-                    : `${formatBytes(analysis.reclaimableBytes)} reclaimable · ${analysis.scannedWorktreeCount} workspaces`
+                    ? `${formatBytes(analysis.reclaimableBytes)} 회수 가능 · ${analysis.unavailableWorktreeCount}개 사용 불가`
+                    : `${formatBytes(analysis.reclaimableBytes)} 회수 가능 · 작업 공간 ${analysis.scannedWorktreeCount}개`
                 : isScanning
-                  ? (progressLabel ?? 'Scanning workspace sizes.')
-                  : 'Workspace disk usage is not scanned.'}
+                  ? (progressLabel ?? '작업 공간 크기를 검색하는 중입니다.')
+                  : '작업 공간 디스크 사용량이 아직 검색되지 않았습니다.'}
             </div>
           </div>
         </div>
@@ -77,14 +77,14 @@ export function WorkspaceSpaceCompactPanel({
             )}
             {isScanning
               ? progress?.state === 'cancelling'
-                ? 'Stopping'
-                : 'Cancel'
+                ? '중지 중'
+                : '취소'
               : analysis
-                ? 'Refresh'
-                : 'Scan'}
+                ? '새로고침'
+                : '검색'}
           </Button>
           <Button variant="ghost" size="xs" onClick={onOpenFullPage}>
-            Review
+            검토
           </Button>
         </div>
       </div>
@@ -92,19 +92,19 @@ export function WorkspaceSpaceCompactPanel({
       {analysis ? (
         <div className="mt-2 grid grid-cols-3 gap-1 text-[10px] tabular-nums">
           <div className="rounded border border-border/60 bg-background/40 px-2 py-1">
-            <div className="text-muted-foreground">Scanned</div>
+            <div className="text-muted-foreground">검색됨</div>
             <div className="truncate font-medium text-foreground">
               {formatBytes(analysis.totalSizeBytes)}
             </div>
           </div>
           <div className="rounded border border-border/60 bg-background/40 px-2 py-1">
-            <div className="text-muted-foreground">Freeable</div>
+            <div className="text-muted-foreground">회수 가능</div>
             <div className="truncate font-medium text-foreground">
               {formatBytes(analysis.reclaimableBytes)}
             </div>
           </div>
           <div className="rounded border border-border/60 bg-background/40 px-2 py-1">
-            <div className="text-muted-foreground">Updated</div>
+            <div className="text-muted-foreground">업데이트됨</div>
             <div className="truncate font-medium text-foreground">
               {getWorkspaceSpaceScanTimeLabel(analysis.scannedAt)}
             </div>

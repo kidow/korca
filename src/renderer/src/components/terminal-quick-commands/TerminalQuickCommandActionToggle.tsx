@@ -21,8 +21,8 @@ export function TerminalQuickCommandActionToggle({
       }}
       className="justify-start"
     >
-      <ToggleGroupItem value="terminal-command">Terminal Command</ToggleGroupItem>
-      <ToggleGroupItem value="agent-prompt">Agent Prompt</ToggleGroupItem>
+      <ToggleGroupItem value="terminal-command">터미널 명령</ToggleGroupItem>
+      <ToggleGroupItem value="agent-prompt">에이전트 프롬프트</ToggleGroupItem>
     </ToggleGroup>
   )
 }

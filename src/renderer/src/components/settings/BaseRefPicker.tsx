@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import { useEffect, useState } from 'react'
 import { ScrollArea } from '../ui/scroll-area'
 import { Button } from '../ui/button'
@@ -114,14 +115,14 @@ export function BaseRefPicker({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <div className="text-sm font-medium text-foreground">
-            {effectiveBaseRef ?? 'No default base ref'}
+            {effectiveBaseRef ?? '기본 기준 ref 없음'}
           </div>
           <p className="text-xs text-muted-foreground">
             {currentBaseRef
-              ? 'Pinned for this repo'
+              ? '이 저장소에 고정됨'
               : defaultBaseRef
-                ? `Following primary branch (${defaultBaseRef})`
-                : 'Pick a base branch below'}
+                ? `기본 브랜치(${defaultBaseRef})를 따름`
+                : '아래에서 기준 브랜치를 선택하세요'}
           </p>
           {/* Why: passive hint that fork workflows have other remotes worth
               searching (e.g. `upstream`). Host-agnostic and remote-name-agnostic
@@ -135,14 +136,14 @@ export function BaseRefPicker({
             // whenever remoteCount>1, not a dynamic status update. aria-live would
             // cause screen readers to re-announce it on every mount/repo switch.
             <p className="text-xs text-muted-foreground">
-              Multiple remotes detected. Type a remote name (e.g. <code>upstream</code>) or a full
-              ref (e.g. <code>upstream/main</code>) to scope results.
+              여러 원격 저장소가 감지되었습니다. 원격 이름(예: <code>upstream</code>)이나 전체
+              ref(예: <code>upstream/main</code>)를 입력해 결과 범위를 좁히세요.
             </p>
           ) : null}
         </div>
         {onUsePrimary && (
           <Button variant="outline" size="sm" onClick={onUsePrimary} disabled={!currentBaseRef}>
-            Use Primary
+            기본값 사용
           </Button>
         )}
       </div>
@@ -150,12 +151,12 @@ export function BaseRefPicker({
       <Input
         value={baseRefQuery}
         onChange={(e) => setBaseRefQuery(e.target.value)}
-        placeholder="Search branches by name..."
+        placeholder="브랜치를 이름으로 검색..."
         className="max-w-md"
       />
 
       {isSearchingBaseRefs ? (
-        <p className="text-xs text-muted-foreground">Searching branches...</p>
+        <p className="text-xs text-muted-foreground">브랜치 검색 중...</p>
       ) : null}
 
       {!isSearchingBaseRefs && baseRefQuery.trim().length >= 2 ? (
@@ -183,14 +184,14 @@ export function BaseRefPicker({
                 >
                   <span className="truncate">{ref}</span>
                   {effectiveBaseRef === ref ? (
-                    <span className="text-[10px] uppercase tracking-[0.18em]">Current</span>
+                    <span className="text-[10px] uppercase tracking-[0.18em]">현재</span>
                   ) : null}
                 </button>
               ))}
             </div>
           </ScrollArea>
         ) : (
-          <p className="text-xs text-muted-foreground">No matching branches found.</p>
+          <p className="text-xs text-muted-foreground">일치하는 브랜치를 찾지 못했습니다.</p>
         )
       ) : null}
     </div>

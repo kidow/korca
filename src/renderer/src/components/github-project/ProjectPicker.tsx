@@ -159,7 +159,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
       if (mountedRef.current) {
         setBrowseError({
           type: 'unknown',
-          message: err instanceof Error ? err.message : 'Failed to list projects'
+          message: err instanceof Error ? err.message : '프로젝트 목록을 가져오지 못했습니다'
         })
       }
     } finally {
@@ -303,7 +303,9 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
         // a transport-level message so the user can retry or paste again.
         if (mountedRef.current) {
           setViewList([])
-          toast.error(`Failed to load views: ${err instanceof Error ? err.message : String(err)}`)
+          toast.error(
+            `보기 목록을 불러오지 못했습니다: ${err instanceof Error ? err.message : String(err)}`
+          )
         }
       } finally {
         if (mountedRef.current) {
@@ -317,7 +319,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
   const handlePaste = useCallback(async () => {
     const parsed = parseProjectInput(pasteInput.trim())
     if (!parsed) {
-      setPasteError('Expected a project URL or owner/number')
+      setPasteError('프로젝트 URL 또는 owner/number 형식이 필요합니다')
       return
     }
     setPasteError(null)
@@ -374,7 +376,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
 
   const buttonLabel = activeProject
     ? `${activeProject.owner} / ${activeProject.title ?? `#${activeProject.number}`}`
-    : 'Choose a project'
+    : '프로젝트 선택'
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -406,7 +408,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
                 <Input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search projects"
+                  placeholder="프로젝트 검색"
                   className="h-8 pl-7 text-xs"
                 />
               </div>
@@ -417,7 +419,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
             ) : null}
             <div className="max-h-[340px] overflow-y-auto p-1 scrollbar-sleek">
               {projectSettings.pinned.length > 0 ? (
-                <Section label="Pinned">
+                <Section label="고정됨">
                   {projectSettings.pinned.map((p) => {
                     const key = `${p.ownerType}:${p.owner}:${p.number}`
                     const knownGood = projectSettings.lastViewByProject[key]?.viewId != null
@@ -452,7 +454,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
                 </Section>
               ) : null}
               {projectSettings.recent.length > 0 ? (
-                <Section label="Recent">
+                <Section label="최근">
                   {projectSettings.recent
                     .filter(
                       (r) =>
@@ -497,10 +499,10 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
                     })}
                 </Section>
               ) : null}
-              <Section label={browseLoading ? 'Browse all (loading…)' : 'Browse all'}>
+              <Section label={browseLoading ? '전체 탐색(불러오는 중…)' : '전체 탐색'}>
                 {browseLoading ? (
                   <div className="flex items-center gap-2 px-2 py-2 text-xs text-muted-foreground">
-                    <Loader className="size-3 animate-spin" /> Loading…
+                    <Loader className="size-3 animate-spin" /> 불러오는 중…
                   </div>
                 ) : null}
                 {filteredBrowse.map((p) => (
@@ -533,7 +535,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
                       void handlePaste()
                     }
                   }}
-                  placeholder="Add by URL or owner/number"
+                  placeholder="URL 또는 owner/number로 추가"
                   className="h-8 text-xs"
                 />
                 <Button
@@ -542,7 +544,7 @@ export default function ProjectPicker({ activeProject, onSelect }: Props): React
                   disabled={pasteBusy || !pasteInput.trim()}
                   className="h-8"
                 >
-                  Add
+                  추가
                 </Button>
               </div>
               {pasteError ? (
@@ -604,14 +606,14 @@ function PickerRow({
             className="text-[10px] text-muted-foreground hover:text-foreground"
             onClick={onRemovePin}
           >
-            Remove pin
+            고정 해제
           </button>
         </div>
       ) : null}
       {canPin ? (
         <button
           type="button"
-          title="Pin"
+          title="고정"
           className="opacity-0 group-hover:opacity-100"
           onClick={onPin}
         >
@@ -643,16 +645,16 @@ function ViewPickStep({
         >
           ← Back
         </button>
-        <span className="text-xs font-medium">Choose a view</span>
+        <span className="text-xs font-medium">보기 선택</span>
         <span />
       </div>
       <div className="max-h-[340px] overflow-y-auto p-1 scrollbar-sleek">
         {loading ? (
           <div className="flex items-center gap-2 px-2 py-2 text-xs text-muted-foreground">
-            <Loader className="size-3 animate-spin" /> Loading views…
+            <Loader className="size-3 animate-spin" /> 보기를 불러오는 중…
           </div>
         ) : views.length === 0 ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">No views found.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">찾은 보기가 없습니다.</div>
         ) : (
           views.map((v) => {
             const supported = v.layout === 'TABLE_LAYOUT'
@@ -670,10 +672,10 @@ function ViewPickStep({
                 <span className="text-sm">{v.name}</span>
                 <span className="text-[10px] text-muted-foreground">
                   {v.layout === 'TABLE_LAYOUT'
-                    ? 'Table'
+                    ? '표'
                     : v.layout === 'BOARD_LAYOUT'
-                      ? 'Board (unsupported)'
-                      : 'Roadmap (unsupported)'}
+                      ? '보드(지원 안 됨)'
+                      : '로드맵(지원 안 됨)'}
                 </span>
               </button>
             )
@@ -695,8 +697,8 @@ function PartialFailuresBanner({
   // Hover exposes the underlying error messages for debugging.
   const summary =
     failures.length === 1 && failures[0].owner !== '*'
-      ? `Couldn't load projects from ${failures[0].owner}.`
-      : `Some organizations didn't load (${failures.length}).`
+      ? `${failures[0].owner}에서 프로젝트를 불러오지 못했습니다.`
+      : `일부 조직을 불러오지 못했습니다(${failures.length}개).`
   const detail = failures
     .map((f) => `${f.owner === '*' ? 'orgs' : f.owner}: ${f.message}`)
     .join('\n')
@@ -710,7 +712,7 @@ function PartialFailuresBanner({
         <div>
           <div>{summary}</div>
           <div className="mt-0.5 text-[11px] opacity-80">
-            Paste a project URL below to reach missing ones.
+            아래에 프로젝트 URL을 붙여 넣으면 누락된 항목으로 갈 수 있습니다.
           </div>
         </div>
       </div>

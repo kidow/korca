@@ -72,7 +72,7 @@ export function TerminalAgentSessionForkDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="gap-4 sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle className="text-base">Fork Agent Session</DialogTitle>
+          <DialogTitle className="text-base">에이전트 세션 분기</DialogTitle>
           <DialogDescription>
             Create a top-level workspace fork and start a fresh agent tab with captured context.
           </DialogDescription>
@@ -81,7 +81,7 @@ export function TerminalAgentSessionForkDialog({
         <div className="flex items-start gap-3 rounded-md border border-border/60 bg-muted/20 px-3 py-3">
           <GitFork className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
           <div className="min-w-0 space-y-1">
-            <p className="text-sm font-medium">Top-level fork</p>
+            <p className="text-sm font-medium">최상위 분기</p>
             <p className="text-xs text-muted-foreground">
               The fork appears as its own workspace, not as a nested child. The new agent receives a
               bounded transcript as an editable draft.

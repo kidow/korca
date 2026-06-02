@@ -344,7 +344,7 @@ export function WorktreeCardDetailsHover({
             <WorktreeCardDetailSection>
               <DetailHeader
                 icon={<CircleDot className="size-3 text-muted-foreground" />}
-                label={`Issue #${issue.number}`}
+                label={`이슈 #${issue.number}`}
                 actions={
                   <>
                     {issue.url && onOpenGitHubIssueInKorca && (
@@ -479,7 +479,7 @@ export function WorktreeCardDetailsHover({
                 icon={<StickyNote className="size-3 text-muted-foreground" />}
                 label="Notes"
                 actions={
-                  <MetadataActionIcon label="Edit notes" onClick={onEditComment}>
+                  <MetadataActionIcon label="노트 수정" onClick={onEditComment}>
                     <Pencil className="size-3" />
                   </MetadataActionIcon>
                 }

@@ -294,16 +294,16 @@ export function ThemePicker({
       <Input
         value={query}
         onChange={(e) => onQueryChange(e.target.value)}
-        placeholder="Search builtin themes"
+        placeholder="내장 테마 검색"
       />
       <div className="rounded-lg border border-border/50">
         <div className="flex items-center justify-between border-b border-border/50 px-3 py-2 text-xs text-muted-foreground">
-          <span>Selected: {selectedTheme}</span>
+          <span>선택됨: {selectedTheme}</span>
           <span>
-            Showing {filteredThemes.length}
+            {filteredThemes.length}개 표시 중
             {normalizedQuery
-              ? ` matching "${query.trim()}"`
-              : ` of ${BUILTIN_TERMINAL_THEME_NAMES.length}`}
+              ? ` - "${query.trim()}"와 일치`
+              : ` / 전체 ${BUILTIN_TERMINAL_THEME_NAMES.length}개`}
           </span>
         </div>
         <ScrollArea className="h-64">
@@ -321,13 +321,15 @@ export function ThemePicker({
                 <span className="truncate">{theme}</span>
                 {selectedTheme === theme ? (
                   <span className="ml-3 shrink-0 text-[11px] uppercase tracking-[0.16em]">
-                    Current
+                    현재
                   </span>
                 ) : null}
               </button>
             ))}
             {filteredThemes.length === 0 ? (
-              <div className="px-3 py-6 text-sm text-muted-foreground">No themes found.</div>
+              <div className="px-3 py-6 text-sm text-muted-foreground">
+                테마를 찾을 수 없습니다.
+              </div>
             ) : null}
           </div>
         </ScrollArea>
@@ -620,7 +622,7 @@ export function FontAutocomplete({
                 focusInput()
               }}
               className="rounded-sm p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              aria-label="Clear font selection"
+              aria-label="글꼴 선택 지우기"
               title="Clear"
             >
               <CircleX className="size-3.5" />
@@ -676,7 +678,9 @@ export function FontAutocomplete({
                   </button>
                 ))
               ) : (
-                <div className="px-3 py-3 text-sm text-muted-foreground">No matching fonts.</div>
+                <div className="px-3 py-3 text-sm text-muted-foreground">
+                  일치하는 글꼴이 없습니다.
+                </div>
               )}
             </div>
           </ScrollArea>

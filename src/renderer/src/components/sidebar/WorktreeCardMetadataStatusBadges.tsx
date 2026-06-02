@@ -33,7 +33,7 @@ export function IssueStateBadge({ state }: { state: IssueInfo['state'] }): React
   if (state === 'closed') {
     return (
       <MetadataStatusBadge
-        label="State: Closed"
+        label="상태: 닫힘"
         className="border-purple-500/25 bg-purple-500/5 text-purple-600 dark:text-purple-300"
       >
         <CircleCheck />
@@ -43,7 +43,7 @@ export function IssueStateBadge({ state }: { state: IssueInfo['state'] }): React
 
   return (
     <MetadataStatusBadge
-      label="State: Open"
+      label="상태: 열림"
       className="border-emerald-500/25 bg-emerald-500/5 text-emerald-600 dark:text-emerald-300"
     >
       <CircleDot />
@@ -66,7 +66,7 @@ export function LinearStateBadge({ stateName }: { stateName: string }): React.JS
         : 'border-border bg-muted/30 text-muted-foreground'
 
   return (
-    <MetadataStatusBadge label={`State: ${stateName}`} className={tone}>
+    <MetadataStatusBadge label={`상태: ${stateName}`} className={tone}>
       <Icon />
     </MetadataStatusBadge>
   )
@@ -86,7 +86,7 @@ export function ReviewStateBadge({
   if (state === 'merged') {
     return (
       <MetadataStatusBadge
-        label="State: Merged"
+        label="상태: 병합됨"
         className="border-purple-500/25 bg-purple-500/5 text-purple-600 dark:text-purple-300"
       >
         <GitMerge />
@@ -97,7 +97,7 @@ export function ReviewStateBadge({
   if (state === 'closed') {
     return (
       <MetadataStatusBadge
-        label="State: Closed"
+        label="상태: 닫힘"
         className="border-rose-500/25 bg-rose-500/5 text-rose-600 dark:text-rose-300"
       >
         <CircleX />
@@ -108,7 +108,7 @@ export function ReviewStateBadge({
   if (state === 'draft') {
     return (
       <MetadataStatusBadge
-        label={`State: Draft ${label}`}
+        label={`상태: 초안 ${label}`}
         className="border-border bg-muted/30 text-muted-foreground"
       >
         <CircleDot />
@@ -118,7 +118,7 @@ export function ReviewStateBadge({
 
   return (
     <MetadataStatusBadge
-      label="State: Open"
+      label="상태: 열림"
       className="border-emerald-500/25 bg-emerald-500/5 text-emerald-600 dark:text-emerald-300"
     >
       {label === 'MR' ? <GitMerge /> : <PullRequestIcon />}
@@ -135,7 +135,7 @@ export function ReviewChecksBadge({
     return null
   }
 
-  const label = `Checks: ${checksLabel(status)}`
+  const label = `검사: ${checksLabel(status)}`
 
   if (status === 'success') {
     return (

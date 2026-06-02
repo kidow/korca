@@ -218,7 +218,7 @@ export function SparsePresetSettingsSection({
 
         <div className="grid gap-4 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
           <div className="space-y-2">
-            <Label htmlFor="sparse-preset-settings-name">Name</Label>
+            <Label htmlFor="sparse-preset-settings-name">이름</Label>
             <Input
               id="sparse-preset-settings-name"
               value={draft.name}
@@ -233,7 +233,7 @@ export function SparsePresetSettingsSection({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sparse-preset-settings-directories">Directories</Label>
+            <Label htmlFor="sparse-preset-settings-directories">디렉터리</Label>
             <textarea
               id="sparse-preset-settings-directories"
               value={draft.directoriesText}
@@ -248,9 +248,9 @@ export function SparsePresetSettingsSection({
             ) : (
               <p className="text-xs text-muted-foreground">
                 {parsedDirectories?.directories.length === 1
-                  ? '1 directory will be saved.'
-                  : `${parsedDirectories?.directories.length ?? 0} directories will be saved.`}{' '}
-                Use repo-relative paths like packages/web or apps/api.
+                  ? '디렉터리 1개가 저장됩니다.'
+                  : `${parsedDirectories?.directories.length ?? 0}개의 디렉터리가 저장됩니다.`}{' '}
+                packages/web 또는 apps/api처럼 저장소 기준 상대 경로를 사용하세요.
               </p>
             )}
           </div>
@@ -264,7 +264,7 @@ export function SparsePresetSettingsSection({
             onClick={() => setDraft(null)}
             disabled={submitting}
           >
-            Cancel
+            취소
           </Button>
           <Button
             type="button"
@@ -277,7 +277,7 @@ export function SparsePresetSettingsSection({
             ) : (
               <Save className="size-3.5" />
             )}
-            Save Preset
+            프리셋 저장
           </Button>
         </div>
       </div>
@@ -288,7 +288,7 @@ export function SparsePresetSettingsSection({
     <section className="space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h3 className="text-sm font-semibold">Sparse Checkout Presets</h3>
+          <h3 className="text-sm font-semibold">스파스 체크아웃 프리셋</h3>
           <p className="text-xs text-muted-foreground">
             Manage saved directory sets for sparse worktree creation.
           </p>

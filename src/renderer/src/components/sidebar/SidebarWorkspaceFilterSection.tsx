@@ -12,7 +12,7 @@ const SidebarWorkspaceFilterSection = React.memo(function SidebarWorkspaceFilter
   return (
     <>
       <div className="flex items-center justify-between px-2 py-1">
-        <span className="text-[11px] font-semibold text-muted-foreground">Filters</span>
+        <span className="text-[11px] font-semibold text-muted-foreground">필터</span>
       </div>
       <FilterToggleRow
         icon={<Moon className="size-3.5" />}

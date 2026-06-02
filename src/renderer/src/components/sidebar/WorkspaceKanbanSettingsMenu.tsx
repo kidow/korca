@@ -40,7 +40,7 @@ export default function WorkspaceKanbanSettingsMenu({
             <Button
               variant="ghost"
               size="icon-xs"
-              aria-label="Workspace board settings"
+              aria-label="워크스페이스 보드 설정"
               className="text-muted-foreground"
             >
               <Settings className="size-3.5" />
@@ -66,7 +66,7 @@ export default function WorkspaceKanbanSettingsMenu({
           }
         }}
       >
-        <DropdownMenuLabel>Statuses</DropdownMenuLabel>
+        <DropdownMenuLabel>상태</DropdownMenuLabel>
         <div className="space-y-2 px-1 pb-1">
           {workspaceStatuses.map((status, index) => {
             const meta = getWorkspaceStatusVisualMeta(status)

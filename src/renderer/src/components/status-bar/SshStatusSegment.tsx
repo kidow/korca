@@ -125,7 +125,7 @@ function TargetRow({
       await window.api.ssh.connect({ targetId })
       recordFeatureInteraction('ssh')
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Connection failed')
+      toast.error(err instanceof Error ? err.message : '연결에 실패했습니다')
     } finally {
       if (mountedRef.current) {
         setBusy(false)
@@ -139,7 +139,7 @@ function TargetRow({
       await window.api.ssh.disconnect({ targetId })
       recordFeatureInteraction('ssh')
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Disconnect failed')
+      toast.error(err instanceof Error ? err.message : '연결 해제에 실패했습니다')
     } finally {
       if (mountedRef.current) {
         setBusy(false)
@@ -175,7 +175,7 @@ function TargetRow({
           onClick={() => void handleConnect()}
           className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium text-foreground hover:bg-accent/70"
         >
-          Connect
+          연결
         </button>
       ) : status === 'connected' ? (
         <button
@@ -183,7 +183,7 @@ function TargetRow({
           onClick={() => void handleDisconnect()}
           className="shrink-0 rounded px-1.5 py-0.5 text-[10px] text-muted-foreground hover:bg-accent/70 hover:text-foreground"
         >
-          Disconnect
+          연결 해제
         </button>
       ) : null}
     </div>
@@ -228,8 +228,8 @@ export function SshStatusSegment({
   )
   const syncProblemLabel = syncProblem
     ? syncProblem.syncStatus?.phase === 'conflict'
-      ? 'Workspace conflict'
-      : 'Workspace sync error'
+      ? '작업 공간 충돌'
+      : '작업 공간 동기화 오류'
     : null
 
   return (
@@ -244,7 +244,7 @@ export function SshStatusSegment({
         <button
           type="button"
           className="inline-flex items-center gap-1.5 cursor-pointer rounded px-1 py-0.5 hover:bg-accent/70"
-          aria-label="SSH connection status"
+          aria-label="SSH 연결 상태"
         >
           {iconOnly ? (
             <span className="inline-flex items-center gap-1">
@@ -298,7 +298,7 @@ export function SshStatusSegment({
         className="w-[min(20rem,calc(100vw-1rem))]"
       >
         <div className="px-2 pt-1.5 pb-1 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
-          SSH Connections
+          SSH 연결
         </div>
         {targets.map((t) => (
           <TargetRow
@@ -317,7 +317,7 @@ export function SshStatusSegment({
             setActiveView('settings')
           }}
         >
-          Manage SSH…
+          SSH 관리…
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

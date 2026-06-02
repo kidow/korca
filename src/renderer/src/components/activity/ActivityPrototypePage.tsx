@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change, react-doctor/no-derived-state-effect, react-doctor/no-initialize-state -- pre-existing patterns, predate these rules */
 /* eslint-disable max-lines -- Why: this prototype keeps the real-data adapter
 and current visual skeleton together until the next refinement pass decides
 which pieces become production modules. */
@@ -406,26 +407,32 @@ function useActivityTerminalLoadingLabel(loading: boolean): boolean {
 
 function agentTitle(event: ActivityEvent): string {
   if (event.state === 'done') {
-    return event.entry.interrupted ? 'Agent interrupted' : 'Agent finished'
+    return event.entry.interrupted ? '에이전트가 중단되었습니다' : '에이전트가 완료되었습니다'
   }
-  return event.state === 'waiting' ? 'Agent waiting for input' : 'Agent needs input'
+  return event.state === 'waiting'
+    ? '에이전트가 입력을 기다리는 중'
+    : '에이전트에 입력이 필요합니다'
 }
 
 function agentSummary(event: ActivityEvent): string {
   const prompt = event.entry.prompt.trim()
   if (event.state === 'done') {
     const message = event.entry.lastAssistantMessage?.trim()
-    return message || prompt || 'Completed the current turn.'
+    return message || prompt || '현재 턴을 완료했습니다.'
   }
-  return prompt || event.entry.lastAssistantMessage?.trim() || 'The agent paused for user input.'
+  return (
+    prompt ||
+    event.entry.lastAssistantMessage?.trim() ||
+    '에이전트가 사용자 입력을 기다리고 있습니다.'
+  )
 }
 
 function agentMeta(event: ActivityEvent): string {
   const agent = formatAgentTypeLabel(event.agentType)
   if (event.state === 'done') {
-    return event.entry.interrupted ? `${agent} interrupted` : `${agent} completed`
+    return event.entry.interrupted ? `${agent} 중단됨` : `${agent} 완료됨`
   }
-  return event.state === 'waiting' ? `${agent} waiting` : `${agent} blocked`
+  return event.state === 'waiting' ? `${agent} 입력 대기 중` : `${agent} 처리 중단`
 }
 
 // Why (label hierarchy): mirror DashboardAgentRow — the agent's last prompt
@@ -884,7 +891,7 @@ function threadAgentState(thread: AgentPaneThread): AgentStatusState {
 function threadAgentStateLabel(thread: AgentPaneThread): string {
   const state = threadAgentState(thread)
   if (!thread.currentAgentState && state === 'done' && thread.latestEvent?.entry.interrupted) {
-    return 'Interrupted'
+    return '중단됨'
   }
   return agentStateLabel(state)
 }
@@ -903,7 +910,7 @@ export function getActivityThreadGroup(
   if (groupBy === 'project') {
     return thread.repo
       ? { key: `project:${thread.repo.id}`, label: thread.repo.displayName }
-      : { key: 'project:unknown', label: 'Unknown project' }
+      : { key: 'project:unknown', label: '알 수 없는 프로젝트' }
   }
   if (groupBy === 'worktree') {
     return { key: `worktree:${thread.worktree.id}`, label: thread.worktree.displayName }
@@ -1154,7 +1161,7 @@ function ThreadRow({
             {thread.unread ? (
               <FilledBellIcon
                 className="size-[13px] shrink-0 text-amber-500 drop-shadow-sm"
-                aria-label="Unread"
+                aria-label="읽지 않음"
               />
             ) : (
               <Tooltip>
@@ -1171,12 +1178,12 @@ function ThreadRow({
                       'hover:bg-accent/80 active:scale-95',
                       'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
                     )}
-                    aria-label="Mark thread unread"
+                    aria-label="대화를 읽지 않음으로 표시"
                   >
                     <Bell className="size-3 text-muted-foreground/40 opacity-0 transition-opacity group-hover:opacity-100 group-hover/unread:opacity-100" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="left">Mark thread unread</TooltipContent>
+                <TooltipContent side="left">대화를 읽지 않음으로 표시</TooltipContent>
               </Tooltip>
             )}
           </span>
@@ -1208,7 +1215,7 @@ function ThreadRow({
                   type="button"
                   variant="outline"
                   size="icon-xs"
-                  aria-label="Jump to workspace"
+                  aria-label="워크스페이스로 이동"
                   onClick={(event) => {
                     event.stopPropagation()
                     onJump()
@@ -1218,7 +1225,7 @@ function ThreadRow({
                   <ExternalLink className="size-3" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="left">Jump to workspace</TooltipContent>
+              <TooltipContent side="left">워크스페이스로 이동</TooltipContent>
             </Tooltip>
           </span>
         ) : null}
@@ -1606,7 +1613,7 @@ export default function ActivityPrototypePage(): React.JSX.Element {
                 <Input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Filter..."
+                  placeholder="필터..."
                   className="h-8 w-full pl-7 text-xs"
                 />
               </div>
@@ -1617,15 +1624,15 @@ export default function ActivityPrototypePage(): React.JSX.Element {
                 <SelectTrigger
                   size="sm"
                   className="h-8 w-[128px] shrink-0 px-2 text-xs"
-                  aria-label="Group agent activity by"
+                  aria-label="에이전트 활동 그룹화 기준"
                 >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent align="end">
-                  <SelectItem value="status">Status</SelectItem>
-                  <SelectItem value="project">Project</SelectItem>
-                  <SelectItem value="worktree">Worktree</SelectItem>
-                  <SelectItem value="agent">Agent</SelectItem>
+                  <SelectItem value="status">상태</SelectItem>
+                  <SelectItem value="project">프로젝트</SelectItem>
+                  <SelectItem value="worktree">워크트리</SelectItem>
+                  <SelectItem value="agent">에이전트</SelectItem>
                 </SelectContent>
               </Select>
               <Tooltip>
@@ -1641,12 +1648,12 @@ export default function ActivityPrototypePage(): React.JSX.Element {
                         ? '!border-primary !bg-primary !text-primary-foreground shadow-xs ring-2 ring-primary/35 hover:!bg-primary/90 hover:!text-primary-foreground'
                         : 'text-muted-foreground hover:text-foreground'
                     )}
-                    aria-label="Show unread threads only"
+                    aria-label="읽지 않은 스레드만 표시"
                   >
                     <BellDot className="size-3.5" />
                   </Toggle>
                 </TooltipTrigger>
-                <TooltipContent side="bottom">Show unread threads only</TooltipContent>
+                <TooltipContent side="bottom">읽지 않은 스레드만 표시</TooltipContent>
               </Tooltip>
               {/* Why (overflow menu): "Mark all read" is a low-frequency,
                   destructive-feeling action — parking it behind a `…` keeps
@@ -1662,13 +1669,13 @@ export default function ActivityPrototypePage(): React.JSX.Element {
                         variant="outline"
                         size="sm"
                         className="size-8 shrink-0 border-input bg-transparent p-0 text-muted-foreground shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-transparent dark:hover:bg-accent dark:hover:text-accent-foreground"
-                        aria-label="Thread list options"
+                        aria-label="스레드 목록 옵션"
                       >
                         <MoreVertical className="size-3.5" />
                       </Button>
                     </DropdownMenuTrigger>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom">More options</TooltipContent>
+                  <TooltipContent side="bottom">추가 옵션</TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent align="end" sideOffset={6}>
                   <DropdownMenuCheckboxItem
@@ -1676,14 +1683,14 @@ export default function ActivityPrototypePage(): React.JSX.Element {
                     onCheckedChange={(checked) => setCompactMode(checked === true)}
                     onSelect={(event) => event.preventDefault()}
                   >
-                    Compact mode
+                    간략 모드
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onSelect={() => markAllThreadsRead()}
                     disabled={!hasUnreadThreads}
                   >
-                    Mark all read
+                    모두 읽음으로 표시
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -1709,13 +1716,13 @@ export default function ActivityPrototypePage(): React.JSX.Element {
             ))}
             {visibleThreads.length === 0 ? (
               <div className="px-3 py-8 text-sm text-muted-foreground">
-                No agent activity matches these filters.
+                이 필터와 일치하는 에이전트 활동이 없습니다.
               </div>
             ) : null}
           </div>
           <div
-            aria-label="Resize activity thread list"
-            title="Drag to resize"
+            aria-label="활동 스레드 목록 크기 조절"
+            title="드래그하여 크기 조절"
             className={cn(
               'group absolute -right-1.5 top-0 z-20 flex h-full w-3 cursor-col-resize items-stretch justify-center',
               isThreadListResizing && 'bg-ring/10'
@@ -1772,8 +1779,8 @@ export default function ActivityPrototypePage(): React.JSX.Element {
                     <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 p-4 text-sm text-muted-foreground">
                       <TerminalSquare className="size-7" />
                       {storeData.worktreeMap.has(selectedThread.worktree.id)
-                        ? 'Agent terminal closed. Open a new terminal in this workspace to continue.'
-                        : 'Standalone terminal unavailable in Activity.'}
+                        ? '에이전트 터미널이 닫혔습니다. 계속하려면 이 작업 공간에서 새 터미널을 여세요.'
+                        : '활동 보기에서는 독립 터미널을 사용할 수 없습니다.'}
                     </div>
                   )
                 }
@@ -1809,12 +1816,12 @@ export default function ActivityPrototypePage(): React.JSX.Element {
                         {visiblePortalUnavailable ? (
                           <div className="ml-3 mt-3 inline-flex items-center gap-2 rounded-md border border-border bg-background/85 px-2 py-1 text-xs text-muted-foreground shadow-xs">
                             <span className="h-3 w-1.5 rounded-sm bg-muted-foreground/70" />
-                            <span>Terminal unavailable</span>
+                            <span>터미널을 사용할 수 없음</span>
                           </div>
                         ) : showTerminalLoadingLabel ? (
                           <div className="ml-3 mt-3 inline-flex items-center gap-2 rounded-md border border-border bg-background/85 px-2 py-1 text-xs text-muted-foreground shadow-xs">
                             <span className="h-3 w-1.5 animate-pulse rounded-sm bg-muted-foreground/70" />
-                            <span>Connecting terminal...</span>
+                            <span>터미널 연결 중...</span>
                           </div>
                         ) : null}
                       </div>
@@ -1828,12 +1835,12 @@ export default function ActivityPrototypePage(): React.JSX.Element {
               {visibleThreads.length === 0 ? (
                 <>
                   <MessageSquareText className="size-7" />
-                  No activity yet.
+                  아직 활동이 없습니다.
                 </>
               ) : (
                 <>
                   <TerminalSquare className="size-7" />
-                  Select an agent to view its activity
+                  활동을 보려면 에이전트를 선택하세요
                 </>
               )}
             </div>

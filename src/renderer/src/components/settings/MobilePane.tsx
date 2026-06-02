@@ -19,10 +19,10 @@ export { MOBILE_PANE_SEARCH_ENTRIES } from './mobile-pane-search'
 // duration knob. Indefinite hold (`null`) is the default. Server clamps
 // anything outside [5_000ms, 60min]. See docs/mobile-fit-hold.md.
 const AUTO_RESTORE_FIT_OPTIONS: { value: string; label: string; ms: number | null }[] = [
-  { value: 'indefinite', label: 'Keep at phone size (default)', ms: null },
-  { value: '60s', label: 'After 1 minute', ms: 60_000 },
-  { value: '5m', label: 'After 5 minutes', ms: 5 * 60_000 },
-  { value: '30m', label: 'After 30 minutes', ms: 30 * 60_000 }
+  { value: 'indefinite', label: '기본값: 휴대폰 크기 유지', ms: null },
+  { value: '60s', label: '1분 후', ms: 60_000 },
+  { value: '5m', label: '5분 후', ms: 5 * 60_000 },
+  { value: '30m', label: '30분 후', ms: 30 * 60_000 }
 ]
 
 function autoRestoreValueFromMs(ms: number | null | undefined): string {
@@ -103,7 +103,7 @@ export function MobilePane(): React.JSX.Element {
         }
       } catch {
         if (opts.notifyOnError && mountedRef.current) {
-          toast.error('Failed to refresh network interfaces')
+          toast.error('네트워크 인터페이스를 새로 고치지 못했습니다')
         }
       } finally {
         if (mountedRef.current) {
@@ -141,12 +141,12 @@ export function MobilePane(): React.JSX.Element {
           }
         } else {
           if (mountedRef.current) {
-            toast.error('WebSocket transport is not running')
+            toast.error('WebSocket 전송이 실행 중이 아닙니다')
           }
         }
       } catch {
         if (mountedRef.current) {
-          toast.error('Failed to generate QR code')
+          toast.error('QR 코드를 생성하지 못했습니다')
         }
       } finally {
         if (mountedRef.current) {
@@ -188,7 +188,7 @@ export function MobilePane(): React.JSX.Element {
       }, 2000)
     } catch {
       if (mountedRef.current) {
-        toast.error('Failed to copy pairing code')
+        toast.error('페어링 코드를 복사하지 못했습니다')
       }
     }
   }
@@ -202,11 +202,11 @@ export function MobilePane(): React.JSX.Element {
           devicesRef.current = nextDevices
           return nextDevices
         })
-        toast.success('Device revoked')
+        toast.success('기기를 해제했습니다')
       }
     } catch {
       if (mountedRef.current) {
-        toast.error('Failed to revoke device')
+        toast.error('기기를 해제하지 못했습니다')
       }
     }
   }
@@ -232,17 +232,17 @@ export function MobilePane(): React.JSX.Element {
             onClick={() => setQrEnlarged(true)}
             className="group relative cursor-pointer rounded-lg border border-border/60 bg-white p-3"
           >
-            <img src={qrDataUrl} alt="QR Code for mobile pairing" className="size-48" />
+            <img src={qrDataUrl} alt="모바일 페어링용 QR 코드" className="size-48" />
             <Maximize2 className="absolute top-1.5 right-1.5 size-3 text-black/30 opacity-0 transition-opacity group-hover:opacity-100" />
           </button>
           {endpoint && <span className="text-muted-foreground font-mono text-xs">{endpoint}</span>}
           <p className="text-muted-foreground max-w-xs text-center text-xs">
-            Scan this code with the Korca mobile app. Each code creates a unique device token.
+            이 코드를 Korca 모바일 앱으로 스캔하세요. 코드마다 고유한 기기 토큰이 생성됩니다.
           </p>
           {pairingUrl && (
             <div className="flex w-full max-w-lg flex-col gap-1.5 px-4">
               <div className="text-muted-foreground text-center text-xs">
-                Or paste this code in the mobile app:
+                또는 모바일 앱에 이 코드를 붙여넣으세요:
               </div>
               <Button
                 ref={setPairingCodeButtonRef}
@@ -265,12 +265,12 @@ export function MobilePane(): React.JSX.Element {
 
       {/* Paired devices */}
       <div>
-        <h3 className="mb-2 text-sm font-medium">Paired Devices</h3>
+        <h3 className="mb-2 text-sm font-medium">페어링된 기기</h3>
         {devices.length === 0 ? (
           <p className="text-muted-foreground text-sm">
             {qrDataUrl
-              ? 'No devices paired yet. Scan the QR code with the Korca mobile app.'
-              : 'No devices paired yet.'}
+              ? '아직 페어링된 기기가 없습니다. Korca 모바일 앱으로 QR 코드를 스캔하세요.'
+              : '아직 페어링된 기기가 없습니다.'}
           </p>
         ) : (
           <div className="space-y-2">
@@ -282,7 +282,7 @@ export function MobilePane(): React.JSX.Element {
                 <div>
                   <div className="text-sm font-medium">{device.name}</div>
                   <div className="text-muted-foreground text-xs">
-                    Paired {new Date(device.pairedAt).toLocaleDateString()}
+                    페어링됨 {new Date(device.pairedAt).toLocaleDateString()}
                   </div>
                 </div>
                 <Button
@@ -299,7 +299,7 @@ export function MobilePane(): React.JSX.Element {
         )}
         {devices.length > 0 && (
           <p className="text-muted-foreground mt-3 text-xs">
-            Revoking a device disconnects it immediately.
+            기기를 해제하면 즉시 연결이 끊깁니다.
           </p>
         )}
       </div>
@@ -308,13 +308,13 @@ export function MobilePane(): React.JSX.Element {
       <div className="rounded-lg border border-border/60 p-4">
         <div className="mb-3 flex items-center gap-2">
           <Smartphone className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium">When you leave the mobile app</span>
+          <span className="text-sm font-medium">모바일 앱을 벗어날 때</span>
         </div>
         <p className="text-muted-foreground mb-3 text-xs">
-          While you&apos;re using a terminal on your phone, Korca shrinks it to fit your phone
-          screen. When you close the app or switch away, this controls whether it stays at phone
-          size (so interactive CLI tools don&apos;t reflow) or resizes back to your desktop. You can
-          always click Restore on the terminal banner to resize it manually.
+          휴대폰에서 터미널을 사용할 때 Korca는 화면에 맞게 크기를 줄입니다. 앱을 닫거나 다른 곳으로
+          전환하면, 이 설정에 따라 휴대폰 크기를 유지할지(대화형 CLI 도구가 재배치되지 않도록)
+          아니면 데스크톱 크기로 다시 늘릴지 결정합니다. 터미널 배너의 복원 버튼으로 언제든 수동
+          조정할 수 있습니다.
         </p>
         <Select
           value={autoRestoreValueFromMs(autoRestoreFitMs)}
@@ -343,12 +343,12 @@ export function MobilePane(): React.JSX.Element {
       <Dialog open={qrEnlarged} onOpenChange={setQrEnlarged}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>Scan with Korca Mobile</DialogTitle>
+            <DialogTitle>Korca Mobile로 스캔</DialogTitle>
           </DialogHeader>
           {qrDataUrl && (
             <div className="flex flex-col items-center gap-3">
               <div className="rounded-lg bg-white p-4">
-                <img src={qrDataUrl} alt="QR Code for mobile pairing" className="size-72" />
+                <img src={qrDataUrl} alt="모바일 페어링용 QR 코드" className="size-72" />
               </div>
               {endpoint && (
                 <span className="text-muted-foreground font-mono text-xs">{endpoint}</span>

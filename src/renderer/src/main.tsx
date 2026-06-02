@@ -10,6 +10,7 @@ import {
 } from './lib/crash-diagnostics'
 import { applyDocumentTheme } from './lib/document-theme'
 import { shouldEnableReactGrab } from './lib/react-grab-dev-gate'
+import { loadReactGrabScript } from './lib/react-grab-script'
 
 recordRendererCrashBreadcrumb('renderer_bootstrap_started', { dev: import.meta.env.DEV })
 installRendererCrashDiagnostics()
@@ -21,8 +22,7 @@ if (
     enableFlag: import.meta.env.VITE_ENABLE_REACT_GRAB
   })
 ) {
-  void import('react-grab').then(({ init }) => init())
-  void import('react-grab/styles.css')
+  await loadReactGrabScript()
 }
 
 applyDocumentTheme('system', { disableTransitions: false })

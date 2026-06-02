@@ -70,10 +70,10 @@ export function TerminalPane({
   const detectedLayout = useDetectedOptionAsAlt()
   const detectedLayoutLabel =
     detectedLayout === 'us'
-      ? 'US English — Option sends Alt/Esc sequences'
+      ? '미국식 영어 — Option 키가 Alt/Esc 시퀀스를 보냅니다'
       : detectedLayout === 'non-us'
-        ? 'non-US layout — Option composes characters like @, €, [, ]'
-        : 'unknown layout — Option composes characters (safe default)'
+        ? '비미국식 배열 — Option 키가 @, €, [, ] 같은 문자를 조합합니다'
+        : '알 수 없는 배열 — Option이 문자를 조합하는 안전한 기본값입니다'
   const scrollbackMb = Math.max(1, Math.round(settings.terminalScrollbackBytes / 1_000_000))
   const isPreset = SCROLLBACK_PRESETS_MB.includes(
     scrollbackMb as (typeof SCROLLBACK_PRESETS_MB)[number]
@@ -95,14 +95,14 @@ export function TerminalPane({
     isWindows && matchesSettingsSearch(searchQuery, TERMINAL_WINDOWS_SHELL_SEARCH_ENTRY) ? (
       <section key="windows-shell" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Windows Shell"
-          description="Default shell for new terminal panes on Windows."
+          title="Windows 셸"
+          description="Windows에서 새 터미널 창에 사용할 기본 셸입니다."
         />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Default Shell"
-            description="Choose the default shell for new terminal panes on Windows."
+            title="기본 셸"
+            description="Windows에서 새 터미널 창의 기본 셸을 선택합니다."
             keywords={[
               'terminal',
               'windows',
@@ -116,16 +116,16 @@ export function TerminalPane({
             ]}
           >
             <SettingsRow
-              label="Default Shell"
-              description="Shell used when opening a new terminal pane. Takes effect for new terminals."
+              label="기본 셸"
+              description="새 터미널 창을 열 때 사용할 셸입니다. 새 터미널부터 적용됩니다."
               control={
                 <SettingsSegmentedControl
-                  ariaLabel="Default Shell"
+                  ariaLabel="기본 셸"
                   value={windowsShell}
                   onChange={(value) => updateSettings({ terminalWindowsShell: value })}
                   options={[
                     { value: 'powershell.exe', label: 'PowerShell' },
-                    { value: 'cmd.exe', label: 'Command Prompt' },
+                    { value: 'cmd.exe', label: '명령 프롬프트' },
                     ...(showGitBashOption
                       ? [
                           {
@@ -143,13 +143,13 @@ export function TerminalPane({
           </SearchableSetting>
           {windowsShell === 'wsl.exe' ? (
             <SearchableSetting
-              title="WSL Distribution"
-              description="Choose which WSL distribution new WSL terminals and local agent scans use."
+              title="WSL 배포판"
+              description="새 WSL 터미널과 로컬 에이전트 검사가 사용할 WSL 배포판을 선택합니다."
               keywords={['terminal', 'windows', 'wsl', 'linux', 'distribution', 'distro', 'ubuntu']}
             >
               <SettingsRow
-                label="WSL Distribution"
-                description="Used for new WSL terminal panes and local agent detection when the active workspace is not already inside WSL."
+                label="WSL 배포판"
+                description="활성 워크스페이스가 이미 WSL 안에 있지 않을 때 새 WSL 터미널과 로컬 에이전트 감지에 사용됩니다."
                 control={
                   <Select
                     value={selectedWslDistro}
@@ -160,15 +160,15 @@ export function TerminalPane({
                     }
                     disabled={wslCapabilitiesLoading || !wslAvailable}
                   >
-                    <SelectTrigger size="sm" aria-label="WSL Distribution" className="min-w-44">
+                    <SelectTrigger size="sm" aria-label="WSL 배포판" className="min-w-44">
                       <SelectValue
                         placeholder={
-                          wslCapabilitiesLoading ? 'Loading distributions' : 'Windows default'
+                          wslCapabilitiesLoading ? '배포판 불러오는 중' : 'Windows 기본값'
                         }
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__default__">Windows default</SelectItem>
+                      <SelectItem value="__default__">Windows 기본값</SelectItem>
                       {wslDistroOptions.map((distro) => (
                         <SelectItem key={distro} value={distro}>
                           {distro}
@@ -186,14 +186,14 @@ export function TerminalPane({
     matchesSettingsSearch(searchQuery, TERMINAL_RENDERING_SEARCH_ENTRIES) ? (
       <section key="rendering" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Rendering"
-          description="Terminal renderer behavior for live panes and new panes."
+          title="렌더링"
+          description="실행 중인 창과 새 창의 터미널 렌더러 동작입니다."
         />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="GPU Acceleration"
-            description="Controls whether the terminal uses xterm.js WebGL rendering. Auto uses DOM on Linux to avoid driver glyph corruption, and otherwise tries WebGL with DOM fallback."
+            title="GPU 가속"
+            description="터미널이 xterm.js WebGL 렌더링을 사용할지 정합니다. 자동은 Linux에서 드라이버 글리프 깨짐을 피하려고 DOM을 쓰고, 그 외에는 WebGL을 시도한 뒤 DOM으로 폴백합니다."
             keywords={[
               'terminal',
               'gpu',
@@ -207,23 +207,23 @@ export function TerminalPane({
             ]}
           >
             <SettingsRow
-              label="GPU Acceleration"
+              label="GPU 가속"
               description={
                 settings.terminalGpuAcceleration === 'off'
-                  ? 'WebGL disabled; DOM renderer for max compatibility.'
+                  ? 'WebGL을 사용하지 않습니다. 최대 호환성을 위해 DOM 렌더러를 씁니다.'
                   : settings.terminalGpuAcceleration === 'on'
-                    ? 'WebGL is always attempted for terminal panes.'
-                    : 'Auto uses DOM on Linux; tries WebGL with DOM fallback elsewhere.'
+                    ? '터미널 창에서 항상 WebGL을 시도합니다.'
+                    : '자동은 Linux에서 DOM을 쓰고, 그 외에는 WebGL을 시도한 뒤 DOM으로 폴백합니다.'
               }
               control={
                 <SettingsSegmentedControl
-                  ariaLabel="GPU Acceleration"
+                  ariaLabel="GPU 가속"
                   value={settings.terminalGpuAcceleration ?? 'auto'}
                   onChange={(option) => updateSettings({ terminalGpuAcceleration: option })}
                   options={[
-                    { value: 'auto', label: 'Auto' },
-                    { value: 'on', label: 'On' },
-                    { value: 'off', label: 'Off' }
+                    { value: 'auto', label: '자동' },
+                    { value: 'on', label: '켜짐' },
+                    { value: 'off', label: '꺼짐' }
                   ]}
                 />
               }
@@ -237,8 +237,8 @@ export function TerminalPane({
       matchesSettingsSearch(searchQuery, TERMINAL_RIGHT_CLICK_TO_PASTE_SEARCH_ENTRY)) ? (
       <section key="pane-interaction" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Terminal Interaction"
-          description="Mouse and clipboard behavior for terminal panes."
+          title="터미널 상호작용"
+          description="터미널 창의 마우스 및 클립보드 동작입니다."
         />
 
         <div className="divide-y divide-border/40">
@@ -248,13 +248,13 @@ export function TerminalPane({
           {isWindows &&
             matchesSettingsSearch(searchQuery, TERMINAL_RIGHT_CLICK_TO_PASTE_SEARCH_ENTRY) && (
               <SearchableSetting
-                title="Right-click to paste"
-                description="On Windows, right-click pastes the clipboard into the terminal. Use Ctrl+right-click to open the context menu."
+                title="오른쪽 클릭으로 붙여넣기"
+                description="Windows에서 오른쪽 클릭은 클립보드를 터미널에 붙여넣습니다. 컨텍스트 메뉴를 열려면 Ctrl+오른쪽 클릭을 사용합니다."
                 keywords={['terminal', 'windows', 'right click', 'paste', 'context menu']}
               >
                 <SettingsSwitchRow
-                  label="Right-click to paste"
-                  description="On Windows, right-click pastes the clipboard. Ctrl+right-click opens the context menu."
+                  label="오른쪽 클릭으로 붙여넣기"
+                  description="Windows에서 오른쪽 클릭은 클립보드를 붙여넣습니다. Ctrl+오른쪽 클릭은 컨텍스트 메뉴를 엽니다."
                   checked={settings.terminalRightClickToPaste}
                   onChange={() =>
                     updateSettings({
@@ -266,13 +266,13 @@ export function TerminalPane({
             )}
 
           <SearchableSetting
-            title="Focus Follows Mouse"
-            description="Hovering a terminal pane activates it without needing to click."
+            title="마우스 따라 포커스"
+            description="터미널 창 위에 마우스를 올리면 클릭 없이 활성화됩니다."
             keywords={['focus', 'follows', 'mouse', 'hover', 'pane', 'ghostty', 'active']}
           >
             <SettingsSwitchRow
-              label="Focus Follows Mouse"
-              description="Hovering a terminal pane activates it without needing to click."
+              label="마우스 따라 포커스"
+              description="터미널 창 위에 마우스를 올리면 클릭 없이 활성화됩니다."
               checked={settings.terminalFocusFollowsMouse}
               onChange={() =>
                 updateSettings({
@@ -283,7 +283,7 @@ export function TerminalPane({
           </SearchableSetting>
 
           <SearchableSetting
-            title="Copy on Select"
+            title="선택 시 자동 복사"
             description="Automatically copy terminal selections to the clipboard."
             keywords={[
               'clipboard',
@@ -299,7 +299,7 @@ export function TerminalPane({
             ]}
           >
             <SettingsSwitchRow
-              label="Copy on Select"
+              label="선택 시 자동 복사"
               description="Automatically copy terminal selections to the clipboard."
               checked={settings.terminalClipboardOnSelect}
               onChange={() =>
@@ -312,8 +312,8 @@ export function TerminalPane({
 
           <SearchableSetting
             id={OSC52_CLIPBOARD_SETTING_ID}
-            title="Allow TUI Clipboard Writes (OSC 52)"
-            description="Let tmux, Neovim, and fzf copy to the system clipboard over the PTY (including over SSH)."
+            title="TUI 클립보드 쓰기 허용 (OSC 52)"
+            description="tmux, Neovim, fzf가 PTY를 통해 시스템 클립보드에 복사하도록 허용합니다. SSH에서도 동작합니다."
             keywords={[
               'osc 52',
               'osc52',
@@ -329,8 +329,8 @@ export function TerminalPane({
             ]}
           >
             <SettingsSwitchRow
-              label="Allow TUI Clipboard Writes (OSC 52)"
-              description="Let programs in the terminal (tmux, Neovim, fzf, SSH) copy to your system clipboard."
+              label="TUI 클립보드 쓰기 허용 (OSC 52)"
+              description="터미널의 프로그램(tmux, Neovim, fzf, SSH)이 시스템 클립보드에 복사하도록 허용합니다."
               checked={settings.terminalAllowOsc52Clipboard}
               onChange={() =>
                 updateSettings({
@@ -345,13 +345,13 @@ export function TerminalPane({
     matchesSettingsSearch(searchQuery, TERMINAL_SETUP_SCRIPT_SEARCH_ENTRIES) ? (
       <section key="setup-script" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Workspace Setup Script"
+          title="워크스페이스 설정 스크립트"
           description="Where the repository setup script runs when a new workspace is created."
         />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Setup Script Location"
+            title="설정 스크립트 위치"
             description="Where the repository setup script runs when a new workspace is created."
             keywords={[
               'setup',
@@ -367,8 +367,8 @@ export function TerminalPane({
             ]}
           >
             <SettingsRow
-              label="Setup Script Location"
-              description='"New Tab" opens the setup command in a background tab titled "Setup" without stealing focus.'
+              label="설정 스크립트 위치"
+              description='"새 탭"은 포커스를 빼앗지 않고 "Setup"이라는 이름의 백그라운드 탭에서 설정 명령을 엽니다.'
               control={
                 <ToggleGroup
                   type="single"
@@ -390,21 +390,21 @@ export function TerminalPane({
                     className="h-8 px-3 text-xs"
                     aria-label="Run in a new tab"
                   >
-                    New Tab
+                    새 탭
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     value="split-vertical"
                     className="h-8 px-3 text-xs"
                     aria-label="Split vertically"
                   >
-                    Split Vertically
+                    세로로 분할
                   </ToggleGroupItem>
                   <ToggleGroupItem
                     value="split-horizontal"
                     className="h-8 px-3 text-xs"
                     aria-label="Split horizontally"
                   >
-                    Split Horizontally
+                    가로로 분할
                   </ToggleGroupItem>
                 </ToggleGroup>
               }
@@ -427,20 +427,20 @@ export function TerminalPane({
         matchesSettingsSearch(searchQuery, TERMINAL_MAC_YEN_SEARCH_ENTRIES))) ? (
       <section key="advanced" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Advanced"
-          description="Scrollback, word boundaries, and platform-specific terminal behaviors."
+          title="고급"
+          description="스크롤백, 단어 경계, 플랫폼별 터미널 동작입니다."
         />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Scrollback Size"
-            description="Maximum terminal scrollback buffer size."
+            title="스크롤백 크기"
+            description="터미널 스크롤백 버퍼의 최대 크기입니다."
             keywords={['terminal', 'scrollback', 'buffer', 'memory']}
           >
             <SettingsRow
               alignTop={scrollbackMode === 'custom'}
-              label="Scrollback Size"
-              description="Maximum terminal scrollback buffer size for new terminal panes."
+              label="스크롤백 크기"
+              description="새 터미널 창의 최대 스크롤백 버퍼 크기입니다."
               control={
                 <div className="flex flex-col items-end gap-2">
                   <ToggleGroup
@@ -509,13 +509,13 @@ export function TerminalPane({
           </SearchableSetting>
 
           <SearchableSetting
-            title="Word Separators"
-            description="Characters treated as word boundaries for double-click selection."
+            title="단어 구분자"
+            description="더블 클릭 선택에서 단어 경계로 취급되는 문자입니다."
             keywords={['word', 'separator', 'boundary', 'double-click', 'selection']}
           >
             <SettingsRow
-              label="Word Separators"
-              description="Characters treated as word boundaries for double-click selection."
+              label="단어 구분자"
+              description="더블 클릭 선택에서 단어 경계로 취급되는 문자입니다."
               control={
                 <Input
                   value={settings.terminalWordSeparator ?? ''}
@@ -536,8 +536,8 @@ export function TerminalPane({
             TERMINAL_WINDOWS_POWERSHELL_IMPLEMENTATION_SEARCH_ENTRY
           ) ? (
             <SearchableSetting
-              title="PowerShell Version"
-              description="Choose whether the PowerShell shell option launches Windows PowerShell or PowerShell 7+ for new terminal panes."
+              title="PowerShell 버전"
+              description="PowerShell 셸 옵션이 새 터미널 창에서 Windows PowerShell을 실행할지, PowerShell 7+를 실행할지 선택합니다."
               keywords={[
                 'terminal',
                 'windows',
@@ -551,20 +551,21 @@ export function TerminalPane({
             >
               <SettingsRow
                 alignTop
-                label="PowerShell Version"
+                label="PowerShell 버전"
                 description={
                   pwshAvailable ? (
                     'Choose between Windows PowerShell and PowerShell 7+ for new terminal panes.'
                   ) : (
                     <>
-                      Auto uses Windows PowerShell now and switches to PowerShell 7+ when installed.{' '}
+                      자동은 현재 Windows PowerShell을 사용하고, PowerShell 7+가 설치되면
+                      전환합니다.{' '}
                       <a
                         href="https://github.com/PowerShell/PowerShell/releases/latest"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="underline hover:text-foreground"
                       >
-                        Download PowerShell 7+
+                        PowerShell 7+ 다운로드
                       </a>
                       .
                     </>
@@ -572,13 +573,13 @@ export function TerminalPane({
                 }
                 control={
                   <SettingsSegmentedControl
-                    ariaLabel="PowerShell Version"
+                    ariaLabel="PowerShell 버전"
                     value={powerShellImplementation}
                     onChange={(value) =>
                       updateSettings({ terminalWindowsPowerShellImplementation: value })
                     }
                     options={[
-                      { value: 'auto', label: 'Auto' },
+                      { value: 'auto', label: '자동' },
                       { value: 'powershell.exe', label: 'Windows PowerShell' },
                       { value: 'pwsh.exe', label: 'PowerShell 7+', disabled: !pwshAvailable }
                     ]}
@@ -591,8 +592,8 @@ export function TerminalPane({
           {isMac ? (
             <>
               <SearchableSetting
-                title="Option as Alt"
-                description="Controls whether the macOS Option key sends Alt/Esc sequences or composes characters."
+                title="Option을 Alt로 사용"
+                description="macOS Option 키가 Alt/Esc 시퀀스를 보낼지, 문자를 조합할지 정합니다."
                 keywords={[
                   'terminal',
                   'option',
@@ -611,27 +612,27 @@ export function TerminalPane({
               >
                 <SettingsRow
                   alignTop
-                  label="Option as Alt"
+                  label="Option을 Alt로 사용"
                   description={
                     settings.terminalMacOptionAsAlt === 'auto'
-                      ? `Auto — detected: ${detectedLayoutLabel}.`
+                      ? `자동 - 감지됨: ${detectedLayoutLabel}.`
                       : settings.terminalMacOptionAsAlt === 'false'
-                        ? 'Option composes special characters for your keyboard layout.'
+                        ? 'Option 키는 키보드 배열에 맞게 특수 문자를 조합합니다.'
                         : settings.terminalMacOptionAsAlt === 'true'
-                          ? 'Both Option keys send Alt/Esc sequences.'
-                          : `The ${settings.terminalMacOptionAsAlt} Option key sends Alt/Esc; the other composes special characters.`
+                          ? '양쪽 Option 키가 모두 Alt/Esc 시퀀스를 보냅니다.'
+                          : `${settings.terminalMacOptionAsAlt} 쪽 Option 키는 Alt/Esc를 보내고, 다른 쪽은 특수 문자를 조합합니다.`
                   }
                   control={
                     <SettingsSegmentedControl
-                      ariaLabel="Option as Alt"
+                      ariaLabel="Option을 Alt로 사용"
                       value={settings.terminalMacOptionAsAlt}
                       onChange={(option) => updateSettings({ terminalMacOptionAsAlt: option })}
                       options={[
-                        { value: 'auto', label: 'Auto' },
-                        { value: 'true', label: 'Both' },
-                        { value: 'left', label: 'Left' },
-                        { value: 'right', label: 'Right' },
-                        { value: 'false', label: 'Off' }
+                        { value: 'auto', label: '자동' },
+                        { value: 'true', label: '양쪽' },
+                        { value: 'left', label: '왼쪽' },
+                        { value: 'right', label: '오른쪽' },
+                        { value: 'false', label: '꺼짐' }
                       ]}
                     />
                   }
@@ -639,8 +640,8 @@ export function TerminalPane({
               </SearchableSetting>
 
               <SearchableSetting
-                title="JIS Yen (¥) to Backslash (\\)"
-                description="Controls whether pressing the JIS Yen (¥) key sends a backslash (\\) instead."
+                title="JIS 엔(¥)을 백슬래시(\\)로"
+                description="JIS 엔(¥) 키를 누를 때 백슬래시(\\)를 보내도록 할지 정합니다."
                 keywords={[
                   'terminal',
                   'yen',
@@ -654,8 +655,8 @@ export function TerminalPane({
                 ]}
               >
                 <SettingsSwitchRow
-                  label="JIS Yen (¥) to Backslash (\\)"
-                  description="Pressing the JIS Yen (¥) key sends a backslash (\\) instead."
+                  label="JIS 엔(¥)을 백슬래시(\\)로"
+                  description="JIS 엔(¥) 키를 누르면 백슬래시(\\)를 보냅니다."
                   checked={settings.terminalJISYenToBackslash ?? false}
                   onChange={() =>
                     updateSettings({

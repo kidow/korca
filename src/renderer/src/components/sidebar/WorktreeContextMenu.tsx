@@ -264,12 +264,12 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
   const removesProject = shouldRemoveProjectFromContextMenu(repo, worktree)
   const sleepLabel =
     isMultiContext && sleepableWorktrees.length > 0
-      ? `Sleep ${sleepableWorktrees.length} Workspace${sleepableWorktrees.length === 1 ? '' : 's'}`
-      : 'Sleep'
+      ? `${sleepableWorktrees.length}개 작업 공간 절전`
+      : '절전'
   const deleteLabel =
     isMultiContext && batchDeleteWorktrees.length > 0
-      ? `Delete ${batchDeleteWorktrees.length} Workspace${batchDeleteWorktrees.length === 1 ? '' : 's'}`
-      : 'Delete Selected'
+      ? `${batchDeleteWorktrees.length}개 작업 공간 삭제`
+      : '선택 항목 삭제'
   const lineage = worktreeLineageById[worktree.id]
   // Why: path-derived worktree IDs can be reused. The menu must honor the same
   // instance check as grouped rows before offering navigation to a parent.
@@ -506,12 +506,12 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
               />
               <DropdownMenuItem onSelect={handleCopyPath} disabled={isDeleting}>
                 <Copy className="size-3.5" />
-                Copy Path
+                경로 복사
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onSelect={handleTogglePin} disabled={isDeleting}>
                 {worktree.isPinned ? <PinOff className="size-3.5" /> : <Pin className="size-3.5" />}
-                {worktree.isPinned ? 'Unpin' : 'Pin'}
+                {worktree.isPinned ? '고정 해제' : '고정'}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleToggleRead} disabled={isDeleting}>
                 {worktree.isUnread ? (
@@ -519,20 +519,20 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
                 ) : (
                   <Bell className="size-3.5" />
                 )}
-                {worktree.isUnread ? 'Mark Read' : 'Mark Unread'}
+                {worktree.isUnread ? '읽음으로 표시' : '읽지 않음으로 표시'}
               </DropdownMenuItem>
               {repo ? (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={handleCreateGroupFromRepo} disabled={isDeleting}>
                     <FolderPlus className="size-3.5" />
-                    New group from project
+                    프로젝트에서 새 그룹 만들기
                   </DropdownMenuItem>
                   {projectGroups.length > 0 ? (
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger disabled={isDeleting}>
                         <FolderInput className="size-3.5" />
-                        Move to group
+                        그룹으로 이동
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent>
                         {projectGroups.map((group) => (
@@ -550,7 +550,7 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
                   {repo.projectGroupId ? (
                     <DropdownMenuItem onSelect={handleRemoveProjectFromGroup} disabled={isDeleting}>
                       <CircleX className="size-3.5" />
-                      Remove from group
+                      그룹에서 제거
                     </DropdownMenuItem>
                   ) : null}
                 </>
@@ -561,13 +561,13 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
                   {validParentWorktreeId && (
                     <DropdownMenuItem onSelect={handleOpenParent} disabled={isDeleting}>
                       <Workflow className="size-3.5" />
-                      Open Parent Workspace
+                      상위 작업 공간 열기
                     </DropdownMenuItem>
                   )}
                   {lineage && (
                     <DropdownMenuItem onSelect={handleRemoveParentLink} disabled={isDeleting}>
                       <Unlink className="size-3.5" />
-                      Remove from Parent
+                      상위 항목에서 제거
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
@@ -580,7 +580,7 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
               {hasAnyContextLineage && (
                 <DropdownMenuItem onSelect={handleRemoveParentLink} disabled={deletingContext}>
                   <Unlink className="size-3.5" />
-                  Remove from Parent
+                  상위 항목에서 제거
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
@@ -589,7 +589,7 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
           <DropdownMenuSub>
             <DropdownMenuSubTrigger disabled={deletingContext}>
               <Kanban className="size-3.5" />
-              {isMultiContext ? 'Move Statuses To' : 'Move to Status'}
+              {isMultiContext ? '상태를 이동할 곳' : '상태로 이동'}
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="w-44">
               <DropdownMenuRadioGroup value={contextWorkspaceStatus}>
@@ -612,7 +612,7 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
           {!isMultiContext && (
             <DropdownMenuItem onSelect={handleRename} disabled={isDeleting}>
               <Pencil className="size-3.5" />
-              Update
+              이름 수정
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
@@ -628,8 +628,8 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={8} className="max-w-[200px] text-pretty">
               {isMultiContext
-                ? 'Close all active panels in the selected workspaces to free up memory and CPU.'
-                : 'Close all active panels in this workspace to free up memory and CPU.'}
+                ? '선택한 작업 공간의 모든 활성 패널을 닫아 메모리와 CPU를 확보합니다.'
+                : '이 작업 공간의 모든 활성 패널을 닫아 메모리와 CPU를 확보합니다.'}
             </TooltipContent>
           </Tooltip>
           {/* Why: primary checkout rows remove the project from Korca instead of
@@ -646,27 +646,27 @@ const WorktreeContextMenu = React.memo(function WorktreeContextMenu({
             }
             title={
               !isMultiContext && worktree.isMainWorktree && !removesProject
-                ? 'The project could not be found'
+                ? '프로젝트를 찾을 수 없습니다'
                 : undefined
             }
           >
             <Trash2 className="size-3.5" />
             {deletingContext
-              ? 'Deleting…'
+              ? '삭제 중…'
               : isMultiContext
                 ? deleteLabel
                 : removesProject
-                  ? 'Remove Project from Korca'
-                  : 'Delete'}
+                  ? 'Korca에서 프로젝트 제거'
+                  : '작업 공간 삭제'}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <ProjectGroupNameDialog
         open={createGroupDialogOpen}
-        title="New Project Group"
-        description="Create a group and move this project into it."
+        title="새 프로젝트 그룹"
+        description="그룹을 만들고 이 프로젝트를 그 안으로 옮깁니다."
         initialName={repo ? `${repo.displayName} group` : ''}
-        confirmLabel="Create"
+        confirmLabel="만들기"
         onOpenChange={setCreateGroupDialogOpen}
         onSubmit={handleSubmitNewProjectGroup}
       />

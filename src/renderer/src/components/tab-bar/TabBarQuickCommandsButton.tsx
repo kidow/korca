@@ -159,14 +159,14 @@ export function TabBarQuickCommandsButton({
                 })
               }
               className="my-auto flex h-7 shrink-0 items-center gap-1 rounded-md px-1.5 text-muted-foreground hover:bg-accent/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-              aria-label="Add quick command"
+              aria-label="빠른 명령 추가"
             >
               <Plus className="size-3.5" />
-              <span className="text-[12px] font-medium">Add command</span>
+              <span className="text-[12px] font-medium">명령 추가</span>
             </button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>
-            Save a quick command for this repo
+            이 저장소용 빠른 명령을 저장합니다
           </TooltipContent>
         </Tooltip>
         <TerminalQuickCommandDialog
@@ -232,7 +232,7 @@ export function TabBarQuickCommandsButton({
             void handleDeleteCommand(command)
           }}
           className="rounded p-1 text-muted-foreground hover:bg-accent hover:text-destructive"
-          aria-label={`Remove ${command.label}`}
+          aria-label={`${command.label} 제거`}
         >
           <Trash2 className="size-3" />
         </button>
@@ -276,7 +276,7 @@ export function TabBarQuickCommandsButton({
                 innerButtonBase,
                 'justify-center rounded-l-none rounded-r-md border-l border-border/60 px-1'
               )}
-              aria-label="More quick commands"
+              aria-label="빠른 명령 더보기"
             >
               <ChevronDown className="size-3" strokeWidth={2.5} />
             </button>
@@ -290,7 +290,9 @@ export function TabBarQuickCommandsButton({
             >
               <CommandList className="max-h-72 py-1">
                 {totalVisible === 0 ? (
-                  <CommandEmpty className="py-4 text-center text-[11px]">No commands</CommandEmpty>
+                  <CommandEmpty className="py-4 text-center text-[11px]">
+                    명령이 없습니다
+                  </CommandEmpty>
                 ) : null}
                 {repoCommands.map(renderItem)}
                 {repoCommands.length > 0 && globalCommands.length > 0 ? (

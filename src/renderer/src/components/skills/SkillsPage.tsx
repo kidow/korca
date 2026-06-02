@@ -27,14 +27,14 @@ import { countSkillsBySource, filterSkills, type SkillsFilterState } from './ski
 const providerLabels: Record<SkillProvider, string> = {
   codex: 'Codex',
   claude: 'Claude',
-  'agent-skills': 'Agent Skills'
+  'agent-skills': '에이전트 스킬'
 }
 
 const sourceLabels: Record<SkillSourceKind, string> = {
-  home: 'Home',
-  repo: 'Repository',
-  bundled: 'Bundled',
-  plugin: 'Plugin'
+  home: '홈',
+  repo: '저장소',
+  bundled: '내장',
+  plugin: '플러그인'
 }
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -47,7 +47,7 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
 const EMPTY_SKILLS: DiscoveredSkill[] = []
 
 function formatUpdatedAt(value: number | null): string {
-  return value ? dateFormatter.format(new Date(value)) : 'Unknown'
+  return value ? dateFormatter.format(new Date(value)) : '알 수 없음'
 }
 
 function pluralize(count: number, singular: string): string {
@@ -58,7 +58,7 @@ function SkillCard({ skill }: { skill: DiscoveredSkill }): React.JSX.Element {
   const revealSkill = async (): Promise<void> => {
     const result = await window.api.shell.openInFileManager(skill.skillFilePath)
     if (!result.ok) {
-      toast.error('Could not reveal skill file')
+      toast.error('스킬 파일을 표시하지 못했습니다')
     }
   }
 
@@ -76,7 +76,7 @@ function SkillCard({ skill }: { skill: DiscoveredSkill }): React.JSX.Element {
                 variant={skill.installed ? 'secondary' : 'outline'}
                 className="h-5 text-[10px]"
               >
-                {skill.installed ? 'Local' : 'Available'}
+                {skill.installed ? '로컬' : '사용 가능'}
               </Badge>
               <Badge variant="outline" className="h-5 text-[10px]">
                 {sourceLabels[skill.sourceKind]}
@@ -87,7 +87,7 @@ function SkillCard({ skill }: { skill: DiscoveredSkill }): React.JSX.Element {
                 {skill.description}
               </p>
             ) : (
-              <p className="text-xs text-muted-foreground">No description found.</p>
+              <p className="text-xs text-muted-foreground">설명이 없습니다.</p>
             )}
           </div>
           <Tooltip>
@@ -105,7 +105,7 @@ function SkillCard({ skill }: { skill: DiscoveredSkill }): React.JSX.Element {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="top" sideOffset={4}>
-              Reveal file
+              파일 표시
             </TooltipContent>
           </Tooltip>
         </div>
@@ -123,7 +123,7 @@ function SkillCard({ skill }: { skill: DiscoveredSkill }): React.JSX.Element {
           </div>
           <div className="flex items-center gap-3 whitespace-nowrap">
             <span>{skill.sourceLabel}</span>
-            <span>{pluralize(skill.fileCount, 'file')}</span>
+            <span>{pluralize(skill.fileCount, '파일')}</span>
             <span className="inline-flex items-center gap-1">
               <Clock className="size-3" />
               {formatUpdatedAt(skill.updatedAt)}
@@ -154,18 +154,18 @@ function EmptyState({
         )}
         <div className="space-y-1">
           <h3 className="text-sm font-semibold">
-            {loading ? 'Scanning skills' : hasSkills ? 'No matches' : 'No local skills found'}
+            {loading ? '스킬을 검색하는 중' : hasSkills ? '일치 항목 없음' : '로컬 스킬이 없습니다'}
           </h3>
           <p className="text-xs leading-5 text-muted-foreground">
             {hasSkills
-              ? 'Adjust the search or filters.'
-              : 'Checked local home, repository, bundled, and plugin skill folders.'}
+              ? '검색어나 필터를 조정하세요.'
+              : '로컬 홈, 저장소, 내장, 플러그인 스킬 폴더를 확인했습니다.'}
           </p>
         </div>
         {!loading ? (
           <Button variant="outline" size="sm" onClick={onRefresh}>
             <RefreshCw className="size-4" />
-            Refresh
+            새로고침
           </Button>
         ) : null}
       </div>
@@ -260,17 +260,17 @@ export default function SkillsPage(): React.JSX.Element {
       <header className="flex shrink-0 items-center gap-3 border-b border-border px-5 py-3">
         <Button variant="outline" size="sm" onClick={closeSkillsPage} className="shrink-0 gap-1.5">
           <ArrowLeft className="size-3.5" />
-          Back
+          뒤로
         </Button>
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <BookOpen className="size-4 text-muted-foreground" />
           <div className="min-w-0">
             <div className="flex min-w-0 items-center gap-2">
-              <h1 className="truncate text-sm font-semibold">Skills</h1>
-              <Badge variant="secondary">Beta</Badge>
+              <h1 className="truncate text-sm font-semibold">스킬</h1>
+              <Badge variant="secondary">베타</Badge>
             </div>
             <p className="truncate text-xs text-muted-foreground">
-              {pluralize(skills.length, 'skill')} from {pluralize(activeSourceCount, 'source')}
+              {`${skills.length}개 스킬`} / {`${activeSourceCount}개 소스`}
             </p>
           </div>
         </div>
@@ -283,7 +283,7 @@ export default function SkillsPage(): React.JSX.Element {
             <Input
               value={filters.query}
               onChange={(event) => setFilters((next) => ({ ...next, query: event.target.value }))}
-              placeholder="Search skills"
+              placeholder="스킬 검색"
               className="h-8 pl-8 text-sm"
             />
           </div>
@@ -301,10 +301,10 @@ export default function SkillsPage(): React.JSX.Element {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All providers</SelectItem>
+                <SelectItem value="all">모든 제공자</SelectItem>
                 <SelectItem value="codex">Codex</SelectItem>
                 <SelectItem value="claude">Claude</SelectItem>
-                <SelectItem value="agent-skills">Agent Skills</SelectItem>
+                <SelectItem value="agent-skills">에이전트 스킬</SelectItem>
               </SelectContent>
             </Select>
             <Select
@@ -320,11 +320,11 @@ export default function SkillsPage(): React.JSX.Element {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All sources</SelectItem>
-                <SelectItem value="home">Home</SelectItem>
-                <SelectItem value="repo">Repository</SelectItem>
-                <SelectItem value="bundled">Bundled</SelectItem>
-                <SelectItem value="plugin">Plugin</SelectItem>
+                <SelectItem value="all">모든 소스</SelectItem>
+                <SelectItem value="home">홈</SelectItem>
+                <SelectItem value="repo">저장소</SelectItem>
+                <SelectItem value="bundled">내장</SelectItem>
+                <SelectItem value="plugin">플러그인</SelectItem>
               </SelectContent>
             </Select>
             <Button
@@ -338,7 +338,7 @@ export default function SkillsPage(): React.JSX.Element {
               }}
             >
               <RefreshCw className={cn('size-4', loading && 'animate-spin')} />
-              Refresh
+              새로고침
             </Button>
           </div>
         </div>

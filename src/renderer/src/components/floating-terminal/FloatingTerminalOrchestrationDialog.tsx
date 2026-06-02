@@ -126,9 +126,9 @@ export function FloatingTerminalOrchestrationDialog({
             }
           })
         )
-        toast.success('Pasted the skill install command. Press Enter to run it.')
+        toast.success('스킬 설치 명령을 붙여넣었습니다. Enter를 눌러 실행하세요.')
       } else {
-        toast.success('Copied the skill install command.')
+        toast.success('스킬 설치 명령을 복사했습니다.')
       }
       onSetupStateChange()
       if (isKorcaCliAvailableOnPath(nextCliStatus ?? cliStatus)) {
@@ -136,7 +136,7 @@ export function FloatingTerminalOrchestrationDialog({
       }
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(error instanceof Error ? error.message : 'Failed to copy skill command.')
+        toast.error(error instanceof Error ? error.message : '스킬 명령을 복사하지 못했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -148,9 +148,9 @@ export function FloatingTerminalOrchestrationDialog({
   const handleCopySkillCommand = async (): Promise<void> => {
     try {
       await window.api.ui.writeClipboardText(ORCHESTRATION_SKILL_INSTALL_COMMAND)
-      toast.success('Copied the skill install command.')
+      toast.success('스킬 설치 명령을 복사했습니다.')
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to copy skill command.')
+      toast.error(error instanceof Error ? error.message : '스킬 명령을 복사하지 못했습니다.')
     }
   }
 
@@ -158,9 +158,9 @@ export function FloatingTerminalOrchestrationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="gap-4 sm:max-w-[620px]">
         <DialogHeader>
-          <DialogTitle>Enable orchestration</DialogTitle>
+          <DialogTitle>오케스트레이션 사용</DialogTitle>
           <DialogDescription>
-            Add the Korca CLI, then install the agent skill in this terminal.
+            Korca CLI를 추가한 뒤, 이 터미널에 에이전트 스킬을 설치하세요.
           </DialogDescription>
         </DialogHeader>
 
@@ -185,10 +185,10 @@ export function FloatingTerminalOrchestrationDialog({
                     size="xs"
                     disabled
                     className="shrink-0 gap-1.5 disabled:opacity-100"
-                    aria-label="Korca CLI added to PATH"
+                    aria-label="Korca CLI가 PATH에 추가됨"
                   >
                     <Check className="size-3" />
-                    Added
+                    추가됨
                   </Button>
                 ) : (
                   <Button
@@ -199,7 +199,7 @@ export function FloatingTerminalOrchestrationDialog({
                     className="shrink-0 gap-1.5"
                   >
                     {cliBusy ? <Loader2 className="size-3.5 animate-spin" /> : null}
-                    Add to PATH
+                    PATH에 추가
                   </Button>
                 )}
               </div>
@@ -210,9 +210,9 @@ export function FloatingTerminalOrchestrationDialog({
             <div className="space-y-2">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 space-y-1">
-                  <p className="text-sm font-medium">Orchestration skill</p>
+                  <p className="text-sm font-medium">오케스트레이션 스킬</p>
                   <p className="text-xs text-muted-foreground">
-                    Paste this command into the terminal so agents can coordinate through Korca.
+                    이 명령을 터미널에 붙여넣으면 에이전트가 Korca를 통해 협업할 수 있습니다.
                   </p>
                   {!cliInstalled ? (
                     <p className="text-xs text-muted-foreground">
@@ -232,7 +232,7 @@ export function FloatingTerminalOrchestrationDialog({
                   ) : (
                     <Clipboard className="size-3.5" />
                   )}
-                  {activeTabId ? 'Paste' : 'Copy'}
+                  {activeTabId ? '붙여넣기' : '복사'}
                 </Button>
               </div>
               <div className="flex min-w-0 items-center gap-2 rounded bg-background px-2 py-1.5">
@@ -244,7 +244,7 @@ export function FloatingTerminalOrchestrationDialog({
                   size="icon-xs"
                   className="shrink-0"
                   onClick={() => void handleCopySkillCommand()}
-                  aria-label="Copy orchestration skill install command"
+                  aria-label="오케스트레이션 스킬 설치 명령 복사"
                 >
                   <Copy className="size-3.5" />
                 </Button>

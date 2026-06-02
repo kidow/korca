@@ -235,7 +235,7 @@ export function ConflictReviewPanel({
     return (
       <div className="flex h-full items-center justify-center px-6 text-center">
         <div className="max-w-md space-y-3">
-          <div className="text-sm font-medium text-foreground">All conflicts resolved</div>
+          <div className="text-sm font-medium text-foreground">모든 충돌이 해결되었습니다</div>
           <div className="text-xs text-muted-foreground">
             This review snapshot no longer has any live unresolved conflicts.
           </div>
@@ -295,7 +295,7 @@ export function ConflictReviewPanel({
           </div>
           <Button type="button" size="sm" variant="outline" onClick={onRefreshSnapshot}>
             <RefreshCw className="size-3.5" />
-            Refresh
+            새로고침
           </Button>
         </div>
         <div className="flex min-h-0 flex-1 flex-col">

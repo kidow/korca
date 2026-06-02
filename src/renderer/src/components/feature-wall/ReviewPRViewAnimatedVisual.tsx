@@ -12,16 +12,16 @@ const SIDEBAR_TABS: readonly {
   icon: ComponentType<{ className?: string; size?: number }>
   label: string
 }[] = [
-  { id: 'explorer', icon: Files, label: 'Explorer' },
-  { id: 'search', icon: Search, label: 'Search' },
-  { id: 'source-control', icon: GitBranch, label: 'Source Control' },
-  { id: 'checks', icon: ListChecks, label: 'Checks' }
+  { id: 'explorer', icon: Files, label: '탐색기' },
+  { id: 'search', icon: Search, label: '검색' },
+  { id: 'source-control', icon: GitBranch, label: '소스 제어' },
+  { id: 'checks', icon: ListChecks, label: '검사' }
 ]
 
 function SidebarTabs(props: { active: SidebarTabId; interactiveChecks?: boolean }): JSX.Element {
   const checksShortcutLabel = useShortcutLabel('sidebar.checks.toggle')
   const checksTooltip =
-    checksShortcutLabel === 'Unassigned' ? 'Checks' : `Checks (${checksShortcutLabel})`
+    checksShortcutLabel === 'Unassigned' ? '검사' : `검사 (${checksShortcutLabel})`
 
   return (
     <div className="ravpr-tabs">
@@ -189,10 +189,10 @@ export function ReviewPRViewAnimatedVisual(props: { reducedMotion: boolean }): J
       comments.forEach((el) => el.classList.remove('is-visible'))
       commentsCountEl.textContent = '0'
       checkSummaryEl.classList.remove('is-done')
-      checkSummaryLabelEl.textContent = '1 pending'
-      checkSummaryMetaEl.textContent = 'verify'
+      checkSummaryLabelEl.textContent = '대기 1개'
+      checkSummaryMetaEl.textContent = '검증'
       verifyRowEl.classList.remove('is-done')
-      verifyStateEl.textContent = 'Running'
+      verifyStateEl.textContent = '실행 중'
       mergeBtnEl.classList.remove('is-ready')
     }
 
@@ -205,10 +205,10 @@ export function ReviewPRViewAnimatedVisual(props: { reducedMotion: boolean }): J
       comments.forEach((el) => el.classList.add('is-visible'))
       commentsCountEl.textContent = String(comments.length)
       checkSummaryEl.classList.add('is-done')
-      checkSummaryLabelEl.textContent = 'Checks passed'
-      checkSummaryMetaEl.textContent = '3 checks'
+      checkSummaryLabelEl.textContent = '검사 통과'
+      checkSummaryMetaEl.textContent = '검사 3개'
       verifyRowEl.classList.add('is-done')
-      verifyStateEl.textContent = 'Passed'
+      verifyStateEl.textContent = '통과'
       mergeBtnEl.classList.add('is-ready')
       cursorEl.classList.remove('is-visible')
     }
@@ -269,10 +269,10 @@ export function ReviewPRViewAnimatedVisual(props: { reducedMotion: boolean }): J
         }
 
         verifyRowEl.classList.add('is-done')
-        verifyStateEl.textContent = 'Passed'
+        verifyStateEl.textContent = '통과'
         checkSummaryEl.classList.add('is-done')
-        checkSummaryLabelEl.textContent = 'Checks passed'
-        checkSummaryMetaEl.textContent = '3 checks'
+        checkSummaryLabelEl.textContent = '검사 통과'
+        checkSummaryMetaEl.textContent = '검사 3개'
         mergeBtnEl.classList.add('is-ready')
 
         await wait(560)
@@ -311,7 +311,7 @@ export function ReviewPRViewAnimatedVisual(props: { reducedMotion: boolean }): J
         <div className="ravpr-sidebar is-visible" data-checks-sidebar-peek>
           <SidebarTabs active="explorer" interactiveChecks />
           <div className="ravpr-explorer">
-            <div className="ravpr-heading">Explorer</div>
+            <div className="ravpr-heading">탐색기</div>
             <div className="ravpr-file-list">
               <ExplorerSkeletonRow active width={190} />
               <ExplorerSkeletonRow width={158} />
@@ -326,12 +326,12 @@ export function ReviewPRViewAnimatedVisual(props: { reducedMotion: boolean }): J
           <div className="ravpr-body">
             <div className="ravpr-number-row">
               <span className="ravpr-number">#2351</span>
-              <span className="ravpr-open">OPEN</span>
+              <span className="ravpr-open">열림</span>
             </div>
-            <div className="ravpr-title">Add local diagnostics error tracking</div>
+            <div className="ravpr-title">로컬 진단 오류 추적 추가</div>
             <button className="ravpr-merge" data-merge-btn type="button">
               <GitBranch className="size-3" />
-              Squash and merge
+              스쿼시 병합
               <ChevDownIcon />
             </button>
 
@@ -339,29 +339,29 @@ export function ReviewPRViewAnimatedVisual(props: { reducedMotion: boolean }): J
               <div className="ravpr-section-row" data-check-summary>
                 <StatusCell />
                 <span className="ravpr-label" data-check-summary-label>
-                  1 pending
+                  대기 1개
                 </span>
                 <span className="ravpr-meta" data-check-summary-meta>
-                  verify
+                  검증
                 </span>
               </div>
               <div className="ravpr-check-list">
                 <div className="ravpr-check-row" data-check-row="verify">
                   <StatusCell />
-                  <span>verify</span>
+                  <span>검증</span>
                   <span className="ravpr-check-state" data-check-verify-state>
-                    Running
+                    실행 중
                   </span>
                 </div>
                 <div className="ravpr-check-row is-done">
                   <StatusCell />
-                  <span>typecheck</span>
-                  <span className="ravpr-check-state">Passed</span>
+                  <span>타입 검사</span>
+                  <span className="ravpr-check-state">통과</span>
                 </div>
                 <div className="ravpr-check-row is-done">
                   <StatusCell />
-                  <span>lint</span>
-                  <span className="ravpr-check-state">Passed</span>
+                  <span>린트</span>
+                  <span className="ravpr-check-state">통과</span>
                 </div>
               </div>
             </div>
@@ -369,17 +369,17 @@ export function ReviewPRViewAnimatedVisual(props: { reducedMotion: boolean }): J
             <div className="ravpr-reveal" data-comments-block>
               <div className="ravpr-section-row">
                 <MessageSquare className="size-3.5" />
-                <span className="ravpr-label">Comments</span>
+                <span className="ravpr-label">댓글</span>
                 <span className="ravpr-meta">
-                  <span data-comments-count>0</span> open
+                  <span data-comments-count>0</span>개 열림
                 </span>
               </div>
               <div className="ravpr-comment-list">
                 <CommentCard index={0} path="src/main/diagnostics.ts">
-                  Can we include the failing command in the diagnostic payload?
+                  진단 페이로드에 실패한 명령도 포함할 수 있을까요?
                 </CommentCard>
                 <CommentCard index={1} path="tests/diagnostics.test.ts">
-                  Add a coverage case for <code>stderr</code> truncation before merge.
+                  병합 전에 <code>stderr</code> 잘림에 대한 커버리지 케이스를 추가해 주세요.
                 </CommentCard>
               </div>
             </div>

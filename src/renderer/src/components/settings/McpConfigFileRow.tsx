@@ -14,18 +14,18 @@ type McpConfigFileRowProps = {
 
 function statusLabel(config: LoadedMcpConfigInspection): string {
   if (config.readError) {
-    return 'Unreadable'
+    return '읽을 수 없음'
   }
   if (config.status === 'missing') {
-    return 'Not found'
+    return '찾을 수 없음'
   }
   if (config.status === 'invalid') {
-    return 'Invalid JSON'
+    return '잘못된 JSON'
   }
   if (config.servers.length === 0) {
-    return 'No servers'
+    return '서버 없음'
   }
-  return `${config.servers.length} server${config.servers.length === 1 ? '' : 's'}`
+  return `${config.servers.length}개 서버`
 }
 
 function statusClassName(config: LoadedMcpConfigInspection): string {
@@ -40,12 +40,12 @@ function statusClassName(config: LoadedMcpConfigInspection): string {
 
 function serverDetailLabel(server: LoadedMcpConfigInspection['servers'][number]): string {
   if (server.transport === 'http') {
-    return server.url ?? 'HTTP server'
+    return server.url ?? 'HTTP 서버'
   }
   if (server.transport === 'stdio') {
-    return server.command ?? 'stdio server'
+    return server.command ?? 'stdio 서버'
   }
-  return server.issue ?? 'Invalid server'
+  return server.issue ?? '잘못된 서버'
 }
 
 export function McpConfigFileRow({ config, onOpen }: McpConfigFileRowProps): React.JSX.Element {
@@ -72,7 +72,7 @@ export function McpConfigFileRow({ config, onOpen }: McpConfigFileRowProps): Rea
         </span>
         {config.exists ? (
           <Button variant="outline" size="xs" onClick={() => onOpen(config)}>
-            Open
+            열기
           </Button>
         ) : null}
       </div>

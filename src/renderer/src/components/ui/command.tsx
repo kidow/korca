@@ -22,8 +22,8 @@ function Command({ className, ...props }: React.ComponentProps<typeof CommandPri
 
 function CommandDialog({
   children,
-  title = 'Command Palette',
-  description = 'Search for a command to run...',
+  title = '명령 팔레트',
+  description = '실행할 명령을 검색하세요...',
   shouldFilter,
   onOpenAutoFocus,
   onCloseAutoFocus,

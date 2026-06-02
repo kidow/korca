@@ -46,7 +46,7 @@ type AppearancePaneProps = {
 
 function ShortcutHintList({ combos }: { combos: string[][] }): React.JSX.Element {
   if (combos.length === 0) {
-    return <span className="text-xs text-muted-foreground">Unassigned</span>
+    return <span className="text-xs text-muted-foreground">미지정</span>
   }
 
   return (
@@ -87,7 +87,7 @@ export function AppearancePane({
       <section key="interface" className="divide-y divide-border/40">
         {matchesSettingsSearch(searchQuery, THEME_ENTRIES) ? (
           <SearchableSetting
-            title="Theme"
+            title="테마"
             description="Choose how Korca looks in the app window."
             keywords={['dark', 'light', 'system']}
           >
@@ -170,17 +170,17 @@ export function AppearancePane({
     ) : null,
     matchesSettingsSearch(searchQuery, LAYOUT_ENTRIES) ? (
       <section key="layout" className="space-y-3">
-        <SettingsSubsectionHeader title="File Explorer" />
+        <SettingsSubsectionHeader title="파일 탐색기" />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Show Git-Ignored Files"
-            description="Show files matched by .gitignore in the file explorer."
+            title="Git 무시 파일 표시"
+            description=".gitignore에 포함된 파일을 파일 탐색기에 표시합니다."
             keywords={['git', 'gitignore', 'ignored', 'file explorer', 'sidebar', 'hide']}
           >
             <SettingsSwitchRow
-              label="Show Git-Ignored Files"
-              description="Turn off to hide files matched by .gitignore from the file explorer."
+              label="Git 무시 파일 표시"
+              description="끄면 .gitignore에 포함된 파일을 파일 탐색기에서 숨깁니다."
               checked={settings.showGitIgnoredFiles ?? true}
               onChange={() =>
                 updateSettings({ showGitIgnoredFiles: !(settings.showGitIgnoredFiles ?? true) })
@@ -193,19 +193,19 @@ export function AppearancePane({
     matchesSettingsSearch(searchQuery, TITLEBAR_ENTRIES) ? (
       <section key="titlebar" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Titlebar"
-          description="Control what appears in the application titlebar."
+          title="제목 표시줄"
+          description="앱 제목 표시줄에 표시할 항목을 제어합니다."
         />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Titlebar App Name"
-            description="Show Korca in the titlebar."
+            title="제목 표시줄 앱 이름"
+            description="제목 표시줄에 Korca를 표시합니다."
             keywords={['titlebar', 'korca', 'app', 'name', 'brand']}
           >
             <SettingsSwitchRow
-              label="Titlebar App Name"
-              description="Show Korca in the titlebar."
+              label="제목 표시줄 앱 이름"
+              description="제목 표시줄에 Korca를 표시합니다."
               checked={settings.showTitlebarAppName}
               onChange={() =>
                 updateSettings({ showTitlebarAppName: !settings.showTitlebarAppName })
@@ -218,8 +218,8 @@ export function AppearancePane({
     matchesSettingsSearch(searchQuery, STATUS_BAR_ENTRIES) ? (
       <section key="status-bar" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Status Bar"
-          description="Choose which indicators appear at the bottom of the window. You can also right-click the status bar for the same toggles."
+          title="상태 표시줄"
+          description="창 하단에 표시할 표시기를 선택합니다. 상태 표시줄을 우클릭해도 같은 토글을 사용할 수 있습니다."
         />
 
         <div className="divide-y divide-border/40">
@@ -263,30 +263,30 @@ export function AppearancePane({
     ) : null,
     matchesSettingsSearch(searchQuery, SIDEBAR_ENTRIES) ? (
       <section key="sidebar" className="space-y-3">
-        <SettingsSubsectionHeader title="Sidebar" />
+        <SettingsSubsectionHeader title="사이드바" />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Show Tasks Button"
-            description="Show the Tasks button at the top of the left sidebar."
+            title="작업 버튼 표시"
+            description="왼쪽 사이드바 상단에 작업 버튼을 표시합니다."
             keywords={['tasks', 'sidebar', 'button', 'hide', 'show', 'github', 'linear']}
           >
             <SettingsSwitchRow
-              label="Show Tasks Button"
-              description="Show the Tasks button at the top of the left sidebar."
+              label="작업 버튼 표시"
+              description="왼쪽 사이드바 상단에 작업 버튼을 표시합니다."
               checked={settings.showTasksButton}
               onChange={() => updateSettings({ showTasksButton: !settings.showTasksButton })}
             />
           </SearchableSetting>
 
           <SearchableSetting
-            title="Show Korca Mobile Button"
-            description="Show the Korca Mobile button at the top of the left sidebar."
+            title="Korca 모바일 버튼 표시"
+            description="왼쪽 사이드바 상단에 Korca 모바일 버튼을 표시합니다."
             keywords={['mobile', 'phone', 'sidebar', 'button', 'hide', 'show', 'toolbox']}
           >
             <SettingsSwitchRow
-              label="Show Korca Mobile Button"
-              description="Show the Korca Mobile shortcut in the sidebar. It remains available from Toolbox."
+              label="Korca 모바일 버튼 표시"
+              description="사이드바에 Korca 모바일 바로가기를 표시합니다. Toolbox에서도 계속 사용할 수 있습니다."
               checked={settings.showMobileButton !== false}
               onChange={() =>
                 updateSettings({ showMobileButton: !(settings.showMobileButton !== false) })

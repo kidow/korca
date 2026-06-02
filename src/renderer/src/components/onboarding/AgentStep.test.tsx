@@ -4,7 +4,7 @@ import { AGENT_CATALOG } from '@/lib/agent-catalog'
 import { AgentStep } from './AgentStep'
 
 describe('AgentStep', () => {
-  it('shows the collapsed fallback agents summary', () => {
+  it('renders the translated detected label', () => {
     const html = renderToStaticMarkup(
       <AgentStep
         selectedAgent={null}
@@ -14,10 +14,10 @@ describe('AgentStep', () => {
       />
     )
 
-    expect(html).toContain(`Show ${AGENT_CATALOG.length - 1} more agents→`)
+    expect(html).toContain('시스템에서 감지됨')
   })
 
-  it('labels the fallback agents summary as hide when expanded', () => {
+  it('does not render the more-agents disclosure', () => {
     const html = renderToStaticMarkup(
       <AgentStep
         selectedAgent={AGENT_CATALOG[1].id}
@@ -27,7 +27,7 @@ describe('AgentStep', () => {
       />
     )
 
-    expect(html).toContain('Hide agents')
-    expect(html).not.toContain(`Show ${AGENT_CATALOG.length - 1} more agents→`)
+    expect(html).not.toContain('Show ')
+    expect(html).not.toContain('Hide agents')
   })
 })

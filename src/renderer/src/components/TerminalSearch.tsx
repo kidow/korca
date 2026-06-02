@@ -109,7 +109,7 @@ export default function TerminalSearch({
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search..."
+        placeholder="검색..."
         className="min-w-0 flex-1 border-none bg-transparent text-sm text-white outline-none placeholder:text-zinc-500"
       />
 
@@ -121,7 +121,7 @@ export default function TerminalSearch({
         className={`flex size-6 shrink-0 items-center justify-center rounded ${
           caseSensitive ? 'bg-zinc-700/50 text-blue-400' : 'text-zinc-400 hover:text-zinc-200'
         }`}
-        title="Case sensitive"
+        title="대소문자 구분"
       >
         <CaseSensitive size={14} />
       </Button>
@@ -134,7 +134,7 @@ export default function TerminalSearch({
         className={`flex size-6 shrink-0 items-center justify-center rounded ${
           regex ? 'bg-zinc-700/50 text-blue-400' : 'text-zinc-400 hover:text-zinc-200'
         }`}
-        title="Regex"
+        title="정규식"
       >
         <Regex size={14} />
       </Button>
@@ -147,7 +147,7 @@ export default function TerminalSearch({
         size="icon-xs"
         onClick={findPrevious}
         className="flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 hover:text-zinc-200"
-        title="Previous match"
+        title="이전 일치 항목"
       >
         <ChevronUp size={14} />
       </Button>
@@ -158,7 +158,7 @@ export default function TerminalSearch({
         size="icon-xs"
         onClick={findNext}
         className="flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 hover:text-zinc-200"
-        title="Next match"
+        title="다음 일치 항목"
       >
         <ChevronDown size={14} />
       </Button>
@@ -171,7 +171,7 @@ export default function TerminalSearch({
         size="icon-xs"
         onClick={onClose}
         className="flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 hover:text-zinc-200"
-        title="Close"
+        title="닫기"
       >
         <X size={14} />
       </Button>

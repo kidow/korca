@@ -75,11 +75,11 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
       return
     }
     setIsRestartingKorca(true)
-    toast.info('Restarting Korca…')
+    toast.info('Korca를 다시 시작하는 중…')
     void window.api.app.restart().catch((error) => {
       if (mountedRef.current) {
         setIsRestartingKorca(false)
-        toast.error('Couldn’t restart Korca.', {
+        toast.error('Korca를 다시 시작하지 못했습니다.', {
           description: error instanceof Error ? error.message : undefined
         })
       }
@@ -98,11 +98,11 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
               className="gap-1.5 text-muted-foreground"
             >
               <FolderPlus className="size-3.5" />
-              <span className="text-[11px]">Add Project</span>
+              <span className="text-[11px]">프로젝트 추가</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top" sideOffset={4}>
-            Open folder picker to add a project
+            프로젝트를 추가하려면 폴더 선택기를 여세요
           </TooltipContent>
         </Tooltip>
         <div className="flex items-center gap-1">
@@ -115,7 +115,7 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
                     variant="ghost"
                     size="icon-xs"
                     type="button"
-                    aria-label="Toolbox"
+                    aria-label="도구 상자"
                     className="text-muted-foreground"
                   >
                     <Boxes className="size-3.5" />
@@ -123,17 +123,17 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
                 </DropdownMenuTrigger>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Toolbox
+                도구 상자
               </TooltipContent>
             </Tooltip>
             <DropdownMenuContent side="top" align="start" sideOffset={8} className="w-44">
               <DropdownMenuItem onSelect={openSkillsPage}>
                 <BookOpen className="size-3.5" />
-                Skills
+                스킬
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={openSpacePage}>
                 <HardDrive className="size-3.5" />
-                Space Analyzer
+                저장 공간 분석기
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={openMobilePage}>
                 <Smartphone className="size-3.5" />
@@ -149,7 +149,7 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
                     variant="ghost"
                     size="icon-xs"
                     type="button"
-                    aria-label="Help"
+                    aria-label="도움말"
                     className="text-muted-foreground"
                     onPointerDown={(event) => revealAdminHelpOptions(event.altKey)}
                     onClick={(event) => revealAdminHelpOptions(event.altKey)}
@@ -159,7 +159,7 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
                 </DropdownMenuTrigger>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Help
+                도움말
               </TooltipContent>
             </Tooltip>
             <DropdownMenuContent side="top" align="start" sideOffset={8} className="w-48">
@@ -169,22 +169,22 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
                 onSelect={handleShowOnboarding}
               >
                 <School className="size-3.5" />
-                Show Onboarding
+                온보딩 보기
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setFeedbackOpen(true)}>
                 <MessageSquareText className="size-3.5" />
-                Send feedback
+                피드백 보내기
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => openExternalUrl(DOCS_URL)}>
                 <ExternalLink className="size-3.5" />
-                Docs
+                문서
               </DropdownMenuItem>
               {showAdminHelpOptions ? (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={handleRestartKorca} disabled={isRestartingKorca}>
                     <RotateCw className="size-3.5" />
-                    Restart Korca
+                    Korca 다시 시작
                   </DropdownMenuItem>
                 </>
               ) : null}
@@ -202,7 +202,7 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="top" sideOffset={4}>
-              Settings
+              설정
             </TooltipContent>
           </Tooltip>
         </div>

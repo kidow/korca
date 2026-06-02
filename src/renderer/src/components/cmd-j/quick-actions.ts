@@ -58,8 +58,8 @@ export const CMD_J_QUICK_ACTIONS: readonly CmdJQuickAction[] = [
   {
     id: 'new-browser-tab',
     kind: 'action',
-    title: 'New Browser Tab',
-    description: 'Open a browser tab in the active workspace.',
+    title: '새 브라우저 탭',
+    description: '활성 작업 공간에서 브라우저 탭을 엽니다.',
     icon: Globe,
     verbKeywords: ['new browser', 'new browser tab', 'open browser', 'browser tab'],
     isAvailable: workspaceActionAvailability,
@@ -68,8 +68,8 @@ export const CMD_J_QUICK_ACTIONS: readonly CmdJQuickAction[] = [
   {
     id: 'new-markdown-file',
     kind: 'action',
-    title: 'New Markdown File',
-    description: 'Create an untitled markdown file in the active workspace.',
+    title: '새 마크다운 파일',
+    description: '활성 작업 공간에 제목 없는 마크다운 파일을 만듭니다.',
     icon: FileText,
     verbKeywords: ['new markdown', 'new markdown file', 'new mark', 'new file', 'markdown file'],
     isAvailable: workspaceActionAvailability,
@@ -78,8 +78,8 @@ export const CMD_J_QUICK_ACTIONS: readonly CmdJQuickAction[] = [
   {
     id: 'new-terminal-tab',
     kind: 'action',
-    title: 'New Terminal Tab',
-    description: 'Open a terminal tab in the active workspace.',
+    title: '새 터미널 탭',
+    description: '활성 작업 공간에서 터미널 탭을 엽니다.',
     icon: SquareTerminal,
     verbKeywords: ['new terminal', 'new terminal tab', 'new shell', 'terminal tab'],
     isAvailable: workspaceActionAvailability,
@@ -88,8 +88,8 @@ export const CMD_J_QUICK_ACTIONS: readonly CmdJQuickAction[] = [
   {
     id: CREATE_WORKSPACE_QUICK_ACTION_ID,
     kind: 'action',
-    title: 'Create Workspace',
-    description: 'Start a new workspace.',
+    title: '작업 공간 만들기',
+    description: '새 작업 공간을 시작합니다.',
     icon: FolderPlus,
     verbKeywords: ['create workspace', 'add workspace', 'new workspace'],
     isAvailable: () => ({ available: true }),
@@ -101,8 +101,8 @@ export const CMD_J_QUICK_ACTIONS: readonly CmdJQuickAction[] = [
   {
     id: 'delete-workspace',
     kind: 'action',
-    title: 'Delete Workspace',
-    description: 'Delete the current workspace.',
+    title: '작업 공간 삭제',
+    description: '현재 작업 공간을 삭제합니다.',
     icon: Trash2,
     verbKeywords: [
       'delete workspace',
@@ -125,8 +125,8 @@ export const CMD_J_QUICK_ACTIONS: readonly CmdJQuickAction[] = [
   {
     id: 'add-quick-command',
     kind: 'action',
-    title: 'Add Quick Command',
-    description: 'Create a saved terminal command.',
+    title: '빠른 명령 추가',
+    description: '저장된 터미널 명령을 만듭니다.',
     icon: Play,
     verbKeywords: ['add quick command', 'new quick command'],
     isAvailable: () => ({ available: true }),

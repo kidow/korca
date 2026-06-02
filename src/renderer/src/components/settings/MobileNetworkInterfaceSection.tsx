@@ -36,18 +36,17 @@ export function MobileNetworkInterfaceSection({
     <div className="rounded-lg border border-border/60 p-4">
       <div className="mb-3 flex items-center gap-2">
         <Wifi className="size-4 text-muted-foreground" />
-        <span className="text-sm font-medium">Network Interface</span>
+        <span className="text-sm font-medium">네트워크 인터페이스</span>
       </div>
       <p className="text-muted-foreground mb-3 text-xs">
-        Choose which network address to advertise in the QR code. Use your LAN address for
-        same-network pairing, or an overlay network address (Tailscale, ZeroTier) for cross-network
-        access.
+        QR 코드에 표시할 네트워크 주소를 선택하세요. 같은 네트워크에서 연결할 때는 LAN 주소를,
+        네트워크를 넘나들어 연결할 때는 오버레이 네트워크 주소(Tailscale, ZeroTier)를 사용하세요.
       </p>
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
           <Select value={selectedAddress} onValueChange={onSelectedAddressChange}>
             <SelectTrigger size="sm" className="min-w-[220px]">
-              <SelectValue placeholder="No interfaces found" />
+              <SelectValue placeholder="인터페이스를 찾지 못했습니다" />
             </SelectTrigger>
             <SelectContent>
               {networkInterfaces.map((iface) => (
@@ -67,14 +66,14 @@ export function MobileNetworkInterfaceSection({
                 size="icon-sm"
                 onClick={onRefreshNetworkInterfaces}
                 disabled={refreshingNetworkInterfaces}
-                aria-label="Refresh network interfaces"
+                aria-label="네트워크 인터페이스 새로고침"
                 className="text-muted-foreground"
               >
                 <RefreshCw className={refreshingNetworkInterfaces ? 'animate-spin' : ''} />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              Refresh network interfaces
+              네트워크 인터페이스 새로고침
             </TooltipContent>
           </Tooltip>
         </div>
@@ -91,23 +90,23 @@ export function MobileNetworkInterfaceSection({
           ) : (
             <QrCode className="size-3.5" />
           )}
-          {hasQrCode ? 'Regenerate' : 'Generate QR Code'}
+          {hasQrCode ? '다시 생성' : 'QR 코드 생성'}
         </Button>
       </div>
       <Accordion type="single" collapsible className="mt-4 border-t border-border/60 pt-2">
         <AccordionItem value="remote-pairing-guide">
           <AccordionTrigger className="py-2 text-xs">
-            Connect outside your Wi-Fi with a tailnet
+            Wi-Fi 밖에서도 tailnet으로 연결
           </AccordionTrigger>
           <AccordionContent className="space-y-3 text-xs text-muted-foreground">
             <p>
-              Korca Mobile connects directly to this computer. To use it away from the same local
-              network, put your computer and phone on the same private overlay network, then
-              generate the QR code with that network address selected.
+              Korca Mobile은 이 컴퓨터에 직접 연결됩니다. 같은 로컬 네트워크가 아닌 곳에서
+              사용하려면, 컴퓨터와 휴대폰을 같은 private overlay 네트워크에 연결한 뒤 해당 네트워크
+              주소를 선택해 QR 코드를 생성하세요.
             </p>
             <ol className="list-decimal space-y-1 pl-4">
               <li>
-                Install{' '}
+                설치{' '}
                 <button
                   type="button"
                   onClick={() => void window.api.shell.openUrl(TAILSCALE_DOWNLOAD_URL)}
@@ -116,14 +115,13 @@ export function MobileNetworkInterfaceSection({
                   Tailscale
                   <ExternalLink className="size-3" />
                 </button>{' '}
-                on your computer and phone.
+                을 컴퓨터와 휴대폰에 설치하세요.
               </li>
-              <li>Sign in to the same tailnet on both devices.</li>
+              <li>두 기기에서 같은 tailnet에 로그인하세요.</li>
               <li>
-                In this Network Interface menu, choose the Tailscale address, usually a 100.x.y.z
-                IP.
+                이 네트워크 인터페이스 메뉴에서 보통 100.x.y.z 형식인 Tailscale 주소를 선택하세요.
               </li>
-              <li>Regenerate the QR code and scan it from the Korca mobile app.</li>
+              <li>QR 코드를 다시 생성하고 Korca 모바일 앱에서 스캔하세요.</li>
             </ol>
           </AccordionContent>
         </AccordionItem>

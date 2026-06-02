@@ -51,9 +51,7 @@ export function DashboardAgentChildDisclosure({
       onMouseDown={stopMouseDown}
       onKeyDown={stopKeyDown}
       className="-ml-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-      aria-label={`${childAgentsExpanded ? 'Hide' : 'Show'} ${childAgentCount} child ${
-        childAgentCount === 1 ? 'agent' : 'agents'
-      }`}
+      aria-label={`${childAgentsExpanded ? '숨기기' : '보이기'} ${childAgentCount}개 하위 에이전트`}
       aria-expanded={childAgentsExpanded}
     >
       <ChevronRight

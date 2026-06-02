@@ -18,57 +18,57 @@ const COLOR_OVERRIDE_GROUPS: {
   keys: { key: keyof TerminalColorOverrides; label: string; description: string }[]
 }[] = [
   {
-    label: 'Base',
+    label: '기본',
     keys: [
-      { key: 'foreground', label: 'Foreground', description: 'Main text color' },
-      { key: 'background', label: 'Background', description: 'Terminal background color' },
-      { key: 'cursor', label: 'Cursor', description: 'Cursor color' },
+      { key: 'foreground', label: '전경색', description: '기본 텍스트 색상' },
+      { key: 'background', label: '배경색', description: '터미널 배경색' },
+      { key: 'cursor', label: '커서', description: '커서 색상' },
       {
         key: 'cursorAccent',
-        label: 'Cursor Text',
-        description: 'Color of text under the cursor (block cursor)'
+        label: '커서 텍스트',
+        description: '블록 커서 아래 텍스트 색상'
       },
       {
         key: 'selectionBackground',
-        label: 'Selection Background',
-        description: 'Background color of selected text'
+        label: '선택 배경',
+        description: '선택한 텍스트의 배경색'
       },
       {
         key: 'selectionForeground',
-        label: 'Selection Foreground',
-        description: 'Text color of selected text'
+        label: '선택 텍스트',
+        description: '선택한 텍스트의 글자색'
       },
       {
         key: 'bold',
-        label: 'Bold Text',
-        description: 'Color for bold text. Falls back to the normal color if not set.'
+        label: '굵은 글씨',
+        description: '굵은 글씨 색상입니다. 설정하지 않으면 일반 색상을 사용합니다.'
       }
     ]
   },
   {
-    label: 'ANSI Normal',
+    label: 'ANSI 기본',
     keys: [
-      { key: 'black', label: 'Black', description: 'ANSI black color' },
-      { key: 'red', label: 'Red', description: 'ANSI red color' },
-      { key: 'green', label: 'Green', description: 'ANSI green color' },
-      { key: 'yellow', label: 'Yellow', description: 'ANSI yellow color' },
-      { key: 'blue', label: 'Blue', description: 'ANSI blue color' },
-      { key: 'magenta', label: 'Magenta', description: 'ANSI magenta color' },
-      { key: 'cyan', label: 'Cyan', description: 'ANSI cyan color' },
-      { key: 'white', label: 'White', description: 'ANSI white color' }
+      { key: 'black', label: '검정', description: 'ANSI 검정 색상' },
+      { key: 'red', label: '빨강', description: 'ANSI 빨강 색상' },
+      { key: 'green', label: '초록', description: 'ANSI 초록 색상' },
+      { key: 'yellow', label: '노랑', description: 'ANSI 노랑 색상' },
+      { key: 'blue', label: '파랑', description: 'ANSI 파랑 색상' },
+      { key: 'magenta', label: '마젠타', description: 'ANSI 마젠타 색상' },
+      { key: 'cyan', label: '시안', description: 'ANSI 시안 색상' },
+      { key: 'white', label: '흰색', description: 'ANSI 흰색 색상' }
     ]
   },
   {
-    label: 'ANSI Bright',
+    label: 'ANSI 밝은 색',
     keys: [
-      { key: 'brightBlack', label: 'Bright Black', description: 'ANSI bright black color' },
-      { key: 'brightRed', label: 'Bright Red', description: 'ANSI bright red color' },
-      { key: 'brightGreen', label: 'Bright Green', description: 'ANSI bright green color' },
-      { key: 'brightYellow', label: 'Bright Yellow', description: 'ANSI bright yellow color' },
-      { key: 'brightBlue', label: 'Bright Blue', description: 'ANSI bright blue color' },
-      { key: 'brightMagenta', label: 'Bright Magenta', description: 'ANSI bright magenta color' },
-      { key: 'brightCyan', label: 'Bright Cyan', description: 'ANSI bright cyan color' },
-      { key: 'brightWhite', label: 'Bright White', description: 'ANSI bright white color' }
+      { key: 'brightBlack', label: '밝은 검정', description: 'ANSI 밝은 검정 색상' },
+      { key: 'brightRed', label: '밝은 빨강', description: 'ANSI 밝은 빨강 색상' },
+      { key: 'brightGreen', label: '밝은 초록', description: 'ANSI 밝은 초록 색상' },
+      { key: 'brightYellow', label: '밝은 노랑', description: 'ANSI 밝은 노랑 색상' },
+      { key: 'brightBlue', label: '밝은 파랑', description: 'ANSI 밝은 파랑 색상' },
+      { key: 'brightMagenta', label: '밝은 마젠타', description: 'ANSI 밝은 마젠타 색상' },
+      { key: 'brightCyan', label: '밝은 시안', description: 'ANSI 밝은 시안 색상' },
+      { key: 'brightWhite', label: '밝은 흰색', description: 'ANSI 밝은 흰색 색상' }
     ]
   }
 ]
@@ -105,18 +105,18 @@ export function TerminalWindowSection({
   return (
     <section className="space-y-4">
       <div className="space-y-1">
-        <h3 className="text-sm font-semibold">Window</h3>
-        <p className="text-xs text-muted-foreground">Window appearance and background settings.</p>
+        <h3 className="text-sm font-semibold">창</h3>
+        <p className="text-xs text-muted-foreground">창 모양과 배경 설정입니다.</p>
       </div>
 
       <SearchableSetting
-        title="Background Opacity"
-        description="Controls the transparency of the terminal background."
+        title="배경 불투명도"
+        description="터미널 배경의 투명도를 조절합니다."
         keywords={['opacity', 'transparency', 'background', 'alpha']}
       >
         <NumberField
-          label="Background Opacity"
-          description="Controls the transparency of the terminal background. 1 is fully opaque, 0 is fully transparent."
+          label="배경 불투명도"
+          description="터미널 배경의 투명도를 조절합니다. 1은 완전 불투명, 0은 완전 투명입니다."
           value={settings.terminalBackgroundOpacity ?? 1}
           defaultValue={1}
           min={0}
@@ -130,14 +130,14 @@ export function TerminalWindowSection({
       </SearchableSetting>
 
       <SearchableSetting
-        title="Window Blur"
-        description="Apply background blur to the terminal window. Requires restart."
+        title="창 블러"
+        description="터미널 창에 배경 블러를 적용합니다. 다시 시작해야 합니다."
         keywords={['window', 'blur', 'background', 'transparency', 'vibrancy']}
         className="space-y-3 py-2"
       >
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-0.5">
-            <Label>Window Blur</Label>
+            <Label>창 블러</Label>
             <p className="text-xs text-muted-foreground">
               Apply background blur to the terminal window. Requires restart.
             </p>
@@ -162,10 +162,10 @@ export function TerminalWindowSection({
           <div className="flex items-center justify-between gap-3 rounded-md border border-yellow-500/50 bg-yellow-500/10 px-3 py-2.5">
             <div className="min-w-0 flex-1 space-y-0.5">
               <p className="text-sm font-medium text-yellow-700 dark:text-yellow-300">
-                Restart required
+                다시 시작 필요
               </p>
               <p className="text-xs text-muted-foreground">
-                Restart Korca to apply the window blur change.
+                창 블러 변경을 적용하려면 Korca를 다시 시작하세요.
               </p>
             </div>
             <Button
@@ -176,20 +176,20 @@ export function TerminalWindowSection({
               onClick={() => void handleRelaunch()}
             >
               <RotateCw className={`size-3 ${relaunchingBlur ? 'animate-spin' : ''}`} />
-              {relaunchingBlur ? 'Restarting…' : 'Restart now'}
+              {relaunchingBlur ? '다시 시작 중…' : '지금 다시 시작'}
             </Button>
           </div>
         ) : null}
       </SearchableSetting>
 
       <SearchableSetting
-        title="Horizontal Padding"
-        description="Horizontal padding around the terminal grid in pixels."
+        title="가로 여백"
+        description="터미널 그리드 주변의 가로 여백(픽셀)입니다."
         keywords={['padding', 'horizontal', 'spacing', 'margin']}
       >
         <NumberField
-          label="Horizontal Padding"
-          description="Horizontal padding around the terminal grid in pixels."
+          label="가로 여백"
+          description="터미널 그리드 주변의 가로 여백(픽셀)입니다."
           value={settings.terminalPaddingX ?? 4}
           defaultValue={4}
           min={0}
@@ -201,13 +201,13 @@ export function TerminalWindowSection({
       </SearchableSetting>
 
       <SearchableSetting
-        title="Vertical Padding"
-        description="Vertical padding around the terminal grid in pixels."
+        title="세로 여백"
+        description="터미널 그리드 주변의 세로 여백(픽셀)입니다."
         keywords={['padding', 'vertical', 'spacing', 'margin']}
       >
         <NumberField
-          label="Vertical Padding"
-          description="Vertical padding around the terminal grid in pixels."
+          label="세로 여백"
+          description="터미널 그리드 주변의 세로 여백(픽셀)입니다."
           value={settings.terminalPaddingY ?? 4}
           defaultValue={4}
           min={0}
@@ -219,13 +219,13 @@ export function TerminalWindowSection({
       </SearchableSetting>
 
       <SearchableSetting
-        title="Hide Mouse While Typing"
-        description="Hide the mouse cursor when typing in the terminal."
+        title="입력 중 마우스 숨기기"
+        description="터미널에 입력할 때 마우스 커서를 숨깁니다."
         keywords={['mouse', 'hide', 'typing', 'cursor']}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Hide Mouse While Typing</Label>
+          <Label>입력 중 마우스 숨기기</Label>
           <p className="text-xs text-muted-foreground">
             Hide the mouse cursor when typing in the terminal.
           </p>
@@ -253,8 +253,8 @@ export function TerminalWindowSection({
       </SearchableSetting>
 
       <SearchableSetting
-        title="Color Overrides"
-        description="Override individual terminal colors."
+        title="색상 재정의"
+        description="터미널의 개별 색상을 덮어씁니다."
         keywords={['color', 'override', 'ansi', 'palette', 'theme']}
         className="space-y-3"
       >
@@ -266,7 +266,7 @@ export function TerminalWindowSection({
             <span className={`transition-transform ${colorOverridesExpanded ? 'rotate-90' : ''}`}>
               ▶
             </span>
-            Color Overrides
+            색상 재정의
           </button>
           <div
             className={`grid overflow-hidden transition-all duration-300 ease-out ${

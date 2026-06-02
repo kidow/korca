@@ -97,7 +97,7 @@ export function GitHubRow(props: { compact?: boolean } = {}): React.JSX.Element 
             command="gh auth login"
             title="GitHub 설정"
             ariaLabel="GitHub 로그인 명령"
-            description="Enter를 눌러 GitHub CLI 인증을 실행하세요. 브라우저 또는 기기 흐름이 끝나면 GitHub를 다시 확인하세요."
+            description="엔터를 눌러 GitHub CLI 인증을 실행하세요. 브라우저 또는 기기 흐름이 끝나면 GitHub를 다시 확인하세요."
           />
         </div>
       ) : null}

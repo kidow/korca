@@ -56,7 +56,7 @@ export function SshDestructiveActionDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isBusy}>
-            Cancel
+            취소
           </Button>
           <Button variant="destructive" onClick={onConfirm} disabled={isBusy} className="gap-1.5">
             {isBusy ? <Loader2 className="size-3 animate-spin" /> : null}

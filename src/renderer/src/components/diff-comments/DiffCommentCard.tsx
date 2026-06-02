@@ -158,15 +158,15 @@ export function DiffCommentCard({
                   <button
                     type="button"
                     className="korca-diff-comment-pill-btn"
-                    title="Open in browser"
-                    aria-label="Open in browser"
+                    title="브라우저에서 열기"
+                    aria-label="브라우저에서 열기"
                     onClick={(ev) => {
                       ev.preventDefault()
                       ev.stopPropagation()
                       void window.api.shell.openUrl(url)
                     }}
                   >
-                    Open
+                    열기
                   </button>
                   {(onSubmitEdit || onDelete) && (
                     <span className="korca-diff-comment-pill-divider" />
@@ -178,8 +178,8 @@ export function DiffCommentCard({
                   <button
                     type="button"
                     className="korca-diff-comment-pill-btn"
-                    title="Edit note"
-                    aria-label="Edit note"
+                    title="노트 수정"
+                    aria-label="노트 수정"
                     onClick={(ev) => {
                       ev.preventDefault()
                       ev.stopPropagation()
@@ -195,8 +195,8 @@ export function DiffCommentCard({
                 <button
                   type="button"
                   className="korca-diff-comment-pill-btn korca-diff-comment-pill-btn-danger"
-                  title="Delete note"
-                  aria-label="Delete note"
+                  title="메모 삭제"
+                  aria-label="메모 삭제"
                   onClick={(ev) => {
                     ev.preventDefault()
                     ev.stopPropagation()
@@ -250,7 +250,7 @@ export function DiffCommentCard({
             />
             <div className="korca-diff-comment-popover-footer">
               <Button variant="ghost" size="sm" onClick={handleCancel} disabled={submitting}>
-                Cancel
+                취소
               </Button>
               <Button
                 size="sm"

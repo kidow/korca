@@ -102,7 +102,7 @@ export function BrowserToolbarMenu({
     onDestroyWebview()
     switchBrowserTabProfile(workspaceId, pendingSwitchProfileId)
     const profile = browserSessionProfiles.find((p) => p.id === targetId)
-    toast.success(`Switched to ${profile?.label ?? 'Default'} profile`)
+    toast.success(`${profile?.label ?? '기본'} 프로필로 전환했습니다`)
     setPendingSwitchProfileId(undefined)
   }
 
@@ -117,7 +117,7 @@ export function BrowserToolbarMenu({
       const profile = await createBrowserSessionProfile('isolated', trimmed)
       if (!profile) {
         if (mountedRef.current) {
-          toast.error('Failed to create profile.')
+          toast.error('프로필을 만들지 못했습니다.')
         }
         return
       }
@@ -131,7 +131,7 @@ export function BrowserToolbarMenu({
 
       onDestroyWebview()
       switchBrowserTabProfile(workspaceId, profile.id)
-      toast.success(`Created and switched to ${profile.label} profile`)
+      toast.success(`${profile.label} 프로필을 만들고 전환했습니다`)
     } finally {
       if (mountedRef.current) {
         setIsCreatingProfile(false)
@@ -147,7 +147,7 @@ export function BrowserToolbarMenu({
     if (result.ok) {
       const browser = detectedBrowsers.find((b) => b.family === browserFamily)
       toast.success(
-        `Imported ${result.summary.importedCookies} cookies from ${browser?.label ?? browserFamily}${browserProfile ? ` (${browserProfile})` : ''}.`
+        `${browser?.label ?? browserFamily}${browserProfile ? ` (${browserProfile})` : ''}에서 ${result.summary.importedCookies}개의 쿠키를 가져왔습니다.`
       )
     } else {
       toast.error(result.reason)
@@ -157,7 +157,7 @@ export function BrowserToolbarMenu({
   const handleImportFromFile = async (): Promise<void> => {
     const result = await importCookiesToProfile(effectiveProfileId)
     if (result.ok) {
-      toast.success(`Imported ${result.summary.importedCookies} cookies from file.`)
+      toast.success(`파일에서 ${result.summary.importedCookies}개의 쿠키를 가져왔습니다.`)
     } else if (result.reason !== 'canceled') {
       toast.error(result.reason)
     }
@@ -167,7 +167,7 @@ export function BrowserToolbarMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" variant="ghost" className="h-8 w-8" title="Browser menu">
+          <Button size="icon" variant="ghost" className="h-8 w-8" title="브라우저 메뉴">
             <Ellipsis className="size-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -197,7 +197,7 @@ export function BrowserToolbarMenu({
 
           <DropdownMenuItem onSelect={() => setNewProfileDialogOpen(true)}>
             <Plus className="mr-2 size-3.5" />
-            New Profile…
+            새 프로필…
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -213,14 +213,14 @@ export function BrowserToolbarMenu({
           >
             <DropdownMenuSubTrigger disabled={browserSessionImportState?.status === 'importing'}>
               <Import className="mr-2 size-3.5" />
-              Import Cookies
+              쿠키 가져오기
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 {detectedBrowsers.map((browser) =>
                   browser.profiles.length > 1 ? (
                     <DropdownMenuSub key={browser.family}>
-                      <DropdownMenuSubTrigger>From {browser.label}</DropdownMenuSubTrigger>
+                      <DropdownMenuSubTrigger>{browser.label}에서</DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
                         <DropdownMenuSubContent>
                           {browser.profiles.map((profile) => (
@@ -241,13 +241,13 @@ export function BrowserToolbarMenu({
                       key={browser.family}
                       onSelect={() => void handleImportFromBrowser(browser.family)}
                     >
-                      From {browser.label}
+                      {browser.label}에서
                     </DropdownMenuItem>
                   )
                 )}
                 {detectedBrowsers.length > 0 && <DropdownMenuSeparator />}
                 <DropdownMenuItem onSelect={() => void handleImportFromFile()}>
-                  From File…
+                  파일에서…
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
@@ -258,7 +258,7 @@ export function BrowserToolbarMenu({
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <Monitor className="mr-2 size-3.5" />
-              Viewport Size
+              뷰포트 크기
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
@@ -273,7 +273,7 @@ export function BrowserToolbarMenu({
                     applyViewportPreset(v === 'default' ? null : (v as BrowserViewportPresetId))
                   }
                 >
-                  <DropdownMenuRadioItem value="default">Default</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="default">기본값</DropdownMenuRadioItem>
                   <DropdownMenuSeparator />
                   {BROWSER_VIEWPORT_PRESETS.map((preset) => (
                     <DropdownMenuRadioItem key={preset.id} value={preset.id}>
@@ -294,7 +294,7 @@ export function BrowserToolbarMenu({
             }}
           >
             <Settings className="mr-2 size-3.5" />
-            Browser Settings…
+            브라우저 설정…
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -309,9 +309,9 @@ export function BrowserToolbarMenu({
       >
         <DialogContent className="sm:max-w-sm" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="text-base">Switch Profile</DialogTitle>
+            <DialogTitle className="text-base">프로필 전환</DialogTitle>
             <DialogDescription className="text-xs">
-              Switching profiles will reload this page. Any unsaved form data will be lost.
+              프로필을 전환하면 이 페이지가 다시 로드됩니다. 저장되지 않은 폼 데이터는 사라집니다.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -320,10 +320,10 @@ export function BrowserToolbarMenu({
               size="sm"
               onClick={() => setPendingSwitchProfileId(undefined)}
             >
-              Cancel
+              취소
             </Button>
             <Button size="sm" onClick={confirmSwitchProfile}>
-              Switch
+              전환
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -332,7 +332,7 @@ export function BrowserToolbarMenu({
       <Dialog open={newProfileDialogOpen} onOpenChange={setNewProfileDialogOpen}>
         <DialogContent className="sm:max-w-sm" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="text-base">New Browser Profile</DialogTitle>
+            <DialogTitle className="text-base">새 브라우저 프로필</DialogTitle>
           </DialogHeader>
           <form
             onSubmit={(e) => {
@@ -343,7 +343,7 @@ export function BrowserToolbarMenu({
             <Input
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
-              placeholder="Profile name"
+              placeholder="프로필 이름"
               autoFocus
               maxLength={50}
               className="mb-4"
@@ -358,14 +358,14 @@ export function BrowserToolbarMenu({
                   setNewProfileName('')
                 }}
               >
-                Cancel
+                취소
               </Button>
               <Button
                 type="submit"
                 size="sm"
                 disabled={!newProfileName.trim() || isCreatingProfile}
               >
-                {isCreatingProfile ? 'Creating…' : 'Create'}
+                {isCreatingProfile ? '생성 중…' : '생성'}
               </Button>
             </DialogFooter>
           </form>

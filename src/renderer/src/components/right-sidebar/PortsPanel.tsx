@@ -183,8 +183,8 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
       })
       .catch((error) => {
         const message = error instanceof Error ? error.message : String(error)
-        toast.error('Failed to refresh ports', {
-          description: message || 'Workspace port scan failed.'
+        toast.error('포트를 새로고침하지 못했습니다', {
+          description: message || '워크스페이스 포트 검사가 실패했습니다.'
         })
       })
       .finally(() => {
@@ -215,14 +215,14 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
         toast.error(result.reason)
         return
       }
-      toast.success(`Stopped process on :${port.port}`)
+      toast.success(`:${port.port}에서 프로세스를 중지했습니다`)
       const refreshResult = await refreshWorkspacePortScanAfterStop({
         runtimeTarget,
         setWorkspacePortScan,
         setWorkspacePortScanRefreshing
       })
       if (!refreshResult.ok) {
-        toast.error('Failed to refresh ports', {
+        toast.error('포트를 새로고침하지 못했습니다', {
           description: refreshResult.reason
         })
       }
@@ -241,7 +241,7 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
         openInKorcaBrowser: shouldOpenWorkspacePortInKorcaBrowser(settings)
       })
       if (!result.ok) {
-        toast.error('Failed to open browser', { description: result.reason })
+        toast.error('브라우저를 열지 못했습니다', { description: result.reason })
       }
     },
     [activeWorktree?.id, createBrowserTab, runtimeTarget, setRemoteBrowserPageHandle, settings]
@@ -256,7 +256,7 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
     return (
       <div className="flex flex-col items-center justify-center h-full px-4 text-center text-muted-foreground">
         <Server size={32} className="mb-3 opacity-50" />
-        <p className="text-sm">No workspace selected</p>
+        <p className="text-sm">선택된 워크스페이스가 없습니다</p>
       </div>
     )
   }
@@ -265,7 +265,7 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
     <div className="flex flex-col h-full overflow-y-auto scrollbar-sleek">
       <div className="flex items-center justify-between px-3 py-2 border-b border-border">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Ports
+          포트
         </span>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -276,20 +276,21 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
               className="text-muted-foreground hover:text-foreground"
               onClick={() => void refresh()}
               disabled={refreshing}
-              aria-label="Refresh Ports"
+              aria-label="포트 새로고침"
             >
               <RefreshCw size={14} className={cn(refreshing && 'animate-spin')} />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top" sideOffset={4}>
-            Refresh Ports
+            포트 새로고침
           </TooltipContent>
         </Tooltip>
       </div>
 
       {displayScan?.unavailableReason && (
         <div className="px-3 py-2 text-xs text-muted-foreground border-b border-border">
-          Port scan unavailable on {displayScan.platform}: {displayScan.unavailableReason}
+          {displayScan.platform}에서는 포트 검사를 사용할 수 없습니다:{' '}
+          {displayScan.unavailableReason}
         </div>
       )}
 
@@ -297,9 +298,9 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
         <>
           <LocalPortSection
             id="active"
-            title="Active Workspace"
+            title="활성 워크스페이스"
             ports={activePorts}
-            emptyText={refreshing && !displayScan ? 'Scanning...' : 'No ports detected'}
+            emptyText={refreshing && !displayScan ? '검사 중...' : '감지된 포트가 없습니다'}
             collapsed={collapsedSections.active ?? false}
             onToggle={() => toggleSection('active')}
             onStopPort={(port) => void handleStopPort(port)}
@@ -308,7 +309,7 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
           />
           <LocalPortSection
             id="other"
-            title="Other Workspaces"
+            title="다른 워크스페이스"
             ports={otherWorkspacePorts}
             collapsed={collapsedSections.other ?? false}
             onToggle={() => toggleSection('other')}
@@ -318,7 +319,7 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
           />
           <LocalPortSection
             id="external"
-            title="External"
+            title="외부"
             ports={externalPorts}
             collapsed={collapsedSections.external ?? false}
             onToggle={() => toggleSection('external')}
@@ -336,7 +337,7 @@ function LocalWorkspacePortsPanel({ isVisible }: { isVisible: boolean }): React.
         externalPorts.length === 0 && (
           <div className="flex flex-col items-center justify-center flex-1 px-4 text-center text-muted-foreground">
             <Server size={32} className="mb-3 opacity-50" />
-            <p className="text-sm">No local ports detected</p>
+            <p className="text-sm">감지된 로컬 포트가 없습니다</p>
           </div>
         )}
 
@@ -458,14 +459,14 @@ function LocalPortRow({
     [onStop, port]
   )
 
-  const processLabel = port.processName ?? (port.pid ? `PID ${port.pid}` : 'Unknown process')
+  const processLabel = port.processName ?? (port.pid ? `PID ${port.pid}` : '알 수 없는 프로세스')
   const address = addressForPort(port)
   const ownerLabel =
     port.kind === 'workspace'
       ? port.owner.displayName
       : port.kind === 'container'
-        ? 'Container or forwarded service'
-        : 'Unassigned'
+        ? '컨테이너 또는 전달된 서비스'
+        : '미지정'
   const confidenceLabel =
     port.kind === 'workspace' ? (port.owner.confidence === 'cwd' ? 'cwd' : 'command') : null
   const canStopProcess =
@@ -478,7 +479,7 @@ function LocalPortRow({
           <div
             className="flex min-w-0 flex-1 items-center gap-2 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             tabIndex={0}
-            aria-label={`Port ${port.port} menu`}
+            aria-label={`포트 ${port.port} 메뉴`}
           >
             <div className="flex size-5 shrink-0 items-center justify-center text-muted-foreground">
               {port.kind === 'container' ? <Box size={13} /> : <Server size={13} />}
@@ -510,13 +511,13 @@ function LocalPortRow({
                   size="icon-xs"
                   className="text-muted-foreground hover:text-foreground"
                   onClick={handleOpenBrowserButtonClick}
-                  aria-label="Open in Browser"
+                  aria-label="브라우저에서 열기"
                 >
                   <ExternalLink size={13} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Open in Browser
+                브라우저에서 열기
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -527,13 +528,13 @@ function LocalPortRow({
                   size="icon-xs"
                   className="text-muted-foreground hover:text-foreground"
                   onClick={handleCopyButtonClick}
-                  aria-label={`Copy ${address}`}
+                  aria-label={`${address} 복사`}
                 >
                   <Copy size={13} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Copy {address}
+                {address} 복사
               </TooltipContent>
             </Tooltip>
             {canStopProcess && (
@@ -545,13 +546,13 @@ function LocalPortRow({
                     size="icon-xs"
                     className="text-muted-foreground hover:text-destructive"
                     onClick={handleStopButtonClick}
-                    aria-label="Stop Process"
+                    aria-label="프로세스 중지"
                   >
                     <Trash2 size={13} />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top" sideOffset={4}>
-                  Stop Process
+                  프로세스 중지
                 </TooltipContent>
               </Tooltip>
             )}
@@ -564,11 +565,11 @@ function LocalPortRow({
         >{`:${port.port}`}</ContextMenuLabel>
         <ContextMenuItem className={LOCAL_PORT_MENU_ITEM_CLASS} onSelect={handleOpenBrowser}>
           <ExternalLink size={13} />
-          Open in Browser
+          브라우저에서 열기
         </ContextMenuItem>
         <ContextMenuItem className={LOCAL_PORT_MENU_ITEM_CLASS} onSelect={handleCopy}>
           <Copy size={13} />
-          Copy Address
+          주소 복사
         </ContextMenuItem>
         <ContextMenuItem
           className={LOCAL_PORT_MENU_ITEM_CLASS}
@@ -577,14 +578,14 @@ function LocalPortRow({
           }}
         >
           <Copy size={13} />
-          Copy Details
+          세부정보 복사
         </ContextMenuItem>
         <ContextMenuItem
           className={LOCAL_PORT_MENU_ITEM_CLASS}
           onSelect={() => onShowDetails(port)}
         >
           <Info size={13} />
-          Show Details
+          세부정보 보기
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem
@@ -594,7 +595,7 @@ function LocalPortRow({
           onSelect={() => onStop(port)}
         >
           <Trash2 size={13} />
-          Stop Process
+          프로세스 중지
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
@@ -612,30 +613,32 @@ function LocalPortDetailsDialog({
     <Dialog open={Boolean(port)} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{port ? `Port :${port.port}` : 'Port'}</DialogTitle>
+          <DialogTitle>{port ? `포트 :${port.port}` : '포트'}</DialogTitle>
           <DialogDescription>
-            {port ? `${port.processName ?? 'Unknown process'} · ${addressForPort(port)}` : ''}
+            {port ? `${port.processName ?? '알 수 없는 프로세스'} · ${addressForPort(port)}` : ''}
           </DialogDescription>
         </DialogHeader>
         {port && (
           <dl className="grid grid-cols-[88px_1fr] gap-x-3 gap-y-2 text-xs">
-            <dt className="text-muted-foreground">Address</dt>
+            <dt className="text-muted-foreground">주소</dt>
             <dd className="min-w-0 break-all text-foreground">{addressForPort(port)}</dd>
-            <dt className="text-muted-foreground">Bind</dt>
+            <dt className="text-muted-foreground">바인드</dt>
             <dd className="min-w-0 break-all text-foreground">{`${port.bindHost}:${port.port}`}</dd>
-            <dt className="text-muted-foreground">Kind</dt>
+            <dt className="text-muted-foreground">종류</dt>
             <dd className="text-foreground">{port.kind}</dd>
-            <dt className="text-muted-foreground">Protocol</dt>
+            <dt className="text-muted-foreground">프로토콜</dt>
             <dd className="text-foreground">{port.protocol}</dd>
-            <dt className="text-muted-foreground">Process</dt>
-            <dd className="min-w-0 break-all text-foreground">{port.processName ?? 'Unknown'}</dd>
-            <dt className="text-muted-foreground">PID</dt>
-            <dd className="text-foreground">{port.pid ?? 'Unknown'}</dd>
+            <dt className="text-muted-foreground">프로세스</dt>
+            <dd className="min-w-0 break-all text-foreground">
+              {port.processName ?? '알 수 없음'}
+            </dd>
+            <dt className="text-muted-foreground">프로세스 ID</dt>
+            <dd className="text-foreground">{port.pid ?? '알 수 없음'}</dd>
             {port.kind === 'workspace' && (
               <>
-                <dt className="text-muted-foreground">Workspace</dt>
+                <dt className="text-muted-foreground">워크스페이스</dt>
                 <dd className="min-w-0 break-all text-foreground">{port.owner.displayName}</dd>
-                <dt className="text-muted-foreground">Evidence</dt>
+                <dt className="text-muted-foreground">근거</dt>
                 <dd className="text-foreground">{port.owner.confidence}</dd>
               </>
             )}
@@ -717,7 +720,7 @@ function SshPortsPanel(): React.JSX.Element {
         return
       }
       if (!activeWorktree?.id) {
-        toast.error('No workspace selected for the browser.')
+        toast.error('브라우저용 워크스페이스가 선택되지 않았습니다.')
         return
       }
       createBrowserTab(activeWorktree.id, url, {
@@ -735,8 +738,8 @@ function SshPortsPanel(): React.JSX.Element {
     return (
       <div className="flex flex-col items-center justify-center h-full px-4 text-center text-muted-foreground">
         <Unplug size={32} className="mb-3 opacity-50" />
-        <p className="text-sm font-medium">SSH connection lost</p>
-        <p className="text-xs mt-1">Reconnecting...</p>
+        <p className="text-sm font-medium">SSH 연결이 끊겼습니다</p>
+        <p className="text-xs mt-1">다시 연결하는 중...</p>
       </div>
     )
   }
@@ -746,7 +749,7 @@ function SshPortsPanel(): React.JSX.Element {
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-border">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Ports
+          포트
         </span>
         <button
           type="button"
@@ -756,7 +759,7 @@ function SshPortsPanel(): React.JSX.Element {
           }
         >
           <Plus size={14} />
-          Add
+          추가
         </button>
       </div>
 
@@ -826,9 +829,9 @@ function SshPortsPanel(): React.JSX.Element {
       {/* Empty state */}
       {allForwards.length === 0 && allDetected.length === 0 && (
         <div className="flex flex-col items-center justify-center flex-1 px-4 text-center text-muted-foreground">
-          <p className="text-sm">No forwarded ports</p>
+          <p className="text-sm">전달된 포트가 없습니다</p>
           <p className="text-xs mt-1 mb-3">
-            Forward a port to access remote services on your local machine.
+            원격 서비스를 로컬 컴퓨터에서 사용하려면 포트를 전달하세요.
           </p>
           <button
             type="button"
@@ -840,7 +843,7 @@ function SshPortsPanel(): React.JSX.Element {
               })
             }
           >
-            Forward a Port
+            포트 전달
           </button>
         </div>
       )}
@@ -947,7 +950,7 @@ function ForwardedPortRow({
         </div>
         {advertisedBrowserUrl && (
           <div className="text-[11px] text-muted-foreground/70 truncate">
-            opens {advertisedBrowserUrl}
+            {advertisedBrowserUrl}을 엽니다
           </div>
         )}
       </div>
@@ -957,7 +960,9 @@ function ForwardedPortRow({
           className="p-1 rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
           onClick={handleOpenBrowserButtonClick}
           title={
-            advertisedBrowserUrl ? `Open ${advertisedBrowserUrl} in Browser` : 'Open in Browser'
+            advertisedBrowserUrl
+              ? `${advertisedBrowserUrl}을 브라우저에서 열기`
+              : '브라우저에서 열기'
           }
         >
           <ExternalLink size={13} />
@@ -966,7 +971,7 @@ function ForwardedPortRow({
           type="button"
           className="p-1 rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
           onClick={handleCopyButtonClick}
-          title={`Copy ${forwardedAddress}`}
+          title={`${forwardedAddress} 복사`}
         >
           <Copy size={13} />
         </button>
@@ -974,7 +979,7 @@ function ForwardedPortRow({
           type="button"
           className="p-1 rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
           onClick={handleEditButtonClick}
-          title="Edit"
+          title="수정"
         >
           <Pencil size={13} />
         </button>
@@ -986,7 +991,7 @@ function ForwardedPortRow({
           )}
           onClick={handleRemoveButtonClick}
           disabled={removing}
-          title="Remove"
+          title="삭제"
         >
           <Trash2 size={13} />
         </button>
@@ -1023,7 +1028,7 @@ function DetectedPortRow({
         className="text-[11px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity bg-accent hover:bg-accent/80 text-foreground"
         onClick={onForward}
       >
-        Forward
+        전달
       </button>
     </div>
   )
@@ -1097,13 +1102,9 @@ function PortForwardDialog({
     >
       <DialogContent showCloseButton={false} className="max-w-[340px]">
         <DialogHeader>
-          <DialogTitle className="text-sm">
-            {isEdit ? 'Edit Port Forward' : 'Forward a Port'}
-          </DialogTitle>
+          <DialogTitle className="text-sm">{isEdit ? '포트 전달 수정' : '포트 전달'}</DialogTitle>
           <DialogDescription className="text-xs">
-            {isEdit
-              ? 'Update the port forwarding configuration.'
-              : 'Forward a remote port to your local machine.'}
+            {isEdit ? '포트 전달 구성을 업데이트합니다.' : '원격 포트를 로컬 컴퓨터로 전달합니다.'}
           </DialogDescription>
         </DialogHeader>
         {isOpen && (
@@ -1209,7 +1210,7 @@ function PortForwardForm({
     <form onSubmit={handleSubmit} className="space-y-3">
       <div className="space-y-2">
         <label className="block">
-          <span className="text-[11px] text-muted-foreground">Remote Port</span>
+          <span className="text-[11px] text-muted-foreground">원격 포트</span>
           <input
             type="text"
             inputMode="numeric"
@@ -1232,7 +1233,7 @@ function PortForwardForm({
         </label>
 
         <label className="block">
-          <span className="text-[11px] text-muted-foreground">Local Port</span>
+          <span className="text-[11px] text-muted-foreground">로컬 포트</span>
           <input
             type="text"
             inputMode="numeric"
@@ -1244,7 +1245,7 @@ function PortForwardForm({
         </label>
 
         <label className="block">
-          <span className="text-[11px] text-muted-foreground">Remote Host</span>
+          <span className="text-[11px] text-muted-foreground">원격 호스트</span>
           <input
             type="text"
             value={remoteHost}
@@ -1255,7 +1256,7 @@ function PortForwardForm({
         </label>
 
         <label className="block">
-          <span className="text-[11px] text-muted-foreground">Label (optional)</span>
+          <span className="text-[11px] text-muted-foreground">레이블(선택 사항)</span>
           <input
             type="text"
             value={label}
@@ -1270,7 +1271,7 @@ function PortForwardForm({
 
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" size="sm" onClick={onClose}>
-          Cancel
+          취소
         </Button>
         <Button type="submit" size="sm" disabled={submitting || !remotePort}>
           {submitting
@@ -1278,8 +1279,8 @@ function PortForwardForm({
               ? 'Saving...'
               : 'Forwarding...'
             : mode === 'edit'
-              ? 'Save'
-              : 'Forward'}
+              ? '저장'
+              : '전달'}
         </Button>
       </div>
     </form>

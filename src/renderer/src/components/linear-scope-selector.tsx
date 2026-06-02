@@ -68,7 +68,7 @@ function summarizeTeamKeys(
 ): string {
   const selectedTeams = teams.filter((team) => selectedTeamIds.has(team.id))
   if (selectedTeams.length === 0) {
-    return 'All teams'
+    return '전체 팀'
   }
 
   if (options.activeAllWorkspaces && options.multipleWorkspaces) {
@@ -102,7 +102,7 @@ export function getLinearScopeTriggerLabel({
     teams.length > 0 && teams.every((team) => selectedTeamIds.has(team.id))
   const teamLabel =
     teamSelectionIsStickyAll || selectedTeamIds.size === 0 || allVisibleTeamsSelected
-      ? 'All teams'
+      ? '전체 팀'
       : summarizeTeamKeys(teams, selectedTeamIds, {
           activeAllWorkspaces,
           multipleWorkspaces
@@ -112,7 +112,7 @@ export function getLinearScopeTriggerLabel({
     return teamLabel
   }
   if (activeAllWorkspaces) {
-    return teamLabel === 'All teams' ? 'All workspaces' : `All workspaces / ${teamLabel}`
+    return teamLabel === '전체 팀' ? '전체 작업 공간' : `전체 작업 공간 / ${teamLabel}`
   }
   return `${selectedWorkspace?.organizationName ?? 'Linear'} / ${teamLabel}`
 }
@@ -229,7 +229,7 @@ export function LinearScopeSelector({
         <Command shouldFilter={false} value={commandValue} onValueChange={setCommandValue}>
           <CommandInput
             autoFocus
-            placeholder="Search teams..."
+            placeholder="팀 검색..."
             value={query}
             onValueChange={setQuery}
             className="text-xs"
@@ -238,7 +238,7 @@ export function LinearScopeSelector({
             {workspaces.length > 1 ? (
               <div className="border-b border-border py-1">
                 <div className="px-3 pb-1 pt-1 text-[11px] font-medium uppercase text-muted-foreground">
-                  Workspace
+                  작업 공간
                 </div>
                 <CommandItem
                   value="workspace:all"
@@ -254,7 +254,7 @@ export function LinearScopeSelector({
                       selectedWorkspaceId === 'all' ? 'opacity-70' : 'opacity-0'
                     )}
                   />
-                  <span>All workspaces</span>
+                  <span>전체 작업 공간</span>
                 </CommandItem>
                 {workspaces.map((workspace) => (
                   <CommandItem
@@ -279,7 +279,7 @@ export function LinearScopeSelector({
             ) : null}
             <div className="border-b border-border py-1">
               <div className="px-3 pb-1 pt-1 text-[11px] font-medium uppercase text-muted-foreground">
-                Teams
+                팀
               </div>
               <CommandItem
                 value="teams:all"
@@ -292,7 +292,7 @@ export function LinearScopeSelector({
                     allTeamsSelected || teamSelectionIsStickyAll ? 'opacity-70' : 'opacity-0'
                   )}
                 />
-                <span>All teams</span>
+                <span>전체 팀</span>
               </CommandItem>
             </div>
             {filteredTeams.length > 0 ? (
@@ -333,8 +333,8 @@ export function LinearScopeSelector({
             ) : (
               <div className="px-3 py-5 text-xs leading-relaxed text-muted-foreground">
                 {query.trim()
-                  ? 'No fetched teams match your search.'
-                  : 'No teams were fetched. Access can depend on key scope, private-team membership, archived teams, permissions, or a fetch failure.'}
+                  ? '검색과 일치하는 팀이 없습니다.'
+                  : '팀을 불러오지 못했습니다. 키 범위, 비공개 팀 멤버십, 보관된 팀, 권한, 또는 불러오기 실패에 따라 접근 가능 여부가 달라질 수 있습니다.'}
               </div>
             )}
           </CommandList>
@@ -349,7 +349,7 @@ export function LinearScopeSelector({
             className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-xs text-foreground transition hover:bg-accent hover:text-accent-foreground"
           >
             <KeyRound className="size-3.5 text-muted-foreground" />
-            <span>Add team access</span>
+            <span>팀 접근 추가</span>
           </button>
         </div>
       </PopoverContent>

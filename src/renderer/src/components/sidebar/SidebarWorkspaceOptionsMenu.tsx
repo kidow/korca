@@ -28,47 +28,47 @@ type SidebarWorkspaceOptionsMenuProps = {
 }
 
 const GROUP_BY_OPTIONS = [
-  { id: 'none', label: 'None' },
-  { id: 'workspace-status', label: 'Status' },
+  { id: 'none', label: '없음' },
+  { id: 'workspace-status', label: '상태' },
   { id: 'pr-status', label: 'PR' },
-  { id: 'repo', label: 'Project' }
+  { id: 'repo', label: '프로젝트' }
 ] as const
 
 const CARD_LAYOUT_OPTIONS = [
-  { id: 'detailed', label: 'Detailed' },
-  { id: 'compact', label: 'Compact' }
+  { id: 'detailed', label: '상세' },
+  { id: 'compact', label: '간단' }
 ] as const
 
 const PROPERTY_OPTIONS: { id: WorktreeCardProperty; label: string }[] = [
-  { id: 'issue', label: 'GitHub ticket' },
-  { id: 'linear-issue', label: 'Linear issue' },
-  { id: 'pr', label: 'PR/MR link' },
-  { id: 'comment', label: 'Notes' },
-  { id: 'ports', label: 'Ports' },
+  { id: 'issue', label: 'GitHub 티켓' },
+  { id: 'linear-issue', label: 'Linear 이슈' },
+  { id: 'pr', label: 'PR/MR 링크' },
+  { id: 'comment', label: '메모' },
+  { id: 'ports', label: '포트' },
   // Why: toggles the inline "Agent activity" list rendered below each
   // workspace card body (see WorktreeCard -> WorktreeCardAgents). Off hides
   // the list; there is no alternate surface.
-  { id: 'inline-agents', label: 'Agent activity' }
+  { id: 'inline-agents', label: '에이전트 활동' }
 ]
 
 const AGENT_ACTIVITY_DISPLAY_OPTIONS: { id: AgentActivityDisplayMode; label: string }[] = [
-  { id: 'compact', label: 'Compact' },
-  { id: 'full', label: 'Full list' }
+  { id: 'compact', label: '간단' },
+  { id: 'full', label: '전체 목록' }
 ]
 
 const SORT_OPTIONS = [
-  { id: 'name', label: 'Name', description: null },
+  { id: 'name', label: '이름', description: null },
   {
     id: 'smart',
-    label: 'Agent Activity',
-    description: 'Agents that need attention, then most recent activity.'
+    label: '에이전트 활동',
+    description: '주의가 필요한 에이전트, 그다음 최근 활동 순.'
   },
-  { id: 'recent', label: 'Recent', description: null },
-  { id: 'repo', label: 'Project', description: null },
+  { id: 'recent', label: '최근', description: null },
+  { id: 'repo', label: '프로젝트', description: null },
   {
     id: 'manual',
-    label: 'Manual',
-    description: 'Drag workspaces to arrange them within each group.'
+    label: '수동',
+    description: '작업 공간을 드래그해 그룹 안에서 정렬합니다.'
   }
 ] as const
 
@@ -117,8 +117,8 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
   const hasAnyFilter = hasSleepingFilter || hideDefaultBranchWorkspace || hasRepoFilter
   const activeFilterCount =
     (hasSleepingFilter ? 1 : 0) + (hideDefaultBranchWorkspace ? 1 : 0) + selectedCount
-  const activeFilterLabel = `${activeFilterCount} ${activeFilterCount === 1 ? 'filter' : 'filters'}`
-  const sortLabel = SORT_OPTIONS.find((opt) => opt.id === sortBy)?.label ?? 'Sort'
+  const activeFilterLabel = `${activeFilterCount}개 필터`
+  const sortLabel = SORT_OPTIONS.find((opt) => opt.id === sortBy)?.label ?? '정렬'
   const cardLayout = settings?.experimentalCompactWorktreeCards ? 'compact' : 'detailed'
   const cardLayoutLabel =
     CARD_LAYOUT_OPTIONS.find((opt) => opt.id === cardLayout)?.label ?? 'Detailed'
@@ -137,9 +137,7 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
               type="button"
               className="relative text-muted-foreground"
               aria-label={
-                hasAnyFilter
-                  ? `Workspace options (${activeFilterLabel} active)`
-                  : 'Workspace options'
+                hasAnyFilter ? `작업 공간 옵션 (${activeFilterLabel} 활성)` : '작업 공간 옵션'
               }
               data-workspace-board-preserve-open={preserveWorkspaceBoardOpen ? '' : undefined}
             >
@@ -158,7 +156,7 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
           </DropdownMenuTrigger>
         </TooltipTrigger>
         <TooltipContent side="bottom" sideOffset={6}>
-          {hasAnyFilter ? `Workspace options (${activeFilterLabel})` : 'Workspace options'}
+          {hasAnyFilter ? `작업 공간 옵션 (${activeFilterLabel})` : '작업 공간 옵션'}
         </TooltipContent>
       </Tooltip>
       <DropdownMenuContent
@@ -168,7 +166,7 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
         className="w-72 pb-2"
         data-workspace-board-preserve-open={preserveWorkspaceBoardOpen ? '' : undefined}
       >
-        <DropdownMenuLabel>Group by</DropdownMenuLabel>
+        <DropdownMenuLabel>그룹 기준</DropdownMenuLabel>
         <div className="px-2 pt-0.5 pb-1">
           <ToggleGroup
             type="single"
@@ -198,7 +196,7 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <span className="flex flex-1 items-center justify-between">
-              <span>Sort by</span>
+              <span>정렬 기준</span>
               <span className="text-[11px] font-medium text-muted-foreground">{sortLabel}</span>
             </span>
           </DropdownMenuSubTrigger>
@@ -241,7 +239,7 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <span className="flex flex-1 items-center justify-between">
-              <span>Card layout</span>
+              <span>카드 레이아웃</span>
               <span className="text-[11px] font-medium text-muted-foreground">
                 {cardLayoutLabel}
               </span>
@@ -278,9 +276,9 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
             className="data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
           >
             <span className="flex flex-1 items-center justify-between">
-              <span>Show properties</span>
+              <span>속성 표시</span>
               {cardLayout === 'compact' ? (
-                <span className="text-[11px] font-medium text-muted-foreground">Detailed only</span>
+                <span className="text-[11px] font-medium text-muted-foreground">상세만</span>
               ) : visiblePropertyCount > 0 ? (
                 <span className="text-[11px] font-medium text-muted-foreground">
                   {visiblePropertyCount}
@@ -304,7 +302,7 @@ const SidebarWorkspaceOptionsMenu = React.memo(function SidebarWorkspaceOptionsM
             ))}
             <DropdownMenuSeparator />
             <DropdownMenuLabel className="px-2 py-1 text-[11px] font-medium text-muted-foreground">
-              Agent activity layout
+              에이전트 활동 레이아웃
             </DropdownMenuLabel>
             <DropdownMenuRadioGroup
               value={agentActivityDisplayMode}

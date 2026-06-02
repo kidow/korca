@@ -34,7 +34,7 @@ describe('feature wall shortcut labels', () => {
     expect(html).toContain('Alt+Shift+D')
     expect(html).toContain('Ctrl+B')
     expect(html).toContain('Ctrl+I')
-    expect(html).toContain('Checks')
+    expect(html).toContain('검사')
     expect(html).not.toContain('⌘')
   })
 })

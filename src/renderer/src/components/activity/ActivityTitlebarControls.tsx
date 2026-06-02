@@ -18,7 +18,7 @@ export function ActivityTitlebarControls(): React.JSX.Element {
       >
         {/* Why: Activity hides the worktree sidebar (full-page surface), so the
             sidebar's nav row isn't available as the back path. This Back button
-            is the dedicated exit, mirroring Settings' onBack pattern. */}
+            설정의 onBack 패턴을 따르는 전용 종료 경로입니다. */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -26,19 +26,19 @@ export function ActivityTitlebarControls(): React.JSX.Element {
               variant="ghost"
               size="icon-xs"
               onClick={closeActivityPage}
-              aria-label="Close agents"
+              aria-label="에이전트 닫기"
             >
               <ArrowLeft className="size-3.5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>
-            Close agents
+            에이전트 닫기
           </TooltipContent>
         </Tooltip>
         <Bell className="size-3.5 shrink-0 text-muted-foreground" />
-        <span className="truncate text-xs font-medium">agents</span>
+        <span className="truncate text-xs font-medium">에이전트</span>
         <Badge variant="secondary" className="h-5 px-1.5 text-[11px] font-normal">
-          {unreadCount} unread
+          읽지 않음 {unreadCount}
         </Badge>
       </div>
     </div>

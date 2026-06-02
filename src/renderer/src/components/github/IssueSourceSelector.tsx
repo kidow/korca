@@ -113,7 +113,7 @@ export default function IssueSourceSelector({
   const group = (
     <div
       role="group"
-      aria-label="Issue source"
+      aria-label="이슈 출처"
       className={cn(
         // Why: an inner rounded track with subtle divider between segments.
         // Thin border matches the outer chip's border weight so the control

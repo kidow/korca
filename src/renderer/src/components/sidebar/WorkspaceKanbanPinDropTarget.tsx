@@ -25,8 +25,8 @@ export default function WorkspaceKanbanPinDropTarget({
       onDragLeave={onDragLeave}
     >
       <Pin className="size-3.5" />
-      <span className="font-medium">Pinned</span>
-      <span className="truncate">Drop here to pin without changing status.</span>
+      <span className="font-medium">고정됨</span>
+      <span className="truncate">상태를 바꾸지 않고 고정하려면 여기에 놓으세요.</span>
     </div>
   )
 }

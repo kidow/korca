@@ -200,7 +200,7 @@ export function WorktreeTitleInlineRename({
       tabIndex={disabled ? undefined : 0}
     >
       {/* Why: visible text alone misses the unread state for assistive tech. */}
-      {showUnreadEmphasis && <span className="sr-only">Unread: </span>}
+      {showUnreadEmphasis && <span className="sr-only">읽지 않음: </span>}
       {displayName}
     </span>
   )

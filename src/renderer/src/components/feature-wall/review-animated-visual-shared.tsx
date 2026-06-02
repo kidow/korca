@@ -231,21 +231,21 @@ export const NOTE_TARGETS: readonly {
   {
     hunk: 0,
     lineIdx: 2,
-    body: 'Backfill must run before commit if schema assumes new columns.',
-    summary: 'Sequence schema → backfill before commit'
+    body: 'schema가 새 열을 전제한다면 backfill은 commit보다 먼저 실행해야 합니다.',
+    summary: 'schema → backfill → commit 순서 유지'
   },
   {
     hunk: 1,
     lineIdx: 2,
-    body: 'Silently skipping rows — log the count or surface it in the result.',
-    summary: 'Log skipped rows in result'
+    body: '행을 조용히 건너뛰지 말고 개수를 기록하거나 결과에 노출하세요.',
+    summary: '건너뛴 행 수 기록'
   }
 ]
 
-export const COMMIT_MSG = 'Run schema + backfill steps in order during migration'
-export const PR_TITLE = 'Run schema + backfill in order during migration'
+export const COMMIT_MSG = '마이그레이션 중 schema와 backfill 단계를 순서대로 실행'
+export const PR_TITLE = '마이그레이션에서 schema와 backfill을 순서대로 실행'
 export const PR_BODY =
-  'Awaits schema before backfill so commits stay in order. Skips rows with no tier on reruns.'
+  'backfill 전에 schema를 기다려 커밋 순서를 유지합니다. 재실행 시 tier가 없는 행은 건너뜁니다.'
 
 // Why: same files appear in the SC changes list and conceptually feed both
 // the commit message and the PR body, so the read→write relationship reads

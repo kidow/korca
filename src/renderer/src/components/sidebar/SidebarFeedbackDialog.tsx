@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import React, { useState } from 'react'
 import { ExternalLink, Github } from 'lucide-react'
 import { toast } from 'sonner'
@@ -136,14 +137,14 @@ export function SidebarFeedbackDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-sm">Send Feedback</DialogTitle>
+          <DialogTitle className="text-sm">피드백 보내기</DialogTitle>
           <DialogDescription className="text-xs">
-            Share what&apos;s working, what&apos;s broken, or what Korca should do next.
+            잘 되는 것, 문제인 것, 또는 Korca가 다음에 해야 할 일을 알려주세요.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-2 rounded-md border border-border/70 bg-muted/30 p-3">
-          <div className="text-xs font-medium text-foreground">Other ways to reach us</div>
+          <div className="text-xs font-medium text-foreground">다른 연락 방법</div>
           <div className="flex flex-wrap gap-2">
             <Button
               type="button"
@@ -153,7 +154,7 @@ export function SidebarFeedbackDialog({
               onClick={() => openExternalUrl(GITHUB_ISSUES_URL)}
             >
               <Github className="size-3.5" />
-              GitHub issues
+              GitHub 이슈
               <ExternalLink className="size-3.5" />
             </Button>
             <Button
@@ -189,7 +190,7 @@ export function SidebarFeedbackDialog({
           autoFocus
           value={feedback}
           onChange={(event) => setFeedback(event.target.value)}
-          placeholder="What could we improve?"
+          placeholder="무엇을 개선하면 좋을까요?"
           rows={7}
           className="min-h-32 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         />
@@ -214,23 +215,23 @@ export function SidebarFeedbackDialog({
                     'accent-foreground'
                   )}
                 />
-                Submit anonymously
+                익명으로 제출
               </label>
             </div>
           ) : isViewerLoading ? (
-            <div className="text-xs text-muted-foreground">Checking GitHub identity…</div>
+            <div className="text-xs text-muted-foreground">GitHub 신원 확인 중…</div>
           ) : (
             <div className="text-xs text-muted-foreground">
-              Submit with your typed feedback only, or connect `gh` to include GitHub identity.
+              입력한 피드백만 제출하거나 `gh`를 연결해 GitHub 신원을 포함하세요.
             </div>
           )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
-            Cancel
+            취소
           </Button>
           <Button onClick={() => void handleSubmit()} disabled={isSubmitting || !feedback.trim()}>
-            {isSubmitting ? 'Sending…' : 'Send'}
+            {isSubmitting ? '전송 중…' : '보내기'}
           </Button>
         </DialogFooter>
       </DialogContent>

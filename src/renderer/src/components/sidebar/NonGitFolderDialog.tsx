@@ -87,7 +87,7 @@ const NonGitFolderDialog = React.memo(function NonGitFolderDialog() {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-sm sm:max-w-sm" showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle className="text-sm">Open as Folder</DialogTitle>
+          <DialogTitle className="text-sm">폴더로 열기</DialogTitle>
           <DialogDescription className="text-xs">
             This folder isn&apos;t a Git repository. You&apos;ll have the editor, terminal, and
             search, but Git-based features won&apos;t be available.
@@ -104,7 +104,7 @@ const NonGitFolderDialog = React.memo(function NonGitFolderDialog() {
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleConfirm}>Open as Folder</Button>
+          <Button onClick={handleConfirm}>폴더로 열기</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

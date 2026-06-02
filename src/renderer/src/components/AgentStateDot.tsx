@@ -33,7 +33,7 @@ export function agentStateLabel(state: AgentDotState): string {
     case 'blocked':
       return 'Blocked'
     case 'waiting':
-      return 'Waiting for input'
+      return '입력 대기 중'
     case 'interrupted':
       return 'Interrupted'
     case 'done':
@@ -41,7 +41,7 @@ export function agentStateLabel(state: AgentDotState): string {
     case 'idle':
       return 'Idle'
     case 'permission':
-      return 'Needs attention'
+      return '주의 필요'
   }
 }
 

@@ -48,7 +48,7 @@ export function useCreateRepo(
     if (useAppStore.getState().settings?.activeRuntimeEnvironmentId?.trim()) {
       // Why: the native folder picker returns a client-local path. Runtime
       // project creation needs an explicit server parent path.
-      toast.error('Enter a server parent path.')
+      toast.error('서버 상위 경로를 입력하세요.')
       return
     }
     const gen = createGenRef.current
@@ -327,10 +327,8 @@ export function CreateStep({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Start a new project</DialogTitle>
-        <DialogDescription>
-          Create a Git repository or a plain folder and open it in Korca.
-        </DialogDescription>
+        <DialogTitle>새 프로젝트 시작</DialogTitle>
+        <DialogDescription>Git 저장소 또는 일반 폴더를 만들고 Korca에서 여세요.</DialogDescription>
       </DialogHeader>
 
       {/* Why: DialogContent is a CSS grid; grid items default to min-width:auto
@@ -342,7 +340,7 @@ export function CreateStep({
         <div
           ref={setRadioGroupNode}
           role="radiogroup"
-          aria-label="Project kind"
+          aria-label="프로젝트 종류"
           className="grid grid-cols-2 gap-2"
         >
           <KindCard
@@ -352,8 +350,8 @@ export function CreateStep({
             onSelect={() => onKindChange('git')}
             onArrowNav={cycleKind}
             icon={<GitBranch className="size-4" />}
-            title="Git repository"
-            caption="Initializes an empty Git repo"
+            title="Git 저장소"
+            caption="빈 Git 저장소를 초기화합니다"
           />
           <KindCard
             kind="folder"
@@ -362,8 +360,8 @@ export function CreateStep({
             onSelect={() => onKindChange('folder')}
             onArrowNav={cycleKind}
             icon={<Folder className="size-4" />}
-            title="Folder"
-            caption="Create a new folder"
+            title="폴더"
+            caption="새 폴더를 만듭니다"
           />
         </div>
 
@@ -373,7 +371,7 @@ export function CreateStep({
             htmlFor="create-project-name"
             className="text-[11px] font-medium text-muted-foreground block"
           >
-            Name
+            이름
           </label>
           <Input
             id="create-project-name"
@@ -391,7 +389,7 @@ export function CreateStep({
         {/* Location. The local flow uses a folder picker; runtime servers need
           manual server-path entry because the client cannot browse that filesystem yet. */}
         <div className="space-y-1">
-          <span className="text-[11px] font-medium text-muted-foreground block">Location</span>
+          <span className="text-[11px] font-medium text-muted-foreground block">위치</span>
 
           {manualParentEntry ? (
             <Input
@@ -415,10 +413,10 @@ export function CreateStep({
                 onClick={onPickParent}
                 disabled={isCreating}
                 className="shrink-0 inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:cursor-not-allowed"
-                aria-label="Change parent folder"
+                aria-label="상위 폴더 변경"
               >
                 <Pencil className="size-3" />
-                Change
+                변경
               </button>
             </div>
           ) : (
@@ -432,7 +430,7 @@ export function CreateStep({
               <span className="shrink-0 inline-flex items-center justify-center size-7 rounded-md border border-border/70 bg-background/40">
                 <Folder className="size-3.5" />
               </span>
-              Choose parent folder…
+              상위 폴더 선택…
             </Button>
           )}
         </div>
@@ -444,7 +442,7 @@ export function CreateStep({
         )}
 
         <Button onClick={onCreate} disabled={!canSubmit} size="lg" className="w-full">
-          {isCreating ? 'Creating…' : 'Create project'}
+          {isCreating ? '생성 중…' : '프로젝트 생성'}
         </Button>
       </div>
     </>

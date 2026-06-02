@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: this animation is a self-contained storyboard; splitting the phase markup from its timing constants would make the sequence harder to verify. */
 import { useEffect, useRef, useState, type JSX, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
@@ -11,7 +12,7 @@ import { FeatureWallClickRing } from './FeatureWallClickRing'
 // The DOM and timing track docs/feature-wall-workbench-tile-mock.html so the
 // modal stays in lockstep with the design source.
 
-const PROMPT_TEXT = 'Make Starter card stand out'
+const PROMPT_TEXT = 'Starter 카드를 더 돋보이게 해 주세요'
 
 const PRE_INTRO_MS = 600
 const NEWTAB_APPROACH_MS = 700
@@ -133,11 +134,11 @@ const TERM_ENTRIES: readonly { entry: TermEntry; minPhase: Phase }[] = [
   {
     entry: {
       kind: 'prompt',
-      text: 'Let me click Try free to verify it still works.'
+      text: '정말로 동작하는지 확인하려고 체험하기를 눌러 보겠습니다.'
     },
     minPhase: 'verify-intent'
   },
-  { entry: { kind: 'tool', tool: 'click', arg: '"Try free"' }, minPhase: 'click-press' },
+  { entry: { kind: 'tool', tool: 'click', arg: '"무료로 체험"' }, minPhase: 'click-press' },
   {
     entry: { kind: 'tool-muted', tool: 'screenshot', muted: '(capturing page)' },
     minPhase: 'screenshot-line'
@@ -145,7 +146,7 @@ const TERM_ENTRIES: readonly { entry: TermEntry; minPhase: Phase }[] = [
   {
     entry: {
       kind: 'ok',
-      html: <>✓ Verified — Try free still works.</>
+      html: <>✓ 확인됨 — 체험하기가 계속 동작합니다.</>
     },
     minPhase: 'verified'
   }
@@ -525,7 +526,7 @@ export function BrowserAnimatedVisual(props: { reducedMotion: boolean }): JSX.El
                   <span className="inline-flex size-[13px] items-center justify-center text-foreground">
                     <GlobeGlyph />
                   </span>
-                  <span className="text-[11.5px] text-foreground">New Browser Tab</span>
+                  <span className="text-[11.5px] text-foreground">새 브라우저 탭</span>
                   <span className="font-mono text-[10.5px] text-muted-foreground">
                     {newBrowserShortcutLabel}
                   </span>
@@ -607,13 +608,13 @@ export function BrowserAnimatedVisual(props: { reducedMotion: boolean }): JSX.El
                         <span className="ml-px inline-block h-2 w-px translate-y-[1px] bg-foreground align-baseline" />
                       </>
                     ) : (
-                      <span className="text-muted-foreground">Describe the change…</span>
+                      <span className="text-muted-foreground">변경 내용을 설명하세요…</span>
                     )}
                   </div>
                   <div className="flex justify-end">
                     <span
                       ref={sendBtnRef}
-                      aria-label="Send to Claude"
+                      aria-label="Claude에게 보내기"
                       className={cn(
                         'inline-flex size-5 shrink-0 items-center justify-center rounded border border-border bg-muted text-foreground transition-[background-color,transform] duration-150',
                         sendPressed ? 'scale-[0.92] bg-foreground/[0.12]' : null
@@ -746,7 +747,7 @@ function TermEntryView(props: { entry: TermEntry }): JSX.Element {
     return (
       <span className="inline-flex items-center gap-1.5 text-muted-foreground">
         <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
-        Working…
+        작업 중…
       </span>
     )
   }
@@ -788,20 +789,20 @@ function PricingView(props: {
 }): JSX.Element {
   return (
     <>
-      <div className="text-[15px] font-bold leading-tight">Pricing</div>
+      <div className="text-[15px] font-bold leading-tight">요금제</div>
       <div className="h-2 w-4/5 rounded bg-foreground/10" />
       <div className="mt-1 grid grid-cols-2 gap-2.5">
         <PricingCard
           cardRef={props.cardRef}
           ctaRef={props.ctaRef}
           label="Starter"
-          cta="Try free"
+          cta="무료로 체험"
           target
           ringActive={props.ringStarter}
           ctaHighlighted={props.ctaHighlighted}
           ctaPressing={props.ctaPressing}
         />
-        <PricingCard label="Pro" cta="Get Pro" highlighted />
+        <PricingCard label="Pro" cta="Pro로 업그레이드" highlighted />
       </div>
     </>
   )
@@ -810,7 +811,7 @@ function PricingView(props: {
 function SignupView(): JSX.Element {
   return (
     <div className="flex animate-[browserViewIn_360ms_cubic-bezier(.2,.8,.2,1)_both] flex-col gap-3">
-      <div className="text-[15px] font-bold leading-tight">Start your free trial</div>
+      <div className="text-[15px] font-bold leading-tight">무료 체험을 시작하세요</div>
       <div className="h-2 w-[70%] rounded bg-foreground/10" />
       <div className="-mt-1 h-2 w-[55%] rounded bg-foreground/10" />
     </div>

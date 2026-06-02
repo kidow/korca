@@ -2,8 +2,8 @@ import type { SettingsSearchEntry } from './settings-search'
 
 export const EXPERIMENTAL_PANE_SEARCH_ENTRIES: SettingsSearchEntry[] = [
   {
-    title: 'Pet',
-    description: 'Floating animated pet in the bottom-right corner.',
+    title: '펫',
+    description: '오른쪽 아래에 떠 있는 애니메이션 펫입니다.',
     keywords: [
       'experimental',
       'pet',
@@ -16,8 +16,8 @@ export const EXPERIMENTAL_PANE_SEARCH_ENTRIES: SettingsSearchEntry[] = [
     ]
   },
   {
-    title: 'Agents View',
-    description: 'Threaded left-sidebar feed for agent completions and blocking states.',
+    title: '에이전트 보기',
+    description: '에이전트 완료와 대기 상태를 보여주는 왼쪽 사이드바 스레드 피드입니다.',
     keywords: [
       'experimental',
       'agents',
@@ -32,8 +32,8 @@ export const EXPERIMENTAL_PANE_SEARCH_ENTRIES: SettingsSearchEntry[] = [
     ]
   },
   {
-    title: 'Terminal attention',
-    description: 'Persistent pane highlight for terminal bell and agent-completion events.',
+    title: '터미널 주의',
+    description: '터미널 벨과 에이전트 완료 이벤트에 맞춰 창을 지속적으로 하이라이트합니다.',
     keywords: [
       'experimental',
       'terminal',
@@ -48,8 +48,8 @@ export const EXPERIMENTAL_PANE_SEARCH_ENTRIES: SettingsSearchEntry[] = [
     ]
   },
   {
-    title: 'Compact worktree cards',
-    description: 'Use one-line worktree cards instead of the detailed metadata row.',
+    title: '압축된 워크트리 카드',
+    description: '자세한 메타데이터 행 대신 한 줄짜리 워크트리 카드를 사용합니다.',
     keywords: [
       'experimental',
       'worktree',
@@ -64,9 +64,9 @@ export const EXPERIMENTAL_PANE_SEARCH_ENTRIES: SettingsSearchEntry[] = [
     ]
   },
   {
-    title: 'Symlinks on worktrees',
+    title: '워크트리의 심볼릭 링크',
     description:
-      'Automatically symlink configured files or folders into newly created worktrees so shared state (envs, caches, installs) stays connected.',
+      '설정한 파일이나 폴더를 새로 만든 워크트리에 자동으로 심볼릭 링크해 공유 상태(env, 캐시, 설치)를 연결된 채로 유지합니다.',
     keywords: [
       'experimental',
       'worktree',
@@ -81,9 +81,9 @@ export const EXPERIMENTAL_PANE_SEARCH_ENTRIES: SettingsSearchEntry[] = [
     ]
   },
   {
-    title: 'Smart New Tab menu',
+    title: '스마트 새 탭 메뉴',
     description:
-      'Type in the New Tab menu to open a terminal, launch an agent, visit a URL, or open/create a file.',
+      '새 탭 메뉴에 입력하면 터미널을 열고, 에이전트를 시작하고, URL을 방문하고, 파일을 열거나 만들 수 있습니다.',
     keywords: [
       'experimental',
       'smart',
@@ -119,5 +119,5 @@ export const EXPERIMENTAL_SEARCH_ENTRY = {
   terminalAttention: findEntry('Terminal attention'),
   compactWorktreeCards: findEntry('Compact worktree cards'),
   symlinks: findEntry('Symlinks on worktrees'),
-  unifiedNewTabLauncher: findEntry('Smart New Tab menu')
+  unifiedNewTabLauncher: findEntry('스마트 새 탭 메뉴')
 } as const

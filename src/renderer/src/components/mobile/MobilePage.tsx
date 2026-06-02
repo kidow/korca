@@ -40,13 +40,13 @@ export const PLATFORM_COPY: Record<
   { description: string; ctaLabel: string; url: string }
 > = {
   ios: {
-    description: 'Scan with your iPhone camera to open the App Store.',
-    ctaLabel: 'Open App Store',
+    description: 'iPhone 카메라로 스캔해 App Store를 여세요.',
+    ctaLabel: 'App Store 열기',
     url: 'https://apps.apple.com/app/korca-ide/id6766130217'
   },
   android: {
-    description: 'Scan with your Android camera to download the latest APK from GitHub Releases.',
-    ctaLabel: 'Download APK',
+    description: 'Android 카메라로 스캔해 GitHub Releases에서 최신 APK를 받으세요.',
+    ctaLabel: 'APK 다운로드',
     url: 'https://github.com/stablyai/korca/releases/download/mobile-v0.0.10/app-release.apk'
   }
 }
@@ -170,14 +170,14 @@ export default function MobilePage(): React.JSX.Element {
         await window.api.mobile.revokeDevice({ deviceId })
         const remaining = await loadDevices()
         if (mountedRef.current) {
-          toast.success('Device revoked')
+          toast.success('기기를 해제했습니다')
         }
         if (remaining.length === 0 && mountedRef.current) {
           showStage('intro')
         }
       } catch {
         if (mountedRef.current) {
-          toast.error('Failed to revoke device')
+          toast.error('기기를 해제하지 못했습니다')
         }
       } finally {
         if (mountedRef.current) {
@@ -234,12 +234,12 @@ export default function MobilePage(): React.JSX.Element {
           hasGeneratedRef.current = true
         } else {
           if (mountedRef.current) {
-            toast.error('WebSocket transport is not running')
+            toast.error('WebSocket 전송이 실행 중이 아닙니다')
           }
         }
       } catch {
         if (mountedRef.current) {
-          toast.error('Failed to generate pairing code')
+          toast.error('페어링 코드를 생성하지 못했습니다')
         }
       } finally {
         if (mountedRef.current) {
@@ -301,12 +301,12 @@ export default function MobilePage(): React.JSX.Element {
     try {
       await window.api.ui.writeClipboardText(pairingUrl)
       if (mountedRef.current) {
-        toast.success('Pairing code copied')
+        toast.success('페어링 코드가 복사되었습니다')
       }
     } catch (err) {
       console.error('writeClipboardText failed', err)
       if (mountedRef.current) {
-        toast.error('Failed to copy pairing code')
+        toast.error('페어링 코드를 복사하지 못했습니다')
       }
     }
   }, [mountedRef, pairingUrl])
@@ -383,12 +383,12 @@ export default function MobilePage(): React.JSX.Element {
     try {
       await window.api.ui.writeClipboardText(PLATFORM_COPY[platform].url)
       if (mountedRef.current) {
-        toast.success('Install link copied')
+        toast.success('설치 링크가 복사되었습니다')
       }
     } catch (err) {
       console.error('writeClipboardText failed', err)
       if (mountedRef.current) {
-        toast.error('Failed to copy link')
+        toast.error('링크를 복사하지 못했습니다')
       }
     }
   }
@@ -436,13 +436,13 @@ export default function MobilePage(): React.JSX.Element {
               size="icon"
               className="size-7 rounded-full"
               onClick={closeMobilePage}
-              aria-label="Close Korca Mobile"
+              aria-label="Korca Mobile 닫기"
             >
               <X className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>
-            Close · Esc
+            닫기 · Esc
           </TooltipContent>
         </Tooltip>
         <Button
@@ -452,7 +452,7 @@ export default function MobilePage(): React.JSX.Element {
           onClick={toggleMobileSidebarButton}
         >
           {showMobileButton ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-          {showMobileButton ? 'Hide from sidebar' : 'Show in sidebar'}
+          {showMobileButton ? '사이드바에서 숨기기' : '사이드바에 표시'}
         </Button>
       </div>
       <section className="mp-hero">
@@ -492,7 +492,7 @@ export default function MobilePage(): React.JSX.Element {
           )}
         </div>
 
-        <div className="mp-stage" aria-label="Phone preview">
+        <div className="mp-stage" aria-label="휴대폰 미리보기">
           <PhoneCarousel />
         </div>
       </section>

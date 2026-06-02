@@ -52,14 +52,14 @@ export function MarkdownTemplatePicker(): JSX.Element {
           resolveRequest({ type: 'cancel' })
         }
       }}
-      title="New Markdown"
-      description="Choose a Markdown template."
+      title="새 마크다운"
+      description="마크다운 템플릿을 선택합니다."
       contentClassName="w-[520px]"
     >
-      <CommandInput placeholder="Search templates..." />
+      <CommandInput placeholder="템플릿 검색..." />
       <CommandList>
-        <CommandEmpty>No matching templates.</CommandEmpty>
-        <CommandGroup heading="New Document">
+        <CommandEmpty>일치하는 템플릿이 없습니다.</CommandEmpty>
+        <CommandGroup heading="새 문서">
           <CommandItem
             value="blank markdown document"
             className="items-start gap-3"
@@ -67,13 +67,13 @@ export function MarkdownTemplatePicker(): JSX.Element {
           >
             <FileText className="mt-0.5 size-4 text-muted-foreground" />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-medium">Blank Markdown</span>
-              <span className="block truncate text-xs text-muted-foreground">untitled.md</span>
+              <span className="block truncate text-sm font-medium">빈 마크다운</span>
+              <span className="block truncate text-xs text-muted-foreground">제목 없음.md</span>
             </span>
           </CommandItem>
         </CommandGroup>
         {activeRequest && (
-          <CommandGroup heading="Templates">
+          <CommandGroup heading="템플릿">
             {activeRequest.templates.map((template) => (
               <CommandItem
                 key={template.id}

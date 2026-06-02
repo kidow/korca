@@ -23,11 +23,11 @@ export function BrowserUseSkillSetupCard(props: {
   const setupPanel = (
     <AgentSkillSetupPanel
       className={compact ? 'w-full max-w-[520px]' : undefined}
-      title="Browser Use skill"
-      description="Enables agents to navigate and verify pages in Korca's browser."
+      title="Browser Use 스킬"
+      description="에이전트가 Korca 브라우저에서 페이지를 탐색하고 검증할 수 있게 합니다."
       command={KORCA_CLI_SKILL_INSTALL_COMMAND}
-      terminalTitle="Browser Use setup"
-      terminalAriaLabel="Browser Use skill install terminal"
+      terminalTitle="Browser Use 설정"
+      terminalAriaLabel="Browser Use 스킬 설치 터미널"
       terminalWorktreeId="feature-wall-browser-use-skill-terminal"
       installed={skill.installed}
       loading={skill.loading}

@@ -19,11 +19,11 @@ export function DeleteWorktreeLineageNotice({
       <div className="flex items-start gap-2">
         <Workflow className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
         <div className="min-w-0 flex-1">
-          <div className="font-medium text-foreground">Child workspaces will be deleted</div>
+          <div className="font-medium text-foreground">하위 작업 공간도 삭제됩니다</div>
           <div className="mt-1 text-muted-foreground">
             {childWorkspaceCount === 1
-              ? 'Deleting this workspace also deletes 1 child workspace.'
-              : `Deleting this workspace also deletes ${childWorkspaceCount} child workspaces.`}
+              ? '이 작업 공간을 삭제하면 하위 작업 공간 1개도 함께 삭제됩니다.'
+              : `이 작업 공간을 삭제하면 하위 작업 공간 ${childWorkspaceCount}개도 함께 삭제됩니다.`}
           </div>
           {/* Why: long nowrap paths can otherwise give this grid child an
              intrinsic width wider than the modal. */}
@@ -35,7 +35,7 @@ export function DeleteWorktreeLineageNotice({
               </div>
             ))}
             {descendants.length > 4 ? (
-              <div className="text-muted-foreground">+{descendants.length - 4} more</div>
+              <div className="text-muted-foreground">+{descendants.length - 4}개 더</div>
             ) : null}
           </div>
         </div>

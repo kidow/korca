@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Image as ImageIcon, RotateCcw, Search, ZoomIn, ZoomOut } from 'lucide-react'
 import * as pdfjsLib from 'pdfjs-dist'
@@ -214,7 +215,7 @@ export default function PdfViewer({ content, filePath }: PdfViewerProps): JSX.El
           <span className="min-w-0 truncate" title={filename}>
             {filename}
           </span>
-          <span>PDF preview</span>
+          <span>PDF 미리보기</span>
         </div>
       </div>
     )
@@ -284,7 +285,7 @@ export default function PdfViewer({ content, filePath }: PdfViewerProps): JSX.El
         <span className="min-w-0 truncate" title={filename}>
           {filename}
         </span>
-        <span>PDF preview</span>
+        <span>PDF 미리보기</span>
       </div>
     </div>
   )

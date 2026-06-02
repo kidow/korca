@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: the script editor, advanced/Command Source disclosure, issue-command override, and YAML state surfaces share tightly coupled state and persistence; splitting them across files would scatter prop drilling. */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
@@ -39,37 +40,37 @@ type HookSettingsPolicyDraft = Partial<
 >
 
 const SETUP_RUN_POLICY_OPTIONS: PolicyOption<SetupRunPolicy>[] = [
-  { policy: 'ask', label: 'Ask every time', description: 'Prompt before running setup.' },
-  { policy: 'run-by-default', label: 'Run by default', description: 'Run setup automatically.' },
+  { policy: 'ask', label: '매번 묻기', description: '설정을 실행하기 전에 묻습니다.' },
+  { policy: 'run-by-default', label: '기본으로 실행', description: '설정을 자동으로 실행합니다.' },
   {
     policy: 'skip-by-default',
-    label: 'Skip by default',
-    description: 'Only run setup when chosen.'
+    label: '기본으로 건너뛰기',
+    description: '선택했을 때만 설정을 실행합니다.'
   }
 ]
 
 const COMMAND_SOURCE_POLICY_OPTIONS: PolicyOption<HookCommandSourcePolicy>[] = [
   {
     policy: 'shared-only',
-    label: 'korca.yaml only',
-    description: 'Run only committed repo commands; ignore local commands.'
+    label: 'korca.yaml만',
+    description: '커밋된 저장소 명령만 실행하고 로컬 명령은 무시합니다.'
   },
   {
     policy: 'local-only',
-    label: 'Local only',
-    description: 'Ignore korca.yaml; run only your local commands.'
+    label: '로컬만',
+    description: 'korca.yaml를 무시하고 로컬 명령만 실행합니다.'
   },
   {
     policy: 'run-both',
-    label: 'Run both',
-    description: 'korca.yaml first, then your local commands.'
+    label: '둘 다 실행',
+    description: 'korca.yaml를 먼저 실행한 뒤 로컬 명령을 실행합니다.'
   }
 ]
 
 const COMMAND_SOURCE_LABEL: Record<HookCommandSourcePolicy, string> = {
-  'shared-only': 'korca.yaml only',
-  'local-only': 'Local only',
-  'run-both': 'Run both'
+  'shared-only': 'korca.yaml만',
+  'local-only': '로컬만',
+  'run-both': '둘 다 실행'
 }
 
 type LocalHookField = {
@@ -82,15 +83,15 @@ type LocalHookField = {
 const LOCAL_HOOK_FIELDS: LocalHookField[] = [
   {
     name: 'setup',
-    label: 'Setup Script',
+    label: '설정 스크립트',
     description:
-      'Runs after a new worktree is created; install deps, copy env files, run migrations.',
+      '새 워크트리가 만들어진 뒤 실행됩니다. 의존성을 설치하고, 환경 파일을 복사하고, 마이그레이션을 실행합니다.',
     placeholder: '# e.g.\npnpm install\ncp "$KORCA_ROOT_PATH/.env" "$KORCA_WORKTREE_PATH/.env"'
   },
   {
     name: 'archive',
-    label: 'Archive Script',
-    description: 'Runs before a worktree is archived or removed.',
+    label: '보관 스크립트',
+    description: '워크트리를 보관하거나 제거하기 전에 실행됩니다.',
     placeholder: '# e.g.\necho "Cleaning up $KORCA_WORKSPACE_NAME"'
   }
 ]
@@ -99,15 +100,15 @@ const ENV_VARS: readonly { name: string; description: string }[] = [
   {
     name: '$KORCA_ROOT_PATH',
     description:
-      'Path to the main repo checkout. Useful for copying shared files, like .env, into a worktree.'
+      '기본 저장소 체크아웃 경로입니다. .env 같은 공유 파일을 워크트리로 복사할 때 유용합니다.'
   },
   {
     name: '$KORCA_WORKTREE_PATH',
-    description: 'Path to the worktree being created. Setup commands run from this directory.'
+    description: '만들고 있는 워크트리의 경로입니다. 설정 명령은 이 디렉터리에서 실행됩니다.'
   },
   {
     name: '$KORCA_WORKSPACE_NAME',
-    description: 'Name of the workspace, usually based on the branch name.'
+    description: '작업 공간 이름입니다. 보통 브랜치 이름을 바탕으로 합니다.'
   }
 ]
 
@@ -168,7 +169,7 @@ export function getLocalCommandSourcePolicyNotice({
   }
   return hasSharedScript
     ? { kind: 'action', policy: 'run-both', label: 'Run both' }
-    : { kind: 'action', policy: 'local-only', label: 'Use local commands' }
+    : { kind: 'action', policy: 'local-only', label: '로컬 명령 사용' }
 }
 
 const YAML_STATE_STYLES: Record<
@@ -178,30 +179,30 @@ const YAML_STATE_STYLES: Record<
   loaded: {
     card: 'border-emerald-500/20 bg-emerald-500/5',
     title: 'text-emerald-700 dark:text-emerald-300',
-    heading: 'Using `korca.yaml`',
+    heading: '`korca.yaml` 사용 중',
     description:
-      'Shared hook and issue-automation defaults are defined in the repo and available to everyone who uses it.'
+      '공유 훅과 이슈 자동화 기본값이 저장소에 정의되어 있으며 이를 사용하는 모든 사람이 이용할 수 있습니다.'
   },
   'update-available': {
     card: 'border-amber-500/20 bg-amber-500/5',
     title: 'text-amber-700 dark:text-amber-300',
-    heading: '`korca.yaml` could not be parsed',
+    heading: '`korca.yaml`를 구문 분석할 수 없습니다',
     description:
-      'The file contains configuration keys that this version of Korca does not recognize. You may need to update Korca, or check the file for typos.'
+      '이 파일에는 현재 Korca 버전이 인식하지 못하는 설정 키가 있습니다. Korca를 업데이트하거나 파일의 오타를 확인하세요.'
   },
   invalid: {
     card: 'border-amber-500/20 bg-amber-500/5',
     title: 'text-amber-700 dark:text-amber-300',
-    heading: '`korca.yaml` could not be parsed',
+    heading: '`korca.yaml`를 구문 분석할 수 없습니다',
     description:
-      'The core configuration file exists in the repo root, but Korca could not parse the supported hook definitions yet.'
+      '핵심 설정 파일은 저장소 루트에 있지만, Korca가 아직 지원되는 훅 정의를 구문 분석하지 못했습니다.'
   },
   missing: {
     card: 'border-border/50 bg-muted/20',
     title: 'text-foreground',
-    heading: 'No `korca.yaml` detected',
+    heading: '`korca.yaml`이 감지되지 않음',
     description:
-      'Add an `korca.yaml` file to enable shared setup, archive, or issue-automation defaults for this repo. Example template:'
+      '이 저장소에서 공유 설정, 보관, 이슈 자동화 기본값을 사용하려면 `korca.yaml` 파일을 추가하세요. 예제 템플릿:'
   }
 }
 
@@ -289,7 +290,7 @@ function ExampleTemplateCard({
   return (
     <div className="space-y-2">
       <p className="text-[10px] tracking-[0.18em] text-muted-foreground">
-        Example <code className="rounded bg-muted px-1 py-0.5">korca.yaml</code> template
+        예시 <code className="rounded bg-muted px-1 py-0.5">korca.yaml</code> 템플릿
       </p>
       <div className="relative rounded-lg border border-border/50 bg-background/70">
         <Button
@@ -301,7 +302,7 @@ function ExampleTemplateCard({
           }`}
           onClick={onCopyTemplate}
         >
-          {copiedTemplate ? 'Copied' : 'Copy'}
+          {copiedTemplate ? '복사됨' : '복사'}
         </Button>
         <pre className="overflow-x-auto whitespace-pre-wrap break-words p-3 pr-16 font-mono text-[11px] leading-5 text-muted-foreground">
           {EXAMPLE_TEMPLATE}
@@ -484,11 +485,12 @@ function ScriptEditor({
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
               korca.yaml
               <span className="font-normal text-emerald-700/80 dark:text-emerald-300/80">
-                - shared with your team
+                - 팀과 공유됨
               </span>
             </span>
             <span className="text-[11px] text-muted-foreground">
-              Edit <code className="rounded bg-muted px-1 py-0.5">korca.yaml</code> to change.
+              변경하려면 <code className="rounded bg-muted px-1 py-0.5">korca.yaml</code>를
+              수정하세요.
             </span>
           </div>
           <YamlScriptBlock content={sharedScript ?? ''} />
@@ -500,8 +502,8 @@ function ScriptEditor({
           <div className="flex items-center justify-between gap-2">
             {hasShared ? (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/30 px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-                local
-                <span className="font-normal">- just for you, on this machine</span>
+                로컬
+                <span className="font-normal">- 이 머신에서만 사용</span>
               </span>
             ) : (
               <span />
@@ -779,16 +781,16 @@ export function RepositoryHooksSection({
   return (
     <section ref={flushScriptDraftOnUnmount} className="space-y-6">
       <div className="space-y-1">
-        <h2 className="text-sm font-semibold">Worktree Hooks</h2>
+        <h2 className="text-sm font-semibold">작업 트리 훅</h2>
         <p className="text-xs text-muted-foreground">
-          Scripts that run when worktrees are created or archived. Local scripts are stored on this
-          machine; `korca.yaml` scripts are shared with your team.
+          작업 트리가 생성되거나 보관될 때 실행되는 스크립트입니다. 로컬 스크립트는 이 머신에
+          저장되고, `korca.yaml` 스크립트는 팀과 공유됩니다.
         </p>
       </div>
 
       <SearchableSetting
-        title="Setup Script"
-        description="Local and shared scripts that run after a new worktree is created."
+        title="설정 스크립트"
+        description="새 작업 트리가 생성된 뒤 실행되는 로컬 및 공유 스크립트입니다."
         forceVisible={forceVisible}
         keywords={[
           'setup',
@@ -814,16 +816,16 @@ export function RepositoryHooksSection({
       </SearchableSetting>
 
       <SearchableSetting
-        title="When to Run Setup"
-        description="Choose the default behavior when a setup script is available."
+        title="설정 스크립트 실행 시점"
+        description="설정 스크립트가 있을 때의 기본 동작을 선택합니다."
         forceVisible={forceVisible}
         keywords={['setup run policy', 'ask', 'run by default', 'skip by default']}
       >
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/50 bg-background/80 p-4 shadow-sm">
           <div className="min-w-0">
-            <h5 className="text-sm font-semibold">When to run</h5>
+            <h5 className="text-sm font-semibold">실행 시점</h5>
             <p className="text-xs text-muted-foreground">
-              Default behavior when a new worktree is created.
+              새 작업 트리가 만들어질 때의 기본 동작입니다.
             </p>
           </div>
           <SegmentedPolicyToggle
@@ -835,8 +837,8 @@ export function RepositoryHooksSection({
       </SearchableSetting>
 
       <SearchableSetting
-        title="Archive Script"
-        description="Local and shared scripts that run before a worktree is archived."
+        title="보관 스크립트"
+        description="작업 트리가 보관되기 전에 실행되는 로컬 및 공유 스크립트입니다."
         forceVisible={forceVisible}
         keywords={[
           'archive',
@@ -870,16 +872,16 @@ export function RepositoryHooksSection({
       ) : null}
 
       <SearchableSetting
-        title="Custom GitHub Issue Command"
-        description="Optional per-user override for the linked-issue command."
+        title="사용자 지정 GitHub 이슈 명령"
+        description="연결된 이슈 명령에 대한 사용자별 선택적 재정의입니다."
         forceVisible={forceVisible}
         keywords={['github issue command', 'issue command', 'workflow', 'agent', 'github']}
       >
         <div className="space-y-3 rounded-2xl border border-border/50 bg-background/80 p-4 shadow-sm">
           <div className="space-y-1">
-            <h5 className="text-sm font-semibold">Custom GitHub Issue Command</h5>
+            <h5 className="text-sm font-semibold">사용자 지정 GitHub 이슈 명령</h5>
             <p className="text-xs text-muted-foreground">
-              Optional override. Use{' '}
+              선택적 재정의입니다.{' '}
               <code className="rounded bg-muted px-1 py-0.5">{'{{artifact_url}}'}</code> for the
               linked issue or PR URL.
             </p>
@@ -895,9 +897,9 @@ export function RepositoryHooksSection({
             className="w-full min-w-0 resize-y rounded-md border border-input bg-muted/20 px-3 py-2 font-mono text-xs shadow-xs transition-[color,box-shadow] outline-none placeholder:italic placeholder:text-muted-foreground/60 focus-visible:border-ring focus-visible:bg-background focus-visible:ring-[3px] focus-visible:ring-ring/40"
           />
           <p className="text-[11px] text-muted-foreground">
-            Leave blank to use the repo default from{' '}
+            비워 두면 저장소 기본값을 사용합니다.{' '}
             <code className="rounded bg-muted px-1 py-0.5">korca.yaml</code>
-            {hasSharedIssueCommand ? '.' : ' when one exists.'}
+            {hasSharedIssueCommand ? '.' : ' 가 있으면 이를 사용합니다.'}
           </p>
           {issueCommandSaveError ? (
             <p className="text-xs text-destructive">{issueCommandSaveError}</p>
@@ -906,8 +908,8 @@ export function RepositoryHooksSection({
       </SearchableSetting>
 
       <SearchableSetting
-        title="Advanced"
-        description="Command source and korca.yaml details."
+        title="고급"
+        description="명령 소스와 korca.yaml 세부정보입니다."
         forceVisible={forceVisible}
         keywords={[
           'advanced',
@@ -940,8 +942,8 @@ export function RepositoryHooksSection({
           >
             <div className="flex items-center gap-2">
               <ChevronRight className="size-3.5 text-muted-foreground transition-transform group-open:rotate-90" />
-              <h5 className="text-sm font-semibold">Advanced</h5>
-              <span className="text-xs text-muted-foreground">Command source &amp; korca.yaml</span>
+              <h5 className="text-sm font-semibold">고급</h5>
+              <span className="text-xs text-muted-foreground">명령 소스 &amp; korca.yaml</span>
             </div>
             <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-foreground">
               {COMMAND_SOURCE_LABEL[selectedCommandSourcePolicy]}
@@ -951,10 +953,10 @@ export function RepositoryHooksSection({
           <div className="space-y-5 border-t border-border/50 px-4 py-4">
             <div className="space-y-3">
               <div className="space-y-1">
-                <p className="text-sm font-medium">Command Source</p>
+                <p className="text-sm font-medium">명령 소스</p>
                 <p className="text-[11px] text-muted-foreground">
-                  When both <code className="rounded bg-muted px-1 py-0.5">korca.yaml</code> and
-                  local commands exist, choose which run.
+                  <code className="rounded bg-muted px-1 py-0.5">korca.yaml</code>와 로컬 명령이
+                  모두 있을 때 어떤 것을 실행할지 선택합니다.
                 </p>
               </div>
               <PolicyOptionGrid

@@ -19,7 +19,7 @@ export function WorktreeListSlide({ tapping }: { tapping: boolean }): React.JSX.
     <div className="mp-device-screen">
       <div className="mp-wl-chrome">
         <div className="mp-wl-statusrow">
-          <button type="button" className="mp-wl-back" aria-label="Back">
+          <button type="button" className="mp-wl-back" aria-label="뒤로">
             <ChevronLeftIcon />
           </button>
           <div className="mp-wl-host">
@@ -30,15 +30,15 @@ export function WorktreeListSlide({ tapping }: { tapping: boolean }): React.JSX.
         <div className="mp-wl-toolbar">
           <button type="button" className="mp-wl-chip">
             <FilterIcon />
-            Filter
+            필터
           </button>
           <button type="button" className="mp-wl-button">
             <SortIcon />
-            Recent
+            최근
           </button>
           <button type="button" className="mp-wl-button">
             <GroupIcon />
-            Repo
+            저장소
           </button>
           <span className="mp-wl-spacer" />
           <span className="mp-wl-icon">
@@ -56,7 +56,7 @@ export function WorktreeListSlide({ tapping }: { tapping: boolean }): React.JSX.
       <div className="mp-wl-section">
         <CaretIcon />
         <PinIcon />
-        <span style={{ marginLeft: 4 }}>Pinned</span>
+        <span style={{ marginLeft: 4 }}>고정됨</span>
         <span style={{ marginLeft: 4, color: 'var(--m-text-muted)' }}>3</span>
       </div>
 
@@ -97,7 +97,7 @@ export function WorktreeListSlide({ tapping }: { tapping: boolean }): React.JSX.
 
       <div className="mp-wl-section">
         <CaretIcon />
-        <span>Active</span>
+        <span>활성</span>
         <span style={{ marginLeft: 4, color: 'var(--m-text-muted)' }}>37</span>
       </div>
       <div className="mp-wl-list">

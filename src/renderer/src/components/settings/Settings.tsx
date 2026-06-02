@@ -73,13 +73,13 @@ import {
 } from './settings-load-performance'
 
 const SETTINGS_NAV_GROUPS = [
-  { id: 'capabilities', title: 'AI Capabilities' },
-  { id: 'setup', title: 'Set Up' },
-  { id: 'workflows', title: 'Workflows' },
-  { id: 'interface', title: 'Interface' },
-  { id: 'remote', title: 'Remote Access' },
-  { id: 'security', title: 'Privacy & Security' },
-  { id: 'experimental', title: 'Experimental' }
+  { id: 'capabilities', title: 'AI 기능' },
+  { id: 'setup', title: '설정' },
+  { id: 'workflows', title: '작업 흐름' },
+  { id: 'interface', title: '인터페이스' },
+  { id: 'remote', title: '원격 접근' },
+  { id: 'security', title: '개인정보 및 보안' },
+  { id: 'experimental', title: '실험 기능' }
 ] as const
 
 const SHORTCUTS_ESCAPE_CONFIRM_TOAST_ID = 'shortcuts-escape-confirm'
@@ -103,7 +103,7 @@ function computerUsePlatformLabel(args: { isWindows: boolean; isMac: boolean }):
   if (!args.isMac) {
     return 'Linux'
   }
-  return 'This platform'
+  return '이 플랫폼'
 }
 
 function getSettingsScrollTarget(
@@ -274,7 +274,8 @@ function Settings(): React.JSX.Element {
     }
     const shouldDiscard = await confirm({
       title: '저장되지 않은 소스 컨트롤 AI 프롬프트 변경 사항을 버리시겠습니까?',
-      description: '저장되지 않은 소스 컨트롤 AI 프롬프트 변경 사항이 있습니다. 이동하면 내용이 버려집니다.',
+      description:
+        '저장되지 않은 소스 컨트롤 AI 프롬프트 변경 사항이 있습니다. 이동하면 내용이 버려집니다.',
       confirmLabel: '버리기',
       confirmVariant: 'destructive'
     })
@@ -741,7 +742,7 @@ function Settings(): React.JSX.Element {
         className="settings-view-shell flex min-h-0 flex-1 overflow-hidden bg-background"
       >
         <div className="flex flex-1 items-center justify-center text-muted-foreground">
-          Loading settings...
+          설정을 불러오는 중...
         </div>
       </div>
     )
@@ -800,13 +801,13 @@ function Settings(): React.JSX.Element {
           >
             {visibleNavSections.length === 0 ? (
               <div className="flex min-h-[24rem] items-center justify-center rounded-2xl border border-dashed border-border/60 bg-card/30 text-sm text-muted-foreground">
-                No settings found for &quot;{settingsSearchQuery.trim()}&quot;
+                &quot;{settingsSearchQuery.trim()}&quot;에 대한 설정을 찾지 못했습니다
               </div>
             ) : (
               <ActiveSettingsSectionProvider value={activeSectionId}>
                 <SettingsSection
                   id="agents"
-                  title="Agents"
+                  title="에이전트"
                   description="Manage AI agents, set a default, and customize commands."
                   searchEntries={getSectionSearchEntries('agents')}
                 >
@@ -824,7 +825,7 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="accounts"
-                  title="AI Provider Accounts"
+                  title="AI 제공자 계정"
                   description="Optional. Korca works with your existing provider logins; add accounts only if you want Korca to help switch between them."
                   badge="Optional"
                   searchEntries={getSectionSearchEntries('accounts')}
@@ -887,9 +888,9 @@ function Settings(): React.JSX.Element {
 
                     <SettingsSection
                       id="voice"
-                      title="Voice"
+                      title="음성"
                       badge="Beta"
-                      description="Local speech-to-text dictation with on-device models."
+                      description="기기 내 모델을 사용하는 로컬 음성 받아쓰기입니다."
                       searchEntries={getSectionSearchEntries('voice')}
                     >
                       {isSectionMounted('voice') ? (
@@ -901,8 +902,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="general"
-                  title="General"
-                  description="Workspace defaults, app setup, and maintenance."
+                  title="일반"
+                  description="워크스페이스 기본값, 앱 설정, 유지관리."
                   searchEntries={getSectionSearchEntries('general')}
                 >
                   {isSectionMounted('general') ? (
@@ -912,8 +913,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="integrations"
-                  title="Integrations"
-                  description="Connect GitHub, GitLab, Linear, and source-hosting services."
+                  title="연동"
+                  description="GitHub, GitLab, Linear 및 소스 호스팅 서비스를 연결합니다."
                   searchEntries={getSectionSearchEntries('integrations')}
                 >
                   {isSectionMounted('integrations') ? <IntegrationsPane /> : null}
@@ -950,8 +951,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="tasks"
-                  title="Task Sources"
-                  description="Choose which task providers appear in the Tasks page and sidebar."
+                  title="작업 소스"
+                  description="작업 페이지와 사이드바에 표시할 작업 제공자를 선택합니다."
                   searchEntries={getSectionSearchEntries('tasks')}
                 >
                   {isSectionMounted('tasks') ? (
@@ -961,8 +962,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="terminal"
-                  title="Terminal"
-                  description="Shells, renderer, sessions, and terminal behavior."
+                  title="터미널"
+                  description="셸, 렌더러, 세션, 터미널 동작입니다."
                   searchEntries={getSectionSearchEntries('terminal')}
                 >
                   {isSectionMounted('terminal') ? (
@@ -982,8 +983,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="quick-commands"
-                  title="Quick Commands"
-                  description="Saved terminal commands, scoped globally or per project."
+                  title="빠른 명령"
+                  description="전역 또는 프로젝트별로 저장된 터미널 명령입니다."
                   searchEntries={getSectionSearchEntries('quick-commands')}
                 >
                   {isSectionMounted('quick-commands') ? (
@@ -998,7 +999,7 @@ function Settings(): React.JSX.Element {
                 {showDesktopOnlySettings ? (
                   <SettingsSection
                     id="browser"
-                    title="Browser"
+                    title="브라우저"
                     description="Home page, link routing, and session cookies."
                     searchEntries={getSectionSearchEntries('browser')}
                   >
@@ -1014,8 +1015,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="floating-workspace"
-                  title="Floating Workspace"
-                  description="Global terminal, browser, and markdown tabs."
+                  title="떠있는 워크스페이스"
+                  description="전역 터미널, 브라우저, 마크다운 탭입니다."
                   searchEntries={getSectionSearchEntries('floating-workspace')}
                 >
                   {isSectionMounted('floating-workspace') ? (
@@ -1025,8 +1026,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="appearance"
-                  title="Appearance"
-                  description="Theme, zoom, app and terminal appearance, sidebars, and status bar."
+                  title="외형"
+                  description="테마, 확대/축소, 앱 및 터미널 외형, 사이드바, 상태 표시줄입니다."
                   searchEntries={getSectionSearchEntries('appearance')}
                 >
                   {isSectionMounted('appearance') ? (
@@ -1046,8 +1047,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="input"
-                  title="Input & Editing"
-                  description="Selection and editing behavior."
+                  title="입력 및 편집"
+                  description="선택 및 편집 동작입니다."
                   searchEntries={getSectionSearchEntries('input')}
                 >
                   <InputPane settings={settings} updateSettings={updateSettings} />
@@ -1056,8 +1057,8 @@ function Settings(): React.JSX.Element {
                 {showDesktopOnlySettings ? (
                   <SettingsSection
                     id="notifications"
-                    title="Notifications"
-                    description="Native desktop notifications for agent activity and terminal events."
+                    title="알림"
+                    description="에이전트 활동과 터미널 이벤트에 대한 기본 데스크톱 알림입니다."
                     searchEntries={getSectionSearchEntries('notifications')}
                   >
                     {isSectionMounted('notifications') ? (
@@ -1098,7 +1099,7 @@ function Settings(): React.JSX.Element {
                   badge="Beta"
                   description={
                     isWebClient
-                      ? 'Connect this browser to a saved Korca server.'
+                      ? '이 브라우저를 저장된 Korca 서버에 연결합니다.'
                       : 'Switch between local desktop mode and paired remote Korca runtimes.'
                   }
                   searchEntries={getSectionSearchEntries('servers')}
@@ -1117,8 +1118,8 @@ function Settings(): React.JSX.Element {
                   <>
                     <SettingsSection
                       id="ssh"
-                      title="SSH Hosts"
-                      description="Remote SSH hosts for files, terminals, and git."
+                      title="SSH 호스트"
+                      description="파일, 터미널, git을 위한 원격 SSH 호스트입니다."
                       searchEntries={getSectionSearchEntries('ssh')}
                     >
                       {isSectionMounted('ssh') ? <SshPane /> : null}
@@ -1126,9 +1127,9 @@ function Settings(): React.JSX.Element {
 
                     <SettingsSection
                       id="mobile"
-                      title="Mobile"
+                      title="모바일"
                       badge="Beta"
-                      description="Control terminals and agents from your phone."
+                      description="휴대폰에서 터미널과 에이전트를 제어합니다."
                       searchEntries={getSectionSearchEntries('mobile')}
                     >
                       {isSectionMounted('mobile') ? (
@@ -1141,8 +1142,8 @@ function Settings(): React.JSX.Element {
                 {showDesktopOnlySettings && isMac ? (
                   <SettingsSection
                     id="developer-permissions"
-                    title="macOS Permissions"
-                    description="macOS privacy access for terminal-launched developer tools."
+                    title="macOS 권한"
+                    description="터미널에서 실행된 개발 도구에 대한 macOS 개인정보 접근 권한입니다."
                     searchEntries={getSectionSearchEntries('developer-permissions')}
                   >
                     {isSectionMounted('developer-permissions') ? (
@@ -1153,8 +1154,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="privacy"
-                  title="Privacy & Telemetry"
-                  description="Anonymous usage data and telemetry controls."
+                  title="개인정보 및 텔레메트리"
+                  description="익명 사용 데이터와 텔레메트리 제어입니다."
                   searchEntries={getSectionSearchEntries('privacy')}
                 >
                   {isSectionMounted('privacy') ? <PrivacyPane settings={settings} /> : null}
@@ -1162,8 +1163,8 @@ function Settings(): React.JSX.Element {
 
                 <SettingsSection
                   id="experimental"
-                  title="Experimental"
-                  description="New features that are still taking shape. Give them a try."
+                  title="실험 기능"
+                  description="아직 형태를 잡아가는 새 기능들입니다. 사용해 보세요."
                   searchEntries={getSectionSearchEntries('experimental')}
                 >
                   {isSectionMounted('experimental') ? (
@@ -1183,7 +1184,7 @@ function Settings(): React.JSX.Element {
                     <SettingsSection
                       key={repo.id}
                       id={repoSectionId}
-                      title={`Project Settings > ${repo.displayName}`}
+                      title={`프로젝트 설정 > ${repo.displayName}`}
                       description={repo.path}
                       searchEntries={getSectionSearchEntries(repoSectionId)}
                     >

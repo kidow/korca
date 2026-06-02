@@ -52,16 +52,18 @@ export function BrowserMobileDriverOverlay({ driver, onTakeBack }: Props): React
       <div className="pointer-events-auto flex w-full max-w-[30rem] flex-col gap-3 rounded-lg border border-border bg-card p-6 pb-5 text-card-foreground shadow-xs">
         <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
           <span aria-hidden="true">●</span>
-          <span>Mobile is driving this browser</span>
+          <span>휴대폰이 이 브라우저를 제어 중입니다</span>
         </div>
-        <div className="text-base font-semibold leading-tight">Browser input is paused</div>
+        <div className="text-base font-semibold leading-tight">
+          브라우저 입력이 일시 중지되었습니다
+        </div>
         <div className="text-sm leading-relaxed text-muted-foreground">
-          This tab is being controlled from your phone. Take back to use it on desktop.
+          이 탭은 휴대폰에서 제어 중입니다. 데스크톱에서 사용하려면 다시 가져오세요.
         </div>
         <div className="mt-1 flex justify-end">
           {/* autoFocus puts keyboard users on the recovery action when the lock appears. */}
           <Button type="button" size="sm" onClick={handleTakeBack} disabled={pending} autoFocus>
-            Take back
+            다시 가져오기
           </Button>
         </div>
       </div>

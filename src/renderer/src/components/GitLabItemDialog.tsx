@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: dialog co-locates header, three
    tabs (Description / Conversation / Pipeline), comment composer,
    and four mutation actions. Splitting any of these into separate
@@ -87,6 +88,13 @@ function jobStatusTone(status: string): string {
 }
 
 function StateBadge({ state }: { state: GitLabWorkItem['state'] }): React.JSX.Element {
+  const label: Record<GitLabWorkItem['state'], string> = {
+    opened: '열림',
+    closed: '닫힘',
+    merged: '병합됨',
+    locked: '잠김',
+    draft: '초안'
+  }
   return (
     <span
       className={cn(
@@ -94,9 +102,39 @@ function StateBadge({ state }: { state: GitLabWorkItem['state'] }): React.JSX.El
         STATE_TONE[state]
       )}
     >
-      {state}
+      {label[state]}
     </span>
   )
+}
+
+function formatPipelineJobStatus(status: string): string {
+  switch (status) {
+    case 'success':
+      return '성공'
+    case 'failed':
+      return '실패'
+    case 'running':
+      return '실행 중'
+    case 'pending':
+      return '대기 중'
+    case 'created':
+      return '생성됨'
+    case 'preparing':
+      return '준비 중'
+    case 'waiting_for_resource':
+      return '리소스 대기 중'
+    case 'scheduled':
+      return '예약됨'
+    case 'manual':
+      return '수동'
+    case 'canceled':
+    case 'cancelled':
+      return '취소됨'
+    case 'skipped':
+      return '건너뜀'
+    default:
+      return status
+  }
 }
 
 function normalizeGitLabLabels(labels: readonly string[]): string[] {
@@ -172,7 +210,7 @@ function CommentCard({
           <span className="font-medium text-foreground">{comment.author}</span>
           {comment.isResolved ? (
             <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-300">
-              resolved
+              해결됨
             </span>
           ) : null}
         </div>
@@ -187,7 +225,7 @@ function CommentCard({
               className="h-6"
             >
               {resolving ? <LoaderCircle className="size-3 animate-spin" /> : null}
-              {comment.isResolved ? 'Reopen' : 'Resolve'}
+              {comment.isResolved ? '다시 열기' : '해결'}
             </Button>
           ) : null}
           <span>{comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : ''}</span>
@@ -237,7 +275,7 @@ function PipelineJobRow({
             jobStatusTone(job.status)
           )}
         >
-          {job.status}
+          {formatPipelineJobStatus(job.status)}
         </span>
         <span className="text-right text-[11px] text-muted-foreground">
           {/* Why: durations come back as seconds; show "Nm Ns" for >60s
@@ -259,7 +297,7 @@ function PipelineJobRow({
               className="h-6"
             >
               {retrying ? <LoaderCircle className="size-3 animate-spin" /> : null}
-              Retry
+              다시 시도
             </Button>
           ) : null}
           {job.webUrl ? (
@@ -268,7 +306,7 @@ function PipelineJobRow({
               variant="ghost"
               size="icon-xs"
               onClick={() => void window.api.shell.openUrl(job.webUrl)}
-              title="Open job in GitLab"
+              title="GitLab에서 작업 열기"
             >
               <ExternalLink className="size-3" />
             </Button>
@@ -278,21 +316,21 @@ function PipelineJobRow({
       {expanded ? (
         <div className="mx-3 mb-2 rounded-md border border-border/50 bg-muted/20">
           <div className="flex items-center justify-between border-b border-border/40 px-2.5 py-1.5 text-[11px] text-muted-foreground">
-            <span>Job log</span>
+            <span>작업 로그</span>
             <Button type="button" variant="ghost" size="xs" onClick={() => onToggleTrace(job)}>
-              Hide
+              숨기기
             </Button>
           </div>
           {traceState?.loading ? (
             <div className="flex items-center gap-2 px-2.5 py-3 text-xs text-muted-foreground">
               <LoaderCircle className="size-3.5 animate-spin" />
-              Loading log
+              로그 불러오는 중
             </div>
           ) : traceState?.error ? (
             <div className="px-2.5 py-3 text-xs text-destructive">{traceState.error}</div>
           ) : (
             <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-words px-2.5 py-2 font-mono text-[11px] leading-4 text-foreground scrollbar-sleek">
-              {traceState?.trace?.trim() ? traceState.trace : 'No log output.'}
+              {traceState?.trace?.trim() ? traceState.trace : '로그 출력 없음'}
             </pre>
           )}
         </div>
@@ -369,7 +407,7 @@ export default function GitLabItemDialog({
           return
         }
         if (!data) {
-          setError('Item not found.')
+          setError('항목을 찾을 수 없습니다.')
           return
         }
         setDetails(data as GitLabWorkItemDetails)
@@ -486,7 +524,7 @@ export default function GitLabItemDialog({
     const nextBody = bodyDraft
     const nextLabels = parseGitLabLabelDraft(labelDraft)
     if (!nextTitle) {
-      toast.error('MR title is required.')
+      toast.error('MR 제목이 필요합니다.')
       return
     }
 
@@ -613,7 +651,7 @@ export default function GitLabItemDialog({
           return
         }
         if (result.ok) {
-          toast.success(`Retried ${job.name}`)
+          toast.success(`${job.name} 작업을 다시 시도했습니다`)
           if (result.job) {
             setDetails((current) =>
               current
@@ -648,7 +686,7 @@ export default function GitLabItemDialog({
         .map((reviewer) => reviewer.id)
         .filter((id): id is number => typeof id === 'number')
       if (reviewerIds.length !== nextReviewers.length) {
-        toast.error('Reviewer id is unavailable for this GitLab user.')
+        toast.error('이 GitLab 사용자의 Reviewer ID를 사용할 수 없습니다.')
         return
       }
       setReviewerUpdating(true)
@@ -690,11 +728,11 @@ export default function GitLabItemDialog({
     const line = Number.parseInt(inlineCommentLine, 10)
     const body = inlineCommentBody.trim()
     if (!file || !Number.isFinite(line) || line <= 0 || !body) {
-      toast.error('File, line, and comment are required.')
+      toast.error('파일, 줄 번호, 댓글이 필요합니다.')
       return
     }
     if (!details.baseSha || !details.startSha || !details.headSha) {
-      toast.error('MR diff refs are unavailable for inline comments.')
+      toast.error('인라인 댓글에 필요한 MR diff ref를 사용할 수 없습니다.')
       return
     }
     setInlineCommentSubmitting(true)
@@ -721,7 +759,7 @@ export default function GitLabItemDialog({
           current ? { ...current, comments: [...current.comments, result.comment] } : current
         )
         setInlineCommentBody('')
-        toast.success('Inline comment added')
+        toast.success('인라인 댓글을 추가했습니다')
       } else {
         toast.error(result.error)
       }
@@ -749,7 +787,7 @@ export default function GitLabItemDialog({
       const res = await window.api.gl.closeMR({ repoPath, iid: item.number })
       if (res.ok) {
         if (mountedRef.current) {
-          toast.success(`Closed MR !${item.number}`)
+          toast.success(`MR !${item.number}을 닫았습니다`)
           handleRefresh()
         }
       } else {
@@ -773,7 +811,7 @@ export default function GitLabItemDialog({
       const res = await window.api.gl.reopenMR({ repoPath, iid: item.number })
       if (res.ok) {
         if (mountedRef.current) {
-          toast.success(`Reopened MR !${item.number}`)
+          toast.success(`MR !${item.number}을 다시 열었습니다`)
           handleRefresh()
         }
       } else {
@@ -797,7 +835,7 @@ export default function GitLabItemDialog({
       const res = await window.api.gl.mergeMR({ repoPath, iid: item.number })
       if (res.ok) {
         if (mountedRef.current) {
-          toast.success(`Merged MR !${item.number}`)
+          toast.success(`MR !${item.number}을 병합했습니다`)
           handleRefresh()
         }
       } else {
@@ -909,8 +947,8 @@ export default function GitLabItemDialog({
     <Sheet open={item !== null} onOpenChange={(open) => !open && onClose()}>
       <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-2xl">
         <VisuallyHidden.Root>
-          <SheetTitle>{item ? visibleTitle : 'Work item'}</SheetTitle>
-          <SheetDescription>GitLab work item detail</SheetDescription>
+          <SheetTitle>{item ? visibleTitle : '작업 항목'}</SheetTitle>
+          <SheetDescription>GitLab 작업 항목 상세</SheetDescription>
         </VisuallyHidden.Root>
 
         {item ? (
@@ -925,7 +963,7 @@ export default function GitLabItemDialog({
                       {item.number}
                     </span>
                     <StateBadge state={item.state} />
-                    {item.author ? <span>by {item.author}</span> : null}
+                    {item.author ? <span>작성자 {item.author}</span> : null}
                   </div>
                   <h2 className="mt-1.5 text-lg font-semibold leading-tight text-foreground">
                     {visibleTitle}
@@ -946,7 +984,7 @@ export default function GitLabItemDialog({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Refresh"
+                  aria-label="새로고침"
                   disabled={loading}
                   onClick={handleRefresh}
                   className="size-7"
@@ -962,9 +1000,9 @@ export default function GitLabItemDialog({
 
             <Tabs defaultValue="description" className="flex min-h-0 flex-1 flex-col">
               <TabsList className="mx-5 mt-3 self-start">
-                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="description">설명</TabsTrigger>
                 <TabsTrigger value="conversation">
-                  Conversation
+                  대화
                   {details?.comments?.length ? (
                     <span className="ml-1.5 rounded-full bg-muted px-1.5 text-[10px] font-medium">
                       {details.comments.length}
@@ -973,7 +1011,7 @@ export default function GitLabItemDialog({
                 </TabsTrigger>
                 {isMR ? (
                   <TabsTrigger value="files">
-                    Files
+                    파일
                     {details?.files?.length ? (
                       <span className="ml-1.5 rounded-full bg-muted px-1.5 text-[10px] font-medium">
                         {details.files.length}
@@ -983,7 +1021,7 @@ export default function GitLabItemDialog({
                 ) : null}
                 {isMR ? (
                   <TabsTrigger value="pipeline">
-                    Pipeline
+                    파이프라인
                     {details?.pipelineJobs?.length ? (
                       <span className="ml-1.5 rounded-full bg-muted px-1.5 text-[10px] font-medium">
                         {details.pipelineJobs.length}
@@ -1005,16 +1043,14 @@ export default function GitLabItemDialog({
                     <div className="mb-4 rounded-md border border-border/50 bg-muted/20 p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div>
-                          <div className="text-xs font-medium text-foreground">Reviewers</div>
+                          <div className="text-xs font-medium text-foreground">리뷰어</div>
                           {approvalState ? (
                             <div className="mt-0.5 text-[11px] text-muted-foreground">
                               {approvalState.approvalsLeft === 0
-                                ? 'Approved'
-                                : `${approvalState.approvalsLeft ?? 0} approval${
-                                    approvalState.approvalsLeft === 1 ? '' : 's'
-                                  } remaining`}
+                                ? '승인됨'
+                                : `${approvalState.approvalsLeft ?? 0}개 승인 필요`}
                               {typeof approvalState.approvalsRequired === 'number'
-                                ? ` of ${approvalState.approvalsRequired} required`
+                                ? ` / 총 ${approvalState.approvalsRequired}개 필요`
                                 : ''}
                             </div>
                           ) : null}
@@ -1029,7 +1065,7 @@ export default function GitLabItemDialog({
                           {reviewerOptionsLoading ? (
                             <LoaderCircle className="size-3 animate-spin" />
                           ) : null}
-                          Manage
+                          관리
                         </Button>
                       </div>
                       <div className="mt-2 flex flex-wrap gap-1.5">
@@ -1058,7 +1094,9 @@ export default function GitLabItemDialog({
                             </span>
                           ))
                         ) : (
-                          <span className="text-[11px] text-muted-foreground">No reviewers.</span>
+                          <span className="text-[11px] text-muted-foreground">
+                            리뷰어가 없습니다.
+                          </span>
                         )}
                       </div>
                       {reviewerOptions ? (
@@ -1069,7 +1107,7 @@ export default function GitLabItemDialog({
                             onChange={(event) => setReviewerDraftId(event.target.value)}
                             className="h-8 min-w-0 flex-1 rounded-md border border-input bg-background px-2 text-xs text-foreground"
                           >
-                            <option value="">Add reviewer</option>
+                            <option value="">리뷰어 추가</option>
                             {reviewerOptionRows.map((reviewer) => (
                               <option key={gitLabUserKey(reviewer)} value={gitLabUserKey(reviewer)}>
                                 {reviewer.username}
@@ -1092,7 +1130,7 @@ export default function GitLabItemDialog({
                             {reviewerUpdating ? (
                               <LoaderCircle className="size-3 animate-spin" />
                             ) : null}
-                            Add
+                            추가
                           </Button>
                         </div>
                       ) : null}
@@ -1105,7 +1143,7 @@ export default function GitLabItemDialog({
                             >
                               <span className="min-w-0 truncate">{rule.name}</span>
                               <span>
-                                {rule.approved ? 'Approved' : `${rule.approvalsRequired} required`}
+                                {rule.approved ? '승인됨' : `${rule.approvalsRequired}개 필요`}
                               </span>
                             </div>
                           ))}
@@ -1121,7 +1159,7 @@ export default function GitLabItemDialog({
                     <div className="space-y-3">
                       <div>
                         <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                          Title
+                          제목
                         </label>
                         <input
                           value={titleDraft}
@@ -1132,7 +1170,7 @@ export default function GitLabItemDialog({
                       </div>
                       <div>
                         <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                          Description
+                          설명
                         </label>
                         <textarea
                           value={bodyDraft}
@@ -1144,13 +1182,13 @@ export default function GitLabItemDialog({
                       </div>
                       <div>
                         <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                          Labels
+                          레이블
                         </label>
                         <input
                           value={labelDraft}
                           onChange={(event) => setLabelDraft(event.target.value)}
                           disabled={detailsSaving}
-                          placeholder="bug, backend"
+                          placeholder="버그, 백엔드"
                           className="h-9 w-full rounded-md border border-input bg-transparent px-2.5 text-sm shadow-xs focus:border-ring focus:outline-none focus:ring-[3px] focus:ring-ring/50"
                         />
                         {labelOptionsLoading || labelSuggestionOptions.length > 0 ? (
@@ -1158,7 +1196,7 @@ export default function GitLabItemDialog({
                             {labelOptionsLoading ? (
                               <span className="inline-flex h-6 items-center gap-1 rounded-full border border-border/50 px-2 text-[11px] text-muted-foreground">
                                 <LoaderCircle className="size-3 animate-spin" />
-                                Loading labels
+                                레이블 불러오는 중
                               </span>
                             ) : null}
                             {labelSuggestionOptions.map((label) => {
@@ -1197,7 +1235,7 @@ export default function GitLabItemDialog({
                           onClick={handleCancelDetailsEdit}
                         >
                           <X className="size-3.5" />
-                          Cancel
+                          취소
                         </Button>
                         <Button
                           type="button"
@@ -1210,7 +1248,7 @@ export default function GitLabItemDialog({
                           ) : (
                             <Check className="size-3.5" />
                           )}
-                          Save
+                          저장
                         </Button>
                       </div>
                     </div>
@@ -1226,7 +1264,7 @@ export default function GitLabItemDialog({
                             className="gap-1.5"
                           >
                             <Pencil className="size-3.5" />
-                            Edit
+                            편집
                           </Button>
                         </div>
                       ) : null}
@@ -1244,11 +1282,11 @@ export default function GitLabItemDialog({
                             className="gap-1.5"
                           >
                             <Pencil className="size-3.5" />
-                            Edit
+                            편집
                           </Button>
                         </div>
                       ) : null}
-                      <p className="text-sm text-muted-foreground">No description.</p>
+                      <p className="text-sm text-muted-foreground">설명이 없습니다.</p>
                     </div>
                   )}
                 </TabsContent>
@@ -1271,7 +1309,7 @@ export default function GitLabItemDialog({
                       />
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground">No comments yet.</p>
+                    <p className="text-sm text-muted-foreground">댓글이 아직 없습니다.</p>
                   )}
                 </TabsContent>
 
@@ -1290,7 +1328,7 @@ export default function GitLabItemDialog({
                               onChange={(event) => setInlineCommentFilePath(event.target.value)}
                               className="h-8 min-w-0 rounded-md border border-input bg-background px-2 text-xs text-foreground"
                             >
-                              <option value="">File</option>
+                              <option value="">파일</option>
                               {details.files.map((file) => (
                                 <option key={file.path} value={file.path}>
                                   {file.path}
@@ -1301,7 +1339,7 @@ export default function GitLabItemDialog({
                               value={inlineCommentLine}
                               onChange={(event) => setInlineCommentLine(event.target.value)}
                               inputMode="numeric"
-                              placeholder="Line"
+                              placeholder="줄"
                               className="h-8 rounded-md border border-input bg-background px-2 text-xs text-foreground"
                             />
                           </div>
@@ -1309,7 +1347,7 @@ export default function GitLabItemDialog({
                             value={inlineCommentBody}
                             onChange={(event) => setInlineCommentBody(event.target.value)}
                             rows={2}
-                            placeholder="Inline comment"
+                            placeholder="인라인 댓글"
                             className="mt-2 w-full resize-none rounded-md border border-input bg-background px-2.5 py-1.5 text-sm shadow-xs focus:border-ring focus:outline-none focus:ring-[3px] focus:ring-ring/50"
                           />
                           <div className="mt-2 flex justify-end">
@@ -1329,7 +1367,7 @@ export default function GitLabItemDialog({
                               ) : (
                                 <Send className="size-3.5" />
                               )}
-                              Comment
+                              댓글
                             </Button>
                           </div>
                         </div>
@@ -1346,7 +1384,7 @@ export default function GitLabItemDialog({
                                   </div>
                                   {file.oldPath ? (
                                     <div className="break-all font-mono text-[11px] text-muted-foreground">
-                                      from {file.oldPath}
+                                      이전 경로 {file.oldPath}
                                     </div>
                                   ) : null}
                                 </div>
@@ -1361,7 +1399,7 @@ export default function GitLabItemDialog({
                                 </pre>
                               ) : (
                                 <div className="px-3 py-3 text-xs text-muted-foreground">
-                                  Diff content unavailable.
+                                  diff 내용을 사용할 수 없습니다.
                                 </div>
                               )}
                             </div>
@@ -1369,7 +1407,7 @@ export default function GitLabItemDialog({
                         </div>
                       </>
                     ) : (
-                      <p className="text-sm text-muted-foreground">No changed files.</p>
+                      <p className="text-sm text-muted-foreground">변경된 파일이 없습니다.</p>
                     )}
                   </TabsContent>
                 ) : null}
@@ -1395,7 +1433,9 @@ export default function GitLabItemDialog({
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground">No pipeline runs for this MR.</p>
+                      <p className="text-sm text-muted-foreground">
+                        이 MR의 파이프라인 실행이 없습니다.
+                      </p>
                     )}
                   </TabsContent>
                 ) : null}
@@ -1409,7 +1449,7 @@ export default function GitLabItemDialog({
                 <textarea
                   value={commentDraft}
                   onChange={(e) => updateCommentDraft(e.target.value)}
-                  placeholder={`Comment on ${prefix}${item.number}…`}
+                  placeholder={`#${item.number}에 댓글 추가…`}
                   rows={2}
                   disabled={commentSubmitting}
                   className="min-h-9 w-full resize-none rounded-md border border-input bg-transparent px-2.5 py-1.5 text-sm shadow-xs focus:border-ring focus:outline-none focus:ring-[3px] focus:ring-ring/50"
@@ -1433,7 +1473,7 @@ export default function GitLabItemDialog({
                   ) : (
                     <Send className="size-3.5" />
                   )}
-                  Comment
+                  댓글
                 </Button>
               </div>
 
@@ -1445,12 +1485,12 @@ export default function GitLabItemDialog({
                   className="gap-1.5"
                 >
                   <ExternalLink className="size-3.5" />
-                  Open in GitLab
+                  GitLab에서 열기
                 </Button>
                 <div className="flex items-center gap-2">
                   {onCreateWorkspace ? (
                     <Button variant="outline" size="sm" onClick={() => onCreateWorkspace(item)}>
-                      Create workspace
+                      작업 공간 만들기
                     </Button>
                   ) : null}
                   {canMerge ? (
@@ -1462,7 +1502,7 @@ export default function GitLabItemDialog({
                       {actionInFlight === 'merge' ? (
                         <LoaderCircle className="size-3.5 animate-spin" />
                       ) : null}
-                      Merge
+                      병합
                     </Button>
                   ) : null}
                   {canClose ? (
@@ -1475,7 +1515,7 @@ export default function GitLabItemDialog({
                       {actionInFlight === 'close' ? (
                         <LoaderCircle className="size-3.5 animate-spin" />
                       ) : null}
-                      Close
+                      닫기
                     </Button>
                   ) : null}
                   {canReopen ? (
@@ -1488,7 +1528,7 @@ export default function GitLabItemDialog({
                       {actionInFlight === 'reopen' ? (
                         <LoaderCircle className="size-3.5 animate-spin" />
                       ) : null}
-                      Reopen
+                      다시 열기
                     </Button>
                   ) : null}
                 </div>

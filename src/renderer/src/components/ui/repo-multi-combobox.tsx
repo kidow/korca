@@ -32,10 +32,10 @@ type RepoMultiComboboxProps = {
 
 function renderTriggerLabel(repos: Repo[], selected: ReadonlySet<string>): React.JSX.Element {
   if (repos.length === 0) {
-    return <span className="text-muted-foreground">No projects</span>
+    return <span className="text-muted-foreground">프로젝트 없음</span>
   }
   if (selected.size === repos.length) {
-    return <span className="inline-flex min-w-0 items-center gap-1.5">All projects</span>
+    return <span className="inline-flex min-w-0 items-center gap-1.5">전체 프로젝트</span>
   }
   const selectedRepos = repos.filter((r) => selected.has(r.id))
   const [first, second, ...rest] = selectedRepos
@@ -135,7 +135,7 @@ export default function RepoMultiCombobox({
         <Command shouldFilter={false} value={commandValue} onValueChange={setCommandValue}>
           <CommandInput
             autoFocus
-            placeholder="Search projects..."
+            placeholder="프로젝트 검색..."
             value={query}
             onValueChange={setQuery}
             className="text-xs"
@@ -161,11 +161,11 @@ export default function RepoMultiCombobox({
                   allSelected ? 'opacity-70' : 'opacity-0'
                 )}
               />
-              <span>All projects</span>
+              <span>전체 프로젝트</span>
             </button>
           </div>
           <CommandList>
-            <CommandEmpty>No projects match your search.</CommandEmpty>
+            <CommandEmpty>검색과 일치하는 프로젝트가 없습니다.</CommandEmpty>
             {filteredRepos.map((repo) => {
               const isSelected = selected.has(repo.id)
               const isLastSelected = isSelected && selected.size <= 1

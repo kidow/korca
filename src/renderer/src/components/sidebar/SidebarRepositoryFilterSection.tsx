@@ -158,7 +158,9 @@ const SidebarRepositoryFilterSection = React.memo(function SidebarRepositoryFilt
         />
         <CommandList className="max-h-40 py-1">
           <CommandEmpty className="py-4 text-[11px]">
-            {hasRepoFilter ? 'No unselected projects match' : 'No projects match'}
+            {hasRepoFilter
+              ? '선택하지 않은 프로젝트와 일치하는 항목이 없습니다'
+              : '일치하는 프로젝트가 없습니다'}
           </CommandEmpty>
           {availableRepos.map((repo) => (
             <CommandItem

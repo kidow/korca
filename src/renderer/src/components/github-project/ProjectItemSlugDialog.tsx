@@ -33,10 +33,10 @@ export default function ProjectItemSlugDialog({
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <VisuallyHidden.Root asChild>
-          <SheetTitle>GitHub item</SheetTitle>
+          <SheetTitle>GitHub 항목</SheetTitle>
         </VisuallyHidden.Root>
         <VisuallyHidden.Root asChild>
-          <SheetDescription>Project row preview.</SheetDescription>
+          <SheetDescription>프로젝트 행 미리보기.</SheetDescription>
         </VisuallyHidden.Root>
         {projectOrigin ? <SlugDialogBody projectOrigin={projectOrigin} onClose={onClose} /> : null}
       </SheetContent>

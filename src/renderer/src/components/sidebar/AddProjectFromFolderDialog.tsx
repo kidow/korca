@@ -268,8 +268,8 @@ const AddProjectFromFolderDialog = React.memo(function AddProjectFromFolderDialo
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle>Add Project</DialogTitle>
-              <DialogDescription>Add this folder as a separate Korca project.</DialogDescription>
+              <DialogTitle>프로젝트 추가</DialogTitle>
+              <DialogDescription>이 폴더를 별도의 Korca 프로젝트로 추가합니다.</DialogDescription>
             </DialogHeader>
 
             {folderPath && (

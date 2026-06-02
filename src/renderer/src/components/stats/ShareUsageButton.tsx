@@ -105,7 +105,7 @@ export function ShareUsageButton(props: ShareUsageButtonProps): React.JSX.Elemen
     }
 
     const lines = [
-      `My ${rangeLabel} ${providerName} usage via @korca_build`,
+      `@korca_build로 본 ${rangeLabel} ${providerName} 사용량`,
       '',
       `${fmtTokens(totalTokens)} tokens · ${costStr} est. cost`,
       '',
@@ -125,20 +125,20 @@ export function ShareUsageButton(props: ShareUsageButtonProps): React.JSX.Elemen
                 ref={setShareButtonRef}
                 variant="ghost"
                 size="icon-xs"
-                aria-label="Share usage"
+                aria-label="사용량 공유"
               >
                 <Share2 className="size-3.5" />
               </Button>
             </DialogTrigger>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={6}>
-            Share
+            공유
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <DialogContent className="max-w-fit" showCloseButton>
         <DialogHeader>
-          <DialogTitle>Share usage</DialogTitle>
+          <DialogTitle>사용량 공유</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center gap-3 py-2">
           <ShareUsageCard ref={cardRef} {...props} />
@@ -147,12 +147,12 @@ export function ShareUsageButton(props: ShareUsageButtonProps): React.JSX.Elemen
               {copied ? (
                 <>
                   <Check className="mr-2 size-4" />
-                  Copied
+                  복사됨
                 </>
               ) : (
                 <>
                   <Copy className="mr-2 size-4" />
-                  Copy image
+                  이미지 복사
                 </>
               )}
             </Button>
@@ -165,7 +165,7 @@ export function ShareUsageButton(props: ShareUsageButtonProps): React.JSX.Elemen
               <span className="mr-2">
                 <XIcon />
               </span>
-              Share on X
+              X에 공유
             </Button>
           </div>
         </div>

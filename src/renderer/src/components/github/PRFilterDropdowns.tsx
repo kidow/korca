@@ -55,7 +55,7 @@ function ActivePill({
       <span className="max-w-[160px] truncate font-medium">{value}</span>
       <button
         type="button"
-        aria-label={`Remove ${label} filter`}
+        aria-label={`${label} 필터 제거`}
         onClick={onClear}
         className="rounded-full p-0.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
       >
@@ -94,12 +94,12 @@ export default function PRFilterDropdowns({
   // login — GitHub's search API resolves it server-side to the authenticated
   // user, matching the behavior of the built-in "Mine" / "Needs review" presets.
   const userOpts = useMemo<PickerOption[]>(() => {
-    const meOption: PickerOption = { key: '@me', primary: '@me', secondary: 'Current user' }
+    const meOption: PickerOption = { key: '@me', primary: '@me', secondary: '현재 사용자' }
     return [meOption, ...userOptions(hasPrimarySlug ? assigneesState.data : [])]
   }, [assigneesState.data, hasPrimarySlug])
   const authorOpts = useMemo<PickerOption[]>(() => {
     const options = new Map<string, PickerOption>()
-    options.set('@me', { key: '@me', primary: '@me', secondary: 'Current user' })
+    options.set('@me', { key: '@me', primary: '@me', secondary: '현재 사용자' })
     // Why: the Author filter should reflect actual visible item authors.
     // Assignable-user metadata is repo-collaborator scoped and can omit outside
     // contributors.
@@ -129,14 +129,14 @@ export default function PRFilterDropdowns({
   const statusPillValue = ((): string | null => {
     const parts: string[] = []
     if (parsed.state === 'closed') {
-      parts.push('Closed')
+      parts.push('닫힘')
     } else if (parsed.state === 'merged') {
-      parts.push('Merged')
+      parts.push('병합됨')
     } else if (parsed.state === 'all') {
-      parts.push('Any')
+      parts.push('전체')
     }
     if (parsed.draft) {
-      parts.push('Draft')
+      parts.push('초안')
     }
     return parts.length > 0 ? parts.join(' · ') : null
   })()
@@ -176,7 +176,7 @@ export default function PRFilterDropdowns({
             )}
           >
             <ListFilter className="size-3.5" />
-            Filters
+            필터
             {activeCount > 0 ? (
               <span className="ml-0.5 rounded-full bg-muted px-1.5 text-[10px] font-medium text-foreground">
                 {activeCount}
@@ -238,35 +238,35 @@ export default function PRFilterDropdowns({
       </Popover>
       {statusPillValue ? (
         <ActivePill
-          label="Status"
+          label="상태"
           value={statusPillValue}
           onClear={() => onChange({ state: 'open', draft: false })}
         />
       ) : null}
       {parsed.author ? (
         <ActivePill
-          label="Author"
+          label="작성자"
           value={parsed.author}
           onClear={() => onChange({ author: null })}
         />
       ) : null}
       {parsed.labels.length > 0 ? (
         <ActivePill
-          label="Label"
-          value={parsed.labels.length === 1 ? parsed.labels[0] : `${parsed.labels.length} labels`}
+          label="레이블"
+          value={parsed.labels.length === 1 ? parsed.labels[0] : `레이블 ${parsed.labels.length}개`}
           onClear={() => onChange({ labels: [] })}
         />
       ) : null}
       {reviewerActive ? (
         <ActivePill
-          label={reviewerKind === 'reviewed-by' ? 'Reviewed by' : 'Review from'}
+          label={reviewerKind === 'reviewed-by' ? '검토한 사람' : '검토 요청'}
           value={reviewerActive}
           onClear={() => onChange({ reviewer: null })}
         />
       ) : null}
       {parsed.assignee ? (
         <ActivePill
-          label="Assignee"
+          label="담당자"
           value={parsed.assignee}
           onClear={() => onChange({ assignee: null })}
         />

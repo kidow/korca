@@ -56,7 +56,7 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
     try {
       await window.api.diagnostics.openTraceFolder()
     } catch {
-      toast.error('Could not open trace folder')
+      toast.error('추적 폴더를 열지 못했습니다')
     }
   }, [])
 
@@ -71,10 +71,10 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
       setPreviewOpened(false)
       setTicketId(null)
       await refreshStatus()
-      toast.success('Local trace files cleared')
+      toast.success('로컬 추적 파일을 지웠습니다')
     } catch {
       if (mountedRef.current) {
-        toast.error('Could not clear trace files')
+        toast.error('추적 파일을 지우지 못했습니다')
       }
     }
   }, [refreshStatus])
@@ -93,10 +93,10 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
       setBundle(nextBundle)
       setPreviewOpened(false)
       setTicketId(null)
-      toast.success('Diagnostic bundle preview created')
+      toast.success('진단 번들 미리보기를 만들었습니다')
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(getDiagnosticsErrorMessage(error, 'Could not create diagnostic bundle'))
+        toast.error(getDiagnosticsErrorMessage(error, '진단 번들을 만들지 못했습니다'))
       }
     } finally {
       if (mountedRef.current) {
@@ -116,10 +116,10 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
         return
       }
       setPreviewOpened(true)
-      toast.success('Diagnostic bundle preview opened')
+      toast.success('진단 번들 미리보기를 열었습니다')
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(getDiagnosticsErrorMessage(error, 'Could not open diagnostic bundle preview'))
+        toast.error(getDiagnosticsErrorMessage(error, '진단 번들 미리보기를 열지 못했습니다'))
       }
     } finally {
       if (mountedRef.current) {
@@ -142,10 +142,10 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
       setBundle(null)
       setPreviewOpened(false)
       setTicketId(upload.ticketId)
-      toast.success('Diagnostic bundle uploaded')
+      toast.success('진단 번들을 업로드했습니다')
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(getDiagnosticsErrorMessage(error, 'Could not upload diagnostic bundle'))
+        toast.error(getDiagnosticsErrorMessage(error, '진단 번들을 업로드하지 못했습니다'))
       }
     } finally {
       if (mountedRef.current) {
@@ -167,12 +167,10 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
       activeBundleSubmissionIdRef.current = null
       setBundle(null)
       setPreviewOpened(false)
-      toast.success('Diagnostic bundle preview discarded')
+      toast.success('진단 번들 미리보기를 버렸습니다')
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(
-          getDiagnosticsErrorMessage(error, 'Could not discard diagnostic bundle preview')
-        )
+        toast.error(getDiagnosticsErrorMessage(error, '진단 번들 미리보기를 버리지 못했습니다'))
       }
     } finally {
       if (mountedRef.current) {
@@ -191,10 +189,10 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
       if (!mountedRef.current) {
         return
       }
-      toast.success('Diagnostic ticket copied')
+      toast.success('진단 티켓을 복사했습니다')
     } catch {
       if (mountedRef.current) {
-        toast.error('Could not copy diagnostic ticket')
+        toast.error('진단 티켓을 복사하지 못했습니다')
       }
     } finally {
       if (mountedRef.current) {
@@ -214,10 +212,10 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
         return
       }
       setTicketId(null)
-      toast.success('Uploaded diagnostic bundle deleted')
+      toast.success('업로드한 진단 번들을 삭제했습니다')
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(getDiagnosticsErrorMessage(error, 'Could not delete diagnostic bundle'))
+        toast.error(getDiagnosticsErrorMessage(error, '진단 번들을 삭제하지 못했습니다'))
       }
     } finally {
       if (mountedRef.current) {
@@ -234,7 +232,7 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
       <Separator />
       <Section
         icon={<FileText className="size-4" />}
-        title="Diagnostic bundle"
+        title="진단 번들"
         description={getDiagnosticBundleDescription({ bundle, previewOpened, ticketId })}
       >
         <PrivacyDiagnosticBundleControls
@@ -260,18 +258,18 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
       <Separator />
       <Section
         icon={<Folder className="size-4" />}
-        title="Open trace folder"
-        description={`Reveals ${status?.traceFilePath || 'the trace folder'} in your file manager.`}
+        title="추적 폴더 열기"
+        description={`파일 관리자에서 ${status?.traceFilePath || '추적 폴더'}를 엽니다.`}
       >
         <Button variant="outline" size="sm" onClick={() => void handleOpenFolder()}>
-          Open trace folder
+          추적 폴더 열기
         </Button>
       </Section>
       <Separator />
       <Section
         icon={<Trash2 className="size-4" />}
-        title="Clear local traces"
-        description="Deletes every rotated trace file on this machine."
+        title="로컬 추적 지우기"
+        description="이 기기에 있는 모든 회전 추적 파일을 삭제합니다."
       >
         <Button
           variant="outline"
@@ -279,16 +277,16 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
           disabled={!status?.localFileEnabled}
           onClick={() => void handleClear()}
         >
-          Clear local traces
+          로컬 추적 지우기
         </Button>
       </Section>
       <Separator />
       <Section
         icon={<Globe className="size-4" />}
-        title="OTLP export"
+        title="OTLP 내보내기"
         description={
           status?.otlpStatus ??
-          'Set KORCA_OTLP_TRACES_URL to point Korca at your own OpenTelemetry collector.'
+          'KORCA_OTLP_TRACES_URL을 설정해 Korca를 직접 운영하는 OpenTelemetry 수집기로 연결하세요.'
         }
       >
         <span
@@ -298,7 +296,7 @@ export function PrivacyDiagnosticsSection(): React.JSX.Element {
               : 'text-xs text-muted-foreground'
           }
         >
-          {status?.otlpEnabled ? 'Enabled' : 'Disabled'}
+          {status?.otlpEnabled ? '활성화됨' : '비활성화됨'}
         </span>
       </Section>
     </>
@@ -316,14 +314,14 @@ function DiagnosticsDisabledStateNote({
 }): React.JSX.Element {
   const message =
     reason === 'do_not_track'
-      ? 'DO_NOT_TRACK=1 is set — network-bound diagnostics are disabled. The local trace file is still active.'
+      ? 'DO_NOT_TRACK=1이 설정되어 네트워크 기반 진단이 꺼져 있습니다. 로컬 추적 파일은 계속 활성화됩니다.'
       : reason === 'korca_telemetry_disabled'
-        ? 'KORCA_TELEMETRY_DISABLED=1 is set — network-bound diagnostics are disabled. The local trace file is still active.'
+        ? 'KORCA_TELEMETRY_DISABLED=1이 설정되어 네트워크 기반 진단이 꺼져 있습니다. 로컬 추적 파일은 계속 활성화됩니다.'
         : reason === 'korca_diagnostics_disabled'
-          ? 'KORCA_DIAGNOSTICS_DISABLED=1 is set — every diagnostics surface is off, including local trace writes.'
+          ? 'KORCA_DIAGNOSTICS_DISABLED=1이 설정되어 로컬 추적 기록을 포함한 모든 진단 기능이 꺼져 있습니다.'
           : reason === 'ci'
-            ? 'Running in CI — diagnostics are off.'
-            : 'Diagnostics are disabled by an environment variable.'
+            ? 'CI에서 실행 중이므로 진단이 꺼져 있습니다.'
+            : '환경 변수로 인해 진단이 비활성화되어 있습니다.'
 
   return (
     <div className="rounded border border-dashed border-border/60 bg-card/30 px-3 py-2 text-xs text-muted-foreground">

@@ -121,12 +121,12 @@ function InstallRgGuidance({
         className="flex items-start gap-2.5 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-amber-700 dark:text-amber-300"
       >
         <AlertTriangle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
-        <p className="text-[13px] leading-5">Quick Open scan too large ({reason}).</p>
+        <p className="text-[13px] leading-5">빠른 열기 스캔이 너무 큽니다({reason}).</p>
       </div>
       <p>
-        Install{' '}
-        <code className="rounded bg-muted px-1 py-0.5 font-mono text-foreground">ripgrep</code> on
-        the remote to enable fast, gitignore-aware listing:
+        원격에{' '}
+        <code className="rounded bg-muted px-1 py-0.5 font-mono text-foreground">ripgrep</code>
+        을 설치하면 빠르고 `.gitignore`를 반영한 목록을 사용할 수 있습니다:
       </p>
       {command ? (
         <div className="flex items-center gap-2 rounded border border-border bg-muted/50 px-3 py-2 font-mono text-xs text-foreground">
@@ -136,10 +136,10 @@ function InstallRgGuidance({
             type="button"
             onClick={handleCopy}
             className="flex items-center gap-1 rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-            aria-label="Copy install command"
+            aria-label="설치 명령 복사"
           >
             {copied ? <Check size={12} /> : <Copy size={12} />}
-            {copied ? 'Copied' : 'Copy'}
+            {copied ? '복사됨' : '복사'}
           </button>
         </div>
       ) : guidance ? (
@@ -219,13 +219,15 @@ export default function QuickOpen(): React.JSX.Element | null {
       onOpenChange={handleOpenChange}
       shouldFilter={false}
       onCloseAutoFocus={handleCloseAutoFocus}
-      title="Go to file"
-      description="Search for a file to open"
+      title="파일 이동"
+      description="열 파일을 검색합니다"
     >
-      <CommandInput placeholder="Go to file..." value={query} onValueChange={setQuery} />
+      <CommandInput placeholder="파일 이동..." value={query} onValueChange={setQuery} />
       <CommandList className="p-2">
         {loading ? (
-          <div className="py-6 text-center text-sm text-muted-foreground">Loading files...</div>
+          <div className="py-6 text-center text-sm text-muted-foreground">
+            파일을 불러오는 중...
+          </div>
         ) : loadError ? (
           (() => {
             const guidance = parseInstallRgGuidance(loadError)
@@ -242,7 +244,7 @@ export default function QuickOpen(): React.JSX.Element | null {
             )
           })()
         ) : filtered.length === 0 ? (
-          <CommandEmpty>No matching files.</CommandEmpty>
+          <CommandEmpty>일치하는 파일이 없습니다.</CommandEmpty>
         ) : (
           filtered.map((item) => {
             const lastSlash = item.path.lastIndexOf('/')
@@ -268,16 +270,16 @@ export default function QuickOpen(): React.JSX.Element | null {
       <div className="flex items-center justify-end border-t border-border/60 px-3.5 py-2.5 text-[11px] text-muted-foreground/82">
         <div className="flex items-center gap-2">
           <FooterKey>Enter</FooterKey>
-          <span>Open</span>
+          <span>열기</span>
           <FooterKey>Esc</FooterKey>
-          <span>Close</span>
+          <span>닫기</span>
           <FooterKey>↑↓</FooterKey>
-          <span>Move</span>
+          <span>이동</span>
         </div>
       </div>
       {/* Accessibility: announce result count changes */}
       <div aria-live="polite" className="sr-only">
-        {deferredQuery.trim() ? `${filtered.length} files found` : ''}
+        {deferredQuery.trim() ? `파일 ${filtered.length}개` : ''}
       </div>
     </CommandDialog>
   )

@@ -144,10 +144,10 @@ export function GitHubRateLimitPanel({ className }: { className?: string }): Rea
         <div className="space-y-0.5">
           <div className="flex items-center gap-1.5 text-sm font-medium text-foreground">
             <Gauge className="size-4" />
-            GitHub API Budget
+            GitHub API 한도
           </div>
           <p className="text-xs text-muted-foreground">
-            Korca uses REST, Search, and GraphQL through the GitHub CLI.
+            Korca는 GitHub CLI를 통해 REST, Search, GraphQL을 사용합니다.
           </p>
         </div>
         <button
@@ -155,17 +155,17 @@ export function GitHubRateLimitPanel({ className }: { className?: string }): Rea
           onClick={() => void refresh(true)}
           disabled={isFetching}
           className="inline-flex size-7 items-center justify-center rounded-md border border-border bg-secondary text-secondary-foreground transition hover:bg-accent disabled:opacity-50"
-          aria-label="Refresh GitHub API budget"
+          aria-label="GitHub API 사용량 새로고침"
         >
           <RefreshCw className={cn('size-3.5', isFetching && 'animate-spin')} />
         </button>
       </div>
       {hasError ? (
-        <div className="text-xs text-muted-foreground">GitHub API budget is unavailable.</div>
+        <div className="text-xs text-muted-foreground">GitHub API 한도를 사용할 수 없습니다.</div>
       ) : snapshot ? (
         <GitHubRateLimitRows snapshot={snapshot} />
       ) : (
-        <div className="text-xs text-muted-foreground">Loading GitHub API budget…</div>
+        <div className="text-xs text-muted-foreground">GitHub API 한도를 불러오는 중…</div>
       )}
     </div>
   )

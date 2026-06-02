@@ -31,9 +31,9 @@ export function CodexUsageDailyChart({ daily }: CodexUsageDailyChartProps): Reac
   return (
     <section className="rounded-lg border border-border/60 bg-card/40 p-4">
       <div className="mb-3">
-        <h4 className="text-sm font-semibold text-foreground">Daily usage</h4>
+        <h4 className="text-sm font-semibold text-foreground">일별 사용량</h4>
         <p className="text-xs text-muted-foreground">
-          Input, cached input, output, and reasoning totals by day.
+          일별 입력, 캐시 입력, 출력, 추론 합계입니다.
         </p>
       </div>
       <div className="grid h-56 grid-cols-10 items-end gap-3">
@@ -41,25 +41,25 @@ export function CodexUsageDailyChart({ daily }: CodexUsageDailyChartProps): Reac
           const segments = [
             {
               key: 'input',
-              label: 'Input',
+              label: '입력',
               value: entry.inputTokens,
               className: 'bg-sky-500/80'
             },
             {
               key: 'output',
-              label: 'Output',
+              label: '출력',
               value: entry.outputTokens,
               className: 'bg-emerald-500/80'
             },
             {
               key: 'cached-input',
-              label: 'Cached input',
+              label: '캐시 입력',
               value: entry.cachedInputTokens,
               className: 'bg-amber-500/70'
             },
             {
               key: 'reasoning',
-              label: 'Reasoning',
+              label: '추론',
               value: entry.reasoningOutputTokens,
               className: 'bg-fuchsia-500/70'
             }
@@ -107,19 +107,19 @@ export function CodexUsageDailyChart({ daily }: CodexUsageDailyChartProps): Reac
       <div className="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-sky-500/80" />
-          Input
+          입력
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-emerald-500/80" />
-          Output
+          출력
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-amber-500/70" />
-          Cached input
+          캐시 입력
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-fuchsia-500/70" />
-          Reasoning
+          추론
         </span>
       </div>
     </section>

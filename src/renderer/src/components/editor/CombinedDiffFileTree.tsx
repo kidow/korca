@@ -262,7 +262,7 @@ export function CombinedDiffFileTree({
                   <Check
                     className={cn('size-3.5 shrink-0', includeViewed ? 'opacity-100' : 'opacity-0')}
                   />
-                  <span className="min-w-0 flex-1 truncate">Viewed files</span>
+                  <span className="min-w-0 flex-1 truncate">검토된 파일</span>
                 </button>
                 {activeFilterCount > 0 && (
                   <button

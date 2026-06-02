@@ -36,7 +36,7 @@ export function TerminalQuickCommandScopeField({
 }: TerminalQuickCommandScopeFieldProps): React.JSX.Element {
   return (
     <div className="space-y-2">
-      <Label>Scope</Label>
+      <Label>범위</Label>
       <div className="flex flex-wrap items-center gap-2">
         <ToggleGroup
           type="single"
@@ -54,9 +54,9 @@ export function TerminalQuickCommandScopeField({
           }}
           className="justify-start"
         >
-          <ToggleGroupItem value="global">Global</ToggleGroupItem>
+          <ToggleGroupItem value="global">전역</ToggleGroupItem>
           <ToggleGroupItem value="repo" disabled={repos.length === 0}>
-            Project
+            프로젝트
           </ToggleGroupItem>
         </ToggleGroup>
         {selectedScope.type === 'repo' && repos.length > 0 ? (
@@ -69,7 +69,7 @@ export function TerminalQuickCommandScopeField({
             >
               <SelectTrigger size="sm" className="min-w-48">
                 <SelectValue
-                  placeholder={selectedRepoMissing ? 'Project not in list' : 'Choose project'}
+                  placeholder={selectedRepoMissing ? '목록에 없는 프로젝트' : '프로젝트 선택'}
                 />
               </SelectTrigger>
               <SelectContent>
@@ -86,7 +86,7 @@ export function TerminalQuickCommandScopeField({
             </Select>
             {selectedRepoMissing ? (
               <p className="max-w-48 text-xs text-muted-foreground">
-                Saving keeps the existing project scope unless you choose another.
+                저장하면 다른 프로젝트를 선택하기 전까지 기존 프로젝트 범위를 유지합니다.
               </p>
             ) : null}
           </div>

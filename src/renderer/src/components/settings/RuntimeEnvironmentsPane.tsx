@@ -76,7 +76,7 @@ export function RuntimeEnvironmentsPane({
       }
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(error instanceof Error ? error.message : 'Failed to load runtime environments.')
+        toast.error(error instanceof Error ? error.message : '런타임 환경을 불러오지 못했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -102,14 +102,14 @@ export function RuntimeEnvironmentsPane({
     const trimmedName = name.trim()
     const trimmedPairingCode = pairingCode.trim()
     if (!trimmedName || !trimmedPairingCode) {
-      toast.error('Name and pairing code are required.')
+      toast.error('이름과 페어링 코드는 필수입니다.')
       return
     }
     const duplicate = environments.find(
       (environment) => environment.name.trim().toLowerCase() === trimmedName.toLowerCase()
     )
     if (duplicate) {
-      toast.error(`A server named "${duplicate.name}" already exists.`)
+      toast.error(`"${duplicate.name}"이라는 서버가 이미 있습니다.`)
       return
     }
     setIsSaving(true)
@@ -137,11 +137,13 @@ export function RuntimeEnvironmentsPane({
           return
         }
         if (mountedRef.current) {
-          toast.success(`Connected to ${result.environment.name}.`)
+          toast.success(`${result.environment.name}에 연결했습니다.`)
         }
       } else {
         if (mountedRef.current) {
-          toast.success(`Saved ${result.environment.name}. Use Active Server to switch when ready.`)
+          toast.success(
+            `${result.environment.name}을 저장했습니다. 준비되면 활성 서버에서 전환하세요.`
+          )
         }
       }
       if (mountedRef.current) {
@@ -149,7 +151,7 @@ export function RuntimeEnvironmentsPane({
       }
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(error instanceof Error ? error.message : 'Failed to save runtime environment.')
+        toast.error(error instanceof Error ? error.message : '런타임 환경을 저장하지 못했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -170,8 +172,8 @@ export function RuntimeEnvironmentsPane({
           if (mountedRef.current) {
             setRemoveError(
               allowLocalRuntime
-                ? 'Could not switch to Local desktop. Fix the issue and try again.'
-                : 'Could not disconnect from this server. Fix the issue and try again.'
+                ? '로컬 데스크톱으로 전환하지 못했습니다. 문제를 해결한 뒤 다시 시도하세요.'
+                : '이 서버에서 연결을 끊지 못했습니다. 문제를 해결한 뒤 다시 시도하세요.'
             )
           }
           return false
@@ -179,7 +181,7 @@ export function RuntimeEnvironmentsPane({
         if (!allowLocalRuntime) {
           await loadEnvironments()
           if (mountedRef.current) {
-            toast.success(`Removed ${environment.name}.`)
+            toast.success(`${environment.name}을 제거했습니다.`)
           }
           return true
         }
@@ -187,12 +189,11 @@ export function RuntimeEnvironmentsPane({
       await window.api.runtimeEnvironments.remove({ selector: environment.id })
       await loadEnvironments()
       if (mountedRef.current) {
-        toast.success(`Removed ${environment.name}.`)
+        toast.success(`${environment.name}을 제거했습니다.`)
       }
       return true
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to remove runtime environment.'
+      const message = error instanceof Error ? error.message : '런타임 환경을 제거하지 못했습니다.'
       if (mountedRef.current) {
         setRemoveError(message)
         toast.error(message)
@@ -217,16 +218,16 @@ export function RuntimeEnvironmentsPane({
       )
       if (switched) {
         if (mountedRef.current) {
-          toast.success(`Switched to ${getEnvironmentLabel(value)}.`)
+          toast.success(`${getEnvironmentLabel(value)}로 전환했습니다.`)
         }
         return true
       }
       if (mountedRef.current) {
-        setSwitchError('Could not switch servers. Fix the issue and try again.')
+        setSwitchError('서버를 전환하지 못했습니다. 문제를 해결한 뒤 다시 시도하세요.')
       }
       return false
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to switch servers.'
+      const message = error instanceof Error ? error.message : '서버를 전환하지 못했습니다.'
       if (mountedRef.current) {
         setSwitchError(message)
         toast.error(message)
@@ -241,12 +242,12 @@ export function RuntimeEnvironmentsPane({
 
   const getEnvironmentLabel = (value: string): string => {
     if (value === LOCAL_RUNTIME_VALUE) {
-      return 'Local desktop'
+      return '로컬 데스크톱'
     }
     if (value === NO_RUNTIME_VALUE) {
-      return 'No server connected'
+      return '연결된 서버 없음'
     }
-    return environments.find((environment) => environment.id === value)?.name ?? 'remote server'
+    return environments.find((environment) => environment.id === value)?.name ?? '원격 서버'
   }
 
   return (
@@ -258,7 +259,7 @@ export function RuntimeEnvironmentsPane({
     >
       <div className="space-y-2">
         <div className="space-y-1">
-          <Label id="runtime-active-server-label">Active Server</Label>
+          <Label id="runtime-active-server-label">활성 서버</Label>
           <p className="text-xs text-muted-foreground">
             {allowLocalRuntime
               ? "Local keeps today's desktop behavior. Saved servers route supported client calls through the remote runtime."
@@ -285,7 +286,7 @@ export function RuntimeEnvironmentsPane({
             </SelectTrigger>
             <SelectContent>
               {allowLocalRuntime ? (
-                <SelectItem value={LOCAL_RUNTIME_VALUE}>Local desktop</SelectItem>
+                <SelectItem value={LOCAL_RUNTIME_VALUE}>로컬 데스크톱</SelectItem>
               ) : environments.length === 0 ? (
                 <SelectItem value={NO_RUNTIME_VALUE} disabled>
                   No server connected
@@ -302,8 +303,8 @@ export function RuntimeEnvironmentsPane({
             type="button"
             variant="outline"
             size="icon-sm"
-            aria-label="Refresh servers"
-            title="Refresh servers"
+            aria-label="서버 새로고침"
+            title="서버 새로고침"
             onClick={() => void loadEnvironments()}
             disabled={isLoading || isBusy}
           >
@@ -314,7 +315,7 @@ export function RuntimeEnvironmentsPane({
 
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-3">
-          <div className="text-sm font-medium">Saved Servers</div>
+          <div className="text-sm font-medium">저장된 서버</div>
           {addServerFormOpen ? null : (
             <Button
               type="button"
@@ -325,7 +326,7 @@ export function RuntimeEnvironmentsPane({
               disabled={isBusy}
             >
               <Plus />
-              Add Server
+              서버 추가
             </Button>
           )}
         </div>
@@ -340,18 +341,18 @@ export function RuntimeEnvironmentsPane({
           >
             <div className="grid gap-3 sm:grid-cols-[minmax(0,180px)_minmax(0,1fr)]">
               <div className="space-y-1">
-                <Label htmlFor="runtime-server-name">Server name</Label>
+                <Label htmlFor="runtime-server-name">서버 이름</Label>
                 <Input
                   id="runtime-server-name"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="Dev box"
+                  placeholder="개발 서버"
                   className="h-8 text-xs"
                   autoFocus
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="runtime-server-pairing-code">Pairing code</Label>
+                <Label htmlFor="runtime-server-pairing-code">페어링 코드</Label>
                 <Input
                   id="runtime-server-pairing-code"
                   aria-describedby="runtime-server-pairing-code-help"
@@ -361,8 +362,9 @@ export function RuntimeEnvironmentsPane({
                   className="h-8 min-w-0 font-mono text-xs"
                 />
                 <p id="runtime-server-pairing-code-help" className="text-xs text-muted-foreground">
-                  Run <span className="font-mono">korca serve --pairing-address &lt;host&gt;</span>{' '}
-                  on the server and paste the printed pairing URL.
+                  서버에서{' '}
+                  <span className="font-mono">korca serve --pairing-address &lt;host&gt;</span> 를
+                  실행한 뒤 출력된 페어링 URL을 붙여넣으세요.
                 </p>
               </div>
             </div>
@@ -374,7 +376,7 @@ export function RuntimeEnvironmentsPane({
                 onClick={closeAddServerForm}
                 disabled={isSaving}
               >
-                Cancel
+                취소
               </Button>
               <Button
                 type="submit"
@@ -382,7 +384,7 @@ export function RuntimeEnvironmentsPane({
                 disabled={isBusy || !name.trim() || !pairingCode.trim()}
               >
                 {isSaving ? <Loader2 className="animate-spin" /> : <Plus />}
-                Add Server
+                서버 추가
               </Button>
             </div>
           </form>
@@ -390,7 +392,7 @@ export function RuntimeEnvironmentsPane({
 
         <div className="rounded-lg border border-border/50">
           {environments.length === 0 ? (
-            <div className="px-3 py-4 text-sm text-muted-foreground">No saved servers.</div>
+            <div className="px-3 py-4 text-sm text-muted-foreground">저장된 서버가 없습니다.</div>
           ) : (
             <div className="divide-y divide-border/50">
               {environments.map((environment) => (
@@ -401,7 +403,7 @@ export function RuntimeEnvironmentsPane({
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium">{environment.name}</div>
                     <div className="truncate font-mono text-xs text-muted-foreground">
-                      {environment.endpoints[0]?.endpoint ?? 'No endpoint'}
+                      {environment.endpoints[0]?.endpoint ?? '엔드포인트 없음'}
                     </div>
                   </div>
                   <Button
@@ -428,9 +430,10 @@ export function RuntimeEnvironmentsPane({
         <div className="overflow-hidden rounded-lg border border-border/50">
           <div className="flex flex-wrap items-center justify-between gap-3 px-3 py-2.5">
             <div className="min-w-0 space-y-0.5">
-              <div className="text-sm font-medium">Share this Korca server</div>
+              <div className="text-sm font-medium">이 Korca 서버 공유</div>
               <p className="text-xs text-muted-foreground">
-                Create a revocable access grant so a browser or another Korca client can connect.
+                브라우저나 다른 Korca 클라이언트가 연결할 수 있도록 철회 가능한 접근 권한을
+                만듭니다.
               </p>
             </div>
             <Button
@@ -441,7 +444,7 @@ export function RuntimeEnvironmentsPane({
               onClick={() => setShareServerFormOpen((open) => !open)}
             >
               <Share2 />
-              {shareServerFormOpen ? 'Hide Form' : 'New Link'}
+              {shareServerFormOpen ? '폼 숨기기' : '새 링크'}
             </Button>
           </div>
           <div className="border-t border-border/40 px-3 py-3">
@@ -465,15 +468,15 @@ export function RuntimeEnvironmentsPane({
       >
         <DialogContent className="max-w-sm sm:max-w-sm" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="text-sm">Switch Server</DialogTitle>
+            <DialogTitle className="text-sm">서버 전환</DialogTitle>
             <DialogDescription>
-              Korca will close remote terminals and browser tabs from the current server before
-              loading projects from the next server.
+              Korca는 다음 서버의 프로젝트를 불러오기 전에 현재 서버의 원격 터미널과 브라우저 탭을
+              닫습니다.
             </DialogDescription>
           </DialogHeader>
           {pendingSwitchValue ? (
             <div className="rounded-md border border-border/70 bg-muted/35 px-3 py-2 text-xs">
-              <div className="text-muted-foreground">Switch to</div>
+              <div className="text-muted-foreground">전환 대상</div>
               <div className="mt-0.5 truncate font-medium">
                 {getEnvironmentLabel(pendingSwitchValue)}
               </div>
@@ -489,7 +492,7 @@ export function RuntimeEnvironmentsPane({
               }}
               disabled={switchingValue !== null}
             >
-              Cancel
+              취소
             </Button>
             <Button
               onClick={() => {
@@ -506,7 +509,7 @@ export function RuntimeEnvironmentsPane({
               disabled={switchingValue !== null}
             >
               {switchingValue !== null ? <Loader2 className="animate-spin" /> : null}
-              Switch
+              전환
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -523,20 +526,20 @@ export function RuntimeEnvironmentsPane({
       >
         <DialogContent className="max-w-sm sm:max-w-sm" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="text-sm">Remove Server</DialogTitle>
+            <DialogTitle className="text-sm">서버 제거</DialogTitle>
             <DialogDescription>
               {removingActiveServer
                 ? allowLocalRuntime
-                  ? 'Removing the active server first switches Korca back to Local desktop and closes remote terminals and browser tabs for that server.'
-                  : 'Removing the active server disconnects this browser and closes remote terminals and browser tabs for that server.'
-                : 'This removes the saved server from Korca. It does not change the active server.'}
+                  ? '활성 서버를 먼저 제거하면 Korca가 로컬 데스크톱으로 돌아가고, 해당 서버의 원격 터미널과 브라우저 탭을 닫습니다.'
+                  : '활성 서버를 제거하면 이 브라우저 연결이 끊기고 해당 서버의 원격 터미널과 브라우저 탭을 닫습니다.'
+                : '이 저장된 서버는 Korca에서 제거됩니다. 활성 서버는 바뀌지 않습니다.'}
             </DialogDescription>
           </DialogHeader>
           {pendingRemove ? (
             <div className="rounded-md border border-border/70 bg-muted/35 px-3 py-2 text-xs">
               <div className="truncate font-medium">{pendingRemove.name}</div>
               <div className="mt-0.5 truncate font-mono text-muted-foreground">
-                {pendingRemove.endpoints[0]?.endpoint ?? 'No endpoint'}
+                {pendingRemove.endpoints[0]?.endpoint ?? '엔드포인트 없음'}
               </div>
             </div>
           ) : null}
@@ -550,7 +553,7 @@ export function RuntimeEnvironmentsPane({
               }}
               disabled={removingId !== null}
             >
-              Cancel
+              취소
             </Button>
             <Button
               variant="destructive"

@@ -100,7 +100,7 @@ function textFromUnknown(value: unknown): string | null {
 
 function dateLabel(value: string | null | undefined): string {
   if (!value) {
-    return 'None'
+    return '없음'
   }
   const date = new Date(value)
   return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString()
@@ -112,9 +112,9 @@ function priorityLabel(priority: unknown, fallback: unknown): string {
     return fromFallback
   }
   if (typeof priority === 'number') {
-    return priority === 0 ? 'None' : `P${priority}`
+    return priority === 0 ? '없음' : `P${priority}`
   }
-  return textFromUnknown(priority) ?? 'None'
+  return textFromUnknown(priority) ?? '없음'
 }
 
 function projectProgress(project: LinearProjectLike): number | null {
@@ -153,7 +153,7 @@ function ProjectColorMark({ project }: { project: LinearProjectSummary }): React
 }
 
 function ProjectStatusBadge({ project }: { project: LinearProjectLike }): React.JSX.Element {
-  const label = textFromUnknown(project.status) ?? 'Backlog'
+  const label = textFromUnknown(project.status) ?? '백로그'
   return (
     <Badge variant="outline" className="max-w-full truncate text-[11px] font-medium">
       {label}
@@ -184,7 +184,7 @@ export function LinearCollectionNotice({
       ) : null}
       {hasMore ? (
         <div>
-          Showing first {count} {label}. Search or open Linear for the full set.
+          처음 {count}개 {label}를 보여줍니다. 전체 목록은 검색하거나 Linear에서 여세요.
         </div>
       ) : null}
     </div>
@@ -227,10 +227,12 @@ export function LinearProjectTable({
     return (
       <div className="px-4 py-10 text-center">
         <p className="text-sm font-medium text-foreground">
-          {hasError ? 'Unable to load Linear projects' : 'No Linear projects found'}
+          {hasError ? 'Linear 프로젝트를 불러오지 못했습니다' : '찾은 Linear 프로젝트가 없습니다'}
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
-          {hasError ? 'Review the workspace error below, then refresh.' : 'Try search or refresh.'}
+          {hasError
+            ? '아래 작업 공간 오류를 확인한 뒤 새로 고치세요.'
+            : '검색하거나 새로 고치세요.'}
         </p>
       </div>
     )
@@ -286,13 +288,13 @@ export function LinearProjectTable({
               <ProjectStatusBadge project={projectLike} />
             </div>
             <span className="truncate text-[12px] text-muted-foreground">
-              {textFromUnknown(projectLike.health) ?? 'None'}
+              {textFromUnknown(projectLike.health) ?? '없음'}
             </span>
             <span className="truncate text-[12px] text-muted-foreground">
               {priorityLabel(projectLike.priority, projectLike.priorityLabel)}
             </span>
             <span className="truncate text-[12px] text-muted-foreground">
-              {textFromUnknown(projectLike.lead) ?? 'Unassigned'}
+              {textFromUnknown(projectLike.lead) ?? '미지정'}
             </span>
             <span className="truncate text-[12px] text-muted-foreground">
               {dateLabel(project.targetDate)}
@@ -317,13 +319,13 @@ export function LinearProjectTable({
                         event.stopPropagation()
                         onUseProjectIssues(project)
                       }}
-                      aria-label={`Open ${project.name} issues`}
+                      aria-label={`${project.name} 이슈 열기`}
                     >
                       <ArrowRight className="size-3.5" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" sideOffset={6}>
-                    Issues
+                    이슈
                   </TooltipContent>
                 </Tooltip>
               ) : null}
@@ -336,13 +338,13 @@ export function LinearProjectTable({
                       event.stopPropagation()
                       onOpenProject(project)
                     }}
-                    aria-label={`Open ${project.name} in Linear`}
+                    aria-label={`${project.name}을 Linear에서 열기`}
                   >
                     <ExternalLink className="size-3.5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Open in Linear
+                  Linear에서 열기
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -387,12 +389,12 @@ export function LinearCustomViewTable({
     return (
       <div className="px-4 py-10 text-center">
         <p className="text-sm font-medium text-foreground">
-          {hasError ? `Unable to load ${model} views` : `No ${model} views found`}
+          {hasError ? `${model} 보기를 불러오지 못했습니다` : `${model} 보기를 찾지 못했습니다`}
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
           {hasError
-            ? 'Review the workspace error below, then refresh.'
-            : 'Create or save views in Linear, then refresh.'}
+            ? '아래 작업 공간 오류를 확인한 뒤 새로 고치세요.'
+            : 'Linear에서 보기를 만들거나 저장한 뒤 새로 고치세요.'}
         </p>
       </div>
     )
@@ -443,13 +445,13 @@ export function LinearCustomViewTable({
               {view.model}
             </Badge>
             <span className="truncate text-[12px] text-muted-foreground">
-              {view.shared ? 'Shared' : 'Private'}
+              {view.shared ? '공유됨' : '비공개'}
             </span>
             <span className="truncate text-[12px] text-muted-foreground">
-              {textFromUnknown(view.owner ?? view.creator) ?? 'Unknown'}
+              {textFromUnknown(view.owner ?? view.creator) ?? '알 수 없음'}
             </span>
             <span className="truncate text-[12px] text-muted-foreground">
-              {view.updatedAt ? dateLabel(view.updatedAt) : 'Unknown'}
+              {view.updatedAt ? dateLabel(view.updatedAt) : '알 수 없음'}
             </span>
             <div className="flex justify-end md:opacity-0 md:transition-opacity md:group-hover/row:opacity-100 md:group-focus-within/row:opacity-100">
               <Tooltip>
@@ -461,13 +463,13 @@ export function LinearCustomViewTable({
                       event.stopPropagation()
                       onOpenView(view)
                     }}
-                    aria-label={`Open ${view.name} in Linear`}
+                    aria-label={`${view.name}을 Linear에서 열기`}
                   >
                     <ExternalLink className="size-3.5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Open in Linear
+                  Linear에서 열기
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -501,17 +503,17 @@ export function LinearProjectOverview({
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex h-10 flex-none items-center justify-between gap-3 border-b border-border/50 bg-muted/35 px-3">
         <div className="flex min-w-0 items-center gap-2">
-          <Button variant="ghost" size="icon-xs" onClick={onBack} aria-label="Back to projects">
+          <Button variant="ghost" size="icon-xs" onClick={onBack} aria-label="프로젝트로 돌아가기">
             <ArrowLeft className="size-3.5" />
           </Button>
           <div className="min-w-0">
             <div className="truncate text-[13px] font-medium text-foreground">
-              {project?.name ?? 'Project'}
+              {project?.name ?? '프로젝트'}
             </div>
             <div className="truncate text-[11px] text-muted-foreground">
               {project?.workspaceName
-                ? `Linear / Projects / ${project.workspaceName}`
-                : 'Linear / Projects'}
+                ? `Linear / 프로젝트 / ${project.workspaceName}`
+                : 'Linear / 프로젝트'}
             </div>
           </div>
         </div>
@@ -524,7 +526,7 @@ export function LinearProjectOverview({
               className="gap-1 border-border/50 bg-background/70"
             >
               <Layers3 className="size-3.5" />
-              Issues
+              이슈
             </Button>
           ) : null}
           <Button
@@ -535,7 +537,7 @@ export function LinearProjectOverview({
             className="gap-1 border-border/50 bg-background/70"
           >
             <RefreshCw className={cn('size-3.5', loading && 'animate-spin')} />
-            Refresh
+            새로 고침
           </Button>
           {project ? (
             <Button
@@ -545,7 +547,7 @@ export function LinearProjectOverview({
               className="gap-1 border-border/50 bg-background/70"
             >
               <ExternalLink className="size-3.5" />
-              Linear
+              Linear에서 열기
             </Button>
           ) : null}
         </div>
@@ -578,20 +580,20 @@ export function LinearProjectOverview({
                     {body}
                   </p>
                 ) : (
-                  <p className="mt-3 text-sm text-muted-foreground">No project description.</p>
+                  <p className="mt-3 text-sm text-muted-foreground">프로젝트 설명이 없습니다.</p>
                 )}
               </section>
 
               {progress !== null ? (
                 <section className="rounded-md border border-border/50 bg-muted/20 p-4">
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="font-medium text-foreground">Progress</span>
+                    <span className="font-medium text-foreground">진행률</span>
                     <span className="text-muted-foreground">{progress}%</span>
                   </div>
                   <Progress value={Math.max(0, Math.min(100, progress))} />
                   {typeof projectLike.scope === 'number' ? (
                     <div className="mt-2 text-xs text-muted-foreground">
-                      {projectLike.scope} scoped issues
+                      범위 지정된 이슈 {projectLike.scope}개
                     </div>
                   ) : null}
                 </section>
@@ -599,21 +601,21 @@ export function LinearProjectOverview({
 
               {milestones.length > 0 || resources.length > 0 || latestUpdate ? (
                 <section className="rounded-md border border-border/50 bg-muted/20 p-4">
-                  <h3 className="text-sm font-medium text-foreground">Planning</h3>
+                  <h3 className="text-sm font-medium text-foreground">계획</h3>
                   <div className="mt-3 grid gap-3 md:grid-cols-3">
                     <MetadataList
                       icon={<FolderKanban className="size-3.5" />}
-                      label="Milestones"
+                      label="마일스톤"
                       items={milestones}
                     />
                     <MetadataList
                       icon={<FileText className="size-3.5" />}
-                      label="Resources"
+                      label="리소스"
                       items={resources}
                     />
                     <MetadataList
                       icon={<RefreshCw className="size-3.5" />}
-                      label="Latest update"
+                      label="최근 업데이트"
                       items={latestUpdate ? [latestUpdate] : []}
                     />
                   </div>
@@ -622,38 +624,35 @@ export function LinearProjectOverview({
             </div>
 
             <aside className="min-w-0 space-y-3">
+              <PropertyRow label="상태" value={textFromUnknown(projectLike.status) ?? '백로그'} />
+              <PropertyRow label="건강" value={textFromUnknown(projectLike.health) ?? '없음'} />
               <PropertyRow
-                label="Status"
-                value={textFromUnknown(projectLike.status) ?? 'Backlog'}
-              />
-              <PropertyRow label="Health" value={textFromUnknown(projectLike.health) ?? 'None'} />
-              <PropertyRow
-                label="Priority"
+                label="우선순위"
                 value={priorityLabel(projectLike.priority, projectLike.priorityLabel)}
               />
               <PropertyRow
-                label="Lead"
-                value={textFromUnknown(projectLike.lead) ?? 'Unassigned'}
+                label="담당자"
+                value={textFromUnknown(projectLike.lead) ?? '미지정'}
                 icon={<UserRound className="size-3.5" />}
               />
               <PropertyRow
-                label="Start"
+                label="시작"
                 value={dateLabel(projectLike.startDate)}
                 icon={<CalendarDays className="size-3.5" />}
               />
               <PropertyRow
-                label="Target"
+                label="목표"
                 value={dateLabel(projectLike.targetDate)}
                 icon={<CalendarDays className="size-3.5" />}
               />
-              <MetadataList label="Teams" items={teams} />
-              <MetadataList label="Members" items={members} />
-              <MetadataList label="Labels" items={labels} />
+              <MetadataList label="팀" items={teams} />
+              <MetadataList label="멤버" items={members} />
+              <MetadataList label="레이블" items={labels} />
             </aside>
           </div>
         ) : (
           <div className="px-4 py-10 text-center text-sm text-muted-foreground">
-            Select a project to view its overview.
+            개요를 보려면 프로젝트를 선택하세요.
           </div>
         )}
       </div>
@@ -705,7 +704,7 @@ function MetadataList({
           ))}
         </div>
       ) : (
-        <div className="mt-1 text-sm text-muted-foreground">None</div>
+        <div className="mt-1 text-sm text-muted-foreground">없음</div>
       )}
     </div>
   )

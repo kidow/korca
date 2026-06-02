@@ -28,9 +28,9 @@ export function DiffCommentPopover({
   top,
   left,
   title,
-  placeholder = 'Add note for the AI',
-  submitLabel = 'Add note',
-  submittingLabel = 'Saving…',
+  placeholder = 'AI에게 메모 추가',
+  submitLabel = '메모 추가',
+  submittingLabel = '저장 중…',
   onCancel,
   onSubmit
 }: Props): React.JSX.Element {
@@ -175,7 +175,7 @@ export function DiffCommentPopover({
         />
         <div className="korca-diff-comment-popover-footer">
           <Button variant="ghost" size="sm" onClick={onCancel}>
-            Cancel
+            취소
           </Button>
           <Button
             size="sm"

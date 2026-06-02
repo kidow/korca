@@ -36,7 +36,7 @@ type ExternalAutomationManagersProps = {
 
 function formatExternalDate(value: string | null, now: number): string {
   if (!value) {
-    return 'Never'
+    return '없음'
   }
   const parsed = Date.parse(value)
   if (!Number.isFinite(parsed)) {
@@ -58,7 +58,7 @@ function getProviderLabel(manager: ExternalAutomationManager): string {
 }
 
 function getTargetKindLabel(manager: ExternalAutomationManager): string {
-  return manager.target.type === 'ssh' ? 'Remote SSH' : 'Local'
+  return manager.target.type === 'ssh' ? '원격 SSH' : '로컬'
 }
 
 function ExternalActionButton({
@@ -110,11 +110,9 @@ export function ExternalAutomationManagers({
     <div className="rounded-md border border-border/50 bg-muted/20 shadow-sm">
       <div className="flex items-center justify-between border-b border-border/50 px-3 py-2">
         <div>
-          <div className="text-sm font-medium">External automations</div>
+          <div className="text-sm font-medium">외부 자동화</div>
         </div>
-        <Badge variant="outline">
-          {automationCount} {automationCount === 1 ? 'automation' : 'automations'}
-        </Badge>
+        <Badge variant="outline">{automationCount}개</Badge>
       </div>
       <div className="divide-y divide-border/50">
         {managers.map((manager) => (
@@ -126,9 +124,9 @@ export function ExternalAutomationManagers({
                   {getProviderLabel(manager)} / {getTargetKindLabel(manager)} ·{' '}
                   {manager.status === 'available'
                     ? manager.canManage
-                      ? 'Manageable'
-                      : 'Read-only'
-                    : 'Unavailable'}
+                      ? '관리 가능'
+                      : '읽기 전용'
+                    : '사용 불가'}
                   {manager.error ? ` - ${manager.error}` : null}
                 </div>
               </div>
@@ -148,19 +146,19 @@ export function ExternalAutomationManagers({
                       <div className="flex min-w-0 items-center gap-2">
                         <span className="truncate font-medium">{job.name}</span>
                         <Badge variant={job.enabled ? 'secondary' : 'outline'}>
-                          {job.enabled ? 'Active' : 'Paused'}
+                          {job.enabled ? '활성' : '일시 중지'}
                         </Badge>
                       </div>
                       <div className="mt-1 truncate text-xs font-medium text-foreground/80">
                         {scheduleDisplay.label}
                       </div>
                       <div className="mt-1 truncate text-xs text-muted-foreground">
-                        next {formatExternalDate(job.nextRunAt, now)} · {getProviderLabel(manager)}{' '}
+                        다음 {formatExternalDate(job.nextRunAt, now)} · {getProviderLabel(manager)}{' '}
                         / {manager.targetLabel}
                       </div>
                       {manager.provider === 'hermes' ? (
                         <div className="mt-1 truncate text-xs text-muted-foreground">
-                          {job.runCount} {job.runCount === 1 ? 'run' : 'runs'} found
+                          실행 기록 {job.runCount}개
                         </div>
                       ) : null}
                       {job.promptPreview || job.lastError ? (
@@ -170,12 +168,12 @@ export function ExternalAutomationManagers({
                       ) : null}
                     </div>
                     <div className="hidden min-w-0 text-xs text-muted-foreground md:block">
-                      Last {formatExternalDate(job.lastRunAt, now)}
+                      마지막 {formatExternalDate(job.lastRunAt, now)}
                       {job.lastStatus ? ` · ${job.lastStatus}` : null}
                     </div>
                     <div className="flex items-center justify-end gap-1">
                       <ExternalActionButton
-                        label="Run external automation"
+                        label="외부 자동화 실행"
                         disabled={!manager.canManage || runningActionKey !== null}
                         onClick={() => onAction(manager, job, 'run')}
                       >
@@ -187,7 +185,7 @@ export function ExternalAutomationManagers({
                       </ExternalActionButton>
                       {manager.provider === 'hermes' ? (
                         <ExternalActionButton
-                          label="Edit external automation"
+                          label="외부 자동화 수정"
                           disabled={!manager.canManage || runningActionKey !== null}
                           onClick={() => onEdit?.(manager, job)}
                         >
@@ -195,9 +193,7 @@ export function ExternalAutomationManagers({
                         </ExternalActionButton>
                       ) : null}
                       <ExternalActionButton
-                        label={
-                          job.enabled ? 'Pause external automation' : 'Resume external automation'
-                        }
+                        label={job.enabled ? '외부 자동화 일시 중지' : '외부 자동화 재개'}
                         disabled={!manager.canManage || runningActionKey !== null}
                         onClick={() => onAction(manager, job, job.enabled ? 'pause' : 'resume')}
                       >
@@ -211,7 +207,7 @@ export function ExternalAutomationManagers({
                         )}
                       </ExternalActionButton>
                       <ExternalActionButton
-                        label="Delete external automation"
+                        label="외부 자동화 삭제"
                         className="text-destructive hover:text-destructive"
                         disabled={!manager.canManage || runningActionKey !== null}
                         onClick={() => onAction(manager, job, 'delete')}
@@ -239,7 +235,7 @@ export function ExternalAutomationManagers({
               })}
               {manager.jobs.length === 0 ? (
                 <div className="px-3 py-4 text-sm text-muted-foreground">
-                  No {manager.provider === 'hermes' ? 'Hermes' : 'OpenClaw'} automations found.
+                  {manager.provider === 'hermes' ? 'Hermes' : 'OpenClaw'} 자동화를 찾지 못했습니다.
                 </div>
               ) : null}
             </div>
@@ -247,7 +243,7 @@ export function ExternalAutomationManagers({
         ))}
         {managers.length === 0 ? (
           <div className="px-3 py-6 text-center text-sm text-muted-foreground">
-            No external automation managers found.
+            외부 자동화 관리자를 찾지 못했습니다.
           </div>
         ) : null}
       </div>

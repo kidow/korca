@@ -164,7 +164,7 @@ export function ChecksPanelReviewHeader({
       <div className="flex-1" />
       <button
         className="cursor-pointer rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-50"
-        title="Refresh"
+        title="새로고침"
         onClick={onRefresh}
         disabled={isRefreshing}
       >
@@ -177,8 +177,8 @@ export function ChecksPanelReviewHeader({
               type="button"
               variant="ghost"
               size="icon-xs"
-              aria-label="More PR actions"
-              title="More PR actions"
+              aria-label="PR 추가 작업"
+              title="PR 추가 작업"
               className="text-muted-foreground hover:text-foreground"
             >
               <Ellipsis className="size-3.5" />
@@ -187,11 +187,11 @@ export function ChecksPanelReviewHeader({
           <DropdownMenuContent align="end" className="w-44">
             <DropdownMenuItem disabled={!canUnlinkPullRequest} onSelect={onUnlinkPullRequest}>
               <Unlink className="size-3.5" />
-              unlink PR
+              PR 연결 해제
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={onLinkAnotherPullRequest}>
               <Link className="size-3.5" />
-              Link another PR
+              다른 PR 연결
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -2274,15 +2274,17 @@ export default function ChecksPanel(): React.JSX.Element {
   if (!activeWorktree) {
     return (
       <div className="px-4 py-6">
-        <div className="text-sm font-medium text-foreground">No workspace selected</div>
-        <div className="mt-1 text-xs text-muted-foreground">Select a workspace to view checks</div>
+        <div className="text-sm font-medium text-foreground">선택된 작업 공간이 없습니다</div>
+        <div className="mt-1 text-xs text-muted-foreground">
+          검사를 보려면 작업 공간을 선택하세요
+        </div>
       </div>
     )
   }
   if (isFolder) {
     return (
       <div className="px-4 py-6">
-        <div className="text-sm font-medium text-foreground">Checks unavailable</div>
+        <div className="text-sm font-medium text-foreground">검사를 사용할 수 없습니다</div>
         <div className="mt-1 text-xs text-muted-foreground">
           Checks require a Git branch and hosted review context
         </div>
@@ -2387,7 +2389,7 @@ export default function ChecksPanel(): React.JSX.Element {
                   })
                 }}
               >
-                {emptyRefreshing ? 'Refreshing…' : 'Refresh'}
+                {emptyRefreshing ? '새로고침 중…' : '새로고침'}
               </Button>
             </div>
           )}
@@ -2425,7 +2427,7 @@ export default function ChecksPanel(): React.JSX.Element {
             />
             <button
               className="cursor-pointer rounded p-1 text-emerald-500 transition-colors hover:bg-accent hover:text-emerald-400 disabled:cursor-default disabled:opacity-50"
-              title="Save"
+              title="저장"
               onClick={() => void handleSaveTitle()}
               disabled={titleSaving}
             >
@@ -2437,7 +2439,7 @@ export default function ChecksPanel(): React.JSX.Element {
             </button>
             <button
               className="cursor-pointer rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-default disabled:opacity-50"
-              title="Cancel"
+              title="취소"
               onClick={handleCancelEdit}
               disabled={titleSaving}
             >

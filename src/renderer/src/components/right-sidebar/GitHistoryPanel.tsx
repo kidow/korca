@@ -316,7 +316,7 @@ export function GitHistoryPanel({
             <ChevronDown
               className={cn('size-3 shrink-0 transition-transform', collapsed && '-rotate-90')}
             />
-            <span>Commits</span>
+            <span>커밋</span>
             {result && <span className="text-[10px] font-medium tabular-nums">{count}</span>}
             {result?.hasMore && <span className="text-[10px] font-medium">+</span>}
           </button>
@@ -383,7 +383,7 @@ export function GitHistoryPanel({
           style={expandedBodyStyle}
         >
           <RefreshCw className="size-3 animate-spin" />
-          <span>Loading graph...</span>
+          <span>그래프 불러오는 중...</span>
         </div>
       )}
       {!collapsed && result && viewModels.length === 0 && (

@@ -25,10 +25,10 @@ export function RichMarkdownDocLinkMenu({
       className="rich-markdown-doc-link-menu"
       style={{ left: menu.left, top: menu.top }}
       role="listbox"
-      aria-label="Markdown document links"
+      aria-label="마크다운 문서 링크"
     >
       {rows.length === 0 ? (
-        <div className="rich-markdown-doc-link-item is-empty">No documents found</div>
+        <div className="rich-markdown-doc-link-item is-empty">문서를 찾지 못했습니다</div>
       ) : (
         rows.map((row, index) => {
           const rowKey = row.kind === 'document' ? row.document.filePath : row.id

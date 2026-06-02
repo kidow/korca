@@ -49,7 +49,7 @@ export function TerminalErrorToast({
           {showDaemonRestart ? (
             <>
               {'\n'}
-              Restart the terminal daemon from here to clear stale daemon state.
+              여기서 터미널 데몬을 다시 시작해 오래된 데몬 상태를 지우세요.
             </>
           ) : !ssh ? (
             <>
@@ -59,7 +59,7 @@ export function TerminalErrorToast({
                 href="https://github.com/stablyai/korca/issues"
                 style={{ color: '#fca5a5', textDecoration: 'underline' }}
               >
-                file an issue
+                이슈를 등록하세요
               </a>
               .
             </>
@@ -81,7 +81,7 @@ export function TerminalErrorToast({
               flexShrink: 0
             }}
           >
-            Restart daemon
+            데몬 다시 시작
           </button>
         ) : null}
         <button

@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: the smart name field owns source tabs,
 search orchestration, and result rendering so the unified create flow stays
 in one predictable form control instead of splitting state across fragments. */
@@ -65,10 +66,10 @@ import { resolveSmartWorkspaceCommandValue } from './smart-workspace-command-val
 type MrStateFilter = 'opened' | 'merged' | 'closed' | 'all'
 
 const MR_STATE_FILTERS: { id: MrStateFilter; label: string }[] = [
-  { id: 'opened', label: 'Open' },
-  { id: 'merged', label: 'Merged' },
-  { id: 'closed', label: 'Closed' },
-  { id: 'all', label: 'All' }
+  { id: 'opened', label: '열림' },
+  { id: 'merged', label: '병합됨' },
+  { id: 'closed', label: '닫힘' },
+  { id: 'all', label: '전체' }
 ]
 
 type RepoOption = ReturnType<typeof useAppStore.getState>['repos'][number]
@@ -108,10 +109,10 @@ const MODES: {
   label: string
   Icon: React.ComponentType<{ className?: string }>
 }[] = [
-  { id: 'smart', label: 'Smart', Icon: Sparkles },
+  { id: 'smart', label: '스마트', Icon: Sparkles },
   { id: 'github', label: 'GitHub', Icon: Github },
   { id: 'gitlab', label: 'GitLab', Icon: Gitlab },
-  { id: 'branches', label: 'Branch', Icon: GitBranch },
+  { id: 'branches', label: '브랜치', Icon: GitBranch },
   {
     id: 'linear',
     label: 'Linear',
@@ -121,7 +122,7 @@ const MODES: {
       </svg>
     )
   },
-  { id: 'text', label: 'Name', Icon: CaseSensitive }
+  { id: 'text', label: '이름', Icon: CaseSensitive }
 ]
 
 type RowEntry = SmartWorkspaceSourceRow
@@ -868,18 +869,18 @@ export default function SmartWorkspaceNameField({
   }, [debouncedQuery])
 
   const placeholder = disabled
-    ? (disabledPlaceholder ?? 'Unavailable')
+    ? (disabledPlaceholder ?? '사용할 수 없음')
     : mode === 'smart'
       ? linearAvailable
-        ? 'Type a name, #1234, branch, GitHub or Linear URL'
-        : 'Type a name, #1234, branch, or GitHub URL'
+        ? '이름, #1234, 브랜치, GitHub 또는 Linear URL을 입력하세요'
+        : '이름, #1234, 브랜치 또는 GitHub URL을 입력하세요'
       : mode === 'github'
-        ? 'Search GitHub PRs and issues'
+        ? 'GitHub PR과 이슈 검색'
         : mode === 'branches'
-          ? 'Search branches'
+          ? '브랜치 검색'
           : mode === 'linear'
-            ? 'Search Linear issues'
-            : 'Workspace name'
+            ? 'Linear 이슈 검색'
+            : '작업 공간 이름'
 
   return (
     <div className="min-w-0 space-y-1.5">
@@ -986,13 +987,13 @@ export default function SmartWorkspaceNameField({
                           size="icon-xs"
                           onClick={() => void window.api.shell.openUrl(selectedSource.url!)}
                           className="size-6 shrink-0 rounded-sm text-muted-foreground hover:text-foreground"
-                          aria-label="Open link in browser"
+                          aria-label="브라우저에서 링크 열기"
                         >
                           <ExternalLink className="size-3.5" />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent side="top" sideOffset={6}>
-                        Open in browser
+                        브라우저에서 열기
                       </TooltipContent>
                     </Tooltip>
                   ) : null}
@@ -1004,13 +1005,13 @@ export default function SmartWorkspaceNameField({
                         size="icon-xs"
                         onClick={onClearSelectedSource}
                         className="size-6 shrink-0 rounded-sm text-muted-foreground hover:text-foreground"
-                        aria-label="Clear selected source"
+                        aria-label="선택한 소스 지우기"
                       >
                         <X className="size-3.5" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={6}>
-                      Clear
+                      지우기
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -1141,7 +1142,7 @@ export default function SmartWorkspaceNameField({
               ) : rows.length === 0 ? (
                 <div className="px-3 py-6 text-center text-xs text-muted-foreground">
                   {mode === 'linear' && linearStatusChecked && !linearStatus.connected
-                    ? 'Connect Linear in Settings to search issues.'
+                    ? '이슈를 검색하려면 설정에서 Linear를 연결하세요.'
                     : getSmartWorkspaceEmptyHint(mode)}
                 </div>
               ) : (
@@ -1169,25 +1170,25 @@ export default function SmartWorkspaceNameField({
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Switch project?</DialogTitle>
+            <DialogTitle>프로젝트를 전환할까요?</DialogTitle>
             <DialogDescription>
-              The GitHub URL points to {crossRepoPrompt?.link.slug.owner}/
-              {crossRepoPrompt?.link.slug.repo}, which is different from the selected project.
+              GitHub URL이 {crossRepoPrompt?.link.slug.owner}/{crossRepoPrompt?.link.slug.repo}를
+              가리키며, 선택한 프로젝트와 다릅니다.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={dismissCrossRepoPrompt}>
-              Cancel
+              취소
             </Button>
             <Button variant="outline" onClick={() => void handleUseCurrentRepo()}>
-              Keep {selectedRepo?.displayName ?? 'current project'}
+              {selectedRepo?.displayName ?? '현재 프로젝트'} 유지
             </Button>
             {crossRepoPrompt?.matchingRepo ? (
               <Button onClick={() => void acceptGitHubLink(crossRepoPrompt.matchingRepo!)}>
-                Switch to {crossRepoPrompt.matchingRepo.displayName}
+                {crossRepoPrompt.matchingRepo.displayName}로 전환
               </Button>
             ) : (
-              <Button onClick={() => void handleAddMatchingRepo()}>Add project...</Button>
+              <Button onClick={() => void handleAddMatchingRepo()}>프로젝트 추가...</Button>
             )}
           </DialogFooter>
         </DialogContent>
@@ -1251,15 +1252,15 @@ function RowLabel({ row }: { row: RowEntry }): React.JSX.Element {
   if (row.kind === 'use-name') {
     return (
       <span className="min-w-0 truncate">
-        Use <span className="font-medium text-foreground">&ldquo;{row.name}&rdquo;</span> as
-        workspace name
+        <span className="font-medium text-foreground">&ldquo;{row.name}&rdquo;</span>을 작업 공간
+        이름으로 사용
       </span>
     )
   }
   if (row.kind === 'create-branch') {
     return (
       <span className="min-w-0 truncate">
-        Create new branch{' '}
+        새 브랜치 만들기{' '}
         <span className="font-mono text-[11px] font-medium text-foreground">{row.name}</span>
       </span>
     )

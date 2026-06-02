@@ -35,9 +35,9 @@ export function ClaudeUsageDailyChart({ daily }: ClaudeUsageDailyChartProps): Re
   return (
     <section className="rounded-lg border border-border/60 bg-card/40 p-4">
       <div className="mb-3">
-        <h4 className="text-sm font-semibold text-foreground">Daily usage</h4>
+        <h4 className="text-sm font-semibold text-foreground">일별 사용량</h4>
         <p className="text-xs text-muted-foreground">
-          Input, output, cache read, and cache write totals by day.
+          일별 입력, 출력, 캐시 읽기, 캐시 쓰기 합계입니다.
         </p>
       </div>
       <div className="grid h-56 grid-cols-10 items-end gap-3">
@@ -46,23 +46,23 @@ export function ClaudeUsageDailyChart({ daily }: ClaudeUsageDailyChartProps): Re
           const segments = [
             {
               key: 'cache-write',
-              label: 'Cache write',
+              label: '캐시 쓰기',
               value: entry.cacheWriteTokens,
               className: 'bg-fuchsia-500/70'
             },
             {
               key: 'cache-read',
-              label: 'Cache read',
+              label: '캐시 읽기',
               value: entry.cacheReadTokens,
               className: 'bg-amber-500/70'
             },
             {
               key: 'output',
-              label: 'Output',
+              label: '출력',
               value: entry.outputTokens,
               className: 'bg-emerald-500/80'
             },
-            { key: 'input', label: 'Input', value: entry.inputTokens, className: 'bg-sky-500/80' }
+            { key: 'input', label: '입력', value: entry.inputTokens, className: 'bg-sky-500/80' }
           ]
           return (
             <div key={entry.day} className="flex h-full min-w-0 flex-col justify-end gap-2">
@@ -107,19 +107,19 @@ export function ClaudeUsageDailyChart({ daily }: ClaudeUsageDailyChartProps): Re
       <div className="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-sky-500/80" />
-          Input
+          입력
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-emerald-500/80" />
-          Output
+          출력
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-amber-500/70" />
-          Cache read
+          캐시 읽기
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="size-2 rounded-full bg-fuchsia-500/70" />
-          Cache write
+          캐시 쓰기
         </span>
       </div>
     </section>

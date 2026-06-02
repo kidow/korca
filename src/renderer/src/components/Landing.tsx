@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change, react-doctor/no-derived-state-effect, react-doctor/no-initialize-state -- pre-existing patterns, predate these rules */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ExternalLink, FolderPlus, GitBranchPlus, Star } from 'lucide-react'
 import { cn } from '../lib/utils'
@@ -31,9 +32,9 @@ function getPreflightIssues(status: {
   if (!status.git.installed) {
     issues.push({
       id: 'git',
-      title: 'Git is not installed',
-      description: 'Git is required for Git projects, source control, and workspace management.',
-      fixLabel: 'Install Git',
+      title: 'Git가 설치되어 있지 않습니다',
+      description: 'Git은 Git 프로젝트, 소스 제어, 작업 공간 관리에 필요합니다.',
+      fixLabel: 'Git 설치',
       fixUrl: 'https://git-scm.com/downloads'
     })
   }
@@ -41,17 +42,17 @@ function getPreflightIssues(status: {
   if (!status.gh.installed) {
     issues.push({
       id: 'gh',
-      title: 'GitHub CLI is not installed',
-      description: 'Korca uses the GitHub CLI (gh) to show pull requests, issues, and checks.',
-      fixLabel: 'Install GitHub CLI',
+      title: 'GitHub CLI가 설치되어 있지 않습니다',
+      description: 'Korca는 GitHub CLI(gh)를 사용해 Pull Request, 이슈, 체크를 표시합니다.',
+      fixLabel: 'GitHub CLI 설치',
       fixUrl: 'https://cli.github.com'
     })
   } else if (!status.gh.authenticated) {
     issues.push({
       id: 'gh-auth',
-      title: 'GitHub CLI is not authenticated',
-      description: 'Run "gh auth login" in a terminal to connect your GitHub account.',
-      fixLabel: 'Learn more',
+      title: 'GitHub CLI 인증이 필요합니다',
+      description: '터미널에서 "gh auth login"을 실행해 GitHub 계정을 연결하세요.',
+      fixLabel: '자세히 보기',
       fixUrl: 'https://cli.github.com/manual/gh_auth_login'
     })
   }
@@ -146,7 +147,7 @@ function GitHubStarButton({ hasRepos }: { hasRepos: boolean }): React.JSX.Elemen
               : 'text-amber-600 dark:text-amber-400/80'
           )}
         />
-        {state === 'starred' ? 'Starred on GitHub' : 'Star on GitHub'}
+        {state === 'starred' ? 'GitHub에 별표 표시됨' : 'GitHub에 별표 표시'}
       </button>
       {state === 'starred' && menuOpen && (
         <div className="absolute right-0 top-[calc(100%+4px)] z-10 min-w-[100px] rounded-md border border-border bg-popover py-1 shadow-md">
@@ -157,7 +158,7 @@ function GitHubStarButton({ hasRepos }: { hasRepos: boolean }): React.JSX.Elemen
               setState('hidden')
             }}
           >
-            Hide
+            숨기기
           </button>
         </div>
       )}
@@ -170,7 +171,7 @@ function PreflightBanner({ issues }: { issues: PreflightIssue[] }): React.JSX.El
     <div className="w-full rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-4 space-y-3">
       <div className="flex items-center gap-2 text-yellow-500">
         <AlertTriangle className="size-4 shrink-0" />
-        <span className="text-sm font-medium">Missing dependencies</span>
+        <span className="text-sm font-medium">필수 구성 요소 누락</span>
       </div>
       <div className="space-y-2.5">
         {issues.map((issue) => (
@@ -199,7 +200,7 @@ export default function Landing(): React.JSX.Element {
 
   const canCreateWorktree = repos.length > 0
   const createTargetLabel =
-    canCreateWorktree && repos.every((repo) => isGitRepoKind(repo)) ? 'Worktree' : 'Workspace'
+    canCreateWorktree && repos.every((repo) => isGitRepoKind(repo)) ? '작업 트리' : '작업 공간'
 
   const [preflightIssues, setPreflightIssues] = useState<PreflightIssue[]>([])
 
@@ -265,10 +266,10 @@ export default function Landing(): React.JSX.Element {
       {
         id: 'create',
         keys: createWorktreeKeys,
-        action: `Create ${createTargetLabel.toLowerCase()}`
+        action: `${createTargetLabel} 만들기`
       },
-      { id: 'up', keys: previousWorktreeKeys, action: 'Move up workspace' },
-      { id: 'down', keys: nextWorktreeKeys, action: 'Move down workspace' }
+      { id: 'up', keys: previousWorktreeKeys, action: '작업 공간 위로 이동' },
+      { id: 'down', keys: nextWorktreeKeys, action: '작업 공간 아래로 이동' }
     ]
   }, [createTargetLabel, createWorktreeKeys, nextWorktreeKeys, previousWorktreeKeys])
 
@@ -288,8 +289,8 @@ export default function Landing(): React.JSX.Element {
 
           <p className="text-sm text-muted-foreground text-center">
             {canCreateWorktree
-              ? 'Select a workspace from the sidebar to begin.'
-              : 'Add a project to get started.'}
+              ? '시작하려면 사이드바에서 작업 공간을 선택하세요.'
+              : '시작하려면 프로젝트를 추가하세요.'}
           </p>
 
           <div className="flex items-center justify-center gap-2.5 flex-wrap">
@@ -298,17 +299,17 @@ export default function Landing(): React.JSX.Element {
               onClick={() => openModal('add-repo')}
             >
               <FolderPlus className="size-3.5" />
-              Add Project
+              프로젝트 추가
             </button>
 
             <button
               className="inline-flex items-center gap-1.5 bg-secondary/70 border border-border/80 text-foreground font-medium text-sm px-4 py-2 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed enabled:cursor-pointer enabled:hover:bg-accent"
               disabled={!canCreateWorktree}
-              title={!canCreateWorktree ? 'Add a project first' : undefined}
+              title={!canCreateWorktree ? '먼저 프로젝트를 추가하세요' : undefined}
               onClick={() => openModal('new-workspace-composer', { telemetrySource: 'unknown' })}
             >
               <GitBranchPlus className="size-3.5" />
-              Create {createTargetLabel}
+              {createTargetLabel} 만들기
             </button>
           </div>
 

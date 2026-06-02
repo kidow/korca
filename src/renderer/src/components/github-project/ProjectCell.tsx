@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: ProjectCell dispatches on field.dataType for every supported ProjectV2 field type; keeping the dispatch table and renderers colocated keeps the type-to-renderer mapping easy to audit. */
 // Why: one cell per visible column. Dispatch on `field.dataType` first (so
 // built-in ASSIGNEES/LABELS cells render their dedicated content) and fall
@@ -110,7 +111,7 @@ export default function ProjectCell({
       <TextCell
         value={text}
         editable={editable && !isRedacted}
-        placeholder="Add text"
+        placeholder="텍스트 추가"
         onCommit={(next) => {
           if (next === '') {
             onEditField?.(field.id, null)
@@ -128,7 +129,7 @@ export default function ProjectCell({
         value={num}
         editable={editable && !isRedacted}
         numeric
-        placeholder="Add number"
+        placeholder="숫자 추가"
         onCommit={(next) => {
           if (next === '') {
             onEditField?.(field.id, null)
@@ -192,7 +193,7 @@ function TitleCell({
     return (
       <div className="flex items-center gap-2 text-muted-foreground">
         <Lock className="size-3.5" />
-        <span className="italic">Restricted item</span>
+        <span className="italic">제한된 항목</span>
       </div>
     )
   }
@@ -245,8 +246,8 @@ function TypeCell({
     row.itemType === 'PULL_REQUEST'
       ? { Icon: GitPullRequest, label: 'PR' }
       : row.itemType === 'DRAFT_ISSUE'
-        ? { Icon: FileText, label: 'Draft' }
-        : { Icon: Lock, label: 'Restricted' }
+        ? { Icon: FileText, label: '초안' }
+        : { Icon: Lock, label: '제한됨' }
   const { Icon, label } = meta
   return (
     <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
@@ -323,7 +324,7 @@ function IssueTypeCell({
           )
         })()
       ) : (
-        <span className="text-muted-foreground">Issue</span>
+        <span className="text-muted-foreground">이슈</span>
       )}
     </span>
   )
@@ -337,7 +338,7 @@ function IssueTypeCell({
       <PopoverTrigger asChild>
         <button
           type="button"
-          aria-label="Issue type"
+          aria-label="이슈 유형"
           className="flex h-full w-full cursor-pointer items-center px-1 text-left"
         >
           {trigger}
@@ -345,12 +346,14 @@ function IssueTypeCell({
       </PopoverTrigger>
       <PopoverContent className="w-64 p-1" align="start">
         {!owner || !repo ? (
-          <div className="px-2 py-1 text-xs text-muted-foreground">Row has no repo slug.</div>
+          <div className="px-2 py-1 text-xs text-muted-foreground">
+            행에 저장소 슬러그가 없습니다.
+          </div>
         ) : loading ? (
-          <div className="px-2 py-1 text-xs text-muted-foreground">Loading…</div>
+          <div className="px-2 py-1 text-xs text-muted-foreground">불러오는 중…</div>
         ) : options.length === 0 ? (
           <div className="px-2 py-1 text-xs text-muted-foreground">
-            This repo has no Issue Types.
+            이 저장소에는 이슈 유형이 없습니다.
           </div>
         ) : (
           options.map((t) => (
@@ -387,7 +390,7 @@ function IssueTypeCell({
               setOpen(false)
             }}
           >
-            Clear
+            지우기
           </button>
         ) : null}
       </PopoverContent>
@@ -441,7 +444,7 @@ function SingleSelectCell({
           aria-label={field.name}
           className="flex h-full w-full cursor-pointer items-center px-1 text-left"
         >
-          {label ?? <EmptyCellPrompt label="Select" />}
+          {label ?? <EmptyCellPrompt label="선택" />}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-56 p-1">
@@ -470,7 +473,7 @@ function SingleSelectCell({
             setOpen(false)
           }}
         >
-          Clear
+          지우기
         </button>
       </PopoverContent>
     </Popover>
@@ -510,13 +513,13 @@ function IterationCell({
           aria-label={field.name}
           className="flex h-full w-full cursor-pointer items-center px-1 text-left"
         >
-          {label ?? <EmptyCellPrompt label="Select" />}
+          {label ?? <EmptyCellPrompt label="선택" />}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-1">
         {completed.length > 0 ? (
           <div className="px-2 pt-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-            Completed
+            완료됨
           </div>
         ) : null}
         {completed.map((it) => (
@@ -552,7 +555,7 @@ function IterationCell({
             setOpen(false)
           }}
         >
-          Clear
+          지우기
         </button>
       </PopoverContent>
     </Popover>
@@ -780,7 +783,7 @@ function AssigneesCell({
       <PopoverTrigger asChild>
         <button
           type="button"
-          aria-label="Assignees"
+          aria-label="담당자"
           className={cn(
             'flex h-full w-full flex-wrap items-center gap-1 cursor-pointer px-1 text-xs text-muted-foreground hover:text-foreground'
           )}
@@ -790,9 +793,11 @@ function AssigneesCell({
       </PopoverTrigger>
       <PopoverContent className="w-64 p-1">
         {!owner || !repo ? (
-          <div className="px-2 py-1 text-xs text-muted-foreground">Row has no repo slug.</div>
+          <div className="px-2 py-1 text-xs text-muted-foreground">
+            행에 저장소 슬러그가 없습니다.
+          </div>
         ) : metadata.loading ? (
-          <div className="px-2 py-1 text-xs text-muted-foreground">Loading…</div>
+          <div className="px-2 py-1 text-xs text-muted-foreground">불러오는 중…</div>
         ) : (
           metadata.data.map((u) => {
             const isOn = assignees.some((a) => a.login === u.login)
@@ -856,19 +861,23 @@ function LabelsCell({
       <PopoverTrigger asChild>
         <button
           type="button"
-          aria-label="Labels"
+          aria-label="레이블"
           className={cn('flex h-full w-full flex-wrap items-center gap-1 cursor-pointer px-1')}
         >
-          {labelContent ?? <EmptyCellPrompt label="Add label" />}
+          {labelContent ?? <EmptyCellPrompt label="레이블 추가" />}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-1">
         {!owner || !repo ? (
-          <div className="px-2 py-1 text-xs text-muted-foreground">Row has no repo slug.</div>
+          <div className="px-2 py-1 text-xs text-muted-foreground">
+            행에 저장소 슬러그가 없습니다.
+          </div>
         ) : metadata.loading ? (
-          <div className="px-2 py-1 text-xs text-muted-foreground">Loading…</div>
+          <div className="px-2 py-1 text-xs text-muted-foreground">불러오는 중…</div>
         ) : metadata.data.length === 0 ? (
-          <div className="px-2 py-1 text-xs text-muted-foreground">No labels in this repo.</div>
+          <div className="px-2 py-1 text-xs text-muted-foreground">
+            이 저장소에는 레이블이 없습니다.
+          </div>
         ) : (
           metadata.data.map((name) => {
             const isOn = labels.some((l) => l.name === name)

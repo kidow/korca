@@ -49,21 +49,22 @@ export function GitPane({
 
   const visibleSections = [
     matchesSettingsSearch(searchQuery, {
-      title: 'Branch Prefix',
-      description: 'Prefix added to branch names when creating worktrees.',
+      title: '브랜치 접두사',
+      description: '작업 트리를 만들 때 브랜치 이름 앞에 붙는 접두사입니다.',
       keywords: ['branch naming', 'git username', 'custom']
     }) ? (
       <SearchableSetting
         key="branch-prefix"
-        title="Branch Prefix"
-        description="Prefix added to branch names when creating worktrees."
+        title="브랜치 접두사"
+        description="작업 트리를 만들 때 브랜치 이름 앞에 붙는 접두사입니다."
         keywords={['branch naming', 'git username', 'custom']}
         className="space-y-3"
       >
         <div className="space-y-0.5">
-          <Label>Branch Prefix</Label>
+          <Label>브랜치 접두사</Label>
           <p className="text-xs text-muted-foreground">
-            Choose whether branch names use your Git username, a custom prefix, or no prefix.
+            브랜치 이름에 Git 사용자 이름, 사용자 지정 접두사, 또는 접두사 없음 중 무엇을 사용할지
+            선택하세요.
           </p>
         </div>
         <div className="flex w-fit gap-1 rounded-md border border-border/50 p-1">
@@ -77,7 +78,11 @@ export function GitPane({
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              {option === 'git-username' ? 'Git Username' : option === 'custom' ? 'Custom' : 'None'}
+              {option === 'git-username'
+                ? 'Git 사용자 이름'
+                : option === 'custom'
+                  ? '사용자 지정'
+                  : '없음'}
             </button>
           ))}
         </div>
@@ -91,8 +96,8 @@ export function GitPane({
             onChange={(e) => updateSettings({ branchPrefixCustom: e.target.value })}
             placeholder={
               settings.branchPrefix === 'git-username'
-                ? 'No git username configured'
-                : 'e.g. feature'
+                ? 'Git 사용자 이름이 설정되어 있지 않습니다'
+                : '예: feature'
             }
             className="max-w-xs"
             readOnly={settings.branchPrefix === 'git-username'}
@@ -101,9 +106,8 @@ export function GitPane({
       </SearchableSetting>
     ) : null,
     matchesSettingsSearch(searchQuery, {
-      title: 'Refresh Local Base Ref',
-      description:
-        'Safely fast-forward local main or master so AI tools and diffs use a fresh base.',
+      title: '로컬 기준 ref 새로고침',
+      description: '로컬 main 또는 master를 안전하게 fast-forward해 새 기준을 사용합니다.',
       keywords: [
         'main',
         'master',
@@ -117,8 +121,8 @@ export function GitPane({
     }) ? (
       <SearchableSetting
         key="refresh-base-ref"
-        title="Refresh Local Base Ref"
-        description="Safely fast-forward local main or master so AI tools and diffs use a fresh base."
+        title="로컬 기준 ref 새로고침"
+        description="로컬 main 또는 master를 안전하게 fast-forward하여 새 기준을 사용합니다."
         keywords={[
           'main',
           'master',
@@ -132,12 +136,12 @@ export function GitPane({
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Refresh Local Base Ref</Label>
+          <Label>로컬 기준 ref 새로고침</Label>
           <p className="text-xs text-muted-foreground">
-            Turn this on if you or AI tools use commands like <code>git diff main...HEAD</code>.
-            Korca first refreshes the remote base, then safely fast-forwards the matching local{' '}
-            <code>main</code> or <code>master</code> so those commands do not compare against stale
-            history. Korca skips the update if the local branch is dirty or diverged.
+            당신이나 AI 도구가 <code>git diff main...HEAD</code> 같은 명령을 사용한다면 켜세요.
+            Korca는 먼저 원격 기준을 새로고침한 뒤, 대응하는 로컬 <code>main</code> 또는{' '}
+            <code>master</code>를 안전하게 fast-forward해 오래된 이력과 비교하지 않게 합니다. 로컬
+            브랜치가 수정되었거나 분기된 경우에는 업데이트를 건너뜁니다.
           </p>
         </div>
         <button
@@ -175,14 +179,14 @@ export function GitPane({
       />
     ) : null,
     matchesSettingsSearch(searchQuery, {
-      title: 'GitHub API Budget',
-      description: 'Current GitHub CLI REST, Search, and GraphQL rate limits.',
+      title: 'GitHub API 예산',
+      description: '현재 GitHub CLI REST, Search, GraphQL rate limit 상태입니다.',
       keywords: ['github', 'gh', 'graphql', 'rate limit', 'api budget']
     }) ? (
       <SearchableSetting
         key="github-api-budget"
-        title="GitHub API Budget"
-        description="Current GitHub CLI REST, Search, and GraphQL rate limits."
+        title="GitHub API 예산"
+        description="현재 GitHub CLI REST, Search, GraphQL rate limit 상태입니다."
         keywords={['github', 'gh', 'graphql', 'rate limit', 'api budget']}
         className="space-y-3"
       >
@@ -190,14 +194,14 @@ export function GitPane({
       </SearchableSetting>
     ) : null,
     matchesSettingsSearch(searchQuery, {
-      title: 'GitLab API Budget',
-      description: 'Current GitLab CLI REST rate-limit headers when available.',
+      title: 'GitLab API 예산',
+      description: '가능하면 현재 GitLab CLI REST rate-limit 헤더를 표시합니다.',
       keywords: ['gitlab', 'glab', 'rate limit', 'api budget']
     }) ? (
       <SearchableSetting
         key="gitlab-api-budget"
-        title="GitLab API Budget"
-        description="Current GitLab CLI REST rate-limit headers when available."
+        title="GitLab API 예산"
+        description="가능하면 현재 GitLab CLI REST rate-limit 헤더를 표시합니다."
         keywords={['gitlab', 'glab', 'rate limit', 'api budget']}
         className="space-y-3"
       >
@@ -205,22 +209,29 @@ export function GitPane({
       </SearchableSetting>
     ) : null,
     matchesSettingsSearch(searchQuery, {
-      title: 'Korca Attribution',
-      description: 'Add Korca attribution to commits, PRs, and issues.',
+      title: 'Korca 표기',
+      description: '커밋, PR, 이슈에 Korca 표기를 추가합니다.',
       keywords: ['github', 'gh', 'pr', 'issue', 'co-author', 'coauthored', 'attribution', 'korca']
     }) ? (
       <SearchableSetting
         key="github-attribution"
-        title="Korca Attribution"
-        description="Add Korca attribution to commits, PRs, and issues."
-        keywords={['github', 'gh', 'pr', 'issue', 'co-author', 'coauthored', 'attribution', 'korca']}
+        title="Korca 표기"
+        description="커밋, PR, 이슈에 Korca 표기를 추가합니다."
+        keywords={[
+          'github',
+          'gh',
+          'pr',
+          'issue',
+          'co-author',
+          'coauthored',
+          'attribution',
+          'korca'
+        ]}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Korca Attribution</Label>
-          <p className="text-xs text-muted-foreground">
-            Add Korca attribution to commits, PRs, and issues.
-          </p>
+          <Label>Korca 표기</Label>
+          <p className="text-xs text-muted-foreground">커밋, PR, 이슈에 Korca 표기를 추가합니다.</p>
         </div>
         <button
           role="switch"

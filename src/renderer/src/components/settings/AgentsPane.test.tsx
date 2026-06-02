@@ -134,9 +134,9 @@ describe('AgentsPane', () => {
 
     expect(markup).not.toContain('Agent location')
     expect(markup).not.toContain('aria-label="Agent location"')
-    expect(markup).toContain('Keep computer awake while agents are working')
+    expect(markup).toContain('에이전트 작업 중 컴퓨터 절전 방지')
     expect(markup).toContain(
-      'Keeps this computer and display awake while agents are working. Korca also asks this device to stay awake when the lid is closed, subject to its power policy.'
+      '에이전트가 작업하는 동안 이 컴퓨터와 디스플레이가 잠들지 않게 유지합니다. Korca는 전원 정책에 따라 덮개를 닫아도 이 장치가 깨어 있도록 요청합니다.'
     )
     expect(markup).toContain('aria-checked="false"')
   })
@@ -168,7 +168,7 @@ describe('AgentsPane', () => {
 
   it('describes Windows lid behavior according to the device', () => {
     expect(getAgentAwakeDescription('Windows')).toBe(
-      "Keeps this computer and display awake while agents are working. Lid-close behavior follows this device's power settings."
+      '에이전트가 작업하는 동안 이 컴퓨터와 디스플레이가 잠들지 않게 유지합니다. 덮개를 닫았을 때의 동작은 이 장치의 전원 설정을 따릅니다.'
     )
   })
 
@@ -182,8 +182,8 @@ describe('AgentsPane', () => {
       updateSettings
     })
 
-    const keepAwakeSwitch = findSwitch(element, 'Keep computer awake while agents are working')
-    expect(keepAwakeSwitch.props['aria-label']).toBe('Keep computer awake while agents are working')
+    const keepAwakeSwitch = findSwitch(element, '에이전트 작업 중 컴퓨터 절전 방지')
+    expect(keepAwakeSwitch.props['aria-label']).toBe('에이전트 작업 중 컴퓨터 절전 방지')
     expect(keepAwakeSwitch.props['aria-checked']).toBe(false)
 
     const onClick = keepAwakeSwitch.props.onClick as () => void

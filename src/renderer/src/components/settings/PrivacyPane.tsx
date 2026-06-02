@@ -88,11 +88,11 @@ export function PrivacyPane({ settings }: PrivacyPaneProps): React.JSX.Element {
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
             <ShieldCheck className="size-4" />
-            <Label>Share anonymous usage data</Label>
+            <Label>익명 사용 데이터 공유</Label>
           </div>
           <p className="text-xs text-muted-foreground">
-            Help us figure out what to build next. Korca sends anonymous counts of which features you
-            use and where things break.{' '}
+            Help us figure out what to build next. Korca sends anonymous counts of which features
+            you use and where things break.{' '}
             <button
               type="button"
               className="underline underline-offset-2 hover:text-foreground"
@@ -132,7 +132,9 @@ function BlockedHelper({ blocked, id }: { blocked: BlockedReason; id: string }):
   return (
     <div id={id} className="pb-2 text-xs text-muted-foreground">
       {blocked.reason === 'ci' ? (
-        <p>Telemetry is disabled because a CI environment variable is set. Unset it and restart.</p>
+        <p>
+          CI 환경 변수가 설정되어 있어 원격 측정이 꺼져 있습니다. 설정을 해제하고 다시 시작하세요.
+        </p>
       ) : (
         <p>
           Telemetry is disabled by the{' '}

@@ -40,19 +40,18 @@ const RemoveFolderDialog = React.memo(function RemoveFolderDialog() {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-sm sm:max-w-sm" showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle className="text-sm">Remove Project</DialogTitle>
+          <DialogTitle className="text-sm">프로젝트 제거</DialogTitle>
           <DialogDescription className="text-xs">
-            This only removes{' '}
-            <span className="break-all font-medium text-foreground">{displayName}</span> from Korca.
-            It is still on your disk.
+            이것은 <span className="break-all font-medium text-foreground">{displayName}</span> from
+            Korca. 디스크에는 그대로 남아 있습니다.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
-            Cancel
+            취소
           </Button>
           <Button variant="destructive" onClick={handleConfirm}>
-            Remove
+            제거
           </Button>
         </DialogFooter>
       </DialogContent>

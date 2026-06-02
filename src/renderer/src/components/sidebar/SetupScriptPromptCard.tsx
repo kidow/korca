@@ -41,14 +41,15 @@ function SavedInProjectSettingsToast({
 }: SavedInProjectSettingsToastProps): React.JSX.Element {
   return (
     <span>
-      Saved in this{' '}
+      이{' '}
       <button
         type="button"
         className="rounded-sm font-medium underline underline-offset-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         onClick={onOpenSettings}
       >
-        project&apos;s settings
+        프로젝트 설정
       </button>
+      에 저장되었습니다
     </span>
   )
 }
@@ -249,7 +250,7 @@ function SetupScriptPromptCard(): React.JSX.Element | null {
             })
           )
           if (mountedRef.current) {
-            toast.error('Failed to save setup script')
+            toast.error('설정 스크립트 저장에 실패했습니다')
           }
           return
         }
@@ -277,7 +278,7 @@ function SetupScriptPromptCard(): React.JSX.Element | null {
             )
             showSavedInProjectSettingsToast({
               onOpenSettings: () => openLocalCommandSettings(importedRepoId),
-              description: 'Korca will run this command each time a new worktree is created.'
+              description: 'Korca는 새 작업 공간이 만들어질 때마다 이 명령을 실행합니다.'
             })
           }
           return
@@ -293,8 +294,8 @@ function SetupScriptPromptCard(): React.JSX.Element | null {
             onOpenSettings: () => openLocalCommandSettings(importedRepoId),
             description:
               skippedCount > 0
-                ? `${skippedCount} unsupported field${skippedCount === 1 ? '' : 's'} skipped. Saved locally; move it to korca.yaml later to share it.`
-                : 'Move it to korca.yaml later to share it.'
+                ? `${skippedCount}개의 지원하지 않는 항목을 건너뛰었습니다. 로컬에 저장되었습니다. 나중에 korca.yaml로 옮겨 공유할 수 있습니다.`
+                : '나중에 korca.yaml로 옮겨 공유할 수 있습니다.'
           })
         }
       } catch (error) {
@@ -312,7 +313,7 @@ function SetupScriptPromptCard(): React.JSX.Element | null {
         )
         console.warn('[setup-script-prompt] Failed to save setup script:', error)
         if (mountedRef.current) {
-          toast.error('Failed to save setup script')
+          toast.error('설정 스크립트 저장에 실패했습니다')
         }
       } finally {
         if (mountedRef.current) {
@@ -338,7 +339,7 @@ function SetupScriptPromptCard(): React.JSX.Element | null {
         }
       : promptState.candidate
     if (!candidate.setup) {
-      toast.error('Setup script cannot be empty')
+      toast.error('설정 스크립트는 비워둘 수 없습니다')
       return
     }
     if (actionPrefix === 'save_detected_setup') {
@@ -383,7 +384,7 @@ function SetupScriptPromptCard(): React.JSX.Element | null {
     <div className="px-3 pb-2">
       <div className="setup-script-prompt-card rounded-lg border border-sidebar-border p-3 text-sidebar-accent-foreground shadow-xs">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold leading-snug">Add a setup script</p>
+          <p className="text-sm font-semibold leading-snug">설정 스크립트 추가</p>
           <DismissButton onDismiss={handleDismiss} />
         </div>
 

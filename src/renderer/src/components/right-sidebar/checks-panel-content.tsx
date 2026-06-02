@@ -115,7 +115,7 @@ export function ConflictingFilesSection({ pr }: { pr: ConflictReview }): React.J
       </div>
       <div className="mt-2 flex items-center gap-2">
         <Files className="size-3.5 shrink-0 text-muted-foreground" />
-        <div className="text-[11px] text-muted-foreground">Conflicting files</div>
+        <div className="text-[11px] text-muted-foreground">충돌 파일</div>
       </div>
       <div className="mt-2 space-y-1.5">
         {files.map((filePath) => (
@@ -148,12 +148,12 @@ export function MergeConflictNotice({
   return (
     <div className="border-t border-border px-3 py-3">
       <div className="text-[11px] font-medium text-foreground">
-        This branch has conflicts that must be resolved
+        이 브랜치에는 해결해야 할 충돌이 있습니다
       </div>
       <div className="mt-1 text-[11px] text-muted-foreground">
         {isRefreshingConflictDetails
-          ? 'Refreshing conflict details…'
-          : 'Conflict file details are unavailable'}
+          ? '충돌 세부정보를 새로고침하는 중…'
+          : '충돌 파일 세부정보를 사용할 수 없습니다'}
       </div>
     </div>
   )
@@ -206,10 +206,10 @@ export function PRTriageStrip({
           <CircleX className="size-3.5 shrink-0 text-rose-500" />
           <div className="min-w-0 flex-1">
             <div className="truncate text-[11px] font-medium text-foreground">
-              {failingCount} failing check{failingCount === 1 ? '' : 's'}
+              {failingCount}개 실패한 검사
             </div>
             <div className="truncate text-[10px] text-muted-foreground">
-              Inspect details or start an AI fix pass.
+              세부정보를 확인하거나 AI 수정 패스를 시작하세요.
             </div>
           </div>
           <Button
@@ -225,7 +225,7 @@ export function PRTriageStrip({
             ) : (
               <Wrench className="size-3" />
             )}
-            Fix
+            수정
           </Button>
         </div>
       </div>
@@ -239,10 +239,10 @@ export function PRTriageStrip({
           <LoaderCircle className="size-3.5 shrink-0 animate-spin text-amber-500" />
           <div className="min-w-0 flex-1">
             <div className="truncate text-[11px] font-medium text-foreground">
-              {pendingCount} check{pendingCount === 1 ? '' : 's'} pending
+              {pendingCount}개 검사 대기 중
             </div>
             <div className="truncate text-[10px] text-muted-foreground">
-              Korca will refresh checks while this panel stays open.
+              이 패널이 열려 있는 동안 Korca가 검사를 새로고침합니다.
             </div>
           </div>
         </div>
@@ -256,10 +256,10 @@ export function PRTriageStrip({
         <CircleCheck className="size-3.5 shrink-0 text-emerald-500" />
         <div className="min-w-0 flex-1">
           <div className="truncate text-[11px] font-medium text-foreground">
-            No blocking PR action
+            차단 중인 PR 작업 없음
           </div>
           <div className="truncate text-[10px] text-muted-foreground">
-            Checks and comments below show the current fetched context.
+            아래의 검사와 댓글은 현재 가져온 맥락을 보여줍니다.
           </div>
         </div>
       </div>
@@ -286,10 +286,10 @@ export function ConflictTriageStrip({
         <AlertTriangle className="size-3.5 shrink-0 text-amber-500" />
         <div className="min-w-0 flex-1">
           <div className="truncate text-[11px] font-medium text-foreground">
-            Conflicts block this {reviewKind}
+            충돌이 이 {reviewKind}을 차단합니다
           </div>
           <div className="truncate text-[10px] text-muted-foreground">
-            Resolve conflicts before checks and merge can complete.
+            검사와 병합을 완료하려면 먼저 충돌을 해결하세요.
           </div>
         </div>
         <Button
@@ -305,7 +305,7 @@ export function ConflictTriageStrip({
           ) : (
             <Sparkles className="size-3" />
           )}
-          Resolve
+          충돌 해결
         </Button>
       </div>
     </div>
@@ -363,7 +363,7 @@ function getCheckStatusLabel(check: PRCheckDetail): string {
     return 'Successful'
   }
   if (conclusion === 'failure') {
-    return 'Failed'
+    return '실패'
   }
   if (conclusion === 'cancelled') {
     return 'Cancelled'
@@ -438,20 +438,19 @@ function CheckRunDetails({
       {state?.loading ? (
         <div className="flex items-center gap-2 py-1.5 text-[12px] text-muted-foreground">
           <LoaderCircle className="size-3.5 animate-spin" />
-          Loading check details…
+          검사 세부정보를 불러오는 중…
         </div>
       ) : (
         <div className="flex min-w-0 flex-col gap-2.5 py-1.5">
           <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
             <span>
-              Status:{' '}
-              {details ? getCheckStatusLabel(detailsStatusCheck) : getCheckStatusLabel(check)}
+              상태: {details ? getCheckStatusLabel(detailsStatusCheck) : getCheckStatusLabel(check)}
             </span>
-            {startedAt && <span>Started {startedAt}</span>}
-            {completedAt && <span>Completed {completedAt}</span>}
-            {check.checkRunId && <span className="font-mono">check #{check.checkRunId}</span>}
+            {startedAt && <span>시작 {startedAt}</span>}
+            {completedAt && <span>완료 {completedAt}</span>}
+            {check.checkRunId && <span className="font-mono">검사 #{check.checkRunId}</span>}
             {check.workflowRunId && (
-              <span className="font-mono">workflow #{check.workflowRunId}</span>
+              <span className="font-mono">워크플로 #{check.workflowRunId}</span>
             )}
           </div>
 
@@ -482,14 +481,14 @@ function CheckRunDetails({
           {hasAnnotations && (
             <div className="min-w-0 border-t border-border/60 pt-2">
               <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Annotations
+                주석
               </div>
               <div className="flex max-h-40 flex-col gap-2 overflow-y-auto scrollbar-sleek">
                 {details!.annotations.map((annotation, index) => (
                   <div key={`${annotation.path ?? 'annotation'}-${index}`} className="min-w-0">
                     <div className="flex min-w-0 items-center gap-2">
                       <span className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">
-                        {annotation.path ?? 'Annotation'}
+                        {annotation.path ?? '주석'}
                         {annotation.startLine ? `:${annotation.startLine}` : ''}
                       </span>
                       {annotation.annotationLevel && (
@@ -516,7 +515,7 @@ function CheckRunDetails({
               </div>
               {details!.annotations.length >= 20 && (
                 <div className="mt-1.5 text-[10px] text-muted-foreground">
-                  Showing first 20 annotations
+                  주석 20개만 먼저 표시합니다
                 </div>
               )}
             </div>
@@ -525,7 +524,7 @@ function CheckRunDetails({
           {hasJobs && (
             <div className="min-w-0 border-t border-border/60 pt-2">
               <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                {failedJobs.length > 0 ? 'Failed jobs' : 'Jobs'}
+                {failedJobs.length > 0 ? '실패한 작업' : '작업'}
               </div>
               <div className="flex max-h-48 flex-col gap-2 overflow-y-auto scrollbar-sleek">
                 {jobs.map((job, index) => (
@@ -535,7 +534,7 @@ function CheckRunDetails({
                         {job.name}
                       </span>
                       <span className="shrink-0 text-[11px] text-muted-foreground">
-                        {job.conclusion ?? job.status ?? 'unknown'}
+                        {job.conclusion ?? job.status ?? '알 수 없음'}
                       </span>
                     </div>
                     {job.steps.length > 0 && (
@@ -561,7 +560,7 @@ function CheckRunDetails({
               </div>
               {(details?.jobs.length ?? 0) >= 100 && (
                 <div className="mt-1.5 text-[10px] text-muted-foreground">
-                  Showing first 100 jobs
+                  작업 100개만 먼저 표시합니다
                 </div>
               )}
             </div>
@@ -569,13 +568,13 @@ function CheckRunDetails({
 
           {hasLogTail && (
             <div className="text-[11px] text-muted-foreground">
-              Log tail available in full details.
+              전체 세부정보에서 로그 끝부분을 볼 수 있습니다.
             </div>
           )}
 
           {!state?.error && !hasOutput && !hasAnnotations && !hasJobs && (
             <div className="text-[12px] text-muted-foreground">
-              No inline details are available for this check.
+              이 검사에 대한 인라인 세부정보가 없습니다.
             </div>
           )}
 
@@ -590,7 +589,7 @@ function CheckRunDetails({
                     className="h-7 gap-1 px-2 text-[11px]"
                     onClick={(event) => event.stopPropagation()}
                   >
-                    View full details
+                    전체 세부정보 보기
                     <Maximize2 className="size-3" />
                   </Button>
                 </DialogTrigger>
@@ -614,7 +613,7 @@ function CheckRunDetails({
                   window.api.shell.openUrl(openUrl)
                 }}
               >
-                Open details
+                세부정보 열기
                 <ExternalLink className="size-3" />
               </Button>
             )}
@@ -654,13 +653,13 @@ export function CheckRunDetailsDialog({
         <DialogTitle className="truncate text-base">{check.name}</DialogTitle>
         <DialogDescription className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
           <span>
-            Status: {details ? getCheckStatusLabel(detailsStatusCheck) : getCheckStatusLabel(check)}
+            상태: {details ? getCheckStatusLabel(detailsStatusCheck) : getCheckStatusLabel(check)}
           </span>
-          {startedAt && <span>Started {startedAt}</span>}
-          {completedAt && <span>Completed {completedAt}</span>}
-          {check.checkRunId && <span className="font-mono">check #{check.checkRunId}</span>}
+          {startedAt && <span>시작 {startedAt}</span>}
+          {completedAt && <span>완료 {completedAt}</span>}
+          {check.checkRunId && <span className="font-mono">검사 #{check.checkRunId}</span>}
           {check.workflowRunId && (
-            <span className="font-mono">workflow #{check.workflowRunId}</span>
+            <span className="font-mono">워크플로 #{check.workflowRunId}</span>
           )}
         </DialogDescription>
       </DialogHeader>
@@ -670,7 +669,7 @@ export function CheckRunDetailsDialog({
 
           {hasOutput && (
             <section className="rounded-md border border-border bg-background">
-              <div className="border-b border-border px-3 py-2 text-sm font-medium">Output</div>
+              <div className="border-b border-border px-3 py-2 text-sm font-medium">출력</div>
               <div className="px-3 py-3">
                 {details?.title && (
                   <div className="mb-2 text-sm font-medium text-foreground">{details.title}</div>
@@ -695,15 +694,13 @@ export function CheckRunDetailsDialog({
 
           {hasAnnotations && (
             <section className="rounded-md border border-border bg-background">
-              <div className="border-b border-border px-3 py-2 text-sm font-medium">
-                Annotations
-              </div>
+              <div className="border-b border-border px-3 py-2 text-sm font-medium">주석</div>
               <div className="divide-y divide-border/50">
                 {details!.annotations.map((annotation, index) => (
                   <div key={`${annotation.path ?? 'annotation'}-${index}`} className="px-3 py-3">
                     <div className="flex min-w-0 flex-wrap items-center gap-2">
                       <span className="min-w-0 break-all font-mono text-xs text-muted-foreground">
-                        {annotation.path ?? 'Annotation'}
+                        {annotation.path ?? '주석'}
                         {annotation.startLine ? `:${annotation.startLine}` : ''}
                       </span>
                       {annotation.annotationLevel && (
@@ -733,7 +730,7 @@ export function CheckRunDetailsDialog({
 
           {hasJobs && (
             <section className="rounded-md border border-border bg-background">
-              <div className="border-b border-border px-3 py-2 text-sm font-medium">Jobs</div>
+              <div className="border-b border-border px-3 py-2 text-sm font-medium">작업</div>
               <div className="divide-y divide-border/50">
                 {jobs.map((job, index) => (
                   <div key={`${job.name}-${index}`} className="px-3 py-3">
@@ -742,7 +739,7 @@ export function CheckRunDetailsDialog({
                         {job.name}
                       </span>
                       <span className="shrink-0 text-xs text-muted-foreground">
-                        {job.conclusion ?? job.status ?? 'unknown'}
+                        {job.conclusion ?? job.status ?? '알 수 없음'}
                       </span>
                     </div>
                     {job.steps.length > 0 && (
@@ -766,9 +763,7 @@ export function CheckRunDetailsDialog({
           )}
 
           {!state?.error && !hasOutput && !hasAnnotations && !hasJobs && (
-            <div className="text-sm text-muted-foreground">
-              No details are available for this check.
-            </div>
+            <div className="text-sm text-muted-foreground">이 검사에 대한 세부정보가 없습니다.</div>
           )}
         </div>
       </div>
@@ -783,7 +778,7 @@ export function CheckRunDetailsDialog({
               window.api.shell.openUrl(openUrl)
             }}
           >
-            Open details
+            세부정보 열기
             <ExternalLink className="size-3.5" />
           </Button>
         </div>
@@ -799,7 +794,7 @@ export function CheckJobLogTail({ logTail }: { logTail: string }): React.JSX.Ele
         <div className="min-w-0 flex-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
           Log tail (last 200 lines)
         </div>
-        <CopyButton text={logTail} title="Copy log tail" />
+        <CopyButton text={logTail} title="로그 끝부분 복사" />
       </div>
       <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded bg-muted/40 p-3 font-mono text-xs text-muted-foreground scrollbar-sleek">
         {logTail}
@@ -892,7 +887,7 @@ export function ChecksList({
           [row.key]: {
             loading: false,
             details: null,
-            error: 'No inline details are available for this check.'
+            error: '이 검사에 대한 인라인 세부정보가 없습니다.'
           }
         }))
         return
@@ -903,7 +898,7 @@ export function ChecksList({
           [row.key]: {
             loading: false,
             details: null,
-            error: 'No inline details are available for this check.'
+            error: '이 검사에 대한 인라인 세부정보가 없습니다.'
           }
         }))
         return
@@ -923,7 +918,7 @@ export function ChecksList({
             [row.key]: {
               loading: false,
               details,
-              error: details ? null : 'No inline details are available for this check.'
+              error: details ? null : '이 검사에 대한 인라인 세부정보가 없습니다.'
             }
           }))
         })
@@ -936,7 +931,7 @@ export function ChecksList({
             [row.key]: {
               loading: false,
               details: null,
-              error: err instanceof Error ? err.message : 'Failed to load check details.'
+              error: err instanceof Error ? err.message : '검사 세부정보를 불러오지 못했습니다.'
             }
           }))
         })
@@ -1017,7 +1012,7 @@ export function ChecksList({
         </div>
       ) : checks.length === 0 ? (
         <div className="flex items-center justify-center py-8 text-[11px] text-muted-foreground">
-          No checks configured
+          구성된 검사가 없습니다
         </div>
       ) : !checksExpanded ? null : (
         <>
@@ -1087,7 +1082,7 @@ export function ChecksList({
 
 function CopyButton({
   text,
-  title = 'Copy comment'
+  title = '댓글 복사'
 }: {
   text: string
   title?: string
@@ -1299,14 +1294,14 @@ function CommentRow({
             {showReply && onReply && (
               <button
                 className="shrink-0 rounded px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-                title={replyDisabled ? replyDisabledReason : 'Reply'}
+                title={replyDisabled ? replyDisabledReason : '답글'}
                 disabled={replyDisabled}
                 onClick={(event) => {
                   event.stopPropagation()
                   onReply(comment)
                 }}
               >
-                Reply
+                답글
               </button>
             )}
             <CopyButton text={buildCopyText(comment)} />
@@ -1350,8 +1345,8 @@ function PRCommentGroupView({
     replyingGroupId === groupId && onReply ? (
       <div className={cn('px-3 pb-2', group.kind === 'thread' && 'pl-6')}>
         <RightPanelCommentComposer
-          placeholder={`Reply to ${root.author}`}
-          submitLabel="Reply"
+          placeholder={`${root.author}에게 답글`}
+          submitLabel="답글"
           autoFocus
           disabled={replyDisabled}
           disabledReason={replyDisabledReason}
@@ -1491,7 +1486,7 @@ export function PRCommentsList({
       <div className="border-b border-border px-3 py-2">
         <div className="flex items-center gap-2">
           <MessageSquare className="size-3.5 text-muted-foreground" />
-          <span className="text-[11px] font-medium text-foreground">Comments</span>
+          <span className="text-[11px] font-medium text-foreground">댓글</span>
           {comments.length > 0 && (
             <span className="text-[10px] text-muted-foreground">{comments.length}</span>
           )}
@@ -1520,7 +1515,7 @@ export function PRCommentsList({
         )}
         {comments.length >= 100 && (
           <div className="mt-1.5 text-[10px] text-muted-foreground">
-            Showing first 100 comments per source
+            소스별로 처음 100개의 댓글만 표시합니다
           </div>
         )}
       </div>
@@ -1534,7 +1529,7 @@ export function PRCommentsList({
         // Why: with the composer pinned below as the call to action, the empty
         // state stays a quiet caption instead of competing for attention.
         <div className="flex items-center justify-center py-5 text-[11px] text-muted-foreground">
-          {onAddComment ? 'No comments yet — start the conversation below.' : 'No comments'}
+          {onAddComment ? '아직 댓글이 없습니다. 아래에서 대화를 시작하세요.' : '댓글 없음'}
         </div>
       ) : visibleComments.length === 0 ? (
         <div className="flex items-center justify-center py-5 text-[11px] text-muted-foreground">
@@ -1578,8 +1573,8 @@ export function PRCommentsList({
         <div className="border-t border-border px-3 py-2">
           {isAddingComment ? (
             <RightPanelCommentComposer
-              placeholder="Add a PR comment"
-              submitLabel="Comment"
+              placeholder="PR 댓글 추가"
+              submitLabel="댓글"
               autoFocus
               disabled={commentsDisabled}
               disabledReason={commentsDisabledReason}
@@ -1597,7 +1592,7 @@ export function PRCommentsList({
               onClick={() => setIsAddingComment(true)}
             >
               <MessageSquare className="size-3.5 shrink-0 text-muted-foreground" />
-              <span className="truncate">Add a comment…</span>
+              <span className="truncate">댓글 추가…</span>
             </button>
           )}
         </div>

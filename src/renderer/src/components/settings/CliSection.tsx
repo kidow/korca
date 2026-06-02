@@ -35,25 +35,25 @@ type CliSectionProps = {
 
 function getRevealLabel(platform: string): string {
   if (platform === 'darwin') {
-    return 'Show in Finder'
+    return 'Finder에서 보기'
   }
   if (platform === 'win32') {
-    return 'Show in Explorer'
+    return '탐색기에서 보기'
   }
-  return 'Show in File Manager'
+  return '파일 관리자에서 보기'
 }
 
 function getInstallDescription(platform: string): string {
   if (platform === 'darwin') {
-    return 'Register `korca` in /usr/local/bin.'
+    return '`korca`를 /usr/local/bin에 등록합니다.'
   }
   if (platform === 'linux') {
-    return 'Register `korca-ide` in ~/.local/bin.'
+    return '`korca-ide`를 ~/.local/bin에 등록합니다.'
   }
   if (platform === 'win32') {
-    return 'Register `korca` in your user PATH.'
+    return '사용자 PATH에 `korca`를 등록합니다.'
   }
-  return 'CLI registration is not yet available on this platform.'
+  return '이 플랫폼에서는 CLI 등록을 아직 사용할 수 없습니다.'
 }
 
 function getFallbackCommandName(platform: string): string {
@@ -90,7 +90,7 @@ export function CliSection({ currentPlatform }: CliSectionProps): React.JSX.Elem
       handleStatusChange(await window.api.cli.getInstallStatus())
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(error instanceof Error ? error.message : 'Failed to load CLI status.')
+        toast.error(error instanceof Error ? error.message : 'CLI 상태를 불러오지 못했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -118,12 +118,14 @@ export function CliSection({ currentPlatform }: CliSectionProps): React.JSX.Elem
       if (mountedRef.current) {
         setStatus(next)
         setDialogOpen(false)
-        toast.success(`Registered \`${next.commandName}\` in PATH.`)
+        toast.success(`\`${next.commandName}\`을 PATH에 등록했습니다.`)
       }
     } catch (error) {
       if (mountedRef.current) {
         toast.error(
-          error instanceof Error ? error.message : `Failed to register \`${commandName}\` in PATH.`
+          error instanceof Error
+            ? error.message
+            : `\`${commandName}\`을 PATH에 등록하지 못했습니다.`
         )
       }
     } finally {
@@ -140,12 +142,14 @@ export function CliSection({ currentPlatform }: CliSectionProps): React.JSX.Elem
       if (mountedRef.current) {
         setStatus(next)
         setDialogOpen(false)
-        toast.success(`Removed \`${next.commandName}\` from PATH.`)
+        toast.success(`\`${next.commandName}\`을 PATH에서 제거했습니다.`)
       }
     } catch (error) {
       if (mountedRef.current) {
         toast.error(
-          error instanceof Error ? error.message : `Failed to remove \`${commandName}\` from PATH.`
+          error instanceof Error
+            ? error.message
+            : `\`${commandName}\`을 PATH에서 제거하지 못했습니다.`
         )
       }
     } finally {
@@ -160,18 +164,18 @@ export function CliSection({ currentPlatform }: CliSectionProps): React.JSX.Elem
       <div className="space-y-1">
         <h2 className="text-sm font-semibold">Korca CLI</h2>
         <p className="text-xs text-muted-foreground">
-          Use Korca from your terminal to open the app, manage worktrees, and interact with Korca
-          terminals.
+          터미널에서 Korca를 사용해 앱을 열고, 워크트리를 관리하고, Korca 터미널과 상호작용할 수
+          있습니다.
         </p>
       </div>
 
       <div className="space-y-3 rounded-xl border border-border/60 bg-card/50 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-0.5">
-            <Label>Shell command</Label>
+            <Label>셸 명령</Label>
             <p className="text-xs text-muted-foreground">
               {loading
-                ? 'Checking CLI registration…'
+                ? 'CLI 등록을 확인하는 중…'
                 : (status?.detail ?? getInstallDescription(currentPlatform))}
             </p>
           </div>
@@ -184,13 +188,13 @@ export function CliSection({ currentPlatform }: CliSectionProps): React.JSX.Elem
                     size="icon-xs"
                     onClick={() => void refreshStatus()}
                     disabled={loading || busyAction !== null}
-                    aria-label="Refresh CLI status"
+                    aria-label="CLI 상태 새로고침"
                   >
                     <RefreshCw className="size-3.5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Refresh
+                  새로고침
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -255,7 +259,7 @@ export function CliSection({ currentPlatform }: CliSectionProps): React.JSX.Elem
         {!isBrowserManaged ? (
           <div className="border-t border-border/60 pt-3">
             <div className="space-y-0.5">
-              <Label>Agent skills</Label>
+              <Label>에이전트 스킬</Label>
               <p className="text-xs text-muted-foreground">
                 Give agents Korca-aware workspace, terminal, and progress workflows.
               </p>
@@ -313,19 +317,19 @@ export function CliSection({ currentPlatform }: CliSectionProps): React.JSX.Elem
               onClick={() => setDialogOpen(false)}
               disabled={busyAction !== null}
             >
-              Cancel
+              취소
             </Button>
             <Button
               onClick={() => void (isEnabled ? handleRemove() : handleInstall())}
               disabled={busyAction !== null || !isSupported}
             >
               {busyAction === 'remove'
-                ? 'Removing…'
+                ? '제거하는 중…'
                 : busyAction === 'install'
-                  ? 'Registering…'
+                  ? '등록하는 중…'
                   : isEnabled
-                    ? 'Remove'
-                    : 'Register'}
+                    ? '제거'
+                    : '등록'}
             </Button>
           </DialogFooter>
         </DialogContent>

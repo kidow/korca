@@ -183,7 +183,9 @@ export function DictationController() {
       dictationStateRef.current = 'error'
       setDictationState('error')
       if (message.includes('Permission') || message.includes('NotAllowed')) {
-        toast.error('Microphone access denied. Grant access in system settings, then restart Korca.')
+        toast.error(
+          '마이크 접근이 거부되었습니다. 시스템 설정에서 권한을 허용한 뒤 Korca를 다시 시작하세요.'
+        )
       } else if (message.includes('not ready')) {
         toast('Speech model not ready. Download it in Settings > Voice.')
       } else if (message.includes('Unknown model')) {

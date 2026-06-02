@@ -16,7 +16,7 @@ const SidebarHeader = React.memo(function SidebarHeader() {
   const repos = useAppStore((s) => s.repos)
   const groupBy = useAppStore((s) => s.groupBy)
   const canCreateWorkspace = repos.length > 0
-  const sidebarTitle = groupBy === 'repo' ? 'Projects' : 'Workspaces'
+  const sidebarTitle = groupBy === 'repo' ? '프로젝트' : '작업 공간'
   workspaceBoardOpenRef.current = workspaceBoardOpen
 
   const openWorkspaceBoard = useCallback(() => {
@@ -110,7 +110,7 @@ const SidebarHeader = React.memo(function SidebarHeader() {
                 variant={workspaceBoardOpen ? 'secondary' : 'ghost'}
                 size="icon-xs"
                 className="text-muted-foreground"
-                aria-label="Workspace board"
+                aria-label="작업 공간 보드"
                 aria-pressed={workspaceBoardOpen}
                 data-workspace-board-trigger=""
                 onClick={handleWorkspaceBoardToggle}
@@ -119,7 +119,7 @@ const SidebarHeader = React.memo(function SidebarHeader() {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              {workspaceBoardOpen ? 'Close workspace board' : 'Workspace board'}
+              {workspaceBoardOpen ? '작업 공간 보드 닫기' : '작업 공간 보드'}
             </TooltipContent>
           </Tooltip>
 
@@ -134,7 +134,7 @@ const SidebarHeader = React.memo(function SidebarHeader() {
                   }
                   openModal('new-workspace-composer', { telemetrySource: 'sidebar' })
                 }}
-                aria-label="New workspace"
+                aria-label="새 작업 공간"
                 disabled={!canCreateWorkspace}
               >
                 <Plus className="size-3.5" strokeWidth={2.25} />
@@ -142,8 +142,8 @@ const SidebarHeader = React.memo(function SidebarHeader() {
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={6}>
               {canCreateWorkspace
-                ? `New workspace (${newWorktreeShortcutLabel})`
-                : 'Add a project to create workspaces'}
+                ? `새 작업 공간 (${newWorktreeShortcutLabel})`
+                : '작업 공간을 만들려면 프로젝트를 추가하세요'}
             </TooltipContent>
           </Tooltip>
         </div>

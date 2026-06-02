@@ -23,11 +23,11 @@ type SshDisconnectedDialogProps = {
 }
 
 const STATUS_MESSAGES: Partial<Record<SshConnectionStatus, string>> = {
-  disconnected: 'This remote repository is not connected.',
-  reconnecting: 'Reconnecting to the remote host...',
-  'reconnection-failed': 'Reconnection to the remote host failed.',
-  error: 'The connection to the remote host encountered an error.',
-  'auth-failed': 'Authentication to the remote host failed.'
+  disconnected: '이 원격 저장소는 연결되어 있지 않습니다.',
+  reconnecting: '원격 호스트에 다시 연결하는 중...',
+  'reconnection-failed': '원격 호스트 재연결에 실패했습니다.',
+  error: '원격 호스트 연결 중 오류가 발생했습니다.',
+  'auth-failed': '원격 호스트 인증에 실패했습니다.'
 }
 
 function isReconnectable(status: SshConnectionStatus): boolean {
@@ -52,7 +52,7 @@ export function SshDisconnectedDialog({
         onOpenChange(false)
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Reconnection failed')
+      toast.error(err instanceof Error ? err.message : '재연결에 실패했습니다')
     } finally {
       if (mountedRef.current) {
         setConnecting(false)
@@ -66,8 +66,8 @@ export function SshDisconnectedDialog({
     status === 'deploying-relay' ||
     status === 'reconnecting'
   const message = isConnecting
-    ? 'Reconnecting to the remote host...'
-    : (STATUS_MESSAGES[status] ?? 'This remote repository is not connected.')
+    ? '원격 호스트에 다시 연결하는 중...'
+    : (STATUS_MESSAGES[status] ?? '이 원격 저장소는 연결되어 있지 않습니다.')
   const showReconnect = isReconnectable(status)
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export function SshDisconnectedDialog({
             ) : (
               <ServerOff className="size-4 text-muted-foreground" />
             )}
-            {isConnecting ? 'Reconnecting...' : 'SSH Disconnected'}
+            {isConnecting ? '다시 연결하는 중...' : 'SSH 연결 끊김'}
           </DialogTitle>
           <DialogDescription className="text-xs">{message}</DialogDescription>
         </DialogHeader>
@@ -128,17 +128,17 @@ export function SshDisconnectedDialog({
             onClick={() => onOpenChange(false)}
             disabled={isConnecting}
           >
-            Dismiss
+            닫기
           </Button>
           {showReconnect && (
             <Button size="sm" onClick={() => void handleReconnect()} disabled={isConnecting}>
               {isConnecting ? (
                 <>
                   <Loader2 className="size-3.5 animate-spin" />
-                  Connecting...
+                  연결 중...
                 </>
               ) : (
-                'Reconnect'
+                '다시 연결'
               )}
             </Button>
           )}

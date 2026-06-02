@@ -136,7 +136,7 @@ export function RepositoryIconPicker({
           iconClassName="size-5"
         />
         <div className="min-w-0 flex-1">
-          <Label className="text-sm font-semibold">Repo Icon</Label>
+          <Label className="text-sm font-semibold">저장소 아이콘</Label>
           <div className="mt-1 truncate text-xs text-muted-foreground">{currentIconLabel}</div>
         </div>
         <Button
@@ -147,19 +147,19 @@ export function RepositoryIconPicker({
           onClick={() => setIcon(null)}
         >
           <RotateCcw className="size-3.5" />
-          Reset
+          초기화
         </Button>
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-semibold">Color</Label>
+        <Label className="text-sm font-semibold">색상</Label>
         <div className="flex flex-wrap items-center gap-2">
           {REPO_COLORS.map((color) => (
             <button
               key={color}
               type="button"
               onClick={() => setBadgeColor(color)}
-              aria-label={`Use ${color} repo color`}
+              aria-label={`저장소 색상 ${color} 사용`}
               aria-pressed={selectedBadgeColor === color}
               className={cn(
                 'size-7 rounded-[4px] outline-none transition-all focus-visible:ring-[3px] focus-visible:ring-ring/50',
@@ -281,7 +281,7 @@ export function RepositoryIconPicker({
               Favicon
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground">PNG uploads must be 256KB or smaller.</p>
+          <p className="text-xs text-muted-foreground">PNG 업로드는 256KB 이하여야 합니다.</p>
         </TabsContent>
       </Tabs>
     </div>

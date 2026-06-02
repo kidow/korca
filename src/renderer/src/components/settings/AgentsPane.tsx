@@ -133,7 +133,7 @@ export function AgentAvailabilityControl({
       size="sm"
       options={[
         { value: 'enabled', label: 'Enabled' },
-        { value: 'disabled', label: 'Disabled' }
+        { value: 'disabled', label: '사용 안 함' }
       ]}
     />
   )
@@ -159,7 +159,7 @@ function AgentCommandOverrideInput({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="shrink-0 text-xs text-muted-foreground">Command</span>
+      <span className="shrink-0 text-xs text-muted-foreground">명령</span>
       <Input
         value={cmdDraft}
         onChange={(e) => setCmdDraft(e.target.value)}
@@ -189,7 +189,7 @@ function AgentCommandOverrideInput({
           }}
           className="h-7 shrink-0 text-xs text-muted-foreground hover:text-foreground"
         >
-          Reset
+          초기화
         </Button>
       )}
     </div>
@@ -212,11 +212,11 @@ function AgentRow({
   const [cmdOpen, setCmdOpen] = useState(Boolean(cmdOverride))
   const availabilityDescription = isEnabled
     ? isDetected
-      ? 'Shown in launch and default choices.'
-      : 'Install to use in launch and default choices.'
+      ? '실행 및 기본 선택에 표시됩니다.'
+      : '실행 및 기본 선택에서 사용하려면 설치하세요.'
     : isDetected
-      ? 'Hidden from launch and default choices.'
-      : 'Hidden from launch and default choices if installed.'
+      ? '실행 및 기본 선택에서 숨김.'
+      : '설치되면 실행 및 기본 선택에서 숨깁니다.'
 
   return (
     <div className={cn('py-3', !isDetected && 'opacity-70')}>
@@ -229,11 +229,11 @@ function AgentRow({
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium leading-none">{label}</span>
             {isDetected ? (
-              <SettingsBadge tone="accent">Detected</SettingsBadge>
+              <SettingsBadge tone="accent">감지됨</SettingsBadge>
             ) : (
-              <SettingsBadge tone="muted">Not installed</SettingsBadge>
+              <SettingsBadge tone="muted">미설치</SettingsBadge>
             )}
-            {!isEnabled && <SettingsBadge tone="muted">Disabled</SettingsBadge>}
+            {!isEnabled && <SettingsBadge tone="muted">비활성</SettingsBadge>}
           </div>
           <div className="mt-1 truncate font-mono text-[11px] text-muted-foreground">
             {cmdOverride ? (
@@ -261,11 +261,11 @@ function AgentRow({
               variant={isDefault ? 'secondary' : 'ghost'}
               size="xs"
               onClick={onSetDefault}
-              title={isDefault ? 'Default agent' : 'Set as default'}
+              title={isDefault ? '기본 에이전트' : '기본으로 설정'}
               className="h-7 gap-1 text-xs"
             >
               {isDefault && <Check className="size-3" />}
-              {isDefault ? 'Default' : 'Set default'}
+              {isDefault ? '기본' : '기본으로 설정'}
             </Button>
           )}
 
@@ -275,7 +275,7 @@ function AgentRow({
               variant="ghost"
               size="icon-sm"
               onClick={() => setCmdOpen((prev) => !prev)}
-              title="Customize command"
+              title="명령 사용자 지정"
               aria-expanded={cmdOpen}
               className={cn(
                 'size-7 text-muted-foreground hover:text-foreground',
@@ -290,7 +290,7 @@ function AgentRow({
             href={homepageUrl}
             target="_blank"
             rel="noopener noreferrer"
-            title={isDetected ? 'Docs' : 'Install'}
+            title={isDetected ? '문서' : '설치'}
             className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
           >
             <ExternalLink className="size-3.5" />
@@ -302,7 +302,7 @@ function AgentRow({
               variant="ghost"
               size="icon-sm"
               onClick={() => setCmdOpen((prev) => !prev)}
-              aria-label={cmdOpen ? 'Collapse command override' : 'Expand command override'}
+              aria-label={cmdOpen ? '명령 재정의 접기' : '명령 재정의 펼치기'}
               className="size-7 text-muted-foreground hover:text-foreground"
             >
               <ChevronDown
@@ -323,7 +323,7 @@ function AgentRow({
             onSaveOverride={onSaveOverride}
           />
           <p className="mt-1.5 text-[11px] text-muted-foreground">
-            Override the binary path or name used to launch this agent.
+            이 에이전트를 실행할 때 사용할 바이너리 경로나 이름을 바꿉니다.
           </p>
         </div>
       )}
@@ -438,14 +438,14 @@ export function AgentsPane({
 
       <section className="space-y-4">
         <SettingsSubsectionHeader
-          title="Default Agent"
-          description="Pre-selected agent when opening a new workspace."
+          title="기본 에이전트"
+          description="새 작업 공간을 열 때 미리 선택되는 에이전트입니다."
         />
 
         <div className="flex flex-wrap gap-2">
           <DefaultAgentPill active={isAutoDefault} onClick={() => setDefault(null)}>
             {isAutoDefault && <Check className="size-3.5" />}
-            Auto
+            자동
           </DefaultAgentPill>
 
           {/* Why: users who prefer to open a raw shell by default need a
@@ -454,7 +454,7 @@ export function AgentsPane({
               agent, which is the opposite of what they want. */}
           <DefaultAgentPill active={isBlankDefault} onClick={() => setDefault('blank')}>
             <Terminal className="size-3.5" />
-            No agent (blank terminal)
+            에이전트 없음(빈 터미널)
             {isBlankDefault && <Check className="size-3.5" />}
           </DefaultAgentPill>
 
@@ -486,8 +486,8 @@ export function AgentsPane({
           <SettingsSubsectionHeader
             title={
               <span className="flex items-center gap-2">
-                Installed
-                <SettingsBadge tone="accent">{detectedAgents.length} detected</SettingsBadge>
+                설치됨
+                <SettingsBadge tone="accent">{detectedAgents.length}개 감지됨</SettingsBadge>
               </span>
             }
             action={
@@ -497,11 +497,11 @@ export function AgentsPane({
                 size="xs"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
-                title="Re-read your shell PATH and re-detect installed agents"
+                title="셸 PATH를 다시 읽어 설치된 에이전트를 재감지합니다"
                 className="h-7 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
               >
                 <RefreshCw className={cn('size-3', isRefreshing && 'animate-spin')} />
-                {isRefreshing ? 'Refreshing…' : 'Refresh'}
+                {isRefreshing ? '새로고침 중…' : '새로고침'}
               </Button>
             }
           />
@@ -532,8 +532,8 @@ export function AgentsPane({
           <SettingsSubsectionHeader
             title={
               <span className="flex items-center gap-2 text-muted-foreground">
-                Available to install
-                <SettingsBadge tone="muted">{undetectedAgents.length} agents</SettingsBadge>
+                설치 가능
+                <SettingsBadge tone="muted">{undetectedAgents.length}개 에이전트</SettingsBadge>
               </span>
             }
           />

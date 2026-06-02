@@ -70,7 +70,7 @@ function ProviderRow(props: {
               ) : (
                 <Plus className="size-3.5" />
               )}
-              {isAdding ? 'Signing in' : 'Sign in'}
+              {isAdding ? '로그인 중' : '로그인'}
             </Button>
           )}
         </div>
@@ -153,12 +153,12 @@ export function UsageAccountsCard(props: {
       if (mountedRef.current) {
         await onAccountStateChange?.()
         if (mountedRef.current) {
-          toast.success('Claude account added.')
+          toast.success('Claude 계정 추가됨')
         }
       }
     } catch (error) {
       if (mountedRef.current) {
-        toast.error('Claude sign-in failed.', {
+        toast.error('Claude 로그인 실패', {
           description: String((error as Error)?.message ?? error)
         })
       }
@@ -183,12 +183,12 @@ export function UsageAccountsCard(props: {
       if (mountedRef.current) {
         await onAccountStateChange?.()
         if (mountedRef.current) {
-          toast.success('Codex account added.')
+          toast.success('Codex 계정 추가됨')
         }
       }
     } catch (error) {
       if (mountedRef.current) {
-        toast.error('Codex sign-in failed.', {
+        toast.error('Codex 로그인 실패', {
           description: String((error as Error)?.message ?? error)
         })
       }
@@ -204,7 +204,7 @@ export function UsageAccountsCard(props: {
       <ProviderRow
         icon={<ClaudeIcon size={16} />}
         name="Claude"
-        description="Track session and weekly usage."
+        description="세션 및 주간 사용량을 확인합니다."
         connected={claudeConnection.connected}
         connectionLabel={claudeConnection.label}
         isAdding={claudeAction === 'adding'}
@@ -213,7 +213,7 @@ export function UsageAccountsCard(props: {
       <ProviderRow
         icon={<OpenAIIcon size={16} />}
         name="Codex"
-        description="Surface rate limits and swap accounts inline."
+        description="속도 제한을 보여주고 계정을 바로 전환합니다."
         connected={codexConnection.connected}
         connectionLabel={codexConnection.label}
         isAdding={codexAction === 'adding'}

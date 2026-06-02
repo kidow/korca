@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change, react-doctor/no-derived-state-effect, react-doctor/no-initialize-state -- pre-existing patterns, predate these rules */
 
 import React, { useEffect, useCallback, useMemo, useRef, useState, lazy, Suspense } from 'react'
 import { createPortal } from 'react-dom'
@@ -520,7 +521,7 @@ function Terminal(): React.JSX.Element | null {
         releaseCloseDialogGuardAfterDebounce()
         return
       }
-      toast.error('Save timed out or failed. Fix errors before closing.')
+      toast.error('저장이 시간 초과되었거나 실패했습니다. 닫기 전에 오류를 수정하세요.')
       setSaveDialogFileId(fileId)
       // Why: a genuine timeout leaves the user back on the same dialog, so
       // release the guard immediately — a new click here is a deliberate
@@ -824,7 +825,7 @@ function Terminal(): React.JSX.Element | null {
       return
     }
     createBrowserTab(activeWorktreeId, defaultUrl, {
-      title: 'New Browser Tab',
+      title: '새 브라우저 탭',
       focusAddressBar: true
     })
   }, [
@@ -1826,7 +1827,7 @@ function Terminal(): React.JSX.Element | null {
       >
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-sm">Unsaved Changes</DialogTitle>
+            <DialogTitle className="text-sm">저장되지 않은 변경 사항</DialogTitle>
             <DialogDescription className="text-xs">
               {saveDialogFile
                 ? `"${basename(saveDialogFile.relativePath)}" has unsaved changes. Do you want to save before closing?`
@@ -1858,9 +1859,9 @@ function Terminal(): React.JSX.Element | null {
       >
         <DialogContent className="max-w-sm" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="text-sm">Close Window?</DialogTitle>
+            <DialogTitle className="text-sm">창을 닫을까요?</DialogTitle>
             <DialogDescription className="text-xs">
-              There are local terminals with running processes. Close the window anyway?
+              실행 중인 프로세스가 있는 로컬 터미널이 있습니다. 그래도 창을 닫을까요?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
@@ -1870,7 +1871,7 @@ function Terminal(): React.JSX.Element | null {
               size="sm"
               onClick={() => setWindowCloseDialogOpen(false)}
             >
-              Cancel
+              취소
             </Button>
             <Button
               type="button"
@@ -1882,7 +1883,7 @@ function Terminal(): React.JSX.Element | null {
                 window.api.ui.confirmWindowClose()
               }}
             >
-              Close
+              닫기
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -127,23 +127,23 @@ export function FirstLaunchBanner({
     <div
       className="fixed left-1/2 top-2 z-40 flex w-[min(44.625rem,calc(100vw-2rem))] -translate-x-1/2 items-start gap-4 rounded-lg border border-border bg-card/95 py-3 pl-4 pr-3 shadow-lg backdrop-blur"
       role="region"
-      aria-label="Telemetry notice"
+      aria-label="원격 측정 안내"
       aria-live="polite"
     >
       {/* Text column — title + body stack on the left, takes remaining
           width so the action column never pushes copy into a wrap. */}
       <div className="flex-1 space-y-0.5 pr-1 text-sm">
-        <p className="font-medium leading-snug">Help us decide what to build next</p>
+        <p className="font-medium leading-snug">다음에 무엇을 만들지 결정하는 데 도움을 주세요</p>
         <p className="text-xs leading-snug text-muted-foreground">
-          Anonymous counts of which features you use help us prioritize what to build. No file
-          contents, prompts, terminal output, or anything that identifies you. Change anytime in
-          Settings &rarr; Privacy &amp; Telemetry.{' '}
+          어떤 기능을 쓰는지에 대한 익명 집계는 우선순위를 정하는 데 도움이 됩니다. 파일 내용,
+          프롬프트, 터미널 출력, 또는 사용자를 식별하는 정보는 수집하지 않습니다. 언제든지 설정
+          &rarr; 개인정보 보호 및 원격 측정에서 바꿀 수 있습니다.{' '}
           <button
             type="button"
             className="underline underline-offset-2 hover:text-foreground"
             onClick={() => void window.api.shell.openUrl(PRIVACY_URL)}
           >
-            Privacy policy
+            개인정보 처리방침
           </button>
           .
         </p>
@@ -162,17 +162,17 @@ export function FirstLaunchBanner({
           disabled={inFlight}
           className="border-border/60 text-muted-foreground"
         >
-          Opt out
+          수신 거부
         </Button>
         <Button size="sm" onClick={handleAcknowledge} disabled={inFlight}>
-          Got it
+          알겠습니다
         </Button>
       </div>
-      {/* aria-label says "Dismiss" — the action persists silent opt-in,
-          not just hides the UI. */}
+      {/* aria-label은 "Dismiss"지만 실제로는 UI만 숨기지 않고 조용한 수락을
+          확정한다. */}
       <button
         type="button"
-        aria-label="Dismiss notice"
+        aria-label="안내 닫기"
         onClick={handleAcknowledge}
         disabled={inFlight}
         className="absolute right-1.5 top-1.5 rounded p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"

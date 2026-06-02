@@ -49,12 +49,12 @@ export function ExperimentalPane({
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 shrink space-y-1.5">
-              <Label>Pet</Label>
+              <Label>펫</Label>
               <p className="text-xs text-muted-foreground">
                 Shows a small animated pet pinned to the bottom-right corner. Pick a character
-                (Claudino, OpenCode, Gremlin) or upload your own PNG, APNG, GIF, WebP, JPG, or SVG
-                from the status-bar pet menu. Hide it any time from the same menu without disabling
-                this setting.
+                (Claudino, OpenCode, Gremlin) 또는 PNG, APNG, GIF, WebP, JPG, SVG 파일을 직접 올릴
+                수 있습니다 from the status-bar pet menu. Hide it any time from the same menu
+                without disabling this setting.
               </p>
             </div>
             <button
@@ -87,7 +87,7 @@ export function ExperimentalPane({
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 shrink space-y-0.5">
-              <Label>Agents View</Label>
+              <Label>에이전트 보기</Label>
               <p className="text-xs text-muted-foreground">
                 Adds an Agents entry to the left sidebar with a threaded worktree feed for completed
                 agents, blocking questions, unread state, and worktree creation events. Experimental
@@ -126,7 +126,7 @@ export function ExperimentalPane({
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 shrink space-y-0.5">
-              <Label>Terminal attention</Label>
+              <Label>터미널 주목도</Label>
               <p className="text-xs text-muted-foreground">
                 Keeps a pane-level highlight visible after terminal bell or agent-completion events
                 until you interact with that pane. Experimental while we tune the signal.
@@ -157,14 +157,14 @@ export function ExperimentalPane({
 
       {showCompactWorktreeCards ? (
         <SearchableSetting
-          title="Compact worktree cards"
+          title="압축된 워크트리 카드"
           description="Use one-line worktree cards instead of the detailed metadata row."
           keywords={EXPERIMENTAL_SEARCH_ENTRY.compactWorktreeCards.keywords}
           className="space-y-3 py-2"
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 shrink space-y-0.5">
-              <Label>Compact worktree cards</Label>
+              <Label>작업 트리 카드 압축</Label>
               <p className="text-xs text-muted-foreground">
                 Keeps workspace cards to a single title row. The detailed layout restores the
                 branch, project, cache timer, and selected properties on a second row.
@@ -204,7 +204,7 @@ export function ExperimentalPane({
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 shrink space-y-0.5">
-              <Label>Symlinks on worktrees</Label>
+              <Label>작업 트리 심볼릭 링크</Label>
               <p className="text-xs text-muted-foreground">
                 Allows for automatic symlinks of certain folders or files that must be connected to
                 created worktrees.
@@ -235,17 +235,17 @@ export function ExperimentalPane({
 
       {showUnifiedNewTabLauncher ? (
         <SearchableSetting
-          title="Smart New Tab menu"
-          description="Type in the New Tab menu to open a terminal, launch an agent, visit a URL, or open/create a file."
+          title="스마트 새 탭 메뉴"
+          description="새 탭 메뉴에 입력하면 터미널을 열고, 에이전트를 시작하고, URL을 방문하고, 파일을 열거나 만들 수 있습니다."
           keywords={EXPERIMENTAL_SEARCH_ENTRY.unifiedNewTabLauncher.keywords}
           className="space-y-3 py-2"
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 shrink space-y-0.5">
-              <Label>Smart New Tab menu</Label>
+              <Label>스마트 새 탭 메뉴</Label>
               <p className="text-xs text-muted-foreground">
-                Type in the New Tab menu to open a terminal, launch an agent, visit a URL, or
-                open/create a file.
+                새 탭 메뉴에 입력하면 터미널을 열고, 에이전트를 시작하고, URL을 방문하고, 파일을
+                열거나 만들 수 있습니다.
               </p>
             </div>
             <button

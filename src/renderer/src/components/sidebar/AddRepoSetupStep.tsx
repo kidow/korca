@@ -75,7 +75,7 @@ export function getSyncedProjectAddedChoice(
 }
 
 function formatWorktreeCount(count: number): string {
-  return `${count} ${count === 1 ? 'worktree' : 'worktrees'}`
+  return `작업 트리 ${count}개`
 }
 
 type StartChoiceCardProps = {
@@ -236,11 +236,11 @@ export function ProjectAddedContent({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Repo added</DialogTitle>
+        <DialogTitle>저장소가 추가되었습니다</DialogTitle>
         <DialogDescription>
           {repoName
-            ? `${repoName} is ready. Choose how to start working.`
-            : 'Choose how to start working.'}
+            ? `${repoName}을(를) 사용할 준비가 되었습니다. 작업을 시작하는 방법을 선택하세요.`
+            : '작업을 시작하는 방법을 선택하세요.'}
         </DialogDescription>
       </DialogHeader>
 
@@ -249,7 +249,7 @@ export function ProjectAddedContent({
           <div
             ref={setRadioGroupNode}
             role="radiogroup"
-            aria-label="How to start working"
+            aria-label="작업 시작 방법"
             className="space-y-2"
           >
             {normalizedPrimaryBranchName ? (
@@ -262,8 +262,8 @@ export function ProjectAddedContent({
                 }}
                 onArrowNav={cycleChoice}
                 icon={<GitBranch className="size-4" />}
-                title={`Start from ${normalizedPrimaryBranchName}`}
-                caption="Use the primary checkout without creating a worktree."
+                title={`${normalizedPrimaryBranchName}에서 시작`}
+                caption="작업 트리를 만들지 않고 기본 체크아웃을 사용합니다."
               />
             ) : null}
             {hasHiddenWorktrees ? (
@@ -276,8 +276,8 @@ export function ProjectAddedContent({
                 }}
                 onArrowNav={cycleChoice}
                 icon={<GitBranch className="size-4" />}
-                title="Use existing worktrees"
-                caption={`${formatWorktreeCount(hiddenWorktreeCount)} found in this repo.`}
+                title="기존 작업 트리 사용"
+                caption={`이 저장소에서 ${formatWorktreeCount(hiddenWorktreeCount)}를 찾았습니다.`}
               />
             ) : null}
             <StartChoiceCard
@@ -289,8 +289,8 @@ export function ProjectAddedContent({
               }}
               onArrowNav={cycleChoice}
               icon={<GitBranchPlus className="size-4" />}
-              title="Create a new worktree"
-              caption="Start a fresh workspace from this project."
+              title="새 작업 트리 만들기"
+              caption="이 프로젝트에서 새 작업 공간을 시작합니다."
             />
           </div>
         ) : null}
@@ -301,7 +301,7 @@ export function ProjectAddedContent({
               htmlFor="project-added-worktree-name"
               className="block text-[11px] font-medium text-muted-foreground"
             >
-              Workspace name
+              작업 공간 이름
             </label>
             <Input
               id="project-added-worktree-name"
@@ -311,7 +311,7 @@ export function ProjectAddedContent({
                 markCreateChoiceSelected()
                 setWorktreeName(event.target.value)
               }}
-              placeholder="new-workspace"
+              placeholder="새 작업 공간"
               className="h-9"
             />
           </div>
@@ -325,23 +325,23 @@ export function ProjectAddedContent({
           onClick={onConfigureRepo}
         >
           <Settings className="size-3" />
-          Configure repo
+          저장소 설정
         </button>
         <Button type="button" size="sm" onClick={handlePrimaryAction}>
           {selectedChoice === 'primary' ? (
             <>
               <GitBranch className="size-4" />
-              Start
+              시작
             </>
           ) : selectedChoice === 'existing' ? (
             <>
               <GitBranch className="size-4" />
-              Use existing
+              기존 사용
             </>
           ) : (
             <>
               <GitBranchPlus className="size-4" />
-              Create worktree
+              작업 트리 만들기
             </>
           )}
         </Button>

@@ -55,17 +55,17 @@ export function ReviewNotesSendMenuContent({
 
   return (
     <>
-      <DropdownMenuLabel>Send notes to</DropdownMenuLabel>
+      <DropdownMenuLabel>메모 보낼 대상</DropdownMenuLabel>
       <DropdownMenuItem
         disabled={!hasPrompt || !canSendToActiveTerminal}
         onSelect={sendToActiveAgent}
         className="gap-2 rounded-[7px] px-2 py-1.5 text-[12px] leading-5 font-medium"
       >
         <SquareTerminal className="size-3.5" />
-        Active agent session
+        현재 에이전트 세션
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuLabel>New agent</DropdownMenuLabel>
+      <DropdownMenuLabel>새 에이전트</DropdownMenuLabel>
       <QuickLaunchAgentMenuItems
         worktreeId={worktreeId}
         groupId={groupId}

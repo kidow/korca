@@ -33,9 +33,9 @@ export default function AgentSettingsDialog({
           agents are detected. */}
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-sm">Agents</DialogTitle>
+          <DialogTitle className="text-sm">에이전트</DialogTitle>
           <DialogDescription className="text-xs">
-            Manage AI agents, set a default, and customize commands.
+            AI 에이전트를 관리하고, 기본값을 지정하고, 명령을 사용자 지정합니다.
           </DialogDescription>
         </DialogHeader>
         <div className="scrollbar-sleek -mr-2 max-h-[70vh] overflow-y-auto pr-2">

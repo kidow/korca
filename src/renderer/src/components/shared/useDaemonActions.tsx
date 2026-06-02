@@ -206,7 +206,7 @@ export function DaemonActionDialog({
             </DialogHeader>
             <DialogFooter>
               <Button variant="outline" onClick={() => setPending(null)} disabled={isBusy}>
-                Cancel
+                취소
               </Button>
               <Button variant="destructive" onClick={runConfirmed} disabled={isBusy}>
                 {isBusy ? <LoaderCircle className="size-4 animate-spin" /> : null}

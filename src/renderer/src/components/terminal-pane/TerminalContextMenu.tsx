@@ -117,7 +117,7 @@ export default function TerminalContextMenu({
       )}
       <span className="min-w-0 flex-1 truncate">{command.label}</span>
       {!isTerminalAgentQuickCommand(command) && !command.appendEnter ? (
-        <DropdownMenuShortcut className="shrink-0">Insert</DropdownMenuShortcut>
+        <DropdownMenuShortcut className="shrink-0">삽입</DropdownMenuShortcut>
       ) : null}
     </DropdownMenuItem>
   )
@@ -168,18 +168,18 @@ export default function TerminalContextMenu({
       >
         <DropdownMenuItem onSelect={onCopy}>
           <Copy />
-          Copy
+          복사
           <DropdownMenuShortcut>{shortcuts.copy}</DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={onPaste}>
           <Clipboard />
-          Paste
+          붙여넣기
           <DropdownMenuShortcut>{shortcuts.paste}</DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <Play fill="currentColor" strokeWidth={0} />
-            Quick Commands
+            빠른 명령
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="w-60">
             {hasQuickCommands ? (
@@ -196,7 +196,7 @@ export default function TerminalContextMenu({
                   <>
                     {repoQuickCommands.length > 0 ? <DropdownMenuSeparator /> : null}
                     {repoQuickCommands.length > 0 ? (
-                      <DropdownMenuLabel>Global</DropdownMenuLabel>
+                      <DropdownMenuLabel>전역</DropdownMenuLabel>
                     ) : null}
                     {globalQuickCommands.map(renderQuickCommandItem)}
                   </>
@@ -204,7 +204,7 @@ export default function TerminalContextMenu({
               </>
             ) : (
               <DropdownMenuItem disabled className="text-muted-foreground">
-                No quick commands
+                빠른 명령 없음
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
@@ -217,29 +217,29 @@ export default function TerminalContextMenu({
               }}
             >
               <Plus />
-              Add Quick Command…
+              빠른 명령 추가…
             </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuItem onSelect={onForkAgentSession}>
           <GitFork />
-          Fork Agent Session…
+          에이전트 세션 포크…
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={onSplitRight}>
           <PanelRightClose />
-          Split Terminal Right
+          터미널을 오른쪽으로 분할
           <DropdownMenuShortcut>{shortcuts.splitRight}</DropdownMenuShortcut>
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={onSplitDown}>
           <PanelBottomClose />
-          Split Terminal Down
+          터미널을 아래로 분할
           <DropdownMenuShortcut>{shortcuts.splitDown}</DropdownMenuShortcut>
         </DropdownMenuItem>
         {canEqualizePaneSizes && (
           <DropdownMenuItem onSelect={onEqualizePaneSizes}>
             <PanelsTopLeft />
-            Equalize Pane Sizes
+            패널 크기 맞추기
             {showEqualizeShortcut ? (
               <DropdownMenuShortcut>{shortcuts.equalize}</DropdownMenuShortcut>
             ) : null}
@@ -248,25 +248,25 @@ export default function TerminalContextMenu({
         {canExpandPane && (
           <DropdownMenuItem onSelect={onToggleExpand}>
             {menuPaneIsExpanded ? <Minimize2 /> : <Maximize2 />}
-            {menuPaneIsExpanded ? 'Collapse Pane' : 'Expand Pane'}
+            {menuPaneIsExpanded ? '패널 접기' : '패널 펼치기'}
             <DropdownMenuShortcut>{shortcuts.expand}</DropdownMenuShortcut>
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={onSetTitle}>
           <Pencil />
-          Set Title…
+          제목 설정…
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={onCopyPaneId}>
           <Copy />
-          Copy Pane ID
+          패널 ID 복사
         </DropdownMenuItem>
         {canClosePane && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onSelect={onClosePane}>
               <X />
-              Close Pane
+              패널 닫기
               <DropdownMenuShortcut>{shortcuts.close}</DropdownMenuShortcut>
             </DropdownMenuItem>
           </>
@@ -274,7 +274,7 @@ export default function TerminalContextMenu({
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={onClearScreen}>
           <Eraser />
-          Clear Screen
+          화면 지우기
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

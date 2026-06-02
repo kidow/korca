@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: MonacoEditor centralizes Monaco setup,
 source-mode markdown annotations, persistence-safe content sync, reveal
 handling, and editor-local UI overlays so split-pane state remains coherent. */
@@ -749,8 +750,8 @@ export default function MonacoEditor({
             top: Math.max(4, selectionAnnotationTarget.top - 22),
             left: selectionAnnotationTarget.left ?? 4
           }}
-          title="Add note on selected text"
-          aria-label="Add note on selected text"
+          title="선택한 텍스트에 메모 추가"
+          aria-label="선택한 텍스트에 메모 추가"
           onMouseDown={(event) => {
             event.preventDefault()
             event.stopPropagation()

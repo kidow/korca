@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: the analyzer's private treemap, selection,
    breakdown, and table pieces share one scan state and should evolve as one resource-manager surface. */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -166,14 +167,14 @@ function getBranchStatus(
     return null
   }
   if (status.ahead === 0 && status.behind === 0) {
-    return 'Synced with upstream'
+    return '업스트림과 동기화됨'
   }
   const parts: string[] = []
   if (status.ahead > 0) {
-    parts.push(`${status.ahead} ahead`)
+    parts.push(`앞서 있음 ${status.ahead}`)
   }
   if (status.behind > 0) {
-    parts.push(`${status.behind} behind`)
+    parts.push(`뒤처짐 ${status.behind}`)
   }
   return parts.join(', ')
 }
@@ -304,12 +305,12 @@ function UpdatedMetric({
 
   return (
     <Metric
-      label="Updated"
+      label="업데이트됨"
       title={scannedAt === null ? undefined : getWorkspaceSpaceScanDateTimeLabel(scannedAt)}
       value={
         scannedAt === null
           ? isScanning
-            ? 'Scanning'
+            ? '검색 중'
             : '—'
           : getWorkspaceSpaceScanTimeLabel(scannedAt, now)
       }
@@ -410,33 +411,33 @@ function StatusBadge({
     )
   }
   if (worktree.isMainWorktree) {
-    return <Badge variant="outline">Keep: main</Badge>
+    return <Badge variant="outline">유지: 주 작업 트리</Badge>
   }
   if (decisionDetails?.isActive) {
-    return <Badge variant="outline">Keep: active</Badge>
+    return <Badge variant="outline">유지: 활성</Badge>
   }
   if ((decisionDetails?.changedFileCount ?? 0) > 0) {
-    return <Badge variant="outline">Keep: changed files</Badge>
+    return <Badge variant="outline">유지: 변경된 파일</Badge>
   }
   if (decisionDetails?.changedFileCount === null) {
-    return <Badge variant="outline">Keep: git not checked</Badge>
+    return <Badge variant="outline">유지: Git 미확인</Badge>
   }
   if ((decisionDetails?.dirtyEditorBufferCount ?? 0) > 0) {
-    return <Badge variant="outline">Keep: unsaved edits</Badge>
+    return <Badge variant="outline">유지: 저장되지 않은 수정</Badge>
   }
   if (
     (decisionDetails?.activeAgentCount ?? 0) > 0 ||
     (decisionDetails?.liveTerminalCount ?? 0) > 0 ||
     (decisionDetails?.browserTabCount ?? 0) > 0
   ) {
-    return <Badge variant="outline">Keep: in use</Badge>
+    return <Badge variant="outline">유지: 사용 중</Badge>
   }
   if (
     decisionDetails?.reviewLabel ||
     decisionDetails?.issueLabel ||
     decisionDetails?.linearIssueLabel
   ) {
-    return <Badge variant="outline">Keep: linked</Badge>
+    return <Badge variant="outline">유지: 연결됨</Badge>
   }
   return (
     <Badge
@@ -499,9 +500,9 @@ function getAgentDecisionLabel(details: WorkspaceDecisionDetails): string {
 
 function getTerminalDecisionLabel(details: WorkspaceDecisionDetails): string {
   if (details.terminalTabCount === 0) {
-    return 'No terminal tabs'
+    return '터미널 탭 없음'
   }
-  return `${details.liveTerminalCount} live of ${pluralize(details.terminalTabCount, 'terminal tab')}`
+  return `${pluralize(details.liveTerminalCount, '활성 터미널')} / ${pluralize(details.terminalTabCount, '터미널 탭')}`
 }
 
 function getGitDecisionLabel(
@@ -510,26 +511,26 @@ function getGitDecisionLabel(
 ): string {
   if (details.changedFileCount === null) {
     if (gitRefreshState?.error) {
-      return `Git status unavailable: ${gitRefreshState.error}`
+      return `Git 상태를 사용할 수 없습니다: ${gitRefreshState.error}`
     }
-    return 'Git status has not loaded yet'
+    return 'Git 상태가 아직 불러와지지 않았습니다'
   }
   if (details.changedFileCount === 0) {
-    return 'No uncommitted files'
+    return '커밋되지 않은 파일 없음'
   }
-  return pluralize(details.changedFileCount, 'changed file')
+  return pluralize(details.changedFileCount, '변경된 파일')
 }
 
 function getEditorDecisionLabel(details: WorkspaceDecisionDetails): string {
   if (details.openEditorFileCount === 0) {
-    return 'No editor files open'
+    return '열린 편집기 파일 없음'
   }
   if (details.dirtyEditorBufferCount === 0) {
-    return `${pluralize(details.openEditorFileCount, 'editor file')} open`
+    return `${pluralize(details.openEditorFileCount, '편집기 파일')} 열림`
   }
-  return `${pluralize(details.dirtyEditorBufferCount, 'dirty editor buffer')} of ${pluralize(
+  return `${pluralize(details.dirtyEditorBufferCount, '변경된 편집기 버퍼')} / ${pluralize(
     details.openEditorFileCount,
-    'open file'
+    '열린 파일'
   )}`
 }
 
@@ -538,18 +539,18 @@ function getDeleteDecisionLabel(
   details: WorkspaceDecisionDetails
 ): string {
   if (details.isActive) {
-    return 'This is the active workspace'
+    return '이것이 활성 작업 공간입니다'
   }
   if (worktree.status !== 'ok') {
     return worktree.error ?? getWorkspaceSpaceStatusLabel(worktree.status)
   }
   if (worktree.isMainWorktree) {
-    return 'Main worktree is protected'
+    return '주 작업 트리는 보호됩니다'
   }
   if (!worktree.canDelete) {
-    return 'Workspace is protected'
+    return '작업 공간이 보호됩니다'
   }
-  return 'Can be deleted after review'
+  return '검토 후 삭제 가능'
 }
 
 function WorkspaceDecisionHoverCard({
@@ -565,7 +566,7 @@ function WorkspaceDecisionHoverCard({
 }): React.JSX.Element {
   const deleteDecision = getDeleteDecisionLabel(worktree, details)
   const issueLabel =
-    [details.issueLabel, details.linearIssueLabel].filter(Boolean).join(' · ') || 'No linked issue'
+    [details.issueLabel, details.linearIssueLabel].filter(Boolean).join(' · ') || '연결된 이슈 없음'
   return (
     <HoverCardContent
       align="end"
@@ -589,19 +590,19 @@ function WorkspaceDecisionHoverCard({
       <div className="space-y-3 px-4 py-3">
         <DecisionLine
           icon={<Trash2 />}
-          label="Delete decision"
+          label="삭제 판단"
           value={deleteDecision}
           tone={worktree.canDelete && worktree.status === 'ok' ? 'default' : 'warning'}
         />
-        <DecisionLine icon={<Bot />} label="Agents" value={getAgentDecisionLabel(details)} />
+        <DecisionLine icon={<Bot />} label="에이전트" value={getAgentDecisionLabel(details)} />
         <DecisionLine
           icon={<Terminal />}
-          label="Terminals"
+          label="터미널"
           value={getTerminalDecisionLabel(details)}
         />
         <DecisionLine
           icon={<FileWarning />}
-          label="Git changes"
+          label="Git 변경사항"
           value={getGitDecisionLabel(details, gitRefreshState)}
           tone={
             (details.changedFileCount ?? 0) > 0 || gitRefreshState?.error ? 'warning' : 'default'
@@ -609,18 +610,18 @@ function WorkspaceDecisionHoverCard({
         />
         <DecisionLine
           icon={<FileWarning />}
-          label="Editor buffers"
+          label="편집기 버퍼"
           value={getEditorDecisionLabel(details)}
           tone={details.dirtyEditorBufferCount > 0 ? 'warning' : 'default'}
         />
         <DecisionLine
           icon={<GitBranch />}
-          label="Branch"
+          label="브랜치"
           value={details.branchStatus ?? getWorkspaceSpaceBranchLabel(worktree)}
         />
         <DecisionLine
           icon={<GitPullRequest />}
-          label="Review"
+          label="검토"
           value={details.reviewLabel ?? 'No linked PR'}
         />
         <DecisionLine icon={<ExternalLink />} label="Issue" value={issueLabel} />
@@ -645,7 +646,7 @@ function WorkspaceDecisionHoverCard({
           className="shrink-0 gap-1.5"
         >
           <ExternalLink className="size-3.5" />
-          Go to workspace
+          작업 공간으로 이동
         </Button>
       </div>
     </HoverCardContent>
@@ -706,16 +707,16 @@ function WorkspaceTreemap({
             className="absolute right-2 top-2 gap-1.5 bg-background/90 px-2.5 backdrop-blur"
           >
             <ZoomOut className="size-3" />
-            All
+            전체
           </Button>
         ) : null}
         <span className="flex items-center gap-2">
           {isScanning ? <Loader2 className="size-4 animate-spin" /> : null}
           {isScanning
-            ? 'Scanning workspace sizes. You can leave this page.'
+            ? '작업 공간 크기를 검색 중입니다. 이 페이지를 떠나도 됩니다.'
             : isZoomed
-              ? 'No top-level items to show.'
-              : 'No scanned workspace sizes yet.'}
+              ? '표시할 최상위 항목이 없습니다.'
+              : '아직 검색된 작업 공간 크기가 없습니다.'}
         </span>
       </div>
     )
@@ -736,7 +737,7 @@ function WorkspaceTreemap({
               className="gap-1.5 bg-background/90 px-2.5 backdrop-blur"
             >
               <ZoomOut className="size-3" />
-              All
+              전체
             </Button>
           </>
         ) : canZoomSelected ? (
@@ -747,7 +748,7 @@ function WorkspaceTreemap({
             className="gap-1.5 bg-background/90 px-2.5 backdrop-blur"
           >
             <ZoomIn className="size-3" />
-            Zoom
+            확대
           </Button>
         ) : null}
       </div>
@@ -829,8 +830,8 @@ function BreakdownList({
         <span className="flex items-center gap-2">
           {isScanning ? <Loader2 className="size-4 animate-spin" /> : null}
           {isScanning
-            ? 'Scanning workspace sizes. You can leave this page.'
-            : 'Select a workspace to inspect.'}
+            ? '작업 공간 크기를 검색 중입니다. 이 페이지를 떠나도 됩니다.'
+            : '검사할 작업 공간을 선택하세요.'}
         </span>
       </div>
     )
@@ -853,7 +854,7 @@ function BreakdownList({
               {formatBytes(worktree.sizeBytes)}
             </div>
             <div className="text-[11px] text-muted-foreground">
-              {formatCompactCount(topLevelItemCount)} top-level items
+              {formatCompactCount(topLevelItemCount)}개 최상위 항목
             </div>
           </div>
         </div>
@@ -862,10 +863,10 @@ function BreakdownList({
       {worktree.status !== 'ok' ? (
         <div className="flex items-start gap-2 px-4 py-4 text-xs text-destructive">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
-          <span className="min-w-0 break-words">{worktree.error ?? 'Scan failed.'}</span>
+          <span className="min-w-0 break-words">{worktree.error ?? '검색 실패.'}</span>
         </div>
       ) : worktree.topLevelItems.length === 0 ? (
-        <div className="px-4 py-8 text-center text-sm text-muted-foreground">No files found.</div>
+        <div className="px-4 py-8 text-center text-sm text-muted-foreground">파일이 없습니다.</div>
       ) : (
         <div className="max-h-72 overflow-y-auto scrollbar-sleek px-3 py-3">
           <div className="space-y-2">
@@ -967,7 +968,7 @@ function WorkspaceRow({
           {worktree.isRemote ? (
             <Server className="size-3.5 shrink-0 text-muted-foreground" />
           ) : null}
-          {worktree.isSparse ? <Badge variant="outline">Sparse</Badge> : null}
+          {worktree.isSparse ? <Badge variant="outline">희소</Badge> : null}
         </div>
         <div className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
           <GitBranch className="size-3 shrink-0" />
@@ -1392,9 +1393,12 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
         }
         return next
       })
-      toast.success(deletedIds.length === 1 ? 'Workspace deleted' : 'Workspaces deleted', {
-        description: `${deletedIds.length} ${deletedIds.length === 1 ? 'workspace' : 'workspaces'} removed from Space.`
-      })
+      toast.success(
+        deletedIds.length === 1 ? '작업 공간을 삭제했습니다' : '작업 공간을 삭제했습니다',
+        {
+          description: `${deletedIds.length}개 작업 공간을 Space에서 제거했습니다.`
+        }
+      )
     },
     [removeWorkspaceSpaceWorktrees]
   )
@@ -1445,13 +1449,10 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
   return (
     <div className="space-y-5">
       <div className="grid overflow-hidden rounded-lg border border-border/65 bg-background/35 md:grid-cols-4 md:divide-x md:divide-border/60">
-        <Metric label="Scanned" value={analysis ? formatBytes(analysis.totalSizeBytes) : '—'} />
+        <Metric label="검색됨" value={analysis ? formatBytes(analysis.totalSizeBytes) : '—'} />
+        <Metric label="회수 가능" value={analysis ? formatBytes(analysis.reclaimableBytes) : '—'} />
         <Metric
-          label="Reclaimable"
-          value={analysis ? formatBytes(analysis.reclaimableBytes) : '—'}
-        />
-        <Metric
-          label="Workspaces"
+          label="작업 공간"
           value={
             analysis
               ? analysis.unavailableWorktreeCount > 0
@@ -1473,11 +1474,11 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
           <span className="truncate">
             {analysis
               ? isScanning
-                ? `${progressLabel ?? 'Scanning workspace sizes'}. You can leave this page; the last result stays visible.`
-                : `${formatBytes(analysis.reclaimableBytes)} can be reclaimed from linked worktrees.`
+                ? `${progressLabel ?? '작업 공간 크기 검색 중'}. 이 페이지를 떠나도 마지막 결과는 유지됩니다.`
+                : `${formatBytes(analysis.reclaimableBytes)}를 연결된 작업 트리에서 회수할 수 있습니다.`
               : isScanning
-                ? `${progressLabel ?? 'Scanning workspace sizes'}. You can leave this page.`
-                : 'Run a scan to inspect workspace sizes.'}
+                ? `${progressLabel ?? '작업 공간 크기 검색 중'}. 이 페이지를 떠나도 됩니다.`
+                : '작업 공간 크기를 확인하려면 검색을 실행하세요.'}
           </span>
         </div>
         <Button
@@ -1498,11 +1499,11 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
           )}
           {isScanning
             ? progress?.state === 'cancelling'
-              ? 'Stopping'
-              : 'Cancel'
+              ? '중지 중'
+              : '취소'
             : analysis
-              ? 'Refresh'
-              : 'Scan'}
+              ? '새로고침'
+              : '검색'}
         </Button>
       </div>
 
@@ -1511,7 +1512,7 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
           <span className="min-w-0 break-words">
             {scanError}
-            {analysis ? ' Last successful results remain visible.' : ''}
+            {analysis ? ' 마지막 성공 결과는 계속 보입니다.' : ''}
           </span>
         </div>
       ) : null}
@@ -1547,10 +1548,10 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
         <div className="sticky top-0 z-10 -mx-1 flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/70 bg-background/95 px-3 py-2 shadow-xs backdrop-blur">
           <div className="min-w-0 text-xs text-muted-foreground">
             <span className="font-medium text-foreground">
-              {selectedDeletableIds.length} selected
+              {selectedDeletableIds.length}개 선택됨
             </span>
             <span className="mx-1.5">·</span>
-            <span>{formatBytes(selectedReclaimableBytes)} reclaimable</span>
+            <span>{formatBytes(selectedReclaimableBytes)} 회수 가능</span>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <Button
@@ -1560,7 +1561,7 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
               disabled={selectedDeletableIds.length === 0}
               className="!px-3"
             >
-              Clear
+              해제
             </Button>
             <Button
               variant="destructive"
@@ -1570,7 +1571,7 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
               className="min-w-[9.5rem] gap-1.5 !px-3.5"
             >
               <Trash2 className="size-3.5" />
-              Delete selected
+              선택 항목 삭제
             </Button>
           </div>
         </div>
@@ -1583,7 +1584,7 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Filter workspaces"
+              placeholder="작업 공간 필터"
               className="pl-9"
             />
           </div>
@@ -1596,10 +1597,10 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="size">Size</SelectItem>
-              <SelectItem value="name">Name</SelectItem>
-              <SelectItem value="repo">Repository</SelectItem>
-              <SelectItem value="activity">Activity</SelectItem>
+              <SelectItem value="size">크기</SelectItem>
+              <SelectItem value="name">이름</SelectItem>
+              <SelectItem value="repo">저장소</SelectItem>
+              <SelectItem value="activity">활동</SelectItem>
             </SelectContent>
           </Select>
 
@@ -1608,9 +1609,9 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
             size="sm"
             onClick={() => setOnlyDeletable((current) => !current)}
             className="w-32"
-            aria-label="Show only deletable workspaces"
+            aria-label="삭제 가능한 작업 공간만 표시"
           >
-            {onlyDeletable ? 'Deletable' : 'All'}
+            {onlyDeletable ? '삭제 가능' : '전체'}
           </Button>
 
           <Button
@@ -1619,12 +1620,10 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
             onClick={toggleVisibleSelection}
             disabled={visibleDeletableIds.length === 0}
             className="w-32 gap-1.5"
-            aria-label={
-              allVisibleSelected ? 'Clear visible selection' : 'Select visible deletable workspaces'
-            }
+            aria-label={allVisibleSelected ? '보이는 선택 해제' : '보이는 삭제 가능 작업 공간 선택'}
           >
             <Check className="size-3.5" />
-            {allVisibleSelected ? 'Clear' : 'Select'}
+            {allVisibleSelected ? '해제' : '선택'}
           </Button>
         </div>
       ) : null}
@@ -1638,9 +1637,7 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
                   checked={visibleSelectionState}
                   disabled={visibleDeletableIds.length === 0}
                   label={
-                    allVisibleSelected
-                      ? 'Clear visible selection'
-                      : 'Select visible deletable workspaces'
+                    allVisibleSelected ? '보이는 선택 해제' : '보이는 삭제 가능 작업 공간 선택'
                   }
                   onClick={toggleVisibleSelection}
                 />
@@ -1650,7 +1647,7 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
                 onClick={() => toggleSort('name')}
                 className="flex items-center gap-1 text-left"
               >
-                Workspace
+                작업 공간
                 <SortIndicator sortKey="name" activeKey={sortKey} direction={sortDirection} />
               </button>
               <button
@@ -1658,7 +1655,7 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
                 onClick={() => toggleSort('repo')}
                 className="flex items-center gap-1 text-left"
               >
-                Repository
+                저장소
                 <SortIndicator sortKey="repo" activeKey={sortKey} direction={sortDirection} />
               </button>
               <button
@@ -1666,21 +1663,21 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
                 onClick={() => toggleSort('size')}
                 className="flex items-center justify-end gap-1 text-right"
               >
-                Size
+                크기
                 <SortIndicator sortKey="size" activeKey={sortKey} direction={sortDirection} />
               </button>
-              <div className="text-right">State</div>
+              <div className="text-right">상태</div>
             </div>
 
             <div className="max-h-[28rem] overflow-y-auto scrollbar-sleek">
               {isInitialScan ? (
                 <div className="flex items-center justify-center gap-2 px-4 py-10 text-center text-sm text-muted-foreground">
                   <Loader2 className="size-4 animate-spin" />
-                  Scanning workspaces. You can leave this page.
+                  작업 공간을 검색 중입니다. 이 페이지를 떠나도 됩니다.
                 </div>
               ) : rows.length === 0 ? (
                 <div className="px-4 py-10 text-center text-sm text-muted-foreground">
-                  No matching workspaces.
+                  일치하는 작업 공간이 없습니다.
                 </div>
               ) : (
                 rows.map((worktree) => (
@@ -1729,10 +1726,10 @@ export function WorkspaceSpaceManagerPanel(): React.JSX.Element {
       ) : (
         <div className="rounded-lg border border-border/70 bg-background/30 px-4 py-10 text-center text-sm text-muted-foreground">
           {scanError
-            ? 'Scan failed before any workspace sizes were collected.'
+            ? '작업 공간 크기를 수집하기 전에 검색에 실패했습니다.'
             : analysis
-              ? 'No workspace rows were available from the scan.'
-              : 'Run a scan to inspect workspace sizes.'}
+              ? '검색에서 사용할 수 있는 작업 공간 행이 없습니다.'
+              : '작업 공간 크기를 확인하려면 검색을 실행하세요.'}
         </div>
       )}
     </div>

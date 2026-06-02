@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: notebook editing, output rendering, and cell
 controls share one parsed document/update path for this first notebook editor
 slice; splitting before the model stabilizes would make save/run mutations
@@ -179,9 +180,9 @@ function NotebookCellHeader({
         onChange={(event) => onKindChange(event.target.value as IpynbCellKind)}
         className="h-7 rounded-md border border-input bg-background px-2 text-xs text-foreground"
       >
-        <option value="code">Code</option>
-        <option value="markdown">Markdown</option>
-        <option value="raw">Raw</option>
+        <option value="code">코드</option>
+        <option value="markdown">마크다운</option>
+        <option value="raw">원문</option>
       </select>
       {cell.kind === 'code' ? (
         <NotebookHeaderButton label="Run cell" disabled={running} onClick={onRun}>
@@ -728,7 +729,7 @@ export default function IpynbViewer({
         <div className="flex max-w-md items-start gap-3 rounded-md border border-border bg-background p-4">
           <AlertCircle className="mt-0.5 size-4 text-destructive" />
           <div>
-            <div className="font-medium text-foreground">Unable to render notebook</div>
+            <div className="font-medium text-foreground">노트북을 렌더링할 수 없습니다</div>
             <div className="mt-1">{parsed.error}</div>
           </div>
         </div>

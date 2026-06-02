@@ -101,7 +101,7 @@ function renderItem({
       <ContextMenuContent className="z-[70]">
         <ContextMenuItem onSelect={onSetDefault} disabled={isDefault}>
           <Star className="size-3.5" />
-          {isDefault ? 'Current default' : 'Set as default'}
+          {isDefault ? '현재 기본값' : '기본값으로 설정'}
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
@@ -285,7 +285,7 @@ export default function AgentCombobox({
             ) : (
               <span className="inline-flex min-w-0 flex-1 items-center gap-1.5">
                 <Terminal className="size-3.5" />
-                <span className="truncate">Blank Terminal</span>
+                <span className="truncate">빈 터미널</span>
               </span>
             )}
             <ChevronsUpDown className="size-3.5 opacity-50" />
@@ -306,12 +306,12 @@ export default function AgentCombobox({
           <Command shouldFilter={false} value={commandValue} onValueChange={setCommandValue}>
             <CommandInput
               ref={setInputNode}
-              placeholder="Search agents..."
+              placeholder="에이전트 검색..."
               value={query}
               onValueChange={setQuery}
             />
             <CommandList>
-              <CommandEmpty>No agents match your search.</CommandEmpty>
+              <CommandEmpty>검색과 일치하는 에이전트가 없습니다.</CommandEmpty>
               {blankMatchesQuery
                 ? renderItem({
                     key: BLANK_VALUE,
@@ -321,7 +321,7 @@ export default function AgentCombobox({
                     onSelect: () => handleSelect(null),
                     onSetDefault: onSetDefault ? () => onSetDefault('blank') : undefined,
                     icon: <Terminal className="size-3.5" />,
-                    label: 'Blank Terminal'
+                    label: '빈 터미널'
                   })
                 : null}
               {filteredAgents.map((agent) =>
@@ -347,7 +347,7 @@ export default function AgentCombobox({
                   onMouseEnter={() => setCommandValue('')}
                   className="h-9 w-full justify-start rounded-none px-3 text-xs font-normal text-muted-foreground"
                 >
-                  Manage agents
+                  에이전트 관리
                   <ArrowRight className="ml-auto size-3" />
                 </Button>
               </div>

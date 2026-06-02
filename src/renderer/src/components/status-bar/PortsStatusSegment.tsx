@@ -120,7 +120,7 @@ function PortRow({
         openInKorcaBrowser
       }).then((result) => {
         if (!result.ok) {
-          toast.error('Failed to open browser', { description: result.reason })
+          toast.error('브라우저를 열지 못했습니다', { description: result.reason })
         }
       })
     },
@@ -141,7 +141,7 @@ function PortRow({
       recordFeatureInteraction('ports')
       const address = addressForPort(port)
       void window.api.ui.writeClipboardText(address)
-      toast.success(`Copied ${address}`)
+      toast.success(`${address}를 복사했습니다`)
     },
     [port, recordFeatureInteraction]
   )
@@ -163,14 +163,14 @@ function PortRow({
           toast.error(result.reason)
           return
         }
-        toast.success(`Stopped process on ${port.port}`)
+        toast.success(`${port.port} 포트의 프로세스를 중지했습니다`)
         const refreshResult = await refreshWorkspacePortScanAfterStop({
           runtimeTarget,
           setWorkspacePortScan,
           setWorkspacePortScanRefreshing
         })
         if (!refreshResult.ok) {
-          toast.error('Failed to refresh ports', {
+          toast.error('포트를 새로고침하지 못했습니다', {
             description: refreshResult.reason
           })
         }
@@ -204,13 +204,13 @@ function PortRow({
             </TooltipContent>
           </Tooltip>
           <div className="absolute inset-y-0 right-0 flex items-center gap-0.5 rounded-md border border-border/40 bg-popover/95 px-0.5 opacity-0 shadow-xs transition-opacity group-hover/port:opacity-100 group-focus-within/port:opacity-100">
-            <PortAction label="Open in Browser" onClick={handleOpen} disabled={!canOpen}>
+            <PortAction label="브라우저에서 열기" onClick={handleOpen} disabled={!canOpen}>
               <ExternalLink className="size-3" />
             </PortAction>
-            <PortAction label={`Copy ${addressForPort(port)}`} onClick={handleCopy}>
+            <PortAction label={`${addressForPort(port)} 복사`} onClick={handleCopy}>
               <Copy className="size-3" />
             </PortAction>
-            <PortAction label="Stop Process" disabled={!canStop} onClick={handleStop}>
+            <PortAction label="프로세스 중지" disabled={!canStop} onClick={handleStop}>
               <Trash2 className="size-3" />
             </PortAction>
           </div>
@@ -362,7 +362,7 @@ export function PortsStatusSegment({ iconOnly }: PortsStatusSegmentProps): React
           <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-1.5">
             <div className="flex min-w-0 items-center gap-1.5 text-[11px] font-medium text-foreground">
               <Plug className="size-3 shrink-0 text-muted-foreground" />
-              <span className="truncate">Ports</span>
+              <span className="truncate">포트</span>
             </div>
             <span className="text-[11px] tabular-nums text-muted-foreground">
               {workspacePortCount} workspace · {externalPorts.length} external
@@ -404,7 +404,7 @@ export function PortsStatusSegment({ iconOnly }: PortsStatusSegmentProps): React
                   ) : (
                     <ChevronRight className="size-3" />
                   )}
-                  <span>External Ports</span>
+                  <span>외부 포트</span>
                   <span className="ml-auto font-mono text-[10px]">{externalPorts.length}</span>
                 </button>
                 {externalOpen && (

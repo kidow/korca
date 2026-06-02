@@ -220,7 +220,7 @@ export default function FeatureTipsModal(): JSX.Element | null {
             return
           }
           toast.warning('Korca CLI needs attention', {
-            description: result.status.detail ?? 'Open Settings to finish CLI setup.'
+            description: result.status.detail ?? 'CLI 설정을 마치려면 설정을 여세요.'
           })
           closeModal()
           openCliSettings()
@@ -289,14 +289,14 @@ export default function FeatureTipsModal(): JSX.Element | null {
                       : 'mt-3 max-h-64 translate-y-0 border-border/70 bg-muted/35 p-3 opacity-100'
                   }`}
                 >
-                  <p className="font-medium text-foreground">Try asking:</p>
+                  <p className="font-medium text-foreground">다음처럼 물어보세요:</p>
                   <p>
-                    “Split this PR into two <WorktreePromptTerm>worktrees</WorktreePromptTerm> and
-                    create PRs for each.”
+                    “이 PR을 두 개의 <WorktreePromptTerm>작업 트리</WorktreePromptTerm>로 나누고
+                    각각에 대해 PR을 만들어줘.”
                   </p>
                   <p>
-                    “When the agent in <WorktreePromptTerm>worktree</WorktreePromptTerm> X finishes,
-                    send it the review task.”
+                    “<WorktreePromptTerm>작업 트리</WorktreePromptTerm> X의 에이전트가 끝나면 리뷰
+                    작업을 보내줘.”
                   </p>
                 </div>
               </div>
@@ -306,7 +306,7 @@ export default function FeatureTipsModal(): JSX.Element | null {
             <DialogFooter className="mt-8 flex sm:justify-stretch">
               {skillTerminalOpen ? (
                 <Button className="w-full" onClick={handleSkip}>
-                  Done
+                  완료
                 </Button>
               ) : (
                 <FeatureTipActions

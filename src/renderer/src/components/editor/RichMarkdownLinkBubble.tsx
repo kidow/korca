@@ -80,7 +80,7 @@ function LinkEditInput({
           onCancel()
         }
       }}
-      placeholder="Paste or type a link…"
+      placeholder="링크를 붙여넣거나 입력하세요…"
       className="rich-markdown-link-input"
     />
   )
@@ -129,7 +129,7 @@ export function RichMarkdownLinkBubble({
             type="button"
             className="rich-markdown-link-button"
             onClick={onOpen}
-            title="Open link"
+            title="링크 열기"
           >
             <ExternalLink size={14} />
           </button>
@@ -137,7 +137,7 @@ export function RichMarkdownLinkBubble({
             type="button"
             className="rich-markdown-link-button"
             onClick={onEditStart}
-            title="Edit link"
+            title="링크 수정"
           >
             <Pencil size={14} />
           </button>

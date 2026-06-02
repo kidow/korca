@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: MarkdownPreview owns rendering, link interception,
 search, and viewport state for the preview surface in one place so markdown
 behavior stays coherent across split panes and preview tabs. */
@@ -583,7 +584,7 @@ export default function MarkdownPreview({
     () => [
       {
         id: 'all',
-        label: 'All unsent notes',
+        label: '보내지 않은 메모 전체',
         notes: unsentMarkdownReviewNotes,
         prompt: unsentMarkdownReviewPrompt
       }
@@ -1023,8 +1024,8 @@ export default function MarkdownPreview({
           <button
             type="button"
             className="markdown-annotation-add"
-            aria-label="Add note"
-            title="Add note"
+            aria-label="메모 추가"
+            title="메모 추가"
             onClick={(event) => {
               event.preventDefault()
               event.stopPropagation()
@@ -1069,10 +1070,10 @@ export default function MarkdownPreview({
                         type="button"
                         className="korca-diff-comment-pill-btn"
                         title={
-                          copiedReviewNoteId === comment.id ? 'Copied note' : 'Copy note for agent'
+                          copiedReviewNoteId === comment.id ? '메모 복사됨' : '에이전트용 메모 복사'
                         }
                         aria-label={
-                          copiedReviewNoteId === comment.id ? 'Copied note' : 'Copy note for agent'
+                          copiedReviewNoteId === comment.id ? '메모 복사됨' : '에이전트용 메모 복사'
                         }
                         onClick={(event) => {
                           event.preventDefault()
@@ -1708,7 +1709,7 @@ export default function MarkdownPreview({
               aria-label="Jump to first review note"
             >
               <MessageSquare className="size-3.5" />
-              <span>Review notes</span>
+              <span>리뷰 노트</span>
               <span className="markdown-review-count">{markdownReviewNotes.length}</span>
             </button>
             <button
@@ -1716,8 +1717,8 @@ export default function MarkdownPreview({
               className="markdown-review-icon-button"
               onClick={() => void handleCopyMarkdownReviewNotes()}
               disabled={markdownReviewNotes.length === 0}
-              title="Copy notes for agent"
-              aria-label="Copy notes for agent"
+              title="에이전트용 메모 복사"
+              aria-label="에이전트용 메모 복사"
             >
               {reviewNotesCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
             </button>
@@ -1865,11 +1866,11 @@ function MarkdownAnnotationComposer({
 
   return (
     <div className="markdown-annotation-composer" onClick={(event) => event.stopPropagation()}>
-      <div className="korca-diff-comment-popover-label">Selected text</div>
+      <div className="korca-diff-comment-popover-label">선택한 텍스트</div>
       <textarea
         ref={focusTextareaRef}
         className="korca-diff-comment-popover-textarea"
-        placeholder="Add note for the AI"
+        placeholder="AI를 위한 메모 추가"
         value={body}
         onChange={(event) => {
           setBody(event.target.value)
@@ -1895,7 +1896,7 @@ function MarkdownAnnotationComposer({
           Cancel
         </Button>
         <Button size="sm" onClick={() => void submit()} disabled={submitting || !trimmed}>
-          {submitting ? 'Saving…' : 'Add note'}
+          {submitting ? '저장 중…' : '메모 추가'}
           {!submitting && <CornerDownLeft className="ml-1 size-3 opacity-70" />}
         </Button>
       </div>

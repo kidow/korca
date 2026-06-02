@@ -116,7 +116,9 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
       if (connectionId && sshConnectionStatus !== 'connected') {
         if (mountedRef.current) {
           setConfigs(missingInspections)
-          setInspectionUnavailableMessage('Connect this SSH repo to inspect or add MCP configs.')
+          setInspectionUnavailableMessage(
+            '검사하거나 MCP 구성을 추가하려면 이 SSH 저장소를 연결하세요.'
+          )
         }
         return
       }
@@ -124,7 +126,7 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
       if (!connectionId && !canInspectLocalMcpConfigRoot(targetRootPath, isWindows)) {
         if (mountedRef.current) {
           setConfigs(missingInspections)
-          setInspectionUnavailableMessage('This workspace path is not available from this host.')
+          setInspectionUnavailableMessage('이 작업 공간 경로는 이 호스트에서 사용할 수 없습니다.')
         }
         return
       }
@@ -132,7 +134,7 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
       if (!connectionId && !(await window.api.shell.pathExists(targetRootPath))) {
         if (mountedRef.current) {
           setConfigs(missingInspections)
-          setInspectionUnavailableMessage('This workspace path is not available on disk.')
+          setInspectionUnavailableMessage('이 작업 공간 경로는 디스크에서 사용할 수 없습니다.')
         }
         return
       }
@@ -293,9 +295,9 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
         { targetGroupId }
       )
       setActiveView('terminal')
-      toast.success('MCP config created', { description: '.mcp.json' })
+      toast.success('MCP 구성을 만들었습니다', { description: '.mcp.json' })
     } catch (error) {
-      toast.error(extractIpcErrorMessage(error, 'Failed to create MCP config.'))
+      toast.error(extractIpcErrorMessage(error, 'MCP 구성을 만들지 못했습니다.'))
     }
   }
 
@@ -303,9 +305,9 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
     <section className="space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h3 className="text-sm font-semibold">MCP Configs</h3>
+          <h3 className="text-sm font-semibold">MCP 설정</h3>
           <p className="text-xs text-muted-foreground">
-            Inspect MCP server definitions that agents can use while working in this repo.
+            이 저장소에서 작업할 때 에이전트가 사용할 MCP 서버 정의를 확인합니다.
           </p>
           {repo.connectionId ? (
             <p className="text-xs text-muted-foreground">
@@ -319,7 +321,7 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
             variant="ghost"
             size="icon-sm"
             onClick={() => void loadConfigs()}
-            aria-label="Refresh MCP configs"
+            aria-label="MCP 구성 새로고침"
           >
             {loading ? (
               <LoaderCircle className="size-3.5 animate-spin" />
@@ -335,7 +337,7 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
               onClick={() => void handleCreateStarter()}
             >
               <Plus className="size-3.5" />
-              {createConfirm ? 'Create empty config' : 'Add MCP config'}
+              {createConfirm ? '빈 구성 만들기' : 'MCP 구성 추가'}
             </Button>
           ) : null}
         </div>
@@ -344,7 +346,7 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
       <div className="rounded-md border border-border/50 bg-muted/20">
         <div className="flex items-center justify-between border-b border-border/50 px-3 py-2 text-xs text-muted-foreground">
           <span>
-            {detectedCount} detected · {serverCount} server{serverCount === 1 ? '' : 's'}
+            {detectedCount}개 감지됨 · {serverCount}개 서버
           </span>
           {loading ? <LoaderCircle className="size-3.5 animate-spin" /> : null}
         </div>
@@ -360,8 +362,8 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
                 <span>{inspectionUnavailableMessage}</span>
               ) : (
                 <span>
-                  No MCP config found. Add an empty workspace config when you want this repo to
-                  define its own MCP servers.
+                  MCP 구성을 찾지 못했습니다. 이 저장소가 자체 MCP 서버를 정의하게 하려면 빈 작업
+                  공간 구성을 추가하세요.
                 </span>
               )}
             </div>
@@ -379,7 +381,7 @@ export function McpConfigSection({ repo }: McpConfigSectionProps): React.JSX.Ele
 
           {missingConfigs.length > 0 && !inspectionUnavailable ? (
             <div className="space-y-1.5 border-t border-border/50 px-3 py-2">
-              <p className="text-[11px] text-muted-foreground">Checked</p>
+              <p className="text-[11px] text-muted-foreground">확인됨</p>
               <div className="flex flex-wrap gap-1.5">
                 {missingConfigs.map((config) => (
                   <span

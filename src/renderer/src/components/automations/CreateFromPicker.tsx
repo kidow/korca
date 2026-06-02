@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import React from 'react'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -52,7 +53,7 @@ export function CreateFromPicker({
   const effectiveDefault = repo?.worktreeBaseRef ?? defaultBaseRef
   const selectedValue = value || DEFAULT_VALUE
   const selectedLabel =
-    value || (effectiveDefault ? `${effectiveDefault} (default)` : 'Project default')
+    value || (effectiveDefault ? `${effectiveDefault} (기본값)` : '프로젝트 기본값')
   const branchOptions = React.useMemo(() => {
     const options = new Set<string>()
     if (effectiveDefault) {
@@ -174,7 +175,7 @@ export function CreateFromPicker({
             className={cn('h-9 w-full justify-between px-3 text-sm font-normal', triggerClassName)}
           >
             <span className="flex min-w-0 items-center gap-1.5">
-              <span className="shrink-0 text-muted-foreground">Branch from</span>
+              <span className="shrink-0 text-muted-foreground">기준 브랜치</span>
               <span className="truncate">{selectedLabel}</span>
             </span>
             <ChevronsUpDown className="size-4 opacity-50" />
@@ -193,11 +194,11 @@ export function CreateFromPicker({
               ref={setInputNode}
               value={query}
               onValueChange={setQuery}
-              placeholder="Search repo branches..."
+              placeholder="저장소 브랜치 검색..."
             />
             <CommandList className="max-h-72">
               <CommandEmpty>
-                {isSearching ? 'Searching branches...' : 'No branches found.'}
+                {isSearching ? '브랜치를 검색하는 중...' : '브랜치를 찾지 못했습니다.'}
               </CommandEmpty>
               <CommandItem
                 value={effectiveDefault ? `${effectiveDefault} default` : 'project default'}
@@ -213,7 +214,7 @@ export function CreateFromPicker({
                   )}
                 />
                 <span className="truncate">
-                  {effectiveDefault ? `${effectiveDefault} (default)` : 'Project default'}
+                  {effectiveDefault ? `${effectiveDefault} (기본값)` : '프로젝트 기본값'}
                 </span>
               </CommandItem>
               {branchOptions

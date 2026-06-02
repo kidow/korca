@@ -10,39 +10,39 @@ import type { BrowserGrabPayload } from '../../../../shared/browser-grab-types'
 export function formatGrabPayloadAsText(payload: BrowserGrabPayload): string {
   const lines: string[] = []
 
-  lines.push(`Attached browser context from ${payload.page.sanitizedUrl}`)
+  lines.push(`첨부된 브라우저 컨텍스트: ${payload.page.sanitizedUrl}`)
   lines.push('')
 
   // Selected element summary
-  lines.push('Selected element:')
+  lines.push('선택한 요소:')
   lines.push(payload.target.tagName)
   if (payload.target.accessibility.accessibleName) {
-    lines.push(`Accessible name: "${payload.target.accessibility.accessibleName}"`)
+    lines.push(`접근 가능한 이름: "${payload.target.accessibility.accessibleName}"`)
   }
   if (payload.target.accessibility.role) {
-    lines.push(`Role: ${payload.target.accessibility.role}`)
+    lines.push(`역할: ${payload.target.accessibility.role}`)
   }
-  lines.push(`Selector: ${payload.target.selector}`)
+  lines.push(`선택자: ${payload.target.selector}`)
   if (payload.target.sourceFile) {
-    lines.push(`Source: ${payload.target.sourceFile}`)
+    lines.push(`소스: ${payload.target.sourceFile}`)
   }
   if (payload.target.reactComponents) {
     lines.push(`React: ${payload.target.reactComponents}`)
   }
   const { rectViewport } = payload.target
-  lines.push(`Dimensions: ${Math.round(rectViewport.width)}x${Math.round(rectViewport.height)}`)
+  lines.push(`크기: ${Math.round(rectViewport.width)}x${Math.round(rectViewport.height)}`)
   lines.push('')
 
   // Text snippet
   if (payload.target.textSnippet) {
-    lines.push('Text content:')
+    lines.push('텍스트 내용:')
     lines.push(payload.target.textSnippet)
     lines.push('')
   }
 
   // Nearby context
   if (payload.nearbyText.length > 0) {
-    lines.push('Nearby context:')
+    lines.push('주변 컨텍스트:')
     for (const text of payload.nearbyText) {
       lines.push(`- ${text}`)
     }
@@ -68,7 +68,7 @@ export function formatGrabPayloadAsText(payload: BrowserGrabPayload): string {
     styleLines.push(`background: ${styles.backgroundColor}`)
   }
   if (styleLines.length > 0) {
-    lines.push('Computed styles:')
+    lines.push('계산된 스타일:')
     for (const sl of styleLines) {
       lines.push(`  ${sl}`)
     }
@@ -84,10 +84,10 @@ export function formatGrabPayloadAsText(payload: BrowserGrabPayload): string {
 
   // Ancestor path
   if (payload.ancestorPath.length > 0) {
-    lines.push(`Ancestor path: ${payload.ancestorPath.join(' > ')}`)
+    lines.push(`상위 경로: ${payload.ancestorPath.join(' > ')}`)
   }
   if (payload.target.fullPath) {
-    lines.push(`Full DOM path: ${payload.target.fullPath}`)
+    lines.push(`전체 DOM 경로: ${payload.target.fullPath}`)
   }
 
   return lines.join('\n').trimEnd()
@@ -130,7 +130,8 @@ export default function GrabConfirmationSheet({
             Grab
           </div>
           <span className="text-sm text-muted-foreground">
-            Review before attaching. Captured page context may include visible site content.
+            첨부하기 전에 검토하세요. 캡처된 페이지 컨텍스트에는 보이는 사이트 콘텐츠가 포함될 수
+            있습니다.
           </span>
         </div>
         <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onCancel}>
@@ -148,7 +149,7 @@ export default function GrabConfirmationSheet({
             <div className="overflow-hidden rounded-lg border border-border/60">
               <img
                 src={payload.screenshot.dataUrl}
-                alt="Selected element screenshot"
+                alt="선택한 요소 스크린샷"
                 className="max-h-48 w-full object-contain bg-black/5"
               />
             </div>
@@ -157,7 +158,7 @@ export default function GrabConfirmationSheet({
           {/* Element summary */}
           <div className="space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Selected Element
+              선택한 요소
             </h3>
             <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-sm">
               <div className="flex items-baseline gap-2">
@@ -166,7 +167,7 @@ export default function GrabConfirmationSheet({
                 </span>
                 {target.accessibility.role ? (
                   <span className="text-xs text-muted-foreground">
-                    role=
+                    역할=
                     <EscapedText text={target.accessibility.role} />
                   </span>
                 ) : null}
@@ -190,11 +191,11 @@ export default function GrabConfirmationSheet({
           {/* Page info */}
           <div className="space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Page
+              페이지
             </h3>
             <div className="rounded-lg border border-border/60 bg-muted/20 p-3 text-sm">
               <div className="font-medium text-foreground">
-                <EscapedText text={page.title || 'Untitled'} />
+                <EscapedText text={page.title || '제목 없음'} />
               </div>
               <div className="mt-0.5 text-xs text-muted-foreground/70">
                 <EscapedText text={page.sanitizedUrl} />
@@ -218,7 +219,7 @@ export default function GrabConfirmationSheet({
           {nearbyText.length > 0 ? (
             <div className="space-y-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Nearby Context
+                주변 컨텍스트
               </h3>
               <div className="rounded-lg border border-border/60 bg-muted/20 p-3">
                 <ul className="list-inside list-disc space-y-0.5 text-sm text-muted-foreground">
@@ -237,21 +238,21 @@ export default function GrabConfirmationSheet({
       {/* Actions */}
       <div className="flex items-center justify-end gap-2 border-t border-border/70 px-4 py-3">
         <Button variant="ghost" size="sm" onClick={onCancel}>
-          Cancel
+          취소
         </Button>
         <Button variant="outline" size="sm" className="gap-1.5" onClick={onCopy}>
           <Copy className="size-3.5" />
-          Copy
+          복사
         </Button>
         {onCopyScreenshot ? (
           <Button variant="outline" size="sm" className="gap-1.5" onClick={onCopyScreenshot}>
             <Image className="size-3.5" />
-            Copy Screenshot
+            스크린샷 복사
           </Button>
         ) : null}
         <Button size="sm" className="gap-1.5" onClick={onAttach}>
           <MessageSquarePlus className="size-3.5" />
-          Attach to AI
+          AI에 첨부
         </Button>
       </div>
     </div>

@@ -91,7 +91,7 @@ function formatRelativeTime(timestamp: number): string {
 function isDisconnectedRemoteScanError(message: string): boolean {
   return (
     message === 'SSH provider is unavailable.' ||
-    message === 'Remote workspaces are not connected. Reconnect and refresh to check them.'
+    message === '원격 작업 공간이 연결되어 있지 않습니다. 다시 연결한 뒤 새로고침해 확인하세요.'
   )
 }
 
@@ -420,16 +420,12 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
       }
       if (result.removedIds.length > 0) {
         if (mountedRef.current) {
-          toast.success(
-        `${result.removedIds.length}개의 작업 공간을 제거했습니다`
-          )
+          toast.success(`${result.removedIds.length}개의 작업 공간을 제거했습니다`)
         }
       }
       if (result.failures.length > 0) {
         if (mountedRef.current) {
-          toast.error(
-            `${result.failures.length} workspace${result.failures.length === 1 ? '' : 's'} could not be removed`
-          )
+          toast.error(`${result.failures.length}개의 작업 공간을 제거하지 못했습니다`)
         }
       } else {
         if (mountedRef.current) {
@@ -499,15 +495,15 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                     작업 공간 안전성 확인 중
                   </div>
                   <div className="mt-0.5 text-xs text-muted-foreground">
-                    작업 공간과 git 상태를 검사한 뒤, 열려 있는 탭, 터미널, 활성 에이전트,
-                    원격 사용 가능 상태를 함께 고려해 삭제를 제안합니다.
+                    작업 공간과 git 상태를 검사한 뒤, 열려 있는 탭, 터미널, 활성 에이전트, 원격 사용
+                    가능 상태를 함께 고려해 삭제를 제안합니다.
                   </div>
                 </div>
               </div>
             ) : hasAnyCandidates ? (
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/25 px-4 py-2.5">
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <div className="min-w-0 text-sm font-medium text-foreground">
+                  <div className="min-w-0 text-sm font-medium text-foreground">
                     {selectedCount}개 선택됨
                   </div>
                   <StatusPill>{inactiveCount}개 비활성</StatusPill>
@@ -517,9 +513,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                   {groups.review.length > 0 ? (
                     <StatusPill tone="review">{groups.review.length}개 검토 필요</StatusPill>
                   ) : null}
-                  {protectedCount > 0 ? (
-                    <StatusPill>{protectedCount}개 비추천</StatusPill>
-                  ) : null}
+                  {protectedCount > 0 ? <StatusPill>{protectedCount}개 비추천</StatusPill> : null}
                 </div>
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
                   {eligibleRepos.length > 1 ? (
@@ -613,10 +607,10 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                   <div>
                     {initialLoading ? <SkeletonRows /> : null}
                     {!loading && scan && candidates.length === 0 && !scanNoticeMessage ? (
-                        <EmptyState title="삭제할 비활성 작업 공간이 없습니다." />
+                      <EmptyState title="삭제할 비활성 작업 공간이 없습니다." />
                     ) : null}
                     {!loading && scan && candidates.length === 0 && scanNoticeMessage ? (
-                        <EmptyState title="확인한 저장소에서 비활성 작업 공간을 찾지 못했습니다." />
+                      <EmptyState title="확인한 저장소에서 비활성 작업 공간을 찾지 못했습니다." />
                     ) : null}
                     {!loading &&
                     scan &&
@@ -795,9 +789,9 @@ function CandidateRow({
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <span className="min-w-0 truncate text-sm font-medium">{candidate.displayName}</span>
             <StatusPill tone={status.tone}>{status.label}</StatusPill>
-        <span className="text-xs text-muted-foreground">
-          마지막 활동 {formatRelativeTime(candidate.lastActivityAt)}
-        </span>
+            <span className="text-xs text-muted-foreground">
+              마지막 활동 {formatRelativeTime(candidate.lastActivityAt)}
+            </span>
             {blockers.length > 0 ? (
               <span className="min-w-0 truncate text-xs text-muted-foreground">
                 {blockers.slice(0, 2).join(', ')}
@@ -808,8 +802,8 @@ function CandidateRow({
             {candidate.path}
           </div>
           <div className="mt-1 flex min-w-0 flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-            <span className="min-w-0 truncate">Repo {candidate.repoName}</span>
-            <span className="min-w-0 truncate font-mono">Branch {candidate.branch}</span>
+            <span className="min-w-0 truncate">저장소 {candidate.repoName}</span>
+            <span className="min-w-0 truncate font-mono">브랜치 {candidate.branch}</span>
             <span>{formatGitStatus(candidate)}</span>
             {branchSafetyDetails.slice(0, 1).map((detail) => (
               <span key={detail}>{detail}</span>
@@ -845,7 +839,7 @@ function CandidateRow({
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                aria-label={`${candidate.displayName} 무시`}
+                  aria-label={`${candidate.displayName} 무시`}
                   onClick={() => onIgnore(candidate)}
                 >
                   <EyeOff className="size-3.5" />
@@ -862,7 +856,7 @@ function CandidateRow({
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                aria-label={`${candidate.displayName} 삭제`}
+                  aria-label={`${candidate.displayName} 삭제`}
                   className="text-destructive hover:text-destructive"
                   onClick={() => onRemove(candidate)}
                 >
@@ -932,29 +926,19 @@ function formatBranchSafetyDetails(candidate: WorkspaceCleanupCandidate): string
 function formatContextDetails(candidate: WorkspaceCleanupCandidate): string | null {
   const parts: string[] = []
   if (candidate.localContext.terminalTabCount > 0) {
-    parts.push(
-      `${candidate.localContext.terminalTabCount}개 터미널 탭`
-    )
+    parts.push(`${candidate.localContext.terminalTabCount}개 터미널 탭`)
   }
   if (candidate.localContext.cleanEditorTabCount > 0) {
-    parts.push(
-      `${candidate.localContext.cleanEditorTabCount}개 에디터 탭`
-    )
+    parts.push(`${candidate.localContext.cleanEditorTabCount}개 에디터 탭`)
   }
   if (candidate.localContext.browserTabCount > 0) {
-    parts.push(
-      `${candidate.localContext.browserTabCount}개 브라우저 탭`
-    )
+    parts.push(`${candidate.localContext.browserTabCount}개 브라우저 탭`)
   }
   if (candidate.localContext.diffCommentCount > 0) {
-    parts.push(
-      `${candidate.localContext.diffCommentCount}개 차이점 메모`
-    )
+    parts.push(`${candidate.localContext.diffCommentCount}개 차이점 메모`)
   }
   if (candidate.localContext.retainedDoneAgentCount > 0) {
-    parts.push(
-      `${candidate.localContext.retainedDoneAgentCount}개 완료된 에이전트`
-    )
+    parts.push(`${candidate.localContext.retainedDoneAgentCount}개 완료된 에이전트`)
   }
   return parts.length > 0 ? parts.join(', ') : null
 }
@@ -979,9 +963,7 @@ function ConfirmRemove({
             <AlertTriangle className="size-4" />
           </div>
           <div className="min-w-0">
-            <DialogTitle className="text-base">
-              {count}개의 작업 공간 삭제?
-            </DialogTitle>
+            <DialogTitle className="text-base">{count}개의 작업 공간 삭제?</DialogTitle>
             <DialogDescription className="mt-1.5 text-xs leading-5">
               로컬 파일이 영구 삭제됩니다. 되돌릴 수 없습니다.
             </DialogDescription>

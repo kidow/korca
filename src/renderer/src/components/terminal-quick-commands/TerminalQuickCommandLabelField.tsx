@@ -14,7 +14,7 @@ export function TerminalQuickCommandLabelField({
 }: TerminalQuickCommandLabelFieldProps): React.JSX.Element {
   return (
     <div className="space-y-2">
-      <Label>Label</Label>
+      <Label>레이블</Label>
       <Input
         value={label}
         onChange={(event) => setDraft((current) => ({ ...current, label: event.target.value }))}

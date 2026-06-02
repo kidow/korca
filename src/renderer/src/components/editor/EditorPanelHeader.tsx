@@ -38,11 +38,7 @@ const isMac = navigator.userAgent.includes('Mac')
 const isLinux = navigator.userAgent.includes('Linux')
 
 /** Platform-appropriate label: macOS -> Finder, Windows -> File Explorer, Linux -> Files */
-const revealLabel = isMac
-  ? 'Reveal in Finder'
-  : isLinux
-    ? 'Open Containing Folder'
-    : 'Reveal in File Explorer'
+const revealLabel = isMac ? 'Finder에서 보기' : isLinux ? '폴더 열기' : '파일 탐색기에서 보기'
 
 type EditorPanelHeaderProps = {
   activeFile: OpenFile
@@ -217,7 +213,7 @@ export function EditorPanelHeader({
               }}
             >
               <Pencil className="w-3.5 h-3.5 mr-1.5" />
-              Rename
+              이름 바꾸기
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -226,7 +222,7 @@ export function EditorPanelHeader({
               }}
             >
               <Copy className="w-3.5 h-3.5 mr-1.5" />
-              Copy Path
+              경로 복사
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() => {
@@ -234,13 +230,13 @@ export function EditorPanelHeader({
               }}
             >
               <Copy className="w-3.5 h-3.5 mr-1.5" />
-              Copy Relative Path
+              상대 경로 복사
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             {canShowMarkdownPreview && (
               <DropdownMenuItem onSelect={onOpenMarkdownPreview}>
                 <Eye className="w-3.5 h-3.5 mr-1.5" />
-                Open Markdown Preview
+                마크다운 미리보기 열기
                 <DropdownMenuShortcut>{markdownPreviewShortcutLabel}</DropdownMenuShortcut>
               </DropdownMenuItem>
             )}
@@ -260,7 +256,7 @@ export function EditorPanelHeader({
                 type="button"
                 className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
                 onClick={() => onOpenDiffTargetFile(isMarkdown ? 'rich' : undefined)}
-                aria-label="Open file"
+                aria-label="파일 열기"
                 disabled={!openFileState.canOpen}
               >
                 <FileText size={14} />
@@ -269,9 +265,9 @@ export function EditorPanelHeader({
             <TooltipContent side="bottom" sideOffset={4}>
               {openFileState.canOpen
                 ? isMarkdown
-                  ? 'Open file tab to use rich markdown editing'
-                  : 'Open file tab'
-                : 'This diff has no modified-side file to open'}
+                  ? '리치 마크다운 편집을 사용하려면 파일 탭을 여세요'
+                  : '파일 탭 열기'
+                : '이 diff에는 열 수 있는 수정본 파일이 없습니다'}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -297,13 +293,13 @@ export function EditorPanelHeader({
                 type="button"
                 className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
                 onClick={onOpenPreviewToSide}
-                aria-label="Open Preview to the Side"
+                aria-label="미리보기를 옆에 열기"
               >
                 <Eye size={14} />
               </button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={4}>
-              Open Preview to the Side
+              미리보기를 옆에 열기
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -349,7 +345,7 @@ export function EditorPanelHeader({
                 }`}
                 onClick={onToggleMarkdownTableOfContents}
                 disabled={isMarkdownTableOfContentsDisabled}
-                aria-label="Table of Contents"
+                aria-label="목차"
                 aria-pressed={showMarkdownTableOfContents}
               >
                 <ListTree size={14} />
@@ -357,8 +353,8 @@ export function EditorPanelHeader({
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={4}>
               {isMarkdownTableOfContentsDisabled
-                ? 'Table of Contents is available in rich or preview mode'
-                : 'Table of Contents'}
+                ? '목차는 리치 모드 또는 미리보기 모드에서 사용할 수 있습니다'
+                : '목차'}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -369,8 +365,8 @@ export function EditorPanelHeader({
             <button
               type="button"
               className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
-              aria-label="More actions"
-              title="More actions"
+              aria-label="추가 작업"
+              title="추가 작업"
             >
               <MoreHorizontal size={14} />
             </button>

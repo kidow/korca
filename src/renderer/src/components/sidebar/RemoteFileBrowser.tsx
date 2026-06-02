@@ -24,7 +24,7 @@ type RemoteFileBrowserProps = {
 }
 
 const FILE_HINT_MS = 2000
-const FILE_HINT_TEXT = "Files can't be opened as a project"
+const FILE_HINT_TEXT = '파일은 프로젝트로 열 수 없습니다'
 const PATH_DEBOUNCE_MS = 300
 
 type BrowseResult = { resolvedPath: string; entries: DirEntry[] }
@@ -564,8 +564,8 @@ export function RemoteFileBrowser({
   const showPreviewLoading = isPreviewActive && preview!.loading
   const displayEntries = isPreviewActive ? previewFilteredEntries : filteredEntries
   const displayEmptyDirCopy = isPreviewActive
-    ? `${preview!.resolvedPath} is empty`
-    : 'Empty directory'
+    ? `${preview!.resolvedPath} 비어 있음`
+    : '비어 있는 디렉터리'
 
   // Disable Select folder while a non-empty path-mode preview is visible so
   // the committed directory isn't silently selected while the list shows a
@@ -629,7 +629,7 @@ export function RemoteFileBrowser({
           onChange={(e) => handleInputChange(e.target.value)}
           onPaste={handleInputPaste}
           onKeyDown={handleFilterKeyDown}
-          placeholder="Type to filter or enter a path…"
+          placeholder="필터하거나 경로를 입력하세요…"
           aria-invalid={!!preview?.error}
           aria-describedby={preview?.error ? 'remote-file-browser-path-error' : undefined}
           className={cn(
@@ -673,15 +673,15 @@ export function RemoteFileBrowser({
             </div>
           ) : !isPreviewActive && entries.length === 0 ? (
             <div className="flex items-center justify-center h-full">
-              <p className="text-xs text-muted-foreground">Empty directory</p>
+              <p className="text-xs text-muted-foreground">비어 있는 디렉터리</p>
             </div>
           ) : displayEntries.length === 0 && !preview?.error ? (
             // Directory has contents; filter hides them all. Distinguishing
             // filter emptiness from directory emptiness keeps copy accurate.
             <div className="flex items-center justify-center h-full">
-              <p className="text-xs text-muted-foreground">{`No matches for '${
+              <p className="text-xs text-muted-foreground">{`'${
                 isPreviewActive ? preview!.filter : filter
-              }'`}</p>
+              }'에 대한 일치 항목 없음`}</p>
             </div>
           ) : (
             displayEntries.map((entry) => {
@@ -722,11 +722,11 @@ export function RemoteFileBrowser({
         className="block text-[10px] text-muted-foreground truncate w-full"
         title={fileHint ? undefined : resolvedPath}
       >
-        {fileHint ? FILE_HINT_TEXT : `Opens as a remote project · ${resolvedPath}`}
+        {fileHint ? FILE_HINT_TEXT : `원격 프로젝트로 열립니다 · ${resolvedPath}`}
       </p>
       <div className="flex items-center justify-end gap-2">
         <Button variant="outline" size="sm" className="h-7 text-xs" onClick={onCancel}>
-          Cancel
+          취소
         </Button>
         <Button
           size="sm"
@@ -735,7 +735,7 @@ export function RemoteFileBrowser({
           disabled={selectDisabled}
           title={resolvedPath}
         >
-          Select folder
+          폴더 선택
         </Button>
       </div>
     </div>

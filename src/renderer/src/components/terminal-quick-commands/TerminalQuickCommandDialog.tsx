@@ -168,10 +168,10 @@ export function TerminalQuickCommandDialog({
       <DialogContent className="max-w-md sm:max-w-md" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle className="text-sm">
-            {mode === 'edit' ? 'Edit Quick Command' : 'Add Quick Command'}
+            {mode === 'edit' ? '빠른 명령 편집' : '빠른 명령 추가'}
           </DialogTitle>
           <DialogDescription className="text-xs">
-            Save terminal commands or agent prompts for quick access.
+            터미널 명령이나 에이전트 프롬프트를 빠르게 불러오도록 저장합니다.
           </DialogDescription>
         </DialogHeader>
 
@@ -187,7 +187,7 @@ export function TerminalQuickCommandDialog({
           <TerminalQuickCommandLabelField label={draft.label} setDraft={setDraft} />
 
           <div className="space-y-2">
-            <Label>Action</Label>
+            <Label>동작</Label>
             <TerminalQuickCommandActionToggle
               selectedAction={selectedAction}
               onActionChange={setAction}
@@ -197,7 +197,7 @@ export function TerminalQuickCommandDialog({
           {isTerminalAgentQuickCommand(draft) ? (
             <>
               <div className="space-y-2">
-                <Label>Agent</Label>
+                <Label>에이전트</Label>
                 <Select
                   value={selectedAgent}
                   onValueChange={(agent) => {
@@ -214,7 +214,7 @@ export function TerminalQuickCommandDialog({
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Choose agent" />
+                    <SelectValue placeholder="에이전트 선택" />
                   </SelectTrigger>
                   <SelectContent
                     position="popper"
@@ -233,7 +233,7 @@ export function TerminalQuickCommandDialog({
                               <span className="truncate">{entry.label}</span>
                               {!supported ? (
                                 <span className="truncate text-xs text-muted-foreground">
-                                  Does not support prompt commands
+                                  프롬프트 명령을 지원하지 않습니다
                                 </span>
                               ) : null}
                             </span>
@@ -246,7 +246,7 @@ export function TerminalQuickCommandDialog({
               </div>
 
               <div className="space-y-2">
-                <Label>Prompt</Label>
+                <Label>프롬프트</Label>
                 <textarea
                   value={draft.prompt}
                   onChange={(event) => {
@@ -259,19 +259,19 @@ export function TerminalQuickCommandDialog({
                       isTerminalAgentQuickCommand(current) ? { ...current, prompt } : current
                     )
                   }}
-                  placeholder="Ask the agent to investigate this workspace"
+                  placeholder="이 작업 공간을 조사하도록 에이전트에 요청하세요"
                   rows={4}
                   className="min-h-24 w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Supports skills, file paths, and built-in commands like{' '}
+                  스킬, 파일 경로, 그리고 다음과 같은 내장 명령을 지원합니다{' '}
                   <code className="rounded bg-muted px-1 font-mono text-[11px]">/goal</code>.
                 </p>
               </div>
             </>
           ) : (
             <div className="space-y-2">
-              <Label>Command Text</Label>
+              <Label>명령 텍스트</Label>
               <textarea
                 value={draft.command}
                 onChange={(event) => {

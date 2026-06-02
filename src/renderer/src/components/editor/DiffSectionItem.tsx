@@ -470,7 +470,7 @@ export function DiffSectionItem({
           {section.loading ? (
             <div className="flex h-full items-center gap-2 bg-muted/10 px-3 text-[11px] text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
-              <span>Loading diff...</span>
+              <span>diff 불러오는 중...</span>
             </div>
           ) : section.error ? (
             <div className="flex h-full items-center justify-between gap-3 bg-muted/10 px-3 text-[11px] text-muted-foreground">
@@ -505,7 +505,9 @@ export function DiffSectionItem({
             ) : (
               <div className="flex h-full items-center justify-center px-6 text-center">
                 <div className="space-y-2">
-                  <div className="text-sm font-medium text-foreground">Binary file changed</div>
+                  <div className="text-sm font-medium text-foreground">
+                    바이너리 파일이 변경되었습니다
+                  </div>
                   <div className="text-xs text-muted-foreground">
                     {isBranchMode
                       ? 'Text diff is unavailable for this file in branch compare.'

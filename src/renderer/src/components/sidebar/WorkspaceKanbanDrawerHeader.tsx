@@ -35,15 +35,15 @@ export default function WorkspaceKanbanDrawerHeader({
     <>
       <SheetHeader className="border-b border-sidebar-border px-4 py-3 pr-32">
         <SheetTitle className="flex items-center gap-2 text-sm">
-          <span>Workspace board</span>
+          <span>작업 공간 보드</span>
           {selectedCount > 1 ? (
             <span className="rounded-full bg-sidebar-accent px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-              {selectedCount} selected
+              {selectedCount}개 선택됨
             </span>
           ) : null}
         </SheetTitle>
         <SheetDescription className="sr-only">
-          Organize workspaces by status and open workspace cards.
+          작업 공간을 상태별로 정리하고 작업 공간 카드를 엽니다.
         </SheetDescription>
       </SheetHeader>
 
@@ -63,7 +63,7 @@ export default function WorkspaceKanbanDrawerHeader({
           onRemoveStatus={onRemoveStatus}
           onAddStatus={onAddStatus}
         />
-        <Button variant="ghost" size="icon-xs" aria-label="Close" onClick={onClose}>
+        <Button variant="ghost" size="icon-xs" aria-label="닫기" onClick={onClose}>
           <X className="size-3.5" />
         </Button>
       </div>

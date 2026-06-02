@@ -40,7 +40,7 @@ export function WslCliRegistration({
       }
     } catch (error) {
       if (mountedRef.current) {
-        toast.error(error instanceof Error ? error.message : 'Failed to load WSL CLI status.')
+        toast.error(error instanceof Error ? error.message : 'WSL CLI 상태를 불러오지 못했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -72,11 +72,13 @@ export function WslCliRegistration({
       }
       setStatus(next)
       setDialogOpen(false)
-      toast.success(`Registered \`${next.commandName}\` in WSL.`)
+      toast.success(`WSL에 \`${next.commandName}\`을(를) 등록했습니다.`)
     } catch (error) {
       if (mountedRef.current) {
         toast.error(
-          error instanceof Error ? error.message : `Failed to register \`${commandName}\` in WSL.`
+          error instanceof Error
+            ? error.message
+            : `WSL에 \`${commandName}\`을(를) 등록하지 못했습니다.`
         )
       }
     } finally {
@@ -95,11 +97,13 @@ export function WslCliRegistration({
       }
       setStatus(next)
       setDialogOpen(false)
-      toast.success(`Removed \`${next.commandName}\` from WSL.`)
+      toast.success(`WSL에서 \`${next.commandName}\`을(를) 제거했습니다.`)
     } catch (error) {
       if (mountedRef.current) {
         toast.error(
-          error instanceof Error ? error.message : `Failed to remove \`${commandName}\` from WSL.`
+          error instanceof Error
+            ? error.message
+            : `WSL에서 \`${commandName}\`을(를) 제거하지 못했습니다.`
         )
       }
     } finally {
@@ -114,11 +118,11 @@ export function WslCliRegistration({
       <div className="space-y-3 rounded-xl border border-border/60 bg-card/50 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-0.5">
-            <Label>WSL shell command</Label>
+            <Label>WSL 셸 명령</Label>
             <p className="text-xs text-muted-foreground">
               {loading
-                ? 'Checking WSL CLI registration...'
-                : (status?.detail ?? 'Register `korca-ide` in ~/.local/bin inside WSL.')}
+                ? 'WSL CLI 등록 상태를 확인하는 중...'
+                : (status?.detail ?? 'WSL 내부 ~/.local/bin에 `korca-ide`를 등록합니다.')}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -130,13 +134,13 @@ export function WslCliRegistration({
                     size="icon-xs"
                     onClick={() => void refreshStatus()}
                     disabled={loading || busyAction !== null}
-                    aria-label="Refresh WSL CLI status"
+                    aria-label="WSL CLI 상태 새로고침"
                   >
                     <RefreshCw className="size-3.5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Refresh
+                  새로고침
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -160,14 +164,14 @@ export function WslCliRegistration({
 
         {status?.commandPath ? (
           <p className="text-xs text-muted-foreground">
-            Command path:{' '}
+            명령 경로:{' '}
             <code className="rounded bg-muted px-1 py-0.5 text-[11px]">{status.commandPath}</code>
           </p>
         ) : null}
 
         {status?.state === 'stale' && status.currentTarget ? (
           <p className="text-xs text-amber-600 dark:text-amber-400">
-            Existing launcher target: <code>{status.currentTarget}</code>
+            기존 실행기 대상: <code>{status.currentTarget}</code>
           </p>
         ) : null}
       </div>
@@ -177,18 +181,18 @@ export function WslCliRegistration({
           <DialogHeader>
             <DialogTitle>
               {isEnabled
-                ? `Remove \`${commandName}\` from WSL?`
-                : `Register \`${commandName}\` in WSL?`}
+                ? `WSL에서 \`${commandName}\`을(를) 제거하시겠습니까?`
+                : `WSL에 \`${commandName}\`을(를) 등록하시겠습니까?`}
             </DialogTitle>
             <DialogDescription>
               {isEnabled
-                ? 'This removes the WSL shell command. Korca itself remains installed on Windows.'
-                : `Korca will register ${status?.commandPath ?? commandName} so the command works from WSL terminals.`}
+                ? '이 작업은 WSL 셸 명령만 제거합니다. Korca 자체는 Windows에 그대로 남습니다.'
+                : `Korca가 ${status?.commandPath ?? commandName}을(를) 등록해 WSL 터미널에서도 명령을 사용할 수 있게 합니다.`}
             </DialogDescription>
           </DialogHeader>
           {status?.commandPath ? (
             <p className="text-xs text-muted-foreground">
-              Target path:{' '}
+              대상 경로:{' '}
               <code className="rounded bg-muted px-1 py-0.5 text-[11px]">{status.commandPath}</code>
             </p>
           ) : null}
@@ -198,19 +202,19 @@ export function WslCliRegistration({
               onClick={() => setDialogOpen(false)}
               disabled={busyAction !== null}
             >
-              Cancel
+              취소
             </Button>
             <Button
               onClick={() => void (isEnabled ? handleRemove() : handleInstall())}
               disabled={busyAction !== null || !isSupported}
             >
               {busyAction === 'remove'
-                ? 'Removing...'
+                ? '제거 중...'
                 : busyAction === 'install'
-                  ? 'Registering...'
+                  ? '등록 중...'
                   : isEnabled
-                    ? 'Remove'
-                    : 'Register'}
+                    ? '제거'
+                    : '등록'}
             </Button>
           </DialogFooter>
         </DialogContent>

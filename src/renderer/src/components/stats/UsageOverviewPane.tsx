@@ -44,9 +44,9 @@ function formatPercent(value: number | null): string {
 
 function formatUpdatedAt(timestamp: number | null): string {
   if (!timestamp) {
-    return 'Not scanned yet'
+    return '아직 스캔하지 않음'
   }
-  return `Updated ${new Date(timestamp).toLocaleString()}`
+  return `업데이트됨 ${new Date(timestamp).toLocaleString()}`
 }
 
 function formatDayLabel(day: string): string {
@@ -61,19 +61,19 @@ function TokenMixBar({ overview }: { overview: UsageOverviewModel }): React.JSX.
   const segments = [
     {
       key: 'new-input',
-      label: 'New input',
+      label: '새 입력',
       value: overview.newInputTokens,
       className: 'bg-foreground'
     },
     {
       key: 'output',
-      label: 'Output',
+      label: '출력',
       value: overview.outputTokens,
       className: 'bg-muted-foreground'
     },
     {
       key: 'cache',
-      label: 'Cache',
+      label: '캐시',
       value: overview.cacheTokens,
       className: 'bg-border'
     }
@@ -86,14 +86,14 @@ function TokenMixBar({ overview }: { overview: UsageOverviewModel }): React.JSX.
     <section className="rounded-lg border border-border/60 bg-card/40 p-4">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h4 className="text-sm font-semibold text-foreground">Token mix</h4>
+          <h4 className="text-sm font-semibold text-foreground">토큰 구성</h4>
           <p className="text-xs text-muted-foreground">
-            Combined input, output, and cache tokens across enabled providers.
+            활성화된 제공자 전체의 입력, 출력, 캐시 토큰 합계입니다.
           </p>
         </div>
         {overview.reasoningTokens > 0 ? (
           <Badge variant="outline" className="shrink-0">
-            {formatUsageTokens(overview.reasoningTokens)} reasoning
+            {formatUsageTokens(overview.reasoningTokens)} 추론
           </Badge>
         ) : null}
       </div>
@@ -101,7 +101,7 @@ function TokenMixBar({ overview }: { overview: UsageOverviewModel }): React.JSX.
       {mixTotal > 0 ? (
         <div
           className="flex h-3 overflow-hidden rounded-full border border-border/60 bg-muted"
-          aria-label="Combined token mix"
+          aria-label="토큰 구성 합계"
         >
           {segments.map((segment) =>
             segment.value > 0 ? (
@@ -143,21 +143,21 @@ function DailyIntensityGrid({
     <section className="rounded-lg border border-border/60 bg-card/40 p-4">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h4 className="text-sm font-semibold text-foreground">Daily intensity</h4>
+          <h4 className="text-sm font-semibold text-foreground">일간 밀도</h4>
           <p className="text-xs text-muted-foreground">
-            Recent combined Claude, Codex, and OpenCode token activity.
+            최근 Claude, Codex, OpenCode 토큰 활동입니다.
           </p>
         </div>
         {bestDay && bestDay.totalTokens > 0 ? (
           <Badge variant="outline" className="shrink-0">
-            Best: {formatDayLabel(bestDay.day)}
+            최고: {formatDayLabel(bestDay.day)}
           </Badge>
         ) : null}
       </div>
 
       <div
         className="grid grid-cols-[repeat(14,minmax(0,1fr))] gap-1 sm:grid-cols-[repeat(21,minmax(0,1fr))]"
-        aria-label="Recent token activity heatmap"
+        aria-label="최근 토큰 활동 히트맵"
       >
         {days.map((day) => (
           <div
@@ -170,7 +170,7 @@ function DailyIntensityGrid({
 
       <div className="mt-3 flex items-center justify-between gap-3 text-xs text-muted-foreground">
         <span>{formatDayLabel(days[0]?.day ?? '')}</span>
-        <span>Less</span>
+        <span>적음</span>
         <div className="flex items-center gap-1" aria-hidden>
           {[0, 1, 2, 3, 4].map((intensity) => (
             <span
@@ -179,7 +179,7 @@ function DailyIntensityGrid({
             />
           ))}
         </div>
-        <span>More</span>
+        <span>많음</span>
         <span>{formatDayLabel(days.at(-1)?.day ?? '')}</span>
       </div>
     </section>
@@ -196,7 +196,7 @@ function ProviderRow({
   onEnable: () => void
 }): React.JSX.Element {
   const share = totalTokens > 0 ? provider.totalTokens / totalTokens : 0
-  const status = provider.enabled ? (provider.isScanning ? 'Scanning' : 'Enabled') : 'Off'
+  const status = provider.enabled ? (provider.isScanning ? '스캔 중' : '활성') : '끔'
   const statusVariant = provider.enabled ? 'secondary' : 'outline'
 
   return (
@@ -208,21 +208,21 @@ function ProviderRow({
             <Badge variant={statusVariant}>{status}</Badge>
           </div>
           <p className="mt-1 truncate text-xs text-muted-foreground">
-            {provider.topModel ?? 'No model yet'}
+            {provider.topModel ?? '아직 모델 없음'}
             {provider.topProject ? ` - ${provider.topProject}` : ''}
           </p>
         </div>
         {!provider.enabled ? (
           <Button variant="outline" size="xs" onClick={onEnable}>
-            Enable
+            활성화
           </Button>
         ) : null}
       </div>
 
       <div className="mt-3 grid gap-2 text-xs text-muted-foreground sm:grid-cols-3">
-        <span>{formatUsageTokens(provider.totalTokens)} tokens</span>
+        <span>{formatUsageTokens(provider.totalTokens)} 토큰</span>
         <span>
-          {provider.sessions.toLocaleString()} sessions - {provider.activityCount.toLocaleString()}{' '}
+          {provider.sessions.toLocaleString()} 세션 - {provider.activityCount.toLocaleString()}{' '}
           {provider.activityLabel}
         </span>
         <span>{formatUsageCost(provider.estimatedCostUsd)}</span>
@@ -320,7 +320,7 @@ export function UsageOverviewPane(): React.JSX.Element {
       <section className="rounded-lg border border-border/60 bg-card/30 p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h3 className="text-sm font-semibold text-foreground">Usage Overview</h3>
+            <h3 className="text-sm font-semibold text-foreground">사용량 개요</h3>
             <p className="mt-1 text-xs text-muted-foreground">
               {formatUpdatedAt(overview.lastUpdatedAt)}
               {overview.hasPartialCost ? ' - some model prices are unavailable' : ''}
@@ -333,13 +333,13 @@ export function UsageOverviewPane(): React.JSX.Element {
                 size="icon-xs"
                 onClick={handleRefresh}
                 disabled={!overview.hasAnyEnabledProvider || isScanning}
-                aria-label="Refresh usage overview"
+                aria-label="사용량 개요 새로고침"
               >
                 <RefreshCw className={`size-3.5 ${isScanning ? 'animate-spin' : ''}`} />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              Refresh
+              새로고침
             </TooltipContent>
           </Tooltip>
         </div>
@@ -348,9 +348,9 @@ export function UsageOverviewPane(): React.JSX.Element {
           <div className="mt-4 rounded-lg border border-dashed border-border/60 bg-card/30 px-4 py-5">
             <div className="max-w-xl space-y-3">
               <div>
-                <h4 className="text-sm font-semibold text-foreground">Start tracking tokens</h4>
+                <h4 className="text-sm font-semibold text-foreground">토큰 추적 시작</h4>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Enable a provider to scan local agent logs and build the combined token ledger.
+                  제공자를 활성화해 로컬 에이전트 로그를 스캔하고 합산 토큰 장부를 만드세요.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -361,7 +361,7 @@ export function UsageOverviewPane(): React.JSX.Element {
                     void enableClaudeUsage()
                   }}
                 >
-                  Enable Claude
+                  Claude 활성화
                 </Button>
                 <Button
                   variant="secondary"
@@ -371,7 +371,7 @@ export function UsageOverviewPane(): React.JSX.Element {
                     void enableCodexUsage()
                   }}
                 >
-                  Enable Codex
+                  Codex 활성화
                 </Button>
                 <Button
                   variant="outline"
@@ -381,7 +381,7 @@ export function UsageOverviewPane(): React.JSX.Element {
                     void enableOpenCodeUsage()
                   }}
                 >
-                  Enable OpenCode
+                  OpenCode 활성화
                 </Button>
               </div>
             </div>
@@ -405,7 +405,7 @@ export function UsageOverviewPane(): React.JSX.Element {
                 icon={<CalendarDays className="size-4" />}
               />
               <StatCard
-                label="Cache share"
+                label="캐시 비중"
                 value={formatPercent(overview.cacheShare)}
                 icon={<DatabaseZap className="size-4" />}
               />
@@ -429,7 +429,7 @@ export function UsageOverviewPane(): React.JSX.Element {
       <section className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h4 className="text-sm font-semibold text-foreground">Providers</h4>
+            <h4 className="text-sm font-semibold text-foreground">제공자</h4>
             <p className="text-xs text-muted-foreground">
               {overview.enabledProviderCount} enabled - {overview.dataProviderCount} with data
             </p>

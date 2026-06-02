@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: this animation is a self-contained storyboard; splitting the phase markup from its timing constants would make the sequence harder to verify. */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { JSX } from 'react'
@@ -63,10 +64,10 @@ function CursorIcon(): JSX.Element {
 }
 
 const RUN_QUEUE: readonly { name: string; desc: string }[] = [
-  { name: 'dashboard.spec.ts', desc: '› renders metrics' },
-  { name: 'profile.spec.ts', desc: '› updates avatar' },
-  { name: 'invoices.spec.ts', desc: '› exports CSV' },
-  { name: 'settings.spec.ts', desc: '› toggles dark mode' }
+  { name: 'dashboard.spec.ts', desc: '› 지표를 렌더링함' },
+  { name: 'profile.spec.ts', desc: '› 아바타를 업데이트함' },
+  { name: 'invoices.spec.ts', desc: '› CSV를 내보냄' },
+  { name: 'settings.spec.ts', desc: '› 다크 모드를 전환함' }
 ]
 
 type Phase =
@@ -122,7 +123,7 @@ const FINAL_HOLD_MS = 1800
 const RUN_TICK_MS = 2400
 
 const CLAUDE_CMD = 'claude'
-const REVIEW_PROMPT = 'review src/auth for missing error handling'
+const REVIEW_PROMPT = 'src/auth의 누락된 오류 처리를 검토해 주세요'
 const RESPONSE_WIDTHS = [72, 88, 64, 78] as const
 
 export function WorkbenchAnimatedVisual(props: { reducedMotion: boolean }): JSX.Element {
@@ -373,15 +374,15 @@ export function WorkbenchAnimatedVisual(props: { reducedMotion: boolean }): JSX.
             <Prompt>$</Prompt>
             <span className="text-foreground">pnpm playwright test</span>
           </TermLine>
-          <TermLine muted>Running 12 tests using 4 workers</TermLine>
+          <TermLine muted>4개 워커로 테스트 12개 실행 중</TermLine>
           <TermLine>
             <PwCheck />
-            <PwIdx>1</PwIdx>login.spec.ts<PwName> › can sign in</PwName>
+            <PwIdx>1</PwIdx>login.spec.ts<PwName> › 로그인할 수 있음</PwName>
             <PwDur>(1.2s)</PwDur>
           </TermLine>
           <TermLine>
             <PwCheck />
-            <PwIdx>2</PwIdx>checkout.spec.ts<PwName> › cart total updates</PwName>
+            <PwIdx>2</PwIdx>checkout.spec.ts<PwName> › 장바구니 합계가 갱신됨</PwName>
             <PwDur>(0.8s)</PwDur>
           </TermLine>
           <TermLine>
@@ -442,8 +443,8 @@ export function WorkbenchAnimatedVisual(props: { reducedMotion: boolean }): JSX.
       {/* Standalone keyboard hint stays inside the visual so the tour copy can
           remain a single subheader line. */}
       <div className="border-t border-border bg-card px-3 py-2 text-[11px] text-muted-foreground">
-        Same pane: <kbd className={KBD_CLASS}>{splitRightShortcutLabel}</kbd> splits right ·{' '}
-        <kbd className={KBD_CLASS}>{splitDownShortcutLabel}</kbd> splits down
+        같은 창: <kbd className={KBD_CLASS}>{splitRightShortcutLabel}</kbd>는 오른쪽으로 분할 ·{' '}
+        <kbd className={KBD_CLASS}>{splitDownShortcutLabel}</kbd>는 아래로 분할
       </div>
     </div>
   )
@@ -527,7 +528,7 @@ function ContextMenu(props: {
         <span className="inline-flex items-center justify-center text-muted-foreground">
           <SplitRightIcon />
         </span>
-        <span className="whitespace-nowrap leading-none">Split Terminal Right</span>
+        <span className="whitespace-nowrap leading-none">터미널을 오른쪽으로 분할</span>
         <span className="font-mono text-[11px] text-muted-foreground">
           {props.splitRightShortcutLabel}
         </span>
@@ -536,7 +537,7 @@ function ContextMenu(props: {
         <span className="inline-flex items-center justify-center text-muted-foreground">
           <SplitDownIcon />
         </span>
-        <span className="whitespace-nowrap leading-none">Split Terminal Down</span>
+        <span className="whitespace-nowrap leading-none">터미널을 아래로 분할</span>
         <span className="font-mono text-[11px] text-muted-foreground">
           {props.splitDownShortcutLabel}
         </span>
@@ -570,7 +571,7 @@ function RightPaneScrollback(props: { lines: readonly RightLine[] }): JSX.Elemen
         if (line.kind === 'session-started') {
           return (
             <TermLine key={i} muted>
-              <span className="mr-1.5 text-foreground">●</span>Claude Code session started
+              <span className="mr-1.5 text-foreground">●</span>Claude Code 세션 시작됨
             </TermLine>
           )
         }
@@ -586,7 +587,7 @@ function RightPaneScrollback(props: { lines: readonly RightLine[] }): JSX.Elemen
           return (
             <TermLine key={i}>
               <RunSpinner />
-              <span className="text-muted-foreground">Thinking…</span>
+              <span className="text-muted-foreground">생각하는 중…</span>
             </TermLine>
           )
         }

@@ -38,7 +38,7 @@ export function MobileSettingsPane({
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 shrink space-y-1.5">
-              <Label>Mobile</Label>
+              <Label>모바일</Label>
               <p className="text-xs text-muted-foreground">
                 Control Korca from your phone by scanning a QR code. Beta / early preview &mdash;
                 expect bugs and breaking changes. Get the iOS app from the{' '}

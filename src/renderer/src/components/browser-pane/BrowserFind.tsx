@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronUp, ChevronDown, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -150,13 +151,13 @@ export default function BrowserFind({
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Find in page..."
+        placeholder="페이지에서 찾기..."
         className="min-w-0 flex-1 border-none bg-transparent text-sm text-white outline-none placeholder:text-zinc-500"
       />
 
       {query ? (
         <span className="shrink-0 text-xs text-zinc-400">
-          {totalMatches > 0 ? `${activeMatch} of ${totalMatches}` : 'No matches'}
+          {totalMatches > 0 ? `${activeMatch} / ${totalMatches}` : '일치 항목 없음'}
         </span>
       ) : null}
 
@@ -168,7 +169,7 @@ export default function BrowserFind({
         size="icon-xs"
         onClick={findPrevious}
         className="flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 hover:text-zinc-200"
-        title="Previous match"
+        title="이전 일치 항목"
       >
         <ChevronUp size={14} />
       </Button>
@@ -179,7 +180,7 @@ export default function BrowserFind({
         size="icon-xs"
         onClick={findNext}
         className="flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 hover:text-zinc-200"
-        title="Next match"
+        title="다음 일치 항목"
       >
         <ChevronDown size={14} />
       </Button>
@@ -192,7 +193,7 @@ export default function BrowserFind({
         size="icon-xs"
         onClick={onClose}
         className="flex size-6 shrink-0 items-center justify-center rounded text-zinc-400 hover:text-zinc-200"
-        title="Close"
+        title="닫기"
       >
         <X size={14} />
       </Button>

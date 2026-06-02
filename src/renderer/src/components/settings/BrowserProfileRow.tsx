@@ -58,7 +58,7 @@ export function BrowserProfileRow({
     if (result.ok) {
       const browser = detectedBrowsers.find((b) => b.family === browserFamily)
       toast.success(
-        `Imported ${result.summary.importedCookies} cookies from ${browser?.label ?? browserFamily}${browserProfile ? ` (${browserProfile})` : ''} into ${profile.label}.`
+        `${browser?.label ?? browserFamily}${browserProfile ? ` (${browserProfile})` : ''}에서 ${result.summary.importedCookies}개의 쿠키를 ${profile.label} 프로필로 가져왔습니다.`
       )
     } else {
       toast.error(result.reason)
@@ -69,7 +69,7 @@ export function BrowserProfileRow({
     const result = await useAppStore.getState().importCookiesToProfile(profile.id)
     if (result.ok) {
       toast.success(
-        `Imported ${result.summary.importedCookies} cookies from file into ${profile.label}.`
+        `파일에서 ${result.summary.importedCookies}개의 쿠키를 ${profile.label} 프로필로 가져왔습니다.`
       )
     } else if (result.reason !== 'canceled') {
       toast.error(result.reason)
@@ -105,14 +105,14 @@ export function BrowserProfileRow({
           <span className="truncate text-sm font-medium">{profile.label}</span>
           {isActive ? (
             <span className="shrink-0 rounded border border-border/50 px-1.5 text-[10px] font-medium leading-4 text-foreground/80">
-              Active
+              활성
             </span>
           ) : null}
         </div>
         {sourceLabel ? (
           <p className="truncate text-[11px] text-muted-foreground">{sourceLabel}</p>
         ) : (
-          <p className="text-[11px] text-muted-foreground">No cookies imported</p>
+          <p className="text-[11px] text-muted-foreground">가져온 쿠키 없음</p>
         )}
       </div>
       <div className="flex shrink-0 items-center gap-1" onClick={(e) => e.stopPropagation()}>
@@ -137,14 +137,14 @@ export function BrowserProfileRow({
               ) : (
                 <Import className="size-3" />
               )}
-              Import Cookies
+              쿠키 가져오기
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {detectedBrowsers.map((browser) =>
               browser.profiles.length > 1 ? (
                 <DropdownMenuSub key={browser.family}>
-                  <DropdownMenuSubTrigger>From {browser.label}</DropdownMenuSubTrigger>
+                  <DropdownMenuSubTrigger>{browser.label}에서</DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
                       {browser.profiles.map((bp) => (
@@ -165,13 +165,13 @@ export function BrowserProfileRow({
                   key={browser.family}
                   onSelect={() => void handleImportFromBrowser(browser.family)}
                 >
-                  From {browser.label}
+                  {browser.label}에서
                 </DropdownMenuItem>
               )
             )}
             {detectedBrowsers.length > 0 && <DropdownMenuSeparator />}
             <DropdownMenuItem onSelect={() => void handleImportFromFile()}>
-              From File…
+              파일에서…
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -184,7 +184,7 @@ export function BrowserProfileRow({
             onClick={async () => {
               const ok = await useAppStore.getState().clearDefaultSessionCookies()
               if (ok) {
-                toast.success('Default cookies cleared.')
+                toast.success('기본 쿠키를 지웠습니다.')
               }
             }}
           >
@@ -198,7 +198,7 @@ export function BrowserProfileRow({
             onClick={async () => {
               const ok = await useAppStore.getState().deleteBrowserSessionProfile(profile.id)
               if (ok) {
-                toast.success(`Profile "${profile.label}" removed.`)
+                toast.success(`"${profile.label}" 프로필을 제거했습니다.`)
               }
             }}
           >

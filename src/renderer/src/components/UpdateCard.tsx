@@ -74,7 +74,7 @@ function CompactCardContent({
           size="icon"
           className="size-7 shrink-0"
           onClick={onClose}
-          aria-label="Dismiss"
+          aria-label="닫기"
         >
           <X className="size-3.5" />
         </Button>
@@ -427,16 +427,16 @@ export function UpdateCard() {
     status.state === 'checking'
       ? '업데이트를 확인하는 중'
       : status.state === 'not-available'
-      ? '최신 버전을 사용 중입니다'
-      : status.state === 'available'
-        ? '업데이트 사용 가능'
-        : status.state === 'downloading'
-          ? '업데이트를 다운로드하는 중'
-          : status.state === 'downloaded'
-            ? '업데이트 설치 준비 완료'
-            : status.state === 'error'
-              ? '업데이트 오류'
-              : '업데이트 상태'
+        ? '최신 버전을 사용 중입니다'
+        : status.state === 'available'
+          ? '업데이트 사용 가능'
+          : status.state === 'downloading'
+            ? '업데이트를 다운로드하는 중'
+            : status.state === 'downloaded'
+              ? '업데이트 설치 준비 완료'
+              : status.state === 'error'
+                ? '업데이트 오류'
+                : '업데이트 상태'
 
   // ── Card wrapper ──────────────────────────────────────────────────
 
@@ -571,7 +571,7 @@ export function UpdateCard() {
               size="icon"
               className="size-7 shrink-0"
               onClick={markReassuranceSeen}
-              aria-label="Dismiss tip"
+              aria-label="팁 닫기"
             >
               <X className="size-3.5" />
             </Button>
@@ -626,13 +626,13 @@ function RichCardContent({
   return (
     <div className="flex flex-col gap-3 p-4">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="text-sm font-semibold">New: {release.title}</h3>
+        <h3 className="text-sm font-semibold">새 소식: {release.title}</h3>
         <Button
           variant="ghost"
           size="icon"
           className="size-7 shrink-0 min-w-[44px] min-h-[44px] -m-2"
           onClick={onClose}
-          aria-label="Dismiss update"
+          aria-label="업데이트 닫기"
         >
           <X className="size-3.5" />
         </Button>
@@ -667,7 +667,7 @@ function RichCardContent({
               className="text-xs text-muted-foreground/70 underline hover:text-foreground inline"
               onClick={() => void window.api.shell.openUrl(release.releaseNotesUrl)}
             >
-              +{releasesBehind - 1} more since your last update
+              +최근 업데이트 이후 {releasesBehind - 1}개 더
             </button>
           </>
         )}
@@ -677,11 +677,11 @@ function RichCardContent({
         className="text-xs text-muted-foreground underline hover:text-foreground self-start"
         onClick={() => void window.api.shell.openUrl(release.releaseNotesUrl)}
       >
-        Read the full release notes
+        전체 릴리스 노트 읽기
       </button>
 
       <Button variant="default" size="sm" onClick={onUpdate} className="w-full cursor-pointer">
-        Update
+        업데이트
       </Button>
     </div>
   )
@@ -703,29 +703,27 @@ function SimpleCardContent({
   return (
     <div className="flex flex-col gap-2.5 p-3.5">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="text-sm font-semibold">Update Available</h3>
+        <h3 className="text-sm font-semibold">업데이트 가능</h3>
         <Button
           variant="ghost"
           size="icon"
           className="size-7 shrink-0 min-w-[44px] min-h-[44px] -m-2"
           onClick={onClose}
-          aria-label="Dismiss update"
+          aria-label="업데이트 닫기"
         >
           <X className="size-3.5" />
         </Button>
       </div>
 
-      <p className="text-sm text-muted-foreground">Korca v{version} is ready.</p>
+      <p className="text-sm text-muted-foreground">Korca v{version}을 사용할 수 있습니다.</p>
 
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        Sessions won&apos;t be interrupted.
-      </p>
+      <p className="text-xs leading-relaxed text-muted-foreground">세션은 중단되지 않습니다.</p>
 
       <button
         className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground self-start"
         onClick={() => void window.api.shell.openUrl(releaseUrl)}
       >
-        Release notes
+        릴리스 노트
       </button>
 
       <Button
@@ -734,7 +732,7 @@ function SimpleCardContent({
         onClick={onUpdate}
         className="mt-0.5 w-full cursor-pointer"
       >
-        Update
+        업데이트
       </Button>
     </div>
   )
@@ -771,7 +769,7 @@ function DownloadingContent({
     <div className="flex flex-col gap-3 p-4">
       <div className="flex items-start justify-between gap-2">
         {release ? (
-          <h3 className="text-sm font-semibold">New: {release.title}</h3>
+          <h3 className="text-sm font-semibold">새 소식: {release.title}</h3>
         ) : (
           <h3 className="text-sm font-semibold">업데이트 다운로드 중</h3>
         )}

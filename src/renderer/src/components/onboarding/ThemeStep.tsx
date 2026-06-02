@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change, react-doctor/no-derived-state-effect, react-doctor/no-initialize-state -- pre-existing patterns, predate these rules */
 import { useEffect, useState } from 'react'
 import { Check, Monitor, Moon, Settings2, Sun } from 'lucide-react'
 import { toast } from 'sonner'
@@ -181,9 +182,9 @@ export function ThemeStep({ theme, onThemeChange, settings, updateSettings }: Th
     hint: string
     icon: typeof Monitor
   }[] = [
-    { id: 'system', label: 'System', hint: 'Match OS', icon: Monitor },
-    { id: 'dark', label: 'Dark', hint: 'Easy on the eyes', icon: Moon },
-    { id: 'light', label: 'Light', hint: 'Bright & crisp', icon: Sun }
+    { id: 'system', label: '시스템', hint: 'OS와 일치', icon: Monitor },
+    { id: 'dark', label: '다크', hint: '눈에 편안한', icon: Moon },
+    { id: 'light', label: '라이트', hint: '밝고 선명한', icon: Sun }
   ]
 
   return (
@@ -232,7 +233,7 @@ export function ThemeStep({ theme, onThemeChange, settings, updateSettings }: Th
       <div className="flex items-center gap-2 px-1 text-[12px] text-muted-foreground">
         <Settings2 className="size-3.5" />
         <span>
-          More terminal options, including font, cursor, and palette, in{' '}
+          글꼴, 커서, 팔레트를 포함한 추가 터미널 옵션은{' '}
           <span className="font-medium text-foreground">설정 → 터미널</span>
         </span>
       </div>
@@ -390,24 +391,24 @@ function humanFields(diff: Partial<GlobalSettings>): string[] {
   // stays tidy. Anything in the diff that doesn't match a label still gets
   // imported; it just isn't surfaced as a chip.
   const groups: { label: string; keys: (keyof GlobalSettings)[] }[] = [
-    { label: 'Font', keys: ['terminalFontFamily', 'terminalFontSize', 'terminalFontWeight'] },
+    { label: '글꼴', keys: ['terminalFontFamily', 'terminalFontSize', 'terminalFontWeight'] },
     {
-      label: 'Cursor',
+      label: '커서',
       keys: ['terminalCursorStyle', 'terminalCursorBlink', 'terminalCursorOpacity']
     },
-    { label: 'Theme palette', keys: ['terminalThemeDark', 'terminalThemeLight'] },
-    { label: 'Colors', keys: ['terminalColorOverrides'] },
-    { label: 'Padding', keys: ['terminalPaddingX', 'terminalPaddingY'] },
+    { label: '테마 팔레트', keys: ['terminalThemeDark', 'terminalThemeLight'] },
+    { label: '색상', keys: ['terminalColorOverrides'] },
+    { label: '여백', keys: ['terminalPaddingX', 'terminalPaddingY'] },
     {
-      label: 'Window',
+      label: '창',
       keys: ['terminalBackgroundOpacity', 'windowBackgroundBlur', 'terminalInactivePaneOpacity']
     },
     {
-      label: 'Dividers',
+      label: '구분선',
       keys: ['terminalDividerColorDark', 'terminalDividerColorLight']
     },
-    { label: 'Mouse', keys: ['terminalMouseHideWhileTyping', 'terminalFocusFollowsMouse'] },
-    { label: 'macOS Option key', keys: ['terminalMacOptionAsAlt'] }
+    { label: '마우스', keys: ['terminalMouseHideWhileTyping', 'terminalFocusFollowsMouse'] },
+    { label: 'macOS Option 키', keys: ['terminalMacOptionAsAlt'] }
   ]
   return groups.filter(({ keys }) => keys.some((k) => k in diff)).map(({ label }) => label)
 }

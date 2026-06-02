@@ -607,7 +607,7 @@ function ResourceTree({
                 type="button"
                 onClick={() => toggleRepo(group.repoId)}
                 className="pl-2 py-2 pr-0.5 transition-colors hover:bg-muted/50"
-                aria-label={repoCollapsed ? 'Expand repo' : 'Collapse repo'}
+                aria-label={repoCollapsed ? '저장소 펼치기' : '저장소 접기'}
               >
                 {repoCollapsed ? (
                   <ChevronRight className="h-3 w-3 text-muted-foreground" />
@@ -622,7 +622,7 @@ function ResourceTree({
                   </span>
                   {group.hasRemoteChildren && (
                     <span className="shrink-0 text-[9px] uppercase tracking-wide text-muted-foreground/70">
-                      · remote
+                      · 원격
                     </span>
                   )}
                 </span>
@@ -1193,7 +1193,7 @@ export function ResourceUsageStatusSegment({
           <div className="flex min-w-0 items-center gap-1.5 text-[11px] font-medium text-foreground">
             <MemoryStick className="size-3 shrink-0 text-muted-foreground" />
             <span className="truncate">
-              {runtimeEnvironmentActive ? 'Resource Manager' : 'Resource Manager - Terminals'}
+              {runtimeEnvironmentActive ? '리소스 관리자' : '리소스 관리자 - 터미널'}
             </span>
           </div>
 
@@ -1204,14 +1204,16 @@ export function ResourceUsageStatusSegment({
                   type="button"
                   onClick={() => daemonActions.setPending('restart')}
                   disabled={daemonActions.isBusy || runtimeEnvironmentActive}
-                  aria-label="Restart daemon"
+                  aria-label="데몬 다시 시작"
                   className="inline-flex size-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40"
                 >
                   <RotateCw className="size-3" />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={6}>
-                {runtimeEnvironmentActive ? 'Unavailable for runtime servers' : 'Restart daemon'}
+                {runtimeEnvironmentActive
+                  ? '런타임 서버에서는 사용할 수 없습니다'
+                  : '데몬 다시 시작'}
               </TooltipContent>
             </Tooltip>
             <Tooltip delayDuration={200}>
@@ -1220,14 +1222,16 @@ export function ResourceUsageStatusSegment({
                   type="button"
                   onClick={() => daemonActions.setPending('killAll')}
                   disabled={daemonActions.isBusy || runtimeEnvironmentActive}
-                  aria-label="Kill all sessions"
+                  aria-label="모든 세션 종료"
                   className="inline-flex size-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive disabled:opacity-40"
                 >
                   <Trash2 className="size-3" />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={6}>
-                {runtimeEnvironmentActive ? 'Unavailable for runtime servers' : 'Kill all sessions'}
+                {runtimeEnvironmentActive
+                  ? '런타임 서버에서는 사용할 수 없습니다'
+                  : '모든 세션 종료'}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -1237,9 +1241,9 @@ export function ResourceUsageStatusSegment({
           <div className="flex items-start gap-2 border-b border-border bg-yellow-500/10 px-3 py-2 text-[11px] text-foreground">
             <AlertTriangle className="mt-0.5 size-3 shrink-0 text-yellow-500" />
             <div className="flex-1">
-              <div className="font-medium">Daemon is not responding</div>
+              <div className="font-medium">데몬이 응답하지 않습니다</div>
               <div className="text-muted-foreground">
-                Resource snapshots and terminal sessions are unavailable.
+                리소스 스냅샷과 터미널 세션을 사용할 수 없습니다.
               </div>
             </div>
             <Button
@@ -1250,7 +1254,7 @@ export function ResourceUsageStatusSegment({
               disabled={daemonActions.isBusy}
             >
               <RotateCw className="mr-1 size-3" />
-              Restart
+              다시 시작
             </Button>
           </div>
         )}
@@ -1261,7 +1265,7 @@ export function ResourceUsageStatusSegment({
             role="status"
           >
             <AlertTriangle className="size-3 shrink-0 text-yellow-500" />
-            <span>Terminal sessions unavailable. The list may be stale.</span>
+            <span>터미널 세션을 사용할 수 없습니다. 목록이 오래되었을 수 있습니다.</span>
           </div>
         )}
 

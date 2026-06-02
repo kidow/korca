@@ -236,7 +236,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
           // Why: linked metadata is persisted immediately, but GitHub details
           // arrive asynchronously. Show the durable link number instead of
           // making the worktree look unlinked while the cache warms.
-          title: issue === null ? 'Issue details unavailable' : 'Loading issue...'
+          title: issue === null ? '이슈 세부 정보를 불러올 수 없습니다' : '이슈를 불러오는 중...'
         }
       : null)
   const linearIssue: LinearIssue | null | undefined = worktree.linkedLinearIssue
@@ -255,8 +255,8 @@ const WorktreeCard = React.memo(function WorktreeCard({
           identifier: worktree.linkedLinearIssue,
           title:
             linearIssueEntry || linearIssueFallbackEntry
-              ? 'Linear issue details unavailable'
-              : 'Loading Linear issue...'
+              ? 'Linear 이슈 정보를 불러올 수 없습니다'
+              : 'Linear 이슈를 불러오는 중...'
         }
     : null
   const isDeleting = deleteState?.isDeleting ?? false
@@ -457,13 +457,9 @@ const WorktreeCard = React.memo(function WorktreeCard({
     [showDeleteQuickAction, worktree.id]
   )
 
-  const unreadTooltip = worktree.isUnread ? 'Mark read' : 'Mark unread'
-  const childWorkspaceLabel = `${lineageChildCount} child ${
-    lineageChildCount === 1 ? 'workspace' : 'workspaces'
-  }`
-  const childWorkspaceShortLabel = `${lineageChildCount} ${
-    lineageChildCount === 1 ? 'child' : 'children'
-  }`
+  const unreadTooltip = worktree.isUnread ? '읽음으로 표시' : '읽지 않음으로 표시'
+  const childWorkspaceLabel = `${lineageChildCount}개의 하위 작업 공간`
+  const childWorkspaceShortLabel = `${lineageChildCount}개`
   const showLineageChildChip = lineageChildCount > 0 && onLineageToggle !== undefined
 
   const handleDragStart = useCallback(
@@ -631,7 +627,9 @@ const WorktreeCard = React.memo(function WorktreeCard({
         onEditIssue={handleEditIssue}
         onEditComment={handleEditComment}
         onOpenGitHubIssueInKorca={
-          metaIssue && 'url' in metaIssue && metaIssue.url ? handleOpenGitHubIssueInKorca : undefined
+          metaIssue && 'url' in metaIssue && metaIssue.url
+            ? handleOpenGitHubIssueInKorca
+            : undefined
         }
         onOpenLinearIssueInKorca={linearIssue?.url ? handleOpenLinearIssueInKorca : undefined}
         onOpenReviewInKorca={
@@ -728,7 +726,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
                   </span>
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={8}>
-                  {isSshDisconnected ? 'SSH disconnected' : 'Remote project via SSH'}
+                  {isSshDisconnected ? 'SSH 연결 끊김' : 'SSH 원격 프로젝트'}
                 </TooltipContent>
               </Tooltip>
             )}
@@ -770,11 +768,11 @@ const WorktreeCard = React.memo(function WorktreeCard({
                     variant="outline"
                     className="h-[16px] px-1.5 text-[10px] font-medium rounded shrink-0 leading-none text-foreground/70 border-foreground/20 bg-foreground/[0.06]"
                   >
-                    primary
+                    기본
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={8}>
-                  Primary worktree (original clone directory)
+                  기본 작업 공간(원본 복제 디렉터리)
                 </TooltipContent>
               </Tooltip>
             )}
@@ -791,7 +789,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={8} className="max-w-72">
                   <div className="space-y-1">
-                    <div>Partial checkout. Files outside these paths are not on disk.</div>
+                    <div>부분 체크아웃입니다. 이 경로 밖의 파일은 디스크에 없습니다.</div>
                     {worktree.sparseDirectories && worktree.sparseDirectories.length > 0 ? (
                       <div className="font-mono text-[11px] opacity-80">
                         {formatSparseDirectoryPreview(worktree.sparseDirectories)}
@@ -820,15 +818,12 @@ const WorktreeCard = React.memo(function WorktreeCard({
               {showTitleRowPrimary && (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span
-                      className="shrink-0 inline-flex items-center"
-                      aria-label="Primary worktree"
-                    >
+                    <span className="shrink-0 inline-flex items-center" aria-label="기본 작업 공간">
                       <Star className="size-3 fill-amber-400 text-amber-400" />
                     </span>
                   </TooltipTrigger>
                   <TooltipContent side="right" sideOffset={8}>
-                    Primary worktree (original clone directory)
+                    기본 작업 공간(원본 복제 디렉터리)
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -846,13 +841,13 @@ const WorktreeCard = React.memo(function WorktreeCard({
                         'group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100',
                         'text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive'
                       )}
-                      aria-label="Delete workspace"
+                      aria-label="작업 공간 삭제"
                     >
                       <Trash2 className="size-3.5" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="right" sideOffset={8}>
-                    Delete workspace
+                    작업 공간 삭제
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -877,7 +872,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
                   variant="secondary"
                   className="h-[16px] px-1.5 text-[10px] font-medium rounded shrink-0 text-muted-foreground bg-accent border border-border dark:bg-accent/80 dark:border-border/50 leading-none"
                 >
-                  {repo ? getRepoKindLabel(repo) : 'Folder'}
+                  {repo ? getRepoKindLabel(repo) : '폴더'}
                 </Badge>
               ) : showBranch ? (
                 <span className="min-w-0 text-[11px] text-muted-foreground truncate leading-none">
@@ -912,7 +907,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
           <div className="mt-0.5 flex items-start gap-1.5 rounded border border-amber-500/25 bg-amber-500/5 px-1.5 py-1 text-[10.5px] leading-snug text-amber-700 dark:text-amber-300">
             <AlertTriangle className="mt-[1px] size-3 shrink-0" />
             <span className="min-w-0 flex-1">
-              {remoteBranchConflict.remote}/{remoteBranchConflict.branchName} already exists.
+              {remoteBranchConflict.remote}/{remoteBranchConflict.branchName}이 이미 존재합니다.
             </span>
           </div>
         )}
@@ -943,7 +938,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
                   variant="ghost"
                   size="xs"
                   className="relative z-10 h-[18px] max-w-[8rem] gap-1 rounded-md border border-sidebar-border bg-sidebar px-1.5 text-[10px] font-medium leading-none text-muted-foreground shadow-none hover:bg-sidebar-accent hover:text-foreground focus-visible:ring-1 focus-visible:ring-sidebar-ring"
-                  aria-label={`${lineageCollapsed ? 'Show' : 'Hide'} ${childWorkspaceLabel}`}
+                  aria-label={`${lineageCollapsed ? '표시' : '숨기기'} ${childWorkspaceLabel}`}
                   aria-expanded={!lineageCollapsed}
                   onClick={onLineageToggle}
                 >
@@ -958,7 +953,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right" sideOffset={8}>
-                {lineageCollapsed ? 'Show child workspaces' : 'Hide child workspaces'}
+                {lineageCollapsed ? '하위 작업 공간 표시' : '하위 작업 공간 숨기기'}
               </TooltipContent>
             </Tooltip>
           </div>

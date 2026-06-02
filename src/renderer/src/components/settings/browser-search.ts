@@ -23,13 +23,13 @@ export function getBrowserPaneSearchEntries(
 ): SettingsSearchEntry[] {
   return [
     {
-      title: 'Default Home Page',
-      description: 'URL opened when creating a new browser tab. Leave empty to open a blank tab.',
+      title: '기본 홈 페이지',
+      description: '새 브라우저 탭을 만들 때 열 URL입니다. 비워 두면 빈 탭이 열립니다.',
       keywords: ['browser', 'home', 'homepage', 'default', 'url', 'new tab', 'blank', 'landing']
     },
     {
-      title: 'Default Search Engine',
-      description: 'Search engine used when typing non-URL text in the address bar.',
+      title: '기본 검색 엔진',
+      description: '주소창에 URL이 아닌 텍스트를 입력할 때 사용할 검색 엔진입니다.',
       keywords: [
         'browser',
         'search',
@@ -46,7 +46,7 @@ export function getBrowserPaneSearchEntries(
       ]
     },
     {
-      title: 'Link Routing',
+      title: '링크 라우팅',
       description: getBrowserLinkRoutingDescription(platform),
       keywords: [
         'browser',
@@ -62,9 +62,9 @@ export function getBrowserPaneSearchEntries(
       ]
     },
     {
-      title: 'Session & Cookies',
+      title: '세션 및 쿠키',
       description:
-        'Import cookies from Chrome, Edge, or other browsers to use existing logins inside Korca.',
+        'Chrome, Edge 또는 다른 브라우저의 쿠키를 가져와 Korca 안에서 기존 로그인 정보를 사용합니다.',
       keywords: [
         'browser',
         'cookies',

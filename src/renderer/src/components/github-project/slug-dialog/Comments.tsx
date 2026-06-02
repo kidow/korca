@@ -30,7 +30,7 @@ export function CommentsList({
   return (
     <div className="flex flex-col gap-3">
       {comments.length === 0 ? (
-        <div className="text-xs italic text-muted-foreground">No comments yet.</div>
+        <div className="text-xs italic text-muted-foreground">댓글이 아직 없습니다.</div>
       ) : (
         comments.map((c) => (
           <CommentRow
@@ -114,10 +114,10 @@ function CommentRow({
               setEditing(true)
             }}
           >
-            Edit
+            편집
           </button>
           <button type="button" className="hover:underline" onClick={() => void onDelete()}>
-            Delete
+            삭제
           </button>
         </div>
       </div>
@@ -137,10 +137,10 @@ function CommentRow({
                 void onEdit(draft)
               }}
             >
-              Save
+              저장
             </Button>
             <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>
-              Cancel
+              취소
             </Button>
           </div>
         </div>

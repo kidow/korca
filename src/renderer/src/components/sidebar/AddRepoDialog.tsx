@@ -365,13 +365,13 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
   const handleAddLocalPath = useCallback(
     async (path: string, source: AddRepoExistingWorkspaceSource) => {
       if (settings?.activeRuntimeEnvironmentId?.trim()) {
-        toast.error('Use a server path to add projects from a remote runtime.')
+        toast.error('원격 런타임에서 프로젝트를 추가하려면 서버 경로를 사용하세요.')
         closeModal()
         return
       }
       const gen = ++localAddGenRef.current
       setIsAdding(true)
-      setAddProjectBusyLabel('Scanning for repositories...')
+      setAddProjectBusyLabel('저장소를 검색하는 중...')
       try {
         const attemptId = createNestedRepoTelemetryAttemptId()
         const scanId = createNestedRepoScanId()
@@ -424,7 +424,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
           })
           return
         }
-        setAddProjectBusyLabel('Opening project...')
+        setAddProjectBusyLabel('프로젝트를 여는 중...')
         const repo = await addRepoPath(path)
         if (gen !== localAddGenRef.current) {
           return
@@ -552,7 +552,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
         if (!firstRepoId) {
           const firstFailure = result.projects.find((entry) => entry.status === 'failed')?.error
           if (gen === nestedImportGenRef.current) {
-            toast.error('No repositories imported', {
+            toast.error('가져온 저장소가 없습니다', {
               description: firstFailure ?? undefined
             })
           }
@@ -578,7 +578,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
         }
         if (result.failedCount > 0) {
           if (gen === nestedImportGenRef.current) {
-            toast.warning('Some repositories could not be imported', {
+            toast.warning('일부 저장소를 가져오지 못했습니다', {
               description: `${result.failedCount} failed`
             })
           }
@@ -626,7 +626,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
       }
       const gen = ++serverAddGenRef.current
       setIsAddingServerPath(true)
-      setAddProjectBusyLabel(kind === 'git' ? 'Scanning for repositories...' : 'Opening folder...')
+      setAddProjectBusyLabel(kind === 'git' ? '저장소를 검색하는 중...' : '폴더를 여는 중...')
       try {
         if (kind === 'git') {
           const attemptId = createNestedRepoTelemetryAttemptId()
@@ -691,7 +691,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
             return
           }
         }
-        setAddProjectBusyLabel(kind === 'git' ? 'Opening project...' : 'Opening folder...')
+        setAddProjectBusyLabel(kind === 'git' ? '프로젝트를 여는 중...' : '폴더를 여는 중...')
         const repo = await addRepoPath(path, kind)
         if (gen !== serverAddGenRef.current) {
           return
@@ -734,7 +734,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
     if (settings?.activeRuntimeEnvironmentId?.trim()) {
       // Why: the native folder picker returns a client-local path. Runtime
       // clone destinations must be typed as server paths.
-      toast.error('Enter a server path for the clone destination.')
+      toast.error('클론 대상 서버 경로를 입력하세요.')
       return
     }
     const gen = cloneGenRef.current
@@ -778,7 +778,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
       if (gen !== cloneGenRef.current) {
         return
       }
-      toast.success('Repository cloned', { description: repo.displayName })
+      toast.success('저장소를 클론했습니다', { description: repo.displayName })
       // Why: eagerly upsert so step 2 finds the repo before the IPC event.
       const state = useAppStore.getState()
       const existingIdx = state.repos.findIndex((r) => r.id === repo.id)
@@ -1002,7 +1002,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               onClick={handleBack}
             >
               <ArrowLeft className="size-3" />
-              Back
+              뒤로
             </button>
           )}
           {step === 'nested' && (
@@ -1012,7 +1012,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               onClick={handleBack}
             >
               <ArrowLeft className="size-3" />
-              Back
+              뒤로
             </button>
           )}
           {step === 'setup' && (
@@ -1037,9 +1037,9 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
         {step === 'add' && isRuntimeEnvironmentActive ? (
           <>
             <DialogHeader>
-              <DialogTitle>Add a server project</DialogTitle>
+              <DialogTitle>서버 프로젝트 추가</DialogTitle>
               <DialogDescription>
-                Add a Git repository or folder that already exists on the selected runtime server.
+                선택한 런타임 서버에 이미 있는 Git 저장소 또는 폴더를 추가합니다.
               </DialogDescription>
             </DialogHeader>
 
@@ -1049,7 +1049,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                   htmlFor="server-project-path"
                   className="text-[11px] font-medium text-muted-foreground block"
                 >
-                  Server path
+                  서버 경로
                 </label>
                 <Input
                   id="server-project-path"
@@ -1068,7 +1068,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                   disabled={!serverPath.trim() || isAddingServerPath}
                   className="h-10"
                 >
-                  Add Git Project
+                  Git 프로젝트 추가
                 </Button>
                 <Button
                   onClick={() => void handleAddServerPath('folder')}
@@ -1076,7 +1076,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                   variant="outline"
                   className="h-10"
                 >
-                  Open as Folder
+                  폴더로 열기
                 </Button>
               </div>
               {isAddingServerPath && addProjectBusyLabel ? (
@@ -1095,7 +1095,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                   disabled={isAddingServerPath}
                   className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-default disabled:opacity-40"
                 >
-                  Clone into server path
+                  서버 경로로 클론
                 </button>
                 <button
                   type="button"
@@ -1106,7 +1106,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                   disabled={isAddingServerPath}
                   className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-default disabled:opacity-40"
                 >
-                  Create on server
+                  서버에서 만들기
                 </button>
               </div>
             </div>
@@ -1114,11 +1114,11 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
         ) : step === 'add' ? (
           <>
             <DialogHeader>
-              <DialogTitle>Add a project</DialogTitle>
+              <DialogTitle>프로젝트 추가</DialogTitle>
               <DialogDescription>
                 {repos.length === 0
-                  ? 'Add a project to get started with Korca.'
-                  : 'Add another project to manage with Korca.'}
+                  ? 'Korca에서 시작하려면 프로젝트를 추가하세요.'
+                  : 'Korca에서 관리할 프로젝트를 하나 더 추가하세요.'}
               </DialogDescription>
             </DialogHeader>
 
@@ -1131,9 +1131,9 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               >
                 <FolderOpen className="size-6 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">Browse folder</p>
+                  <p className="text-sm font-medium">폴더 찾아보기</p>
                   <p className="text-[11px] text-muted-foreground font-normal mt-0.5">
-                    Local Git project or folder
+                    로컬 Git 프로젝트 또는 폴더
                   </p>
                 </div>
               </Button>
@@ -1146,9 +1146,9 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               >
                 <Globe className="size-6 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">Clone from URL</p>
+                  <p className="text-sm font-medium">URL에서 클론</p>
                   <p className="text-[11px] text-muted-foreground font-normal mt-0.5">
-                    Remote Git repository
+                    원격 Git 저장소
                   </p>
                 </div>
               </Button>
@@ -1161,9 +1161,9 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               >
                 <Monitor className="size-6 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">Remote project</p>
+                  <p className="text-sm font-medium">원격 프로젝트</p>
                   <p className="text-[11px] text-muted-foreground font-normal mt-0.5">
-                    SSH connected target
+                    SSH 연결 대상
                   </p>
                 </div>
               </Button>
@@ -1181,8 +1181,8 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                         variant="ghost"
                         size="icon-xs"
                         className="group text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive focus-visible:ring-destructive/40"
-                        aria-label="Stop scan"
-                        title="Stop scanning"
+                        aria-label="검색 중지"
+                        title="검색 중지"
                         onClick={handleStopNestedScan}
                       >
                         <Loader2 className="size-3.5 animate-spin text-annotation-highlight group-hover:hidden group-focus-visible:hidden" />
@@ -1190,7 +1190,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={4}>
-                      Scanning repositories. Click to stop.
+                      저장소를 검색 중입니다. 클릭하면 중지합니다.
                     </TooltipContent>
                   </Tooltip>
                 ) : null}
@@ -1201,7 +1201,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               <span className="grid size-6 shrink-0 place-items-center rounded-md border border-border bg-background text-foreground">
                 <Lightbulb className="size-3.5" />
               </span>
-              <span>Want to import many repos at once? Select the parent folder.</span>
+              <span>여러 저장소를 한 번에 가져오려면 상위 폴더를 선택하세요.</span>
             </div>
 
             {/* Secondary link rather than a fourth card — create-from-scratch
@@ -1216,7 +1216,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                 disabled={isAdding}
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-default disabled:opacity-40"
               >
-                Or start a new project from scratch
+                또는 새 프로젝트를 처음부터 시작
               </button>
             </div>
           </>
@@ -1267,7 +1267,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
         ) : step === 'nested' && nestedScan ? (
           <>
             <DialogHeader>
-              <DialogTitle>Import as project group</DialogTitle>
+              <DialogTitle>프로젝트 그룹으로 가져오기</DialogTitle>
               <div className="flex min-w-0 items-center gap-1.5">
                 {nestedScanInProgress ? (
                   <Tooltip>
@@ -1277,8 +1277,8 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                         variant="ghost"
                         size="icon-xs"
                         className="group text-muted-foreground hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10 focus-visible:text-destructive focus-visible:ring-destructive/40"
-                        aria-label="Stop scan"
-                        title="Stop scanning"
+                        aria-label="검색 중지"
+                        title="검색 중지"
                         onClick={handleStopNestedScan}
                       >
                         <Loader2 className="size-3.5 animate-spin text-annotation-highlight group-hover:hidden group-focus-visible:hidden" />
@@ -1286,16 +1286,14 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={4}>
-                      Scanning repositories. Click to stop.
+                      저장소를 검색 중입니다. 클릭하면 중지합니다.
                     </TooltipContent>
                   </Tooltip>
                 ) : null}
                 <DialogDescription className="min-w-0 truncate">
-                  {`${nestedScanInProgress ? 'Scanning... ' : ''}Found ${
+                  {`${nestedScanInProgress ? '검색 중... ' : ''}이 폴더에서 Git 저장소 ${
                     nestedScan.repos.length
-                  } git ${
-                    nestedScan.repos.length === 1 ? 'repository' : 'repositories'
-                  } in this folder.`}
+                  }개를 찾았습니다.`}
                 </DialogDescription>
               </div>
             </DialogHeader>
@@ -1307,7 +1305,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-medium text-foreground">
-                    Group under {nestedGroupName}
+                    {nestedGroupName} 아래로 그룹화
                   </div>
                   <div className="truncate text-[11px] text-muted-foreground">
                     {nestedScan.selectedPath}
@@ -1316,7 +1314,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               </div>
 
               <div className="min-w-0 space-y-1">
-                <label className="text-[11px] font-medium text-muted-foreground">Group name</label>
+                <label className="text-[11px] font-medium text-muted-foreground">그룹 이름</label>
                 <Input
                   value={nestedGroupName}
                   onChange={(event) => setNestedGroupName(event.target.value)}
@@ -1345,7 +1343,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                   variant="ghost"
                 >
                   <ArrowLeft className="size-3.5" />
-                  Back
+                  뒤로
                 </Button>
                 <div className="ml-auto flex min-w-0 flex-wrap justify-end gap-2">
                   <Button
@@ -1353,7 +1351,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                     disabled={isAdding || nestedScanInProgress || nestedSelectedPaths.size === 0}
                     variant="outline"
                   >
-                    Import separately
+                    각각 가져오기
                   </Button>
                   <Button
                     onClick={() => void handleImportNestedRepos('group')}
@@ -1364,7 +1362,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
                       !nestedGroupName.trim()
                     }
                   >
-                    Import as project group
+                    프로젝트 그룹으로 가져오기
                   </Button>
                 </div>
               </div>

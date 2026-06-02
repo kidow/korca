@@ -42,7 +42,7 @@ export function DiffNotesSendMenu({
   const scopes = useMemo<NotesSendMenuScope<DiffComment>[]>(() => {
     const allNotesScope = {
       id: 'all',
-      label: 'All unsent notes',
+      label: '보내지 않은 메모 전체',
       notes: unsentNotes,
       prompt: unsentPrompt
     }
@@ -52,7 +52,7 @@ export function DiffNotesSendMenu({
     return [
       {
         id: 'file',
-        label: 'This file',
+        label: '이 파일',
         notes: unsentFileNotes,
         prompt: unsentFilePrompt
       },

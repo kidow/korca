@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import { useEffect, useRef, useState } from 'react'
 import type { JSX, ReactNode } from 'react'
 import { Wrench } from 'lucide-react'
@@ -9,15 +10,15 @@ import { cn } from '@/lib/utils'
 type ClaudeActivity = { kind: 'tool'; tool: string; arg: string } | { kind: 'msg'; text: ReactNode }
 
 const CLAUDE_ACTIVITIES: readonly ClaudeActivity[] = [
-  { kind: 'tool', tool: 'Edit', arg: 'auth/withSession.ts' },
-  { kind: 'msg', text: 'Looking at the session middleware now…' },
+  { kind: 'tool', tool: '편집', arg: 'auth/withSession.ts' },
+  { kind: 'msg', text: '지금 세션 미들웨어를 보고 있습니다…' },
   { kind: 'tool', tool: 'Bash', arg: 'pnpm run typecheck:node' },
-  { kind: 'msg', text: 'Typecheck passes. Pulling on the login route next.' },
-  { kind: 'tool', tool: 'Read', arg: 'routes/login.ts' },
-  { kind: 'tool', tool: 'Edit', arg: 'middleware/session.ts' },
-  { kind: 'msg', text: 'Adding tests for the redirect path.' },
+  { kind: 'msg', text: '타입 검사는 통과했습니다. 다음은 로그인 라우트입니다.' },
+  { kind: 'tool', tool: '읽기', arg: 'routes/login.ts' },
+  { kind: 'tool', tool: '편집', arg: 'middleware/session.ts' },
+  { kind: 'msg', text: '리다이렉트 경로에 대한 테스트를 추가하는 중입니다.' },
   { kind: 'tool', tool: 'Bash', arg: 'pnpm test auth' },
-  { kind: 'tool', tool: 'Edit', arg: 'auth.test.ts' }
+  { kind: 'tool', tool: '편집', arg: 'auth.test.ts' }
 ]
 
 export function StatusesPage(props: { active: boolean; reducedMotion: boolean }): JSX.Element {
@@ -67,9 +68,7 @@ export function StatusesPage(props: { active: boolean; reducedMotion: boolean })
       <div className="rounded-[10px] bg-foreground/[0.05] px-2 py-2.5 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
         <div className="grid grid-cols-[14px_minmax(0,1fr)] items-center gap-3 px-1.5">
           <span className="inline-block size-[9px] rounded-full bg-emerald-500" />
-          <div className="truncate text-[15.5px] font-semibold leading-[1.2]">
-            redesign auth flow
-          </div>
+          <div className="truncate text-[15.5px] font-semibold leading-[1.2]">인증 흐름 재설계</div>
         </div>
         <div className="flex flex-col gap-3 pl-[30px] pr-2 pt-2.5 pb-1">
           <AgentRow
@@ -80,7 +79,7 @@ export function StatusesPage(props: { active: boolean; reducedMotion: boolean })
           >
             {revealed.codex ? (
               <span>
-                Wants to run <CodeChip>pnpm migrate latest</CodeChip>
+                <CodeChip>pnpm migrate latest</CodeChip> 실행을 원함
               </span>
             ) : (
               <Skel widthPct={64} />
@@ -103,7 +102,7 @@ export function StatusesPage(props: { active: boolean; reducedMotion: boolean })
           <AgentRow icon={<AgentIcon agent="opencode" size={18} />} name="OpenCode" state="done">
             {revealed.opencode ? (
               <span>
-                Updated <CodeChip>src/auth/session.test.ts</CodeChip>
+                <CodeChip>src/auth/session.test.ts</CodeChip> 업데이트됨
               </span>
             ) : (
               <Skel widthPct={56} />

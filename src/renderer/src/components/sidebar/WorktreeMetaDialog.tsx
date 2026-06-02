@@ -270,31 +270,31 @@ const WorktreeMetaDialog = React.memo(function WorktreeMetaDialog() {
         }}
       >
         <DialogHeader>
-          <DialogTitle className="text-sm">Edit Worktree Details</DialogTitle>
+          <DialogTitle className="text-sm">작업 공간 세부정보 편집</DialogTitle>
           <DialogDescription className="text-xs">
-            Edit GitHub links and notes for this workspace.
+            이 작업 공간의 GitHub 링크와 메모를 편집합니다.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-muted-foreground">Display Name</label>
+            <label className="text-[11px] font-medium text-muted-foreground">표시 이름</label>
             <Input
               ref={displayNameInputRef}
               value={displayNameInput}
               onChange={(e) => setDisplayNameInput(e.target.value)}
               onKeyDown={handleIssueKeyDown}
-              placeholder="Custom display name..."
+              placeholder="사용자 지정 표시 이름..."
               className="h-8 text-xs"
             />
             <p className="text-[10px] text-muted-foreground">
-              Only changes the name shown in the sidebar — the folder on disk stays the same. Leave
-              blank to use the branch or folder name.
+              사이드바에 보이는 이름만 바뀌고, 디스크의 폴더는 그대로 유지됩니다. 비워 두면 브랜치
+              또는 폴더 이름을 사용합니다.
             </p>
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-muted-foreground">GH Issue</label>
+            <label className="text-[11px] font-medium text-muted-foreground">GitHub 이슈</label>
             <div className="relative">
               <Input
                 ref={issueInputRef}
@@ -310,7 +310,7 @@ const WorktreeMetaDialog = React.memo(function WorktreeMetaDialog() {
                     type="button"
                     variant="ghost"
                     size="icon-xs"
-                    aria-label="Open GitHub issue"
+                    aria-label="GitHub 이슈 열기"
                     disabled={!canOpenIssue || openingIssue}
                     onClick={handleOpenIssue}
                     className="absolute right-1 top-1 text-muted-foreground"
@@ -323,17 +323,17 @@ const WorktreeMetaDialog = React.memo(function WorktreeMetaDialog() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top" sideOffset={4}>
-                  Open GitHub issue
+                  GitHub 이슈 열기
                 </TooltipContent>
               </Tooltip>
             </div>
             <p className="text-[10px] text-muted-foreground">
-              Paste an issue URL, or enter a number. Leave blank to remove the link.
+              이슈 URL을 붙여넣거나 번호를 입력하세요. 비워 두면 링크를 제거합니다.
             </p>
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-muted-foreground">GH PR</label>
+            <label className="text-[11px] font-medium text-muted-foreground">GitHub PR</label>
             <Input
               ref={prInputRef}
               value={prInput}
@@ -348,7 +348,7 @@ const WorktreeMetaDialog = React.memo(function WorktreeMetaDialog() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[11px] font-medium text-muted-foreground">Comment</label>
+            <label className="text-[11px] font-medium text-muted-foreground">댓글</label>
             <textarea
               ref={setCommentTextareaRef}
               value={commentInput}

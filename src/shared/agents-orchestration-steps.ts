@@ -19,22 +19,21 @@ export type AgentsStep = {
 export const AGENTS_STEPS: readonly AgentsStep[] = [
   {
     id: 'statuses',
-    name: 'Visibility',
-    subtitle: 'Agent Visibility',
-    description: 'Know which agents are working, waiting, live, or blocked.'
+    name: '가시성',
+    subtitle: '에이전트 가시성',
+    description: '어떤 에이전트가 작업 중인지, 대기 중인지, 실행 중인지, 막혔는지 확인합니다.'
   },
   {
     id: 'orchestration',
-    name: 'Orchestration',
-    subtitle: 'Orchestration',
-    description: 'Enable agents to manage and coordinate Korca workspaces to execute larger tasks.'
+    name: '오케스트레이션',
+    subtitle: '오케스트레이션',
+    description: '에이전트가 Korca 작업공간을 조율해 더 큰 작업을 처리하도록 합니다.'
   },
   {
     id: 'usage',
-    name: 'Usage',
-    subtitle: 'Usage',
-    description:
-      'Watch your usage and rate limits across every connected account, so you know when to switch.',
+    name: '사용량',
+    subtitle: '사용량',
+    description: '연결된 계정별 사용량과 rate limit을 확인해, 언제 전환해야 하는지 알 수 있습니다.',
     optional: true
   }
 ] as const

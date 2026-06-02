@@ -1,8 +1,6 @@
-import { useState } from 'react'
 import { Check, ExternalLink } from 'lucide-react'
 import { AGENT_CATALOG, AgentIcon } from '@/lib/agent-catalog'
 import { cn } from '@/lib/utils'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import type { TuiAgent } from '../../../../shared/types'
 
 type AgentStepProps = {
@@ -17,59 +15,38 @@ type AgentStepProps = {
 
 export function AgentStep({ selectedAgent, onSelect, detectedSet, isDetecting }: AgentStepProps) {
   const detected = AGENT_CATALOG.filter((agent) => detectedSet.has(agent.id))
-  const rest = AGENT_CATALOG.filter((agent) => !detectedSet.has(agent.id))
   const hasDetected = detected.length > 0
   const primary = hasDetected ? detected : AGENT_CATALOG.slice(0, 6)
-  const fallbackRest = hasDetected ? rest : AGENT_CATALOG.slice(6)
   const selectedEntry =
     selectedAgent && !detectedSet.has(selectedAgent)
       ? AGENT_CATALOG.find((a) => a.id === selectedAgent)
       : undefined
-  // Why: keep the collapsed bucket open when the selected agent lives there, so
-  // the active card is visible without forcing the user to expand the disclosure.
-  const selectedEntryIsCollapsed =
-    selectedAgent != null && fallbackRest.some((a) => a.id === selectedAgent)
-  // Why: one-way latch: auto-open when selection lands in the fallback bucket,
-  // but never force-close. The user can freely toggle via the native <details>
-  // disclosure once it's open; controlling `open` directly off the prop would
-  // slam it shut as soon as `selectedEntryIsCollapsed` flips back to false.
-  const [openState, setOpenState] = useState(selectedEntryIsCollapsed)
-  const [previousSelectedEntryIsCollapsed, setPreviousSelectedEntryIsCollapsed] =
-    useState(selectedEntryIsCollapsed)
-  if (selectedEntryIsCollapsed !== previousSelectedEntryIsCollapsed) {
-    setPreviousSelectedEntryIsCollapsed(selectedEntryIsCollapsed)
-    if (selectedEntryIsCollapsed && !openState) {
-      setOpenState(true)
-    }
-  }
-  const fallbackRestLabel = openState ? 'Hide agents' : `Show ${fallbackRest.length} more agents→`
   return (
     <div className="space-y-5">
       {!hasDetected && !isDetecting && (
         <div className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs text-amber-700 dark:text-amber-200/90">
-          No agents detected on your PATH. Pick one to install later, or continue with a blank
-          terminal.
+          PATH에서 감지된 에이전트가 없습니다. 나중에 하나를 설치하거나, 빈 터미널로 계속하세요.
         </div>
       )}
       {selectedEntry && (
         <div className="flex items-center justify-between gap-3 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-2.5 text-xs text-amber-700 dark:text-amber-200/90">
           <span>
-            <span className="font-medium">{selectedEntry.label}</span> isn&apos;t on your PATH yet.
-            Korca will set it as your default and you can install it any time.
+            <span className="font-medium">{selectedEntry.label}</span>은 PATH에 아직 없습니다.
+            Korca가 기본값으로 설정하며, 언제든 설치할 수 있습니다.
           </span>
           <button
             type="button"
             className="inline-flex shrink-0 items-center gap-1 rounded-md border border-amber-400/40 bg-amber-400/10 px-2 py-1 font-medium text-amber-800 hover:bg-amber-400/20 dark:text-amber-100"
             onClick={() => void window.api.shell.openUrl(selectedEntry.homepageUrl)}
           >
-            Install instructions
+            설치 안내
             <ExternalLink className="size-3" />
           </button>
         </div>
       )}
       <section className="space-y-3">
         <SectionHeader
-          label={hasDetected ? 'Detected on your system' : 'Popular agents'}
+          label={hasDetected ? '시스템에서 감지됨' : '인기 에이전트'}
           count={primary.length}
           showDetectedIndicator={hasDetected}
         />
@@ -84,25 +61,6 @@ export function AgentStep({ selectedAgent, onSelect, detectedSet, isDetecting }:
           ))}
         </div>
       </section>
-      {fallbackRest.length > 0 && (
-        <Collapsible className="space-y-3" open={openState} onOpenChange={setOpenState}>
-          <CollapsibleTrigger className="cursor-pointer text-xs font-medium text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 data-[state=open]:mb-3">
-            {fallbackRestLabel}
-          </CollapsibleTrigger>
-          <CollapsibleContent className="collapsible-height-content">
-            <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3">
-              {fallbackRest.map((agent) => (
-                <AgentButton
-                  key={agent.id}
-                  agent={agent}
-                  selected={selectedAgent === agent.id}
-                  onClick={() => onSelect(agent.id, true)}
-                />
-              ))}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      )}
     </div>
   )
 }

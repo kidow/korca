@@ -31,8 +31,8 @@ export function getRepoHeaderCreateState(input: {
   if (sshGate.selectedRepoRequiresConnection) {
     return {
       disabled: true,
-      tooltip: 'Reconnect SSH target before creating workspaces',
-      ariaLabel: `Reconnect SSH target before creating workspaces for ${input.label}`,
+      tooltip: '작업 공간을 만들기 전에 SSH 대상을 다시 연결하세요',
+      ariaLabel: `${input.label}의 작업 공간을 만들기 전에 SSH 대상을 다시 연결하세요`,
       requiresSshReconnect: true
     }
   }

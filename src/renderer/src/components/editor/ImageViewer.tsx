@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change, react-doctor/no-derived-state-effect, react-doctor/no-initialize-state -- pre-existing patterns, predate these rules */
 import { Image as ImageIcon, RotateCcw, ZoomIn, ZoomOut } from 'lucide-react'
 import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -215,7 +216,7 @@ export default function ImageViewer({
         )}
       >
         <ImageIcon size={40} />
-        <div>Failed to load file preview</div>
+        <div>파일 미리보기를 불러오지 못했습니다</div>
         <div className="max-w-md break-all text-center text-xs">{filename}</div>
       </div>
     )

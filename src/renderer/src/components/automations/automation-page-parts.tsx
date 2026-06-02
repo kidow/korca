@@ -5,7 +5,7 @@ import type { AutomationRun } from '../../../../shared/automations-types'
 
 export function formatAutomationDateTime(value: number | null | undefined): string {
   if (!value) {
-    return 'Never'
+    return '없음'
   }
   return new Intl.DateTimeFormat(undefined, {
     month: 'short',
@@ -71,23 +71,23 @@ export function getAutomationRunStatusVariant(
 export function getAutomationRunStatusLabel(status: AutomationRun['status']): string {
   switch (status) {
     case 'pending':
-      return 'Queued'
+      return '대기열'
     case 'dispatching':
-      return 'Starting'
+      return '시작 중'
     case 'dispatched':
-      return 'Launched'
+      return '실행됨'
     case 'completed':
-      return 'Done'
+      return '완료'
     case 'skipped_precheck':
-      return 'Precheck skipped'
+      return '사전 검사 건너뜀'
     case 'skipped_missed':
-      return 'Skipped'
+      return '건너뜀'
     case 'skipped_unavailable':
-      return 'Unavailable'
+      return '사용 불가'
     case 'skipped_needs_interactive_auth':
-      return 'Needs credentials'
+      return '자격 증명 필요'
     case 'dispatch_failed':
-      return 'Failed'
+      return '실패'
   }
 }
 

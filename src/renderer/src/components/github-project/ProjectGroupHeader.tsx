@@ -28,14 +28,14 @@ export default function ProjectGroupHeader({
       )}
     >
       {expanded ? <ChevronDown className="size-3.5" /> : <ChevronRight className="size-3.5" />}
-      <span className="font-medium">{group.label || 'All'}</span>
+      <span className="font-medium">{group.label || '전체'}</span>
       <span className="rounded-full border border-border/50 bg-background px-1.5 text-[10px] text-muted-foreground">
         {group.rows.length}
       </span>
       {dateRange ? <span className="text-[10px] text-muted-foreground">{dateRange}</span> : null}
       {isCurrent ? (
         <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-1.5 text-[10px] text-emerald-700 dark:text-emerald-300">
-          Current
+          현재
         </span>
       ) : null}
     </button>

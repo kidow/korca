@@ -41,8 +41,8 @@ export default function WorktreeVisibilityDialog(): React.JSX.Element | null {
           (worktree) => !worktree.selectedCheckout && worktree.ownership !== 'korca-managed'
         ).length
       : 0
-  const hiddenWorktreeLabel = `${hiddenCount} ${hiddenCount === 1 ? 'worktree' : 'worktrees'}`
-  const shownWorktreeLabel = `${otherCount} ${otherCount === 1 ? 'worktree' : 'worktrees'}`
+  const hiddenWorktreeLabel = `${hiddenCount} ${hiddenCount === 1 ? '작업 트리' : '작업 트리'}`
+  const shownWorktreeLabel = `${otherCount} ${otherCount === 1 ? '작업 트리' : '작업 트리'}`
 
   const handleToggle = useCallback(async () => {
     if (!repoId) {
@@ -61,7 +61,7 @@ export default function WorktreeVisibilityDialog(): React.JSX.Element | null {
     <Dialog open onOpenChange={(open) => !open && closeModal()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Non-Korca worktrees</DialogTitle>
+          <DialogTitle>Korca 외 작업 트리</DialogTitle>
           <DialogDescription>{repo.displayName}</DialogDescription>
         </DialogHeader>
 
@@ -71,12 +71,12 @@ export default function WorktreeVisibilityDialog(): React.JSX.Element | null {
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-medium">
-              {showOther ? 'Shown in sidebar' : 'Hidden from sidebar'}
+              {showOther ? '사이드바에 표시됨' : '사이드바에서 숨김'}
             </div>
             <div className="text-xs text-muted-foreground">
               {showOther
-                ? `${shownWorktreeLabel} currently shown`
-                : `${hiddenWorktreeLabel} available to import`}
+                ? `${shownWorktreeLabel}이(가) 현재 표시됩니다`
+                : `${hiddenWorktreeLabel}을(를) 가져올 수 있습니다`}
             </div>
           </div>
           <Button
@@ -84,7 +84,7 @@ export default function WorktreeVisibilityDialog(): React.JSX.Element | null {
             variant={showOther ? 'secondary' : 'outline'}
             onClick={handleToggle}
           >
-            {showOther ? 'Hide' : 'Import'}
+            {showOther ? '숨기기' : '가져오기'}
           </Button>
         </div>
       </DialogContent>

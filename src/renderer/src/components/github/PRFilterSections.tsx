@@ -22,16 +22,16 @@ export type SectionKey = 'status' | 'author' | 'label' | 'reviewer' | 'assignee'
 function statusLabel(parsed: ParsedTaskQuery): string {
   const parts: string[] = []
   if (parsed.state === 'open') {
-    parts.push('Open')
+    parts.push('열림')
   } else if (parsed.state === 'closed') {
-    parts.push('Closed')
+    parts.push('닫힘')
   } else if (parsed.state === 'merged') {
-    parts.push('Merged')
+    parts.push('병합됨')
   } else if (parsed.state === 'all') {
-    parts.push('All')
+    parts.push('전체')
   }
   if (parsed.draft) {
-    parts.push('Draft')
+    parts.push('초안')
   }
   return parts.join(' · ')
 }
@@ -48,15 +48,15 @@ function StatusSection({
   const states: { key: 'open' | 'closed' | 'merged' | 'all'; label: string }[] =
     kind === 'prs'
       ? [
-          { key: 'open', label: 'Open' },
-          { key: 'closed', label: 'Closed' },
-          { key: 'merged', label: 'Merged' },
-          { key: 'all', label: 'Any state' }
+          { key: 'open', label: '열림' },
+          { key: 'closed', label: '닫힘' },
+          { key: 'merged', label: '병합됨' },
+          { key: 'all', label: '전체 상태' }
         ]
       : [
-          { key: 'open', label: 'Open' },
-          { key: 'closed', label: 'Closed' },
-          { key: 'all', label: 'Any state' }
+          { key: 'open', label: '열림' },
+          { key: 'closed', label: '닫힘' },
+          { key: 'all', label: '전체 상태' }
         ]
   return (
     <div className="py-1 text-xs">
@@ -73,7 +73,7 @@ function StatusSection({
             )}
           >
             <span>{s.label}</span>
-            {active ? <span className="text-[10px] text-muted-foreground">selected</span> : null}
+            {active ? <span className="text-[10px] text-muted-foreground">선택됨</span> : null}
           </button>
         )
       })}
@@ -100,11 +100,11 @@ function DraftToggle({
           parsed.draft && 'bg-muted/40 font-medium'
         )}
       >
-        <span>Draft only</span>
+        <span>초안만</span>
         {parsed.draft ? (
-          <span className="text-[10px] text-muted-foreground">on</span>
+          <span className="text-[10px] text-muted-foreground">켜짐</span>
         ) : (
-          <span className="text-[10px] text-muted-foreground">off</span>
+          <span className="text-[10px] text-muted-foreground">꺼짐</span>
         )}
       </button>
     </>
@@ -139,34 +139,34 @@ export function SectionMenu({
 }): React.JSX.Element {
   const status = statusLabel(parsed)
   const rows: { key: SectionKey; label: string; value: string | null }[] = [
-    { key: 'status', label: 'Status', value: status || null },
-    { key: 'author', label: 'Author', value: parsed.author },
+    { key: 'status', label: '상태', value: status || null },
+    { key: 'author', label: '작성자', value: parsed.author },
     {
       key: 'label',
-      label: 'Label',
+      label: '레이블',
       value:
         parsed.labels.length === 0
           ? null
           : parsed.labels.length === 1
             ? parsed.labels[0]
-            : `${parsed.labels.length} labels`
+            : `레이블 ${parsed.labels.length}개`
     },
     ...(kind === 'prs'
       ? [
           {
             key: 'reviewer' as SectionKey,
-            label: reviewerKind === 'reviewed-by' ? 'Reviewed by' : 'Review from',
+            label: reviewerKind === 'reviewed-by' ? '검토한 사람' : '검토 요청',
             value: reviewerActive
           }
         ]
       : []),
-    { key: 'assignee', label: 'Assignee', value: parsed.assignee }
+    { key: 'assignee', label: '담당자', value: parsed.assignee }
   ]
-  const subject = kind === 'prs' ? 'pull requests' : 'issues'
+  const subject = kind === 'prs' ? '풀 리퀘스트' : '이슈'
   return (
     <div className="py-1 text-xs">
       <div className="px-3 py-1.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-        Filter {subject}
+        {subject} 필터
       </div>
       {rows.map((row) => (
         <button
@@ -190,7 +190,7 @@ export function SectionMenu({
             onClick={onClearAll}
             className="w-full px-3 py-1.5 text-left text-muted-foreground transition hover:bg-muted/50 hover:text-foreground"
           >
-            Clear all filters
+            모든 필터 지우기
           </button>
         </>
       ) : null}
@@ -237,7 +237,7 @@ export function SectionDetail({
         className="flex w-full items-center gap-1 border-b border-border px-3 py-1.5 text-[11px] text-muted-foreground transition hover:bg-muted/50 hover:text-foreground"
       >
         <ChevronRight className="size-3 rotate-180" />
-        Back
+        뒤로
       </button>
       {section === 'status' ? (
         <StatusSection parsed={parsed} kind={kind} onSelect={onSelect} />
@@ -248,8 +248,8 @@ export function SectionDetail({
           activeValue={parsed.author}
           loading={false}
           error={null}
-          searchPlaceholder="Filter or type a login..."
-          emptyText="No authors"
+          searchPlaceholder="로그인명으로 필터하거나 입력하세요..."
+          emptyText="작성자 없음"
           allowCustomValue
           renderOption={(opt) => <UserOptionRow option={opt} />}
           onSelect={(value) => onSelect({ author: value })}
@@ -261,8 +261,8 @@ export function SectionDetail({
           activeValue={parsed.assignee}
           loading={usersLoading}
           error={usersError}
-          searchPlaceholder="Filter or type a login..."
-          emptyText="No users"
+          searchPlaceholder="로그인명으로 필터하거나 입력하세요..."
+          emptyText="사용자 없음"
           allowCustomValue
           renderOption={(opt) => <UserOptionRow option={opt} />}
           onSelect={(value) => onSelect({ assignee: value })}
@@ -274,8 +274,8 @@ export function SectionDetail({
           selected={parsed.labels}
           loading={labelsLoading}
           error={labelsError}
-          searchPlaceholder="Filter labels..."
-          emptyText="No labels"
+          searchPlaceholder="레이블 필터..."
+          emptyText="레이블 없음"
           onChange={(next) => onSelect({ labels: next })}
         />
       ) : null}
@@ -292,7 +292,7 @@ export function SectionDetail({
                   : 'text-muted-foreground hover:bg-muted/50'
               )}
             >
-              Review requested
+              검토 요청
             </button>
             <button
               type="button"
@@ -304,7 +304,7 @@ export function SectionDetail({
                   : 'text-muted-foreground hover:bg-muted/50'
               )}
             >
-              Reviewed by
+              검토한 사람
             </button>
           </div>
           <SingleSelectList
@@ -312,8 +312,8 @@ export function SectionDetail({
             activeValue={reviewerMode === 'requested' ? parsed.reviewRequested : parsed.reviewedBy}
             loading={usersLoading}
             error={usersError}
-            searchPlaceholder="Filter or type a login..."
-            emptyText="No users"
+            searchPlaceholder="로그인명으로 필터하거나 입력하세요..."
+            emptyText="사용자 없음"
             allowCustomValue
             renderOption={(opt) => <UserOptionRow option={opt} />}
             onSelect={(login) =>

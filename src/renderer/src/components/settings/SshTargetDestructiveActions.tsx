@@ -199,7 +199,7 @@ export function SshTargetDestructiveActions({
       <SshDestructiveActionDialog
         open={!!pendingTerminate}
         title="End Remote Terminals?"
-        description="This will stop active terminal sessions on this SSH target. Reconnecting will not restore them."
+        description="이 작업은 이 SSH 대상의 활성 터미널 세션을 종료합니다. 다시 연결해도 복원되지 않습니다."
         targetLabel={pendingTerminate?.label}
         actionLabel="End Terminals"
         busyLabel="Ending"

@@ -19,7 +19,7 @@ type AgentLocationSettingProps = {
 }
 
 function getHostRuntimeLabel(): string {
-  return navigator.userAgent.includes('Windows') ? 'Windows' : 'This device'
+  return navigator.userAgent.includes('Windows') ? 'Windows' : '이 기기'
 }
 
 function getSelectedAgentRuntime(
@@ -44,7 +44,7 @@ function getSelectedAgentRuntime(
     return {
       runtime: 'wsl',
       wslDistro: selectedDistro,
-      label: selectedDistro ? `WSL ${selectedDistro}` : 'WSL default'
+      label: selectedDistro ? `WSL ${selectedDistro}` : 'WSL 기본값'
     }
   }
   return { runtime: 'host', label: getHostRuntimeLabel() }
@@ -77,17 +77,17 @@ export function AgentLocationSetting({
   return (
     <section className="space-y-3">
       <SettingsRow
-        label="Agent location"
+        label="에이전트 위치"
         alignTop
         description={
           agentRuntime.runtime === 'wsl' && !wslAvailable && !wslCapabilitiesLoading
-            ? 'WSL is not available on this machine.'
-            : `Show installed agents from ${agentRuntime.label}. Refresh re-checks PATH in that environment.`
+            ? '이 기기에서는 WSL을 사용할 수 없습니다.'
+            : `${agentRuntime.label}에 설치된 에이전트를 표시합니다. 새로고침하면 해당 환경의 PATH를 다시 확인합니다.`
         }
         control={
           <div className="flex w-44 flex-col items-stretch gap-2">
             <SettingsSegmentedControl
-              ariaLabel="Agent location"
+              ariaLabel="에이전트 위치"
               value={agentRuntime.runtime}
               onChange={(value) => updateAgentLocation({ localAgentRuntime: value })}
               equalWidth
@@ -117,11 +117,11 @@ export function AgentLocationSetting({
               >
                 <SelectTrigger size="sm" className="w-full min-w-44">
                   <SelectValue
-                    placeholder={wslCapabilitiesLoading ? 'Loading WSL' : 'WSL default'}
+                    placeholder={wslCapabilitiesLoading ? 'WSL 불러오는 중' : 'WSL 기본값'}
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__default__">WSL default</SelectItem>
+                  <SelectItem value="__default__">WSL 기본값</SelectItem>
                   {wslDistros.map((distro) => (
                     <SelectItem key={distro} value={distro}>
                       {distro}

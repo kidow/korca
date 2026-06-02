@@ -14,21 +14,21 @@ export type ReviewStep = {
 export const REVIEW_STEPS: readonly ReviewStep[] = [
   {
     id: 'notes',
-    name: 'Notes',
-    subtitle: 'Notes & diffs',
-    description: 'Send focused review notes to an agent.'
+    name: '노트',
+    subtitle: '노트 & diff',
+    description: '집중된 리뷰 노트를 에이전트에 보냅니다.'
   },
   {
     id: 'pr-view',
-    name: 'PR checks',
-    subtitle: 'PR checks & comments',
-    description: 'See PR status in the Checks tab.'
+    name: 'PR 확인',
+    subtitle: 'PR 확인 & 코멘트',
+    description: 'Checks 탭에서 PR 상태를 확인합니다.'
   },
   {
     id: 'ship',
-    name: 'Ship with AI',
-    subtitle: 'Ship with AI',
-    description: 'Let AI prepare commit and PR drafts for you.'
+    name: 'AI로 배포',
+    subtitle: 'AI로 배포',
+    description: 'AI가 커밋과 PR 초안을 준비하도록 합니다.'
   }
 ] as const
 

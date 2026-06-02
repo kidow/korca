@@ -18,7 +18,7 @@ export function HiddenExperimentalGroup(): React.JSX.Element {
 
       <div className="flex items-start justify-between gap-4 rounded-md border border-orange-500/30 bg-orange-500/10 px-3 py-2.5">
         <div className="min-w-0 shrink space-y-0.5">
-          <Label className="text-orange-600 dark:text-orange-300">Placeholder toggle</Label>
+          <Label className="text-orange-600 dark:text-orange-300">임시 토글</Label>
           <p className="text-xs text-orange-600/80 dark:text-orange-300/80">
             Does nothing today. Reserved as the first slot for hidden experimental options.
           </p>

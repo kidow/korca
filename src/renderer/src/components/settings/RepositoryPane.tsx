@@ -119,30 +119,29 @@ export function RepositoryPane({
   const allEntries = getRepositoryPaneSearchEntries(repo)
   const identityEntries = allEntries.filter((entry) =>
     [
-      'Display Name',
-      'Project Icon',
-      'Default Worktree Base',
-      'Worktree Location',
-      'Remove Project'
+      '표시 이름',
+      '프로젝트 아이콘',
+      '기본 워크트리 기준',
+      '워크트리 위치',
+      '프로젝트 제거'
     ].includes(entry.title)
   )
   const sparsePresetEntries = allEntries.filter((entry) =>
-    ['Sparse Checkout Presets'].includes(entry.title)
+    ['Sparse Checkout 프리셋'].includes(entry.title)
   )
   const hooksEntries = allEntries.filter((entry) =>
     [
-      'Setup Script',
-      'Archive Script',
-      'Advanced',
-      'When to Run Setup',
-      'Custom GitHub Issue Command'
+      '설정 스크립트',
+      '보관 스크립트',
+      '고급',
+      '설정 스크립트 실행 시점',
+      '사용자 지정 GitHub 이슈 명령'
     ].includes(entry.title)
   )
-  const mcpEntries = allEntries.filter((entry) => entry.title === 'MCP Configs')
-  const symlinkEntries = allEntries.filter((entry) => entry.title === 'Worktree Symlinks')
-  const sourceControlAiEntries = allEntries.filter((entry) => entry.title === 'Source Control AI')
-  const removeProjectLabel =
-    confirmingRemove === repo.id ? 'Confirm Remove Project' : 'Remove Project'
+  const mcpEntries = allEntries.filter((entry) => entry.title === 'MCP 구성')
+  const symlinkEntries = allEntries.filter((entry) => entry.title === '워크트리 심볼릭 링크')
+  const sourceControlAiEntries = allEntries.filter((entry) => entry.title === '소스 컨트롤 AI')
+  const removeProjectLabel = confirmingRemove === repo.id ? '프로젝트 제거 확인' : '프로젝트 제거'
 
   const hooksSection =
     !isFolder && (forceFullPaneForRepoMatch || matchesSettingsSearch(searchQuery, hooksEntries)) ? (
@@ -168,22 +167,22 @@ export function RepositoryPane({
       <section key="identity" className="relative space-y-8">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1 pr-12">
-            <h3 className="text-sm font-semibold">Identity</h3>
+            <h3 className="text-sm font-semibold">식별 정보</h3>
             <p className="text-xs text-muted-foreground">
-              Project-specific display details for the sidebar and tabs.
+              사이드바와 탭에 표시할 이 프로젝트의 표시 정보입니다.
             </p>
             <p className="text-xs text-muted-foreground">
               Type: <span className="text-foreground">{getRepoKindLabel(repo)}</span>
             </p>
             {isFolder ? (
               <p className="text-xs text-muted-foreground">
-                Opened as folder. Git features are unavailable for this workspace.
+                폴더로 열렸습니다. 이 작업 공간에서는 Git 기능을 사용할 수 없습니다.
               </p>
             ) : null}
           </div>
           <SearchableSetting
-            title="Remove Project"
-            description="Remove this project from Korca."
+            title="프로젝트 제거"
+            description="이 프로젝트를 Korca에서 제거합니다."
             keywords={[repo.displayName, 'delete', 'project', 'repository']}
             className="absolute top-0 right-0 z-10 w-auto max-w-none"
             forceVisible={forceFullPaneForRepoMatch}
@@ -209,13 +208,13 @@ export function RepositoryPane({
         </div>
 
         <SearchableSetting
-          title="Display Name"
-          description="Project-specific display details for the sidebar and tabs."
+          title="표시 이름"
+          description="사이드바와 탭에 표시할 이 프로젝트의 표시 정보입니다."
           keywords={[repo.displayName, repo.path, 'project name', 'repository name']}
           className="space-y-2"
           forceVisible={forceFullPaneForRepoMatch}
         >
-          <Label className="text-sm font-semibold">Display Name</Label>
+          <Label className="text-sm font-semibold">표시 이름</Label>
           <Input
             value={repo.displayName}
             onChange={(e) =>
@@ -228,8 +227,8 @@ export function RepositoryPane({
         </SearchableSetting>
 
         <SearchableSetting
-          title="Project Icon"
-          description="Project icon and color used in the sidebar and tabs."
+          title="프로젝트 아이콘"
+          description="사이드바와 탭에 사용할 프로젝트 아이콘과 색상입니다."
           keywords={[
             repo.displayName,
             repo.path,
@@ -250,13 +249,13 @@ export function RepositoryPane({
         {!isFolder ? (
           <>
             <SearchableSetting
-              title="Default Worktree Base"
-              description="Default base branch or ref when creating worktrees."
+              title="기본 워크트리 기준"
+              description="워크트리를 만들 때 사용할 기본 브랜치 또는 ref입니다."
               keywords={[repo.displayName, 'base ref', 'branch']}
               className="space-y-3"
               forceVisible={forceFullPaneForRepoMatch}
             >
-              <Label className="text-sm font-semibold">Default Worktree Base</Label>
+              <Label className="text-sm font-semibold">기본 작업 트리 기준</Label>
               <BaseRefPicker
                 repoId={repo.id}
                 currentBaseRef={repo.worktreeBaseRef}
@@ -266,8 +265,8 @@ export function RepositoryPane({
             </SearchableSetting>
 
             <SearchableSetting
-              title="Worktree Location"
-              description="Project-specific directory for new worktrees."
+              title="워크트리 위치"
+              description="새 워크트리를 위한 이 프로젝트 전용 디렉터리입니다."
               keywords={[
                 repo.displayName,
                 'worktree path',
@@ -280,7 +279,7 @@ export function RepositoryPane({
               forceVisible={forceFullPaneForRepoMatch}
             >
               <div className="flex items-center justify-between gap-3">
-                <Label className="text-sm font-semibold">Worktree Location</Label>
+                <Label className="text-sm font-semibold">작업 트리 위치</Label>
                 {repo.worktreeBasePath ? (
                   <Button
                     type="button"

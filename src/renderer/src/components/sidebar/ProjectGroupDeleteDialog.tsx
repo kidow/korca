@@ -76,10 +76,10 @@ export function ProjectGroupDeleteDialog({
         showCloseButton={false}
       >
         <DialogHeader>
-          <DialogTitle className="text-sm">Delete Project Group</DialogTitle>
+          <DialogTitle className="text-sm">프로젝트 그룹 삭제</DialogTitle>
           <DialogDescription className="text-xs">
-            Delete <span className="break-all font-medium text-foreground">{groupName}</span> and
-            ungroup its projects.
+            <span className="break-all font-medium text-foreground">{groupName}</span>을(를)
+            삭제하고 연결된 프로젝트를 그룹 해제합니다.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -90,7 +90,7 @@ export function ProjectGroupDeleteDialog({
             className="text-xs"
             onClick={() => onOpenChange(false)}
           >
-            Cancel
+            취소
           </Button>
           <Button
             type="button"
@@ -100,7 +100,7 @@ export function ProjectGroupDeleteDialog({
             disabled={deleting}
             onClick={handleConfirm}
           >
-            {deleting ? 'Deleting...' : 'Delete'}
+            {deleting ? '삭제 중...' : '삭제'}
           </Button>
         </DialogFooter>
       </DialogContent>

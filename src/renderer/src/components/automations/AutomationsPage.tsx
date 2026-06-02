@@ -175,7 +175,7 @@ function getExternalAutomationSourceKey(manager: ExternalAutomationManager): str
 
 function formatExternalDate(value: string | null, now: number): string {
   if (!value) {
-    return 'Never'
+    return '없음'
   }
   const parsed = Date.parse(value)
   if (!Number.isFinite(parsed)) {
@@ -189,7 +189,7 @@ function getExternalProviderLabel(manager: ExternalAutomationManager): string {
 }
 
 function getExternalTargetKindLabel(manager: ExternalAutomationManager): string {
-  return manager.target.type === 'ssh' ? 'Remote SSH' : 'Local'
+  return manager.target.type === 'ssh' ? '원격 SSH' : '로컬'
 }
 
 function isSshConnectionBusy(status: SshConnectionStatus | undefined): boolean {
@@ -199,11 +199,11 @@ function isSshConnectionBusy(status: SshConnectionStatus | undefined): boolean {
 function getExternalRunStatusLabel(run: ExternalAutomationRun): string {
   switch (run.status) {
     case 'completed':
-      return 'Completed'
+      return '완료'
     case 'failed':
-      return 'Failed'
+      return '실패'
     case 'unknown':
-      return 'Unknown'
+      return '알 수 없음'
   }
 }
 
@@ -931,7 +931,7 @@ export default function AutomationsPage(): React.JSX.Element {
         const repoTargetMatches =
           target.type === 'local' ? !repo.connectionId : repo.connectionId === target.connectionId
         if (!repoTargetMatches) {
-          toast.error('Choose a workspace on the same host as this Hermes automation.')
+          toast.error('이 Hermes 자동화와 같은 호스트의 워크스페이스를 선택하세요.')
           return
         }
         const schedule = buildHermesCronSchedule(draft)
@@ -965,7 +965,9 @@ export default function AutomationsPage(): React.JSX.Element {
             : null
         )
         toast.success(
-          editingExternalTarget ? 'Hermes automation updated.' : 'Hermes automation created.'
+          editingExternalTarget
+            ? 'Hermes 자동화를 업데이트했습니다.'
+            : 'Hermes 자동화를 만들었습니다.'
         )
         return
       }
@@ -1047,7 +1049,7 @@ export default function AutomationsPage(): React.JSX.Element {
       await refresh()
       selectAutomationId(automation.id)
       setCreateOpen(false)
-      toast.success(editingAutomationId ? 'Automation updated.' : 'Automation saved.')
+      toast.success(editingAutomationId ? '자동화를 업데이트했습니다.' : '자동화를 저장했습니다.')
     } catch (error) {
       if (isHermesSave) {
         await refresh().catch(() => undefined)
@@ -1119,7 +1121,7 @@ export default function AutomationsPage(): React.JSX.Element {
     await window.api.automations.runNow({ id: automation.id })
     await hydratePersistedUIState()
     await refresh()
-    toast.message('Automation run queued.')
+    toast.message('자동화 실행을 대기열에 넣었습니다.')
   }
 
   const rerunAutomationRun = async (automation: Automation, run: AutomationRun): Promise<void> => {
@@ -1135,7 +1137,7 @@ export default function AutomationsPage(): React.JSX.Element {
       await window.api.automations.runNow({ id: automationId })
       await hydratePersistedUIState()
       await refresh()
-      toast.message('Automation run queued.')
+      toast.message('자동화 실행을 대기열에 넣었습니다.')
     } catch (error) {
       toast.error(error instanceof Error ? error.message : '자동화 재실행에 실패했습니다.')
       await refresh()
@@ -1168,12 +1170,12 @@ export default function AutomationsPage(): React.JSX.Element {
       await refresh()
       toast.success(
         action === 'delete'
-          ? 'External automation deleted.'
+          ? '외부 자동화를 삭제했습니다.'
           : action === 'run'
-            ? 'External automation queued.'
+            ? '외부 자동화를 대기열에 넣었습니다.'
             : action === 'pause'
-              ? 'External automation paused.'
-              : 'External automation resumed.'
+              ? '외부 자동화를 일시 중지했습니다.'
+              : '외부 자동화를 재개했습니다.'
       )
     } catch (error) {
       await refresh().catch(() => undefined)
@@ -1445,8 +1447,8 @@ export default function AutomationsPage(): React.JSX.Element {
             <DialogTitle className="text-sm">자동화 삭제</DialogTitle>
             <DialogDescription className="text-xs">
               삭제 대상{' '}
-              <span className="break-all font-medium text-foreground">{deleteTarget?.name}</span>{' '}
-              와 실행 기록입니다. 이전 실행에서 만든 작업 공간은 삭제되지 않습니다.
+              <span className="break-all font-medium text-foreground">{deleteTarget?.name}</span> 와
+              실행 기록입니다. 이전 실행에서 만든 작업 공간은 삭제되지 않습니다.
             </DialogDescription>
           </DialogHeader>
           {deleteTarget ? (
@@ -1485,7 +1487,7 @@ export default function AutomationsPage(): React.JSX.Element {
                 setDontAskDeleteAgain(false)
               }}
             >
-                  취소
+              취소
             </Button>
             <Button
               ref={deleteConfirmButtonRef}
@@ -1545,7 +1547,7 @@ export default function AutomationsPage(): React.JSX.Element {
           ) : null}
           <DialogFooter>
             <Button variant="outline" onClick={() => setExternalDeleteTarget(null)}>
-                  취소
+              취소
             </Button>
             <Button
               ref={deleteConfirmButtonRef}
@@ -1564,8 +1566,8 @@ export default function AutomationsPage(): React.JSX.Element {
           <div className="scrollbar-sleek min-h-0 flex-1 overflow-auto p-2">
             {automations.length + externalAutomationEntries.length > 0 ? (
               <div className="grid grid-cols-[1fr_auto] gap-2 px-2 pb-2 text-[11px] font-medium uppercase text-muted-foreground">
-                <span>Automation</span>
-                <span>Next</span>
+                <span>자동화</span>
+                <span>다음 실행</span>
               </div>
             ) : null}
             {automations.map((automation) => {
@@ -1587,10 +1589,10 @@ export default function AutomationsPage(): React.JSX.Element {
                     )} est. · ${formatAutomationTokens(usageSummary.totalTokens)} tokens`
                   : usageSummary.unavailableRuns > 0
                     ? '사용량을 사용할 수 없음'
-                    : '아직 실행 사용량 없음'
+                    : '아직 실행 사용량이 없습니다.'
               const nextRunLabel = automation.enabled
                 ? formatAutomationDateTimeWithRelative(automation.nextRunAt, relativeNow)
-                : '일시중지됨'
+                : '일시 중지됨'
               const scheduleLabel = formatAutomationSchedule(automation.rrule)
               return (
                 <ContextMenu key={automation.id}>
@@ -1649,11 +1651,11 @@ export default function AutomationsPage(): React.JSX.Element {
                   <ContextMenuContent className="w-48">
                     <ContextMenuItem onSelect={() => void runNow(automation)}>
                       <Play className="size-3.5" />
-                      Run Now
+                      지금 실행
                     </ContextMenuItem>
                     <ContextMenuItem onSelect={() => void openEditDialog(automation)}>
                       <Pencil className="size-3.5" />
-                      Edit
+                      수정
                     </ContextMenuItem>
                     <ContextMenuItem onSelect={() => void toggleAutomation(automation)}>
                       {automation.enabled ? (
@@ -1761,10 +1763,10 @@ export default function AutomationsPage(): React.JSX.Element {
                           <span className="shrink-0">·</span>
                           <span className="truncate">
                             {entry.manager.provider === 'hermes'
-                              ? `${entry.job.runCount} ${entry.job.runCount === 1 ? 'run' : 'runs'}`
+                              ? `${entry.job.runCount}회`
                               : entry.manager.canManage
-                                ? 'Manageable'
-                                : 'Read-only'}
+                                ? '관리 가능'
+                                : '읽기 전용'}
                           </span>
                         </span>
                       </span>
@@ -1780,7 +1782,7 @@ export default function AutomationsPage(): React.JSX.Element {
                       onSelect={() => requestExternalAction(entry.manager, entry.job, 'run')}
                     >
                       <Play className="size-3.5" />
-                      Run Now
+                      지금 실행
                     </ContextMenuItem>
                     {entry.manager.provider === 'hermes' ? (
                       <ContextMenuItem
@@ -1788,7 +1790,7 @@ export default function AutomationsPage(): React.JSX.Element {
                         onSelect={() => openEditExternalDialog(entry.manager, entry.job)}
                       >
                         <Pencil className="size-3.5" />
-                        Edit
+                        수정
                       </ContextMenuItem>
                     ) : null}
                     <ContextMenuItem
@@ -1823,7 +1825,7 @@ export default function AutomationsPage(): React.JSX.Element {
             })}
             {automations.length === 0 && externalAutomationEntries.length === 0 ? (
               <div className="grid gap-2 p-2">
-                <div className="px-1 pb-1 text-sm font-medium">템플릿에서 시작</div>
+                <div className="px-1 pb-1 text-sm font-medium">템플릿으로 시작</div>
                 {AUTOMATION_TEMPLATES.map((template) => (
                   <button
                     key={template.id}

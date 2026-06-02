@@ -250,8 +250,8 @@ export default function TabGroupPanel({
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    aria-label="Pane Actions"
-                    title="Pane Actions"
+                    aria-label="패널 작업"
+                    title="패널 작업"
                     onClick={(event) => {
                       event.stopPropagation()
                     }}
@@ -267,7 +267,7 @@ export default function TabGroupPanel({
                     }}
                   >
                     <Columns2 className="size-4" />
-                    Split Right
+                    오른쪽으로 분할
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={() => {
@@ -275,7 +275,7 @@ export default function TabGroupPanel({
                     }}
                   >
                     <Rows2 className="size-4" />
-                    Split Down
+                    아래로 분할
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={() => {
@@ -283,7 +283,7 @@ export default function TabGroupPanel({
                     }}
                   >
                     <Columns2 className="size-4" />
-                    Split Left
+                    왼쪽으로 분할
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={() => {
@@ -291,7 +291,7 @@ export default function TabGroupPanel({
                     }}
                   >
                     <Rows2 className="size-4" />
-                    Split Up
+                    위로 분할
                   </DropdownMenuItem>
                   {hasSplitGroups ? (
                     <>
@@ -303,7 +303,7 @@ export default function TabGroupPanel({
                         }}
                       >
                         <X className="size-4" />
-                        Close Group
+                        그룹 닫기
                       </DropdownMenuItem>
                     </>
                   ) : null}

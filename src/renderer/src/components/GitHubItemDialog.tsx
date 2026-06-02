@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: the GH item dialog keeps its header, conversation, files, and checks tabs co-located so the read-only PR/Issue surface stays in one place while this view evolves. */
 import React, {
   Suspense,
@@ -290,7 +291,7 @@ type GitHubItemDialogProps = {
 function formatRelativeTime(input: string): string {
   const date = new Date(input)
   if (Number.isNaN(date.getTime())) {
-    return 'recently'
+    return '방금 전'
   }
   const diffMs = date.getTime() - Date.now()
   const diffMinutes = Math.round(diffMs / 60_000)
@@ -808,9 +809,7 @@ function PRReviewersPanel({
       <button
         key={`${options.suggested ? 'suggested' : 'reviewer'}:${reviewer.login}`}
         type="button"
-        aria-label={
-          selected ? `${reviewer.login} 검토 요청 취소` : `${reviewer.login} 검토 요청`
-        }
+        aria-label={selected ? `${reviewer.login} 검토 요청 취소` : `${reviewer.login} 검토 요청`}
         aria-pressed={selected}
         className={cn(
           'flex min-h-10 w-full items-center gap-2 border-b border-border/70 px-3 py-2 text-left text-[13px] outline-none last:border-b-0 hover:bg-accent/70 focus-visible:bg-accent focus-visible:text-accent-foreground',
@@ -1473,7 +1472,7 @@ function PRViewedCheckbox({
           type="button"
           role="checkbox"
           aria-checked={checked}
-          aria-label={`${checked ? 'Unmark' : 'Mark'} ${filePath} as viewed`}
+          aria-label={`${checked ? '확인 해제' : '확인 표시'} ${filePath}`}
           disabled={pending}
           onClick={(event) => {
             event.stopPropagation()
@@ -1499,11 +1498,11 @@ function PRViewedCheckbox({
               <Check className="size-3" strokeWidth={3} />
             ) : null}
           </span>
-          <span>Viewed</span>
+          <span>확인됨</span>
         </button>
       </TooltipTrigger>
       <TooltipContent side="bottom" sideOffset={4}>
-        {checked ? 'Unmark viewed' : 'Mark viewed'}
+        {checked ? '확인 해제' : '확인 표시'}
       </TooltipContent>
     </Tooltip>
   )
@@ -1747,7 +1746,7 @@ function PRFilesCombinedDiffViewer({
               originalIsBinary: false,
               modifiedIsBinary: false
             },
-            error: 'Diff unavailable because the PR commit SHAs are missing.'
+            error: 'PR 커밋 SHA가 없어서 diff를 표시할 수 없습니다.'
           }
         }
         const contents = await loadPRFileContents({
@@ -2002,14 +2001,14 @@ function PRFilesCombinedDiffViewer({
             className="w-20 text-left text-xs text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => setAllSectionsCollapsed(!allSectionsCollapsed)}
           >
-            {allSectionsCollapsed ? 'Expand All' : 'Collapse All'}
+            {allSectionsCollapsed ? '모두 펼치기' : '모두 접기'}
           </button>
           <button
             type="button"
             className="w-24 rounded border border-border px-2 py-0.5 text-center text-xs text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => setSideBySide((prev) => !prev)}
           >
-            {sideBySide ? 'Inline' : 'Side by Side'}
+            {sideBySide ? '인라인' : '나란히 보기'}
           </button>
         </div>
       </div>
@@ -2203,9 +2202,7 @@ function CommentCodeContext({
   const canExpandAbove = from > 1
   const canExpandBelow = to < lines.length
   const canExpandBlock = blockRange.startLine < from || blockRange.endLine > to
-  const blockTooltip = shouldUseBlockRange
-    ? '주변 코드 블록 보기'
-    : '근처 코드 맥락 보기'
+  const blockTooltip = shouldUseBlockRange ? '주변 코드 블록 보기' : '근처 코드 맥락 보기'
 
   if (selectedLines.length === 0) {
     return null
@@ -2227,7 +2224,7 @@ function CommentCodeContext({
             </span>
           )}
         </div>
-        <ButtonGroup className="text-muted-foreground" aria-label="Code context controls">
+        <ButtonGroup className="text-muted-foreground" aria-label="코드 맥락 조절">
           {(contextBefore > 0 || contextAfter > 0) && (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -2240,7 +2237,7 @@ function CommentCodeContext({
                     setContextBefore(0)
                     setContextAfter(0)
                   }}
-                aria-label="코드 맥락 초기화"
+                  aria-label="코드 맥락 초기화"
                 >
                   <UndoDot className="size-3.5" />
                 </Button>
@@ -2386,7 +2383,7 @@ function ConversationTab({
   onCommentAdded: (comment: PRComment) => void
   onReviewersRequested: (reviewRequests: GitHubAssignableUser[]) => void
 }): React.JSX.Element {
-  const authorLabel = item.author ?? 'unknown'
+  const authorLabel = item.author ?? '알 수 없음'
   const [replyingTo, setReplyingTo] = useState<number | null>(null)
   const [commentFilter, setCommentFilter] = useState<PRCommentAudienceFilter>('all')
   const [bodyDraft, setBodyDraft] = useState(body)
@@ -2563,7 +2560,7 @@ function ConversationTab({
         )}
         {comment.isResolved && (
           <span className="rounded-full border border-border/60 bg-muted/40 px-1.5 py-0.5 text-[11px] text-muted-foreground">
-            resolved
+            해결됨
           </span>
         )}
         <div className="ml-auto flex shrink-0 items-center gap-1">
@@ -2592,7 +2589,7 @@ function ConversationTab({
                   size="icon-xs"
                   className="size-7"
                   onClick={() => window.api.shell.openUrl(comment.url)}
-                aria-label="GitHub에서 댓글 열기"
+                  aria-label="GitHub에서 댓글 열기"
                 >
                   <ExternalLink className="size-3.5" />
                 </Button>
@@ -2622,9 +2619,7 @@ function ConversationTab({
         {resolvedReplyingTo === comment.id && (
           <CommentReplyForm
             className="mt-3"
-            placeholder={
-              comment.path ? '이 리뷰 스레드에 답글' : `@${comment.author}에게 답글`
-            }
+            placeholder={comment.path ? '이 리뷰 스레드에 답글' : `@${comment.author}에게 답글`}
             onCancel={() => setReplyingTo(null)}
             onSubmit={(replyBody) => handleReply(comment, replyBody)}
           />
@@ -2685,7 +2680,7 @@ function ConversationTab({
       <div className="flex min-w-0 flex-col gap-4">
         <div className="rounded-lg border border-border/50 bg-card/50 shadow-xs">
           <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2 text-[12px] text-muted-foreground">
-          <span className="font-medium text-foreground">{authorLabel}</span>
+            <span className="font-medium text-foreground">{authorLabel}</span>
             <span>{formatRelativeTime(item.updatedAt)}에 업데이트됨</span>
             {canEditBody && !loading && detailsLoaded ? (
               bodyEditing ? (
@@ -2764,7 +2759,7 @@ function ConversationTab({
                 className="min-w-0 max-w-full overflow-hidden break-words text-[14px] leading-relaxed [&_a]:break-all [&_code]:break-words [&_pre]:max-w-full"
               />
             ) : (
-                <span className="italic text-muted-foreground">설명이 없습니다.</span>
+              <span className="italic text-muted-foreground">설명이 없습니다.</span>
             )}
           </div>
         </div>
@@ -2913,12 +2908,16 @@ function PRActionsPanel({
         number: item.number,
         updates: { state: nextState }
       })
-      toast.success(nextState === 'closed' ? '풀 리퀘스트를 닫았습니다.' : '풀 리퀘스트를 다시 열었습니다.')
+      toast.success(
+        nextState === 'closed' ? '풀 리퀘스트를 닫았습니다.' : '풀 리퀘스트를 다시 열었습니다.'
+      )
       onMutated()
     } catch (err) {
       applyStatePatch(previousState)
       toast.error(
-        err instanceof Error ? err.message : `풀 리퀘스트 ${nextState === 'closed' ? '닫기' : '다시 열기'}에 실패했습니다.`
+        err instanceof Error
+          ? err.message
+          : `풀 리퀘스트 ${nextState === 'closed' ? '닫기' : '다시 열기'}에 실패했습니다.`
       )
     } finally {
       setStatePending(false)
@@ -3025,7 +3024,7 @@ function PRActionsPanel({
               </DropdownMenuTrigger>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              {!repoPath ? 'Merge requires a registered local repo' : mergePresentation.tooltip}
+              {!repoPath ? '병합하려면 등록된 로컬 저장소가 필요합니다' : mergePresentation.tooltip}
             </TooltipContent>
           </Tooltip>
           <DropdownMenuContent align="start" className="w-52">
@@ -3098,7 +3097,7 @@ function CommentReactions({
         <span
           key={reaction.content}
           className="inline-flex h-6 items-center gap-1 rounded-full border border-border/60 bg-muted/35 px-2 text-[12px] leading-none text-foreground"
-          aria-label={`${reaction.count} ${reaction.content} reaction${reaction.count === 1 ? '' : 's'}`}
+          aria-label={`${reaction.count}개 ${reaction.content} 반응`}
         >
           <span aria-hidden="true">{REACTION_EMOJI[reaction.content]}</span>
           <span className="tabular-nums">{reaction.count}</span>
@@ -3202,10 +3201,10 @@ function getCheckStatusLabel(check: PRCheckDetail): string {
     return '건너뜀'
   }
   if (check.status === 'queued') {
-    return 'Queued'
+    return '대기열'
   }
   if (check.status === 'in_progress') {
-    return 'In progress'
+    return '진행 중'
   }
   return '대기 중'
 }
@@ -3243,15 +3242,15 @@ function getChecksSummaryLabel(checks: PRCheckDetail[]): string {
     return '체크를 찾을 수 없습니다'
   }
   if (counts.failing > 0) {
-    return `${counts.failing} ${counts.failing === 1 ? 'check' : 'checks'} failing`
+    return `실패한 체크 ${counts.failing}개`
   }
   if (counts.pending > 0) {
-    return `${counts.pending} ${counts.pending === 1 ? 'check' : 'checks'} pending`
+    return `대기 중인 체크 ${counts.pending}개`
   }
   if (counts.passing === checks.length) {
-    return 'All checks passing'
+    return '모든 체크 통과'
   }
-  return `${counts.passing} of ${checks.length} checks passing`
+  return `${checks.length}개 중 ${counts.passing}개 체크 통과`
 }
 
 function getBrokenChecks(checks: PRCheckDetail[]): PRCheckDetail[] {
@@ -3267,9 +3266,9 @@ function buildFixBrokenChecksPrompt(item: GitHubWorkItem, checks: PRCheckDetail[
       ? brokenChecks.map((check) => {
           const details = [
             getCheckStatusLabel(check),
-            check.checkRunId ? `check run ${check.checkRunId}` : null,
-            check.workflowRunId ? `workflow run ${check.workflowRunId}` : null,
-            check.url ? `details: ${check.url}` : null
+            check.checkRunId ? `체크 실행 ${check.checkRunId}` : null,
+            check.workflowRunId ? `워크플로 실행 ${check.workflowRunId}` : null,
+            check.url ? `세부 정보: ${check.url}` : null
           ]
             .filter(Boolean)
             .join(', ')
@@ -3281,10 +3280,10 @@ function buildFixBrokenChecksPrompt(item: GitHubWorkItem, checks: PRCheckDetail[
     `Fix the broken checks for PR #${item.number}: ${item.title}`,
     `PR: ${item.url}`,
     '',
-    'Broken checks:',
+    '깨진 체크:',
     ...checkLines,
     '',
-    'Focus only on making the failing checks pass. Inspect the CI output first, make the smallest correct code or test changes, and do not work on unrelated cleanup.'
+    '실패한 체크를 통과시키는 데만 집중하세요. 먼저 CI 출력을 확인하고, 가장 작은 올바른 코드 또는 테스트 변경만 하며, 관련 없는 정리는 하지 마세요.'
   ].join('\n')
 }
 
@@ -3422,7 +3421,9 @@ function ChecksTab({
           toast.error(result.error)
           return
         }
-        toast.success(result.count === 1 ? '체크 다시 실행을 요청했습니다' : '체크 다시 실행을 요청했습니다')
+        toast.success(
+          result.count === 1 ? '체크 다시 실행을 요청했습니다' : '체크 다시 실행을 요청했습니다'
+        )
         await handleRefresh()
       } catch (err) {
         toast.error(err instanceof Error ? err.message : '체크를 다시 실행하지 못했습니다.')
@@ -3460,7 +3461,7 @@ function ChecksTab({
           launchSource: 'task_page',
           telemetrySource: 'sidebar',
           openModalFallback: () => {
-        toast.error('수정용 작업 공간을 자동으로 만들 수 없습니다.')
+            toast.error('수정용 작업 공간을 자동으로 만들 수 없습니다.')
           }
         })
         return
@@ -4718,7 +4719,7 @@ function GHEditSection({
                   size="sm"
                   onClick={handleOpenOrUseWorkspace}
                   className="flex-1 gap-1.5"
-                        aria-label="이슈에 연결된 작업 공간 열기"
+                  aria-label="이슈에 연결된 작업 공간 열기"
                 >
                   작업 공간 열기
                   <ArrowRight className="size-3.5" />
@@ -4732,7 +4733,7 @@ function GHEditSection({
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onSelect={() => onUse(item)}>
                   <Plus className="size-4" />
-                    새 작업 공간 시작
+                  새 작업 공간 시작
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -4779,7 +4780,7 @@ function GHEditSection({
             )}
           >
             <CircleDot className="size-3 text-emerald-500" />
-                열림
+            열림
           </button>
           <button
             type="button"
@@ -4790,7 +4791,7 @@ function GHEditSection({
             )}
           >
             <CircleDashed className="size-3 text-rose-500" />
-                닫힘
+            닫힘
           </button>
         </PopoverContent>
       </Popover>
@@ -4804,7 +4805,7 @@ function GHEditSection({
             className="group/labels inline-flex items-center gap-1 rounded-full border border-border/30 bg-muted/20 px-2 py-0.5 text-[11px] transition hover:brightness-125 hover:ring-1 hover:ring-white/10 disabled:opacity-50"
           >
             {localLabels.length === 0 ? (
-              <span className="text-muted-foreground">+ Label</span>
+              <span className="text-muted-foreground">+ 레이블</span>
             ) : (
               localLabels.map((name) => (
                 <span key={name} className="text-[10px] text-muted-foreground">
@@ -4866,7 +4867,7 @@ function GHEditSection({
             className="group/assignees inline-flex items-center gap-1 rounded-full border border-border/30 bg-muted/20 px-2 py-0.5 text-[11px] transition hover:brightness-125 hover:ring-1 hover:ring-white/10 disabled:opacity-50"
           >
             {localAssignees.length === 0 ? (
-              <span className="text-muted-foreground">+ Assignee</span>
+              <span className="text-muted-foreground">+ 담당자</span>
             ) : (
               localAssignees.map((login) => (
                 <span key={login} className="text-[10px] text-muted-foreground">
@@ -4935,7 +4936,7 @@ function GHEditSection({
                 size="sm"
                 onClick={handleOpenOrUseWorkspace}
                 className="gap-2"
-                        aria-label="이슈에 연결된 작업 공간 열기"
+                aria-label="이슈에 연결된 작업 공간 열기"
               >
                 작업 공간 열기
                 <ArrowRight className="size-4" />
@@ -5121,7 +5122,7 @@ export default function GitHubItemDialog({
   repoId,
   initialTab,
   variant = 'sheet',
-  backLabel = 'Back',
+  backLabel = '뒤로',
   projectOrigin,
   onUse,
   onReviewRequestsChange,
@@ -5545,7 +5546,7 @@ export default function GitHubItemDialog({
           if (detailsCacheKey && previousState) {
             patchCachedPRFileViewedState(detailsCacheKey, path, previousState)
           }
-      toast.error('GitHub와 본 상태 동기화에 실패했습니다.')
+          toast.error('GitHub와 본 상태 동기화에 실패했습니다.')
           return false
         }
         return true
@@ -5660,11 +5661,7 @@ export default function GitHubItemDialog({
                         <ArrowRight className="size-3.5" />
                       </Button>
                       <DropdownMenuTrigger asChild>
-                        <Button
-                          type="button"
-                          size="icon-sm"
-                        aria-label="이슈 작업 공간 추가 작업"
-                        >
+                        <Button type="button" size="icon-sm" aria-label="이슈 작업 공간 추가 작업">
                           <ChevronDown className="size-3.5" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -5686,9 +5683,9 @@ export default function GitHubItemDialog({
                     size="sm"
                     onClick={() => onUse(workItem)}
                     className="gap-1.5 whitespace-nowrap"
-              aria-label="이슈에서 작업 공간 시작"
+                    aria-label="이슈에서 작업 공간 시작"
                   >
-              이슈에서 작업 공간 시작
+                    이슈에서 작업 공간 시작
                     <ArrowRight className="size-3.5" />
                   </Button>
                 )}
@@ -5710,7 +5707,7 @@ export default function GitHubItemDialog({
               </span>
               <span className="flex flex-wrap items-center gap-1.5">
                 <span className="font-semibold text-foreground">
-                  {workItem.author ?? 'unknown'}
+                  {workItem.author ?? '알 수 없음'}
                 </span>
                 <span>이 이슈를 열었습니다</span>
                 <span className="text-muted-foreground/80">
@@ -5750,13 +5747,13 @@ export default function GitHubItemDialog({
               <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                 <WorkItemStateBadge item={{ ...workItem, state: localState }} />
                 <span className="font-mono">#{workItem.number}</span>
-              <span>{workItem.type === 'pr' ? '풀 리퀘스트' : '이슈'}</span>
+                <span>{workItem.type === 'pr' ? '풀 리퀘스트' : '이슈'}</span>
               </div>
               <h2 className="text-[15px] font-semibold leading-snug text-foreground">
                 {workItem.title}
               </h2>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
-                <span>{workItem.author ?? 'unknown'}</span>
+                <span>{workItem.author ?? '알 수 없음'}</span>
                 <span>{formatRelativeTime(workItem.updatedAt)}에 업데이트됨</span>
                 {workItem.branchName && (
                   <span className="max-w-full truncate rounded-md border border-border/50 bg-muted/40 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
@@ -5795,7 +5792,7 @@ export default function GitHubItemDialog({
                     variant="ghost"
                     size="icon-sm"
                     onClick={() => void handleCopyWorkItemLink()}
-                  aria-label="GitHub 링크 복사"
+                    aria-label="GitHub 링크 복사"
                   >
                     {linkCopied ? (
                       <Check className="size-4 text-emerald-500" />
@@ -5805,7 +5802,7 @@ export default function GitHubItemDialog({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                    {linkCopied ? '복사됨' : 'GitHub 링크 복사'}
+                  {linkCopied ? '복사됨' : 'GitHub 링크 복사'}
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
@@ -5814,7 +5811,7 @@ export default function GitHubItemDialog({
                     variant="ghost"
                     size="icon-sm"
                     onClick={() => window.api.shell.openUrl(workItem.url)}
-                  aria-label="GitHub에서 열기"
+                    aria-label="GitHub에서 열기"
                   >
                     <ExternalLink className="size-4" />
                   </Button>
@@ -5982,7 +5979,7 @@ export default function GitHubItemDialog({
                 <>
                   <TabsTrigger value="checks" className="px-2">
                     <ListChecks className="size-3.5" />
-                체크
+                    체크
                     {checks.length > 0 && (
                       <span className="ml-1 text-[10px] text-muted-foreground">
                         {checks.length}
@@ -5991,7 +5988,7 @@ export default function GitHubItemDialog({
                   </TabsTrigger>
                   <TabsTrigger value="files" className="px-2">
                     <FileText className="size-3.5" />
-                파일
+                    파일
                     {files.length > 0 && (
                       <span className="ml-1 text-[10px] text-muted-foreground">{files.length}</span>
                     )}

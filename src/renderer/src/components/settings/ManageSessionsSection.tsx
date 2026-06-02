@@ -83,15 +83,15 @@ function getConfirmCopy(confirm: PendingConfirm): {
     return null
   }
   return {
-    title: 'Kill this session?',
+    title: '이 세션을 종료할까요?',
     description: (
       <>
-        Force-quits <span className="font-medium text-foreground">{confirm.session.sessionId}</span>
-        . Any unsaved work in that pane is lost. This can&apos;t be undone.
+        <span className="font-medium text-foreground">{confirm.session.sessionId}</span>를 강제로
+        종료합니다. 해당 창의 저장되지 않은 작업은 사라집니다. 이 작업은 되돌릴 수 없습니다.
       </>
     ),
-    confirmLabel: 'Kill session',
-    busyLabel: 'Killing…'
+    confirmLabel: '세션 종료',
+    busyLabel: '종료 중…'
   }
 }
 
@@ -290,9 +290,9 @@ export function ManageSessionsSection(): React.JSX.Element {
     return (
       <section className="space-y-4">
         <div className="space-y-1">
-          <h3 className="text-sm font-semibold">Manage Sessions</h3>
+          <h3 className="text-sm font-semibold">세션 관리</h3>
           <p className="text-xs text-muted-foreground">
-            Session management is unavailable while a remote runtime server is active.
+            원격 런타임 서버가 활성화되어 있으면 세션 관리를 사용할 수 없습니다.
           </p>
         </div>
         <SearchableSetting
@@ -302,7 +302,7 @@ export function ManageSessionsSection(): React.JSX.Element {
           className="space-y-3"
         >
           <div className="rounded-lg border border-border/60 px-3 py-3 text-xs text-muted-foreground">
-            Switch back to the local runtime to restart or kill local daemon sessions.
+            로컬 런타임으로 돌아가야 로컬 데몬 세션을 다시 시작하거나 종료할 수 있습니다.
           </div>
         </SearchableSetting>
       </section>
@@ -312,10 +312,9 @@ export function ManageSessionsSection(): React.JSX.Element {
   return (
     <section className="space-y-4">
       <div className="space-y-1">
-        <h3 className="text-sm font-semibold">Manage Sessions</h3>
+        <h3 className="text-sm font-semibold">세션 관리</h3>
         <p className="text-xs text-muted-foreground">
-          Recover from a frozen or misbehaving terminal by killing sessions or restarting the
-          underlying daemon.
+          세션을 종료하거나 백그라운드 데몬을 재시작해 멈추거나 이상 동작하는 터미널을 복구합니다.
         </p>
       </div>
 
@@ -327,7 +326,7 @@ export function ManageSessionsSection(): React.JSX.Element {
       >
         {/* Why: full-width sessions card. The table *is* the primary
             surface — header bar on top carries the global actions (Kill
-            all, Restart daemon) plus the session count and refresh; the
+            all, 데몬 다시 시작) plus the session count and refresh; the
             body is the per-session list with a kill X on each row. Keeps
             destructive-color outside the trigger buttons; confirm Dialog
             still does the shouting. */}
@@ -335,7 +334,7 @@ export function ManageSessionsSection(): React.JSX.Element {
           <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border/60 px-3 py-2">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-muted-foreground">
-                Sessions
+                세션
                 {hasLoadedOnce ? <span className="ml-1 tabular-nums">({sessionCount})</span> : null}
               </span>
               <Button
@@ -343,7 +342,7 @@ export function ManageSessionsSection(): React.JSX.Element {
                 size="icon-xs"
                 onClick={() => void refresh()}
                 disabled={isBusy || isRefreshing}
-                aria-label="Refresh"
+                aria-label="새로고침"
                 className="text-muted-foreground"
               >
                 <RefreshCw className={isRefreshing ? 'animate-spin' : ''} />
@@ -363,7 +362,7 @@ export function ManageSessionsSection(): React.JSX.Element {
                     size="icon-xs"
                     disabled={isBusy || sessionCount === 0}
                     onClick={() => daemonActions.setPending('killAll')}
-                    aria-label="Kill all sessions"
+                    aria-label="모든 세션 종료"
                     className="text-muted-foreground hover:text-destructive"
                   >
                     {daemonActions.busyKind === 'killAll' ? (
@@ -374,7 +373,7 @@ export function ManageSessionsSection(): React.JSX.Element {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Kill all sessions
+                  모든 세션 종료
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
@@ -384,7 +383,7 @@ export function ManageSessionsSection(): React.JSX.Element {
                     size="icon-xs"
                     disabled={isBusy}
                     onClick={() => daemonActions.setPending('restart')}
-                    aria-label="Restart daemon"
+                    aria-label="데몬 재시작"
                     className="text-muted-foreground"
                   >
                     {daemonActions.busyKind === 'restart' ? (
@@ -395,7 +394,7 @@ export function ManageSessionsSection(): React.JSX.Element {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Restart daemon
+                  데몬 다시 시작
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -403,11 +402,11 @@ export function ManageSessionsSection(): React.JSX.Element {
 
           {!hasLoadedOnce ? (
             <div className="flex items-center justify-center px-3 py-8 text-xs text-muted-foreground">
-              Loading…
+              불러오는 중…
             </div>
           ) : sessions.length === 0 ? (
             <div className="flex items-center justify-center px-3 py-8 text-xs text-muted-foreground">
-              No sessions.
+              세션이 없습니다.
             </div>
           ) : (
             <div className="max-h-[360px] overflow-y-auto scrollbar-sleek">
@@ -435,7 +434,7 @@ export function ManageSessionsSection(): React.JSX.Element {
                         }`}
                         onClick={rowClickable ? () => handleNavigate(tabId) : undefined}
                         aria-label={
-                          rowClickable ? `Go to terminal ${formatWorkspace(session)}` : undefined
+                          rowClickable ? `터미널로 이동 ${formatWorkspace(session)}` : undefined
                         }
                       >
                         <td className="px-3 py-1.5">
@@ -522,7 +521,7 @@ export function ManageSessionsSection(): React.JSX.Element {
               </DialogHeader>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setConfirm(null)} disabled={isBusy}>
-                  Cancel
+                  취소
                 </Button>
                 <Button variant="destructive" onClick={runConfirmed} disabled={isBusy}>
                   {isBusy ? <LoaderCircle className="size-4 animate-spin" /> : null}

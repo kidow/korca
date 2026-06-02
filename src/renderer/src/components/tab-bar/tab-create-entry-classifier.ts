@@ -307,5 +307,10 @@ export function getTabEntryOptions(
     ]
   }
 
-  return [{ id: 'blocked', classification: { kind: 'blocked', message: 'No action available.' } }]
+  return [
+    {
+      id: 'blocked',
+      classification: { kind: 'blocked', message: '실행할 수 있는 작업이 없습니다.' }
+    }
+  ]
 }

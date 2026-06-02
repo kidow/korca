@@ -43,7 +43,7 @@ export function RichMarkdownSlashMenu({
       </div>
       <div className="rich-markdown-slash-results scrollbar-sleek" role="listbox">
         {filteredCommands.length === 0 ? (
-          <div className="rich-markdown-slash-empty">No blocks found</div>
+          <div className="rich-markdown-slash-empty">블록을 찾을 수 없습니다</div>
         ) : (
           filteredCommands.map((command, index) => {
             const showGroup = command.group !== currentGroup

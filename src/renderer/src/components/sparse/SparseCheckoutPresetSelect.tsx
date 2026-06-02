@@ -63,11 +63,11 @@ export default function SparseCheckoutPresetSelect({
       : null
   const nameError =
     draft && trimmedName.length === 0
-      ? 'Name is required.'
+      ? '이름이 필요합니다.'
       : trimmedName.length > 80
-        ? 'Name must be 80 characters or fewer.'
+        ? '이름은 80자 이하여야 합니다.'
         : nameCollision
-          ? `"${nameCollision.name}" already exists.`
+          ? `"${nameCollision.name}"은 이미 있습니다.`
           : null
   const canSave =
     draft !== null &&
@@ -195,14 +195,14 @@ export default function SparseCheckoutPresetSelect({
   )
 
   const triggerLabel = isLoadingPresets
-    ? 'Loading presets...'
+    ? '프리셋 불러오는 중...'
     : hasPresetLoadError
-      ? 'Retry loading presets'
+      ? '프리셋 다시 불러오기'
       : !presetsLoaded
-        ? 'Load presets'
+        ? '프리셋 불러오기'
         : selectedPreset
           ? selectedPreset.name
-          : 'Off'
+          : '끔'
 
   return (
     <Popover
@@ -252,7 +252,7 @@ export default function SparseCheckoutPresetSelect({
             }}
           >
             <div className="border-b border-border px-3 py-2 text-xs font-medium text-foreground">
-              {draft.mode === 'new' ? 'New preset' : 'Edit preset'}
+              {draft.mode === 'new' ? '새 프리셋' : '프리셋 편집'}
             </div>
             <div className="space-y-3 px-3 py-3">
               <div className="space-y-1">
@@ -260,7 +260,7 @@ export default function SparseCheckoutPresetSelect({
                   htmlFor="sparse-preset-name"
                   className="block text-[11px] font-medium text-muted-foreground"
                 >
-                  Name
+                  이름
                 </label>
                 <div className="rounded-md border border-border/70 bg-muted/20 px-2.5 shadow-xs transition focus-within:border-ring/70 focus-within:ring-1 focus-within:ring-ring/30">
                   <input
@@ -268,7 +268,7 @@ export default function SparseCheckoutPresetSelect({
                     ref={setNameInputNode}
                     value={draft.name}
                     onChange={(event) => setDraft({ ...draft, name: event.target.value })}
-                    placeholder="Renderer UI"
+                    placeholder="렌더러 UI"
                     maxLength={80}
                     autoComplete="off"
                     spellCheck={false}
@@ -281,7 +281,7 @@ export default function SparseCheckoutPresetSelect({
                   htmlFor="sparse-preset-directories"
                   className="block text-[11px] font-medium text-muted-foreground"
                 >
-                  Directories
+                  디렉터리
                 </label>
                 <div className="rounded-md border border-border/70 bg-muted/20 px-2.5 py-1.5 shadow-xs transition focus-within:border-ring/70 focus-within:ring-1 focus-within:ring-ring/30">
                   <textarea
@@ -305,9 +305,9 @@ export default function SparseCheckoutPresetSelect({
                 ) : parsedDirectories?.error ? (
                   <span className="text-destructive">{parsedDirectories.error}</span>
                 ) : parsedDirectories?.directories.length === 1 ? (
-                  '1 directory'
+                  '디렉터리 1개'
                 ) : (
-                  `${parsedDirectories?.directories.length ?? 0} directories`
+                  `디렉터리 ${parsedDirectories?.directories.length ?? 0}개`
                 )}
               </div>
               <div className="flex shrink-0 justify-end gap-1">
@@ -319,11 +319,11 @@ export default function SparseCheckoutPresetSelect({
                   onClick={() => setDraft(null)}
                   disabled={submitting}
                 >
-                  Cancel
+                  취소
                 </Button>
                 <Button type="submit" size="sm" className="h-7 px-2 text-xs" disabled={!canSave}>
                   {submitting ? <LoaderCircle className="size-3 animate-spin" /> : null}
-                  Save
+                  저장
                 </Button>
               </div>
             </div>
@@ -342,7 +342,7 @@ export default function SparseCheckoutPresetSelect({
             >
               <RefreshCcw className="size-3.5 text-muted-foreground" />
               <span className="truncate">
-                {hasPresetLoadError ? 'Retry loading presets' : 'Load presets'}
+                {hasPresetLoadError ? '프리셋 다시 불러오기' : '프리셋 불러오기'}
               </span>
             </button>
           </div>
@@ -354,8 +354,7 @@ export default function SparseCheckoutPresetSelect({
                 className="mx-1 flex h-9 w-[calc(100%-0.5rem)] items-center gap-2 rounded-md px-2 text-left text-xs hover:bg-accent hover:text-accent-foreground"
                 onClick={handleSelectOff}
               >
-                <Check className={cn('size-4', selectedPreset ? 'opacity-0' : 'opacity-100')} />
-                Off
+                <Check className={cn('size-4', selectedPreset ? 'opacity-0' : 'opacity-100')} />끔
               </button>
             </div>
             {visiblePresets.length > 0 ? (
@@ -384,7 +383,7 @@ export default function SparseCheckoutPresetSelect({
                         type="button"
                         variant="ghost"
                         size="icon-xs"
-                        aria-label={`Edit ${preset.name}`}
+                        aria-label={`${preset.name} 편집`}
                         className="mr-1 size-7 shrink-0 rounded-md text-muted-foreground hover:bg-background/35 hover:text-foreground"
                         onClick={() => startEditPreset(preset)}
                       >
@@ -403,7 +402,7 @@ export default function SparseCheckoutPresetSelect({
                 className="mx-1 my-1 h-8 w-[calc(100%-0.5rem)] justify-start rounded-md px-2 text-xs font-normal"
               >
                 <Plus className="size-3.5 text-muted-foreground" />
-                New preset
+                새 프리셋
               </Button>
             </div>
           </div>

@@ -33,7 +33,7 @@ export default function RepoCombobox({
   value,
   onValueChange,
   onValueSelected,
-  placeholder = 'Select repo...',
+  placeholder = '저장소 선택...',
   triggerClassName,
   autoOpenOnMount = false,
   showStandaloneAddButton = true
@@ -57,6 +57,8 @@ export default function RepoCombobox({
     [repos, value]
   )
   const filteredRepos = useMemo(() => searchRepos(repos, query), [repos, query])
+  const addLabel = isAdding ? '프로젝트를 추가하는 중…' : '프로젝트 추가'
+  const addAriaLabel = isAdding ? '프로젝트를 추가하는 중' : '프로젝트 추가'
 
   const cancelFocusFrame = useCallback((): void => {
     if (focusFrameRef.current !== null) {
@@ -224,12 +226,12 @@ export default function RepoCombobox({
           <Command shouldFilter={false} value={commandValue} onValueChange={setCommandValue}>
             <CommandInput
               ref={setInputNode}
-              placeholder="Search projects/folders..."
+              placeholder="프로젝트/폴더 검색..."
               value={query}
               onValueChange={setQuery}
             />
             <CommandList>
-              <CommandEmpty>No projects/folders match your search.</CommandEmpty>
+              <CommandEmpty>검색과 일치하는 프로젝트/폴더가 없습니다.</CommandEmpty>
               {filteredRepos.map((repo) => (
                 <CommandItem
                   key={repo.id}
@@ -276,7 +278,7 @@ export default function RepoCombobox({
                 className="h-9 w-full justify-start rounded-none px-3 text-xs font-normal"
               >
                 <FolderPlus className="size-3.5 text-muted-foreground" />
-                <span>{isAdding ? 'Adding project…' : 'Add project'}</span>
+                <span>{addLabel}</span>
               </Button>
             </div>
           </Command>
@@ -293,7 +295,7 @@ export default function RepoCombobox({
           disabled={isAdding}
           onClick={() => void handleAddFolder()}
           className="size-9 shrink-0 p-0"
-          aria-label={isAdding ? 'Adding project' : 'Add project'}
+          aria-label={addAriaLabel}
         >
           <FolderPlus className="size-3.5" />
         </Button>

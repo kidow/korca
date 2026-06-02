@@ -132,14 +132,14 @@ export function UntitledFileRenameDialog({
         }}
       >
         <DialogHeader>
-          <DialogTitle className="text-sm">Save as</DialogTitle>
+          <DialogTitle className="text-sm">다른 이름으로 저장</DialogTitle>
           <DialogDescription className="text-xs">
             Name your markdown file and pick a folder.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <div>
-            <label className="text-[11px] font-medium text-muted-foreground mb-1 block">Name</label>
+            <label className="text-[11px] font-medium text-muted-foreground mb-1 block">이름</label>
             <div className="flex items-center gap-1.5">
               <Input
                 ref={setNameInputNode}

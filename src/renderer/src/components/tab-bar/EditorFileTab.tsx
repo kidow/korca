@@ -420,19 +420,19 @@ export default function EditorFileTab({
         >
           <DropdownMenuItem onSelect={() => onSplitGroup('up', file.tabId ?? file.id)}>
             <Rows2 className="mr-1.5 size-3.5" />
-            Split Up
+            위로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('down', file.tabId ?? file.id)}>
             <Rows2 className="mr-1.5 size-3.5" />
-            Split Down
+            아래로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('left', file.tabId ?? file.id)}>
             <Columns2 className="mr-1.5 size-3.5" />
-            Split Left
+            왼쪽으로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('right', file.tabId ?? file.id)}>
             <Columns2 className="mr-1.5 size-3.5" />
-            Split Right
+            오른쪽으로 분할
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -444,7 +444,7 @@ export default function EditorFileTab({
             }}
           >
             <Pencil className="mr-1.5 size-3.5" />
-            Rename
+            이름 바꾸기
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={onTogglePin}>
@@ -453,15 +453,15 @@ export default function EditorFileTab({
             ) : (
               <Pin className="mr-1.5 size-3.5" />
             )}
-            {isPinned ? 'Unpin Tab' : 'Pin Tab'}
+            {isPinned ? '탭 고정 해제' : '탭 고정'}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => !isPinned && onClose()} disabled={isPinned}>
-            Close
+            닫기
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={onCloseAll}>Close All Editor Tabs</DropdownMenuItem>
+          <DropdownMenuItem onSelect={onCloseAll}>모든 에디터 탭 닫기</DropdownMenuItem>
           <DropdownMenuItem onSelect={onCloseToRight} disabled={!hasTabsToRight}>
-            Close Tabs To The Right
+            오른쪽 탭 닫기
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {canShowMarkdownPreview && (
@@ -481,7 +481,7 @@ export default function EditorFileTab({
                   )
                 }}
               >
-                Open Markdown Preview
+                마크다운 미리보기 열기
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>

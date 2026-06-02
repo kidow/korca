@@ -61,7 +61,7 @@ function getCodexAccountLabel(
   accountId: string | null | undefined
 ): string {
   if (accountId == null) {
-    return 'System default'
+    return '시스템 기본값'
   }
   return state.accounts.find((account) => account.id === accountId)?.email ?? 'Codex account'
 }
@@ -111,7 +111,7 @@ function getClaudeAccountLabel(
   accountId: string | null | undefined
 ): string {
   if (accountId == null) {
-    return 'System default'
+    return '시스템 기본값'
   }
   return state.accounts.find((account) => account.id === accountId)?.email ?? 'Claude account'
 }
@@ -223,7 +223,7 @@ function getSelectedAccountRuntime(
     return {
       runtime: 'wsl',
       wslDistro: selectedDistro,
-      label: selectedDistro ? `WSL ${selectedDistro}` : 'WSL default'
+      label: selectedDistro ? `WSL ${selectedDistro}` : 'WSL 기본값'
     }
   }
   return { runtime: 'host', label: getHostRuntimeLabel() }
@@ -409,11 +409,11 @@ export function AccountsPane({
               >
                 <SelectTrigger size="sm" className="w-full min-w-44">
                   <SelectValue
-                    placeholder={wslCapabilitiesLoading ? 'Loading WSL' : 'WSL default'}
+                    placeholder={wslCapabilitiesLoading ? 'WSL 불러오는 중' : 'WSL 기본값'}
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__default__">WSL default</SelectItem>
+                  <SelectItem value="__default__">WSL 기본값</SelectItem>
                   {wslDistros.map((distro) => (
                     <SelectItem key={distro} value={distro}>
                       {distro}
@@ -522,7 +522,7 @@ export function AccountsPane({
         >
           <div className="flex items-center justify-between gap-3">
             <div className="space-y-0.5">
-              <Label>Accounts</Label>
+              <Label>계정</Label>
               <p className="text-xs text-muted-foreground">
                 Showing {accountRuntime.label} accounts. New accounts are added there.
               </p>
@@ -548,7 +548,7 @@ export function AccountsPane({
               ) : (
                 <Plus className="size-3" />
               )}
-              Add Account
+              계정 추가
             </Button>
           </div>
 
@@ -573,25 +573,25 @@ export function AccountsPane({
             >
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <div className="flex min-w-0 items-center gap-2">
-                  <span className="truncate text-sm font-medium">System default</span>
+                  <span className="truncate text-sm font-medium">시스템 기본값</span>
                   {activeClaudeAccountId === null ? (
                     <Badge
                       variant="outline"
                       className="h-4 shrink-0 rounded px-1.5 text-[10px] font-medium leading-none text-foreground/80"
                     >
-                      Active
+                      활성
                     </Badge>
                   ) : null}
                 </div>
                 <span className="truncate text-[11px] text-muted-foreground">
-                  Use your current {accountRuntime.label} Claude login.
+                  현재 {accountRuntime.label} Claude 로그인을 사용합니다.
                 </span>
               </div>
             </button>
             {visibleClaudeAccounts.length === 0 ? (
               <div className="rounded-md border border-dashed border-border/70 px-3 py-4 text-xs text-muted-foreground">
-                No managed Claude accounts for {accountRuntime.label}. Korca will use that
-                environment&apos;s system default Claude login until you add one here.
+                {accountRuntime.label}에 관리되는 Claude 계정이 없습니다. 여기에 추가하기 전까지
+                Korca는 해당 환경의 시스템 기본 Claude 로그인을 사용합니다.
               </div>
             ) : (
               visibleClaudeAccounts.map((account) => {
@@ -636,7 +636,7 @@ export function AccountsPane({
                               variant="outline"
                               className="h-4 shrink-0 rounded px-1.5 text-[10px] font-medium leading-none text-foreground/80"
                             >
-                              Active
+                              활성
                             </Badge>
                           ) : null}
                         </div>
@@ -664,7 +664,7 @@ export function AccountsPane({
                           ) : (
                             <RefreshCw className="size-3" />
                           )}
-                          Re-authenticate
+                          다시 인증
                         </Button>
                         <Button
                           variant="ghost"
@@ -677,7 +677,7 @@ export function AccountsPane({
                           className="h-6 px-2 text-muted-foreground hover:text-destructive"
                         >
                           <Trash2 className="size-3" />
-                          Remove
+                          제거
                         </Button>
                       </div>
                     </div>
@@ -737,7 +737,7 @@ export function AccountsPane({
           ) : null}
           <div className="flex items-center justify-between gap-3">
             <div className="space-y-0.5">
-              <Label>Accounts</Label>
+              <Label>계정</Label>
               <p className="text-xs text-muted-foreground">
                 Showing {accountRuntime.label} accounts. New accounts are added there.
               </p>
@@ -763,7 +763,7 @@ export function AccountsPane({
               ) : (
                 <Plus className="size-3" />
               )}
-              Add Account
+              계정 추가
             </Button>
           </div>
 
@@ -790,13 +790,13 @@ export function AccountsPane({
             >
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <div className="flex min-w-0 items-center gap-2">
-                  <span className="truncate text-sm font-medium">System default</span>
+                  <span className="truncate text-sm font-medium">시스템 기본값</span>
                   {activeCodexAccountId === null ? (
                     <Badge
                       variant="outline"
                       className="h-4 shrink-0 rounded px-1.5 text-[10px] font-medium leading-none text-foreground/80"
                     >
-                      Active
+                      활성
                     </Badge>
                   ) : null}
                   {systemCodexNeedsReauthentication ? (
@@ -804,7 +804,7 @@ export function AccountsPane({
                       variant="destructive"
                       className="h-4 shrink-0 rounded px-1.5 text-[10px] font-medium leading-none"
                     >
-                      Needs sign-in
+                      로그인 필요
                     </Badge>
                   ) : null}
                 </div>
@@ -814,15 +814,15 @@ export function AccountsPane({
                   }`}
                 >
                   {systemCodexNeedsReauthentication
-                    ? `Codex reported this ${accountRuntime.label} login is out of date.`
-                    : `Use your current ${accountRuntime.label} Codex login.`}
+                    ? `Codex가 이 ${accountRuntime.label} 로그인이 오래되었다고 보고했습니다.`
+                    : `현재 ${accountRuntime.label} Codex 로그인을 사용합니다.`}
                 </span>
               </div>
             </button>
             {visibleCodexAccounts.length === 0 ? (
               <div className="rounded-md border border-dashed border-border/70 px-3 py-4 text-xs text-muted-foreground">
-                No managed Codex accounts for {accountRuntime.label}. Korca will use that
-                environment&apos;s system default Codex login until you add one here.
+                {accountRuntime.label}에 관리되는 Codex 계정이 없습니다. 여기에 추가하기 전까지
+                Korca는 해당 환경의 시스템 기본 Codex 로그인을 사용합니다.
               </div>
             ) : (
               visibleCodexAccounts.map((account) => {
@@ -878,7 +878,7 @@ export function AccountsPane({
                               variant="outline"
                               className="h-4 shrink-0 rounded px-1.5 text-[10px] font-medium leading-none text-foreground/80"
                             >
-                              Active
+                              활성
                             </Badge>
                           ) : null}
                           {needsReauthentication ? (
@@ -886,7 +886,7 @@ export function AccountsPane({
                               variant="destructive"
                               className="h-4 shrink-0 rounded px-1.5 text-[10px] font-medium leading-none"
                             >
-                              Needs re-auth
+                              다시 인증 필요
                             </Badge>
                           ) : null}
                         </div>
@@ -897,7 +897,7 @@ export function AccountsPane({
                         >
                           {needsReauthentication ? (
                             <span className="truncate">
-                              Codex reported this sign-in is out of date
+                              Codex가 이 로그인이 오래되었다고 보고했습니다
                             </span>
                           ) : account.workspaceLabel ? (
                             <span className="truncate">{account.workspaceLabel}</span>
@@ -932,7 +932,7 @@ export function AccountsPane({
                           ) : (
                             <RefreshCw className="size-3" />
                           )}
-                          Re-authenticate
+                          다시 인증
                         </Button>
                         <Button
                           variant="ghost"
@@ -949,7 +949,7 @@ export function AccountsPane({
                           ) : (
                             <Trash2 className="size-3" />
                           )}
-                          Remove
+                          제거
                         </Button>
                       </div>
                     </div>
@@ -968,12 +968,12 @@ export function AccountsPane({
             <GeminiIcon size={16} />
             Gemini
           </h3>
-          <p className="text-xs text-muted-foreground">Configure Gemini provider settings.</p>
+          <p className="text-xs text-muted-foreground">Gemini 공급자 설정을 구성합니다.</p>
         </div>
 
         <SearchableSetting
-          title="Use Gemini CLI credentials"
-          description="Extracts OAuth credentials from your local Gemini CLI installation to authenticate with Google. This uses credentials issued to the Gemini CLI app, not Korca. May break if Google updates the CLI. Use at your own risk."
+          title="Gemini CLI 인증 정보 사용"
+          description="로컬 Gemini CLI 설치에서 OAuth 인증 정보를 추출해 Google 인증에 사용합니다. 이 기능은 Korca가 아니라 Gemini CLI 앱에 발급된 인증 정보를 사용합니다. Google이 CLI를 업데이트하면 동작이 깨질 수 있습니다. 사용은 본인 책임입니다."
           keywords={[
             'gemini',
             'cli',
@@ -986,11 +986,12 @@ export function AccountsPane({
           className="flex items-center justify-between gap-4 py-2"
         >
           <div className="space-y-0.5">
-            <Label>Use Gemini CLI credentials (experimental)</Label>
+            <Label>Gemini CLI 인증 정보 사용(실험적)</Label>
             <p className="text-xs text-muted-foreground">
-              Extracts OAuth credentials from your local Gemini CLI installation to authenticate
-              with Google for {accountRuntime.label}. This uses credentials issued to the Gemini CLI
-              app, not Korca. May break if Google updates the CLI. Use at your own risk.
+              로컬 Gemini CLI 설치에서 OAuth 인증 정보를 추출해 {accountRuntime.label}의 Google
+              인증에 사용합니다. 이 기능은 Korca가 아니라 Gemini CLI 앱에 발급된 인증 정보를
+              사용합니다. Google이 CLI를 업데이트하면 동작이 깨질 수 있습니다. 사용은 본인
+              책임입니다.
             </p>
           </div>
           <button
@@ -1022,16 +1023,16 @@ export function AccountsPane({
             <OpenCodeGoIcon size={16} />
             OpenCode Go
           </h3>
-          <p className="text-xs text-muted-foreground">Configure OpenCode Go provider settings.</p>
+          <p className="text-xs text-muted-foreground">OpenCode Go 공급자 설정을 구성합니다.</p>
         </div>
 
         <SearchableSetting
-          title="OpenCode Go Session Cookie"
-          description="Paste your opencode.ai session cookie for rate limit fetching."
+          title="OpenCode Go 세션 쿠키"
+          description="rate limit 조회를 위해 opencode.ai 세션 쿠키를 붙여 넣습니다."
           keywords={['opencode', 'cookie', 'session', 'rate limit', 'status bar']}
           className="space-y-2"
         >
-          <Label>OpenCode Go session cookie</Label>
+          <Label>OpenCode Go 세션 쿠키</Label>
           <div className="flex gap-2">
             <Input
               type="password"
@@ -1040,7 +1041,7 @@ export function AccountsPane({
                 recordOpenCodeSettingEdit('cookie')
                 updateSettings({ opencodeSessionCookie: e.target.value })
               }}
-              placeholder="Fe26.2**… token or auth=Fe26.2**… header"
+              placeholder="Fe26.2**… 토큰 또는 auth=Fe26.2**… 헤더"
               spellCheck={false}
               className="flex-1 text-xs"
             />
@@ -1054,7 +1055,7 @@ export function AccountsPane({
                 }}
                 className="h-7 shrink-0 text-xs text-muted-foreground hover:text-foreground"
               >
-                Clear
+                지우기
               </Button>
             )}
           </div>
@@ -1062,17 +1063,17 @@ export function AccountsPane({
             Paste either the raw token value (e.g. <code className="text-xs">Fe26.2**…</code>) or
             the full cookie header (e.g. <code className="text-xs">auth=Fe26.2**…</code>). Find it
             in your browser&apos;s DevTools → Network → any opencode.ai request → Cookie header.
-            OpenCode Go auth is web-based and shared across Windows and WSL terminals.
+            OpenCode Go 인증은 웹 기반이며 Windows와 WSL 터미널 간에 공유됩니다.
           </p>
         </SearchableSetting>
 
         <SearchableSetting
-          title="OpenCode Go Workspace ID"
-          description="Optional workspace ID override if the automatic lookup fails."
+          title="OpenCode Go 작업 공간 ID"
+          description="자동 조회가 실패할 때 사용할 선택적 작업 공간 ID 재정의입니다."
           keywords={['opencode', 'workspace', 'id', 'wrk', 'rate limit', 'status bar']}
           className="space-y-2"
         >
-          <Label>Workspace ID override</Label>
+          <Label>작업 공간 ID 재정의</Label>
           <div className="flex gap-2">
             <Input
               type="text"
@@ -1081,7 +1082,7 @@ export function AccountsPane({
                 recordOpenCodeSettingEdit('workspaceId')
                 updateSettings({ opencodeWorkspaceId: e.target.value })
               }}
-              placeholder="wrk_…  (leave blank for automatic lookup)"
+              placeholder="wrk_…  (비워 두면 자동 조회)"
               spellCheck={false}
               className="flex-1 text-xs"
             />
@@ -1095,12 +1096,12 @@ export function AccountsPane({
                 }}
                 className="h-7 shrink-0 text-xs text-muted-foreground hover:text-foreground"
               >
-                Clear
+                지우기
               </Button>
             )}
           </div>
           <p className="text-xs text-muted-foreground">
-            Find this in the URL after logging into opencode.ai (e.g.{' '}
+            opencode.ai에 로그인한 뒤 URL에서 확인할 수 있습니다(예:{' '}
             <code className="text-xs">opencode.ai/workspace/wrk_…/go</code>).
           </p>
         </SearchableSetting>
@@ -1116,15 +1117,15 @@ export function AccountsPane({
       >
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Remove Codex Account?</DialogTitle>
+            <DialogTitle>Codex 계정을 제거하시겠습니까?</DialogTitle>
             <DialogDescription>
-              Korca will delete the managed Codex home for this saved account. If it is currently
-              active, Korca falls back to the system default Codex login.
+              Korca는 이 저장된 계정에 대한 관리형 Codex 홈을 삭제합니다. 현재 활성 상태라면 Korca는
+              시스템 기본 Codex 로그인으로 돌아갑니다.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRemoveAccountId(null)}>
-              Cancel
+              취소
             </Button>
             <Button
               variant="destructive"
@@ -1139,7 +1140,7 @@ export function AccountsPane({
                 )
               }}
             >
-              Remove Account
+              계정 제거
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1150,15 +1151,15 @@ export function AccountsPane({
       >
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Remove Claude Account?</DialogTitle>
+            <DialogTitle>Claude 계정을 제거하시겠습니까?</DialogTitle>
             <DialogDescription>
-              Korca will delete the managed Claude auth for this saved account. If it is currently
-              active, Korca falls back to the system default Claude login.
+              Korca는 이 저장된 계정에 대한 관리형 Claude 인증을 삭제합니다. 현재 활성 상태라면
+              Korca는 시스템 기본 Claude 로그인으로 돌아갑니다.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRemoveClaudeAccountId(null)}>
-              Cancel
+              취소
             </Button>
             <Button
               variant="destructive"
@@ -1173,7 +1174,7 @@ export function AccountsPane({
                 )
               }}
             >
-              Remove Account
+              계정 제거
             </Button>
           </DialogFooter>
         </DialogContent>

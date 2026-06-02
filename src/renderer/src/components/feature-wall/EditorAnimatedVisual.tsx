@@ -624,7 +624,7 @@ export function EditorAnimatedVisual(props: { reducedMotion: boolean }): JSX.Ele
         <ToolbarBtn iconKey="quote" />
         <span className="ml-auto inline-flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
           <span className="size-1.5 rounded-full bg-emerald-500" />
-          <span>autosaved</span>
+          <span>자동 저장됨</span>
         </span>
       </div>
 
@@ -635,14 +635,14 @@ export function EditorAnimatedVisual(props: { reducedMotion: boolean }): JSX.Ele
         className="relative overflow-hidden bg-background px-6 pb-5 pt-4"
         style={{ minHeight: 280 }}
       >
-        <DocTitle>Launch plan</DocTitle>
+        <DocTitle>출시 계획</DocTitle>
 
         <DocBlock>
           A quick note for the team — pulling together what&apos;s left before we ship.
         </DocBlock>
 
-        <DocBlock listItem>Smoke-test the install flow on a fresh machine.</DocBlock>
-        <DocBlock listItem>Update the docs index once the new tile lands.</DocBlock>
+        <DocBlock listItem>새 머신에서 설치 흐름을 스모크 테스트합니다.</DocBlock>
+        <DocBlock listItem>새 타일이 올라오면 문서 색인을 업데이트합니다.</DocBlock>
 
         {/* Active line where the slash menu fires. The animation imperatively
             mutates this node — typing a glyph, swapping role to h1, etc. */}
@@ -664,32 +664,32 @@ export function EditorAnimatedVisual(props: { reducedMotion: boolean }): JSX.Ele
             data-slash-show="all"
             className="px-2 pb-1 pt-1.5 text-[9.5px] font-bold uppercase tracking-[0.06em] text-muted-foreground"
           >
-            Headings
+            제목
           </div>
           <SlashRow
             refCb={(el) => {
               rowH1Ref.current = el
             }}
             iconKey="h1"
-            label="Heading 1"
+            label="제목 1"
             shortcut="#"
           />
-          <SlashRow iconKey="h2" label="Heading 2" shortcut="##" />
+          <SlashRow iconKey="h2" label="제목 2" shortcut="##" />
           <div data-slash-show="all" className="my-1 h-px bg-foreground/[0.08]" />
           <div
             data-slash-show="all"
             className="px-2 pb-1 pt-1.5 text-[9.5px] font-bold uppercase tracking-[0.06em] text-muted-foreground"
           >
-            Basic blocks
+            기본 블록
           </div>
-          <SlashRow iconKey="quote" label="Quote" shortcut=">" />
-          <SlashRow iconKey="list" label="Bullet List" shortcut="-" />
+          <SlashRow iconKey="quote" label="인용" shortcut=">" />
+          <SlashRow iconKey="list" label="글머리 목록" shortcut="-" />
           <SlashRow
             refCb={(el) => {
               rowCodeRef.current = el
             }}
             iconKey="code"
-            label="Code Block"
+            label="코드 블록"
             shortcut="```"
           />
         </div>
@@ -829,7 +829,7 @@ function codeBlockHTML(): string {
         <span style="font-size: 10px; font-weight: 600; color: rgb(113 113 122); letter-spacing: 0.02em;">typescript</span>
         <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 9.5px; color: rgb(113 113 122);">
           <svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="8" height="8" rx="1.4"/><path d="M3 11V4a1 1 0 0 1 1-1h7"/></svg>
-          <span>Copy</span>
+          <span>복사</span>
         </span>
       </div>
       <div style="padding: 8px 11px; background: #fff; display: flex; flex-direction: column; gap: 2px;">

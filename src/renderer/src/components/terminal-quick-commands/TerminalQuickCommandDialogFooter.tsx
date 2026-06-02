@@ -17,15 +17,15 @@ export function TerminalQuickCommandDialogFooter({
   return (
     <DialogFooter>
       <Button type="button" variant="outline" onClick={onCancel}>
-        Cancel
+        취소
       </Button>
       <Button
         type="button"
         onClick={onSave}
         disabled={!canSave}
-        title={`Save (${submitShortcutLabel})`}
+        title={`저장 (${submitShortcutLabel})`}
       >
-        Save
+        저장
         <span className="ml-1 text-[10px] opacity-60">{submitShortcutLabel}</span>
       </Button>
     </DialogFooter>

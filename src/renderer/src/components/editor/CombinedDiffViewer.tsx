@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: combined diff behavior depends on one
 component-level state machine that coordinates lazy loading, inline editing,
 restore-on-remount caching, and scroll preservation. Splitting those pieces
@@ -1168,7 +1169,7 @@ export default function CombinedDiffViewer({
   const skippedConflictNotice =
     (file.skippedConflicts?.length ?? 0) > 0 ? (
       <div className="mx-4 mt-3 rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs">
-        <div className="font-medium text-foreground">Conflicted files are reviewed separately</div>
+        <div className="font-medium text-foreground">충돌 파일은 별도로 검토합니다</div>
         <div className="mt-1 text-muted-foreground">
           {file.skippedConflicts!.length} unresolved conflict
           {file.skippedConflicts!.length === 1 ? '' : 's'} were excluded from this diff view.
@@ -1236,7 +1237,7 @@ export default function CombinedDiffViewer({
                       aria-label={`Show ${diffCommentCount} AI ${diffCommentCount === 1 ? 'note' : 'notes'}`}
                     >
                       <Sparkles className="size-3 text-violet-500 dark:text-violet-400" />
-                      <span>AI notes</span>
+                      <span>AI 노트</span>
                       <span className="rounded-full bg-background/80 px-1 text-[10px] tabular-nums text-muted-foreground">
                         {diffCommentCount}
                       </span>
@@ -1398,7 +1399,7 @@ export default function CombinedDiffViewer({
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-sm">Clear Notes</DialogTitle>
+            <DialogTitle className="text-sm">노트 지우기</DialogTitle>
             <DialogDescription className="text-xs">
               Clear {diffCommentCount} {diffCommentCount === 1 ? 'note' : 'notes'} from this
               worktree?
@@ -1449,7 +1450,7 @@ function DiffNotesPreviewPopover({
       <div className="flex items-center justify-between gap-2 border-b border-border/60 px-3 py-2">
         <div className="flex min-w-0 items-center gap-1.5 font-medium text-foreground">
           <MessageSquare className="size-3.5 shrink-0 text-muted-foreground" />
-          <span>AI notes</span>
+          <span>AI 노트</span>
           <span className="text-[11px] font-normal tabular-nums text-muted-foreground">
             {totalCount}
           </span>

@@ -24,7 +24,7 @@ import { preventMiddleButtonDefault } from './middle-button-default-guard'
 
 function formatBrowserTabUrlLabel(url: string): string {
   if (url === KORCA_BROWSER_BLANK_URL || url === 'about:blank') {
-    return 'New Tab'
+    return '새 탭'
   }
   try {
     const parsed = new URL(url)
@@ -272,19 +272,19 @@ export default function BrowserTab({
         >
           <DropdownMenuItem onSelect={() => onSplitGroup('up', tab.id)}>
             <Rows2 className="mr-1.5 size-3.5" />
-            Split Up
+            위로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('down', tab.id)}>
             <Rows2 className="mr-1.5 size-3.5" />
-            Split Down
+            아래로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('left', tab.id)}>
             <Columns2 className="mr-1.5 size-3.5" />
-            Split Left
+            왼쪽으로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('right', tab.id)}>
             <Columns2 className="mr-1.5 size-3.5" />
-            Split Right
+            오른쪽으로 분할
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={onDuplicate}>
@@ -305,7 +305,7 @@ export default function BrowserTab({
             Close
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={onCloseToRight} disabled={!hasTabsToRight}>
-            Close Tabs To The Right
+            오른쪽 탭 닫기
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => void window.api.shell.openUrl(openInBrowserUrl)}

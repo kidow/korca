@@ -34,7 +34,7 @@ describe('prepareSkippedOnboardingPreferences', () => {
     expect(applyTheme).toHaveBeenCalledWith('dark')
     expect(updateSettings).toHaveBeenCalledWith({ theme: 'dark' })
     expect(setError).toHaveBeenCalledWith('settings IPC failed')
-    expect(toast.error).toHaveBeenCalledWith('Could not save progress', {
+    expect(toast.error).toHaveBeenCalledWith('진행 상황을 저장하지 못했습니다.', {
       description: 'settings IPC failed'
     })
   })

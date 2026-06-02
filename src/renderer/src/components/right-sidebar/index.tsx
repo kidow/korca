@@ -427,13 +427,13 @@ function ActivityBarPositionMenu({
 }): React.JSX.Element {
   return (
     <ContextMenuContent>
-      <ContextMenuLabel>Activity Bar Position</ContextMenuLabel>
+      <ContextMenuLabel>활동 바 위치</ContextMenuLabel>
       <ContextMenuRadioGroup
         value={currentPosition}
         onValueChange={(v) => onChangePosition(v as ActivityBarPosition)}
       >
-        <ContextMenuRadioItem value="top">Top</ContextMenuRadioItem>
-        <ContextMenuRadioItem value="side">Side</ContextMenuRadioItem>
+        <ContextMenuRadioItem value="top">위쪽</ContextMenuRadioItem>
+        <ContextMenuRadioItem value="side">옆쪽</ContextMenuRadioItem>
       </ContextMenuRadioGroup>
     </ContextMenuContent>
   )

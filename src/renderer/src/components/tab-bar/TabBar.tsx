@@ -244,7 +244,8 @@ function TabBarInner({
       ),
     [agentCmdOverrides, defaultAgent, detectedIds]
   )
-  const isWebClient = (globalThis as { __KORCA_WEB_CLIENT__?: boolean }).__KORCA_WEB_CLIENT__ === true
+  const isWebClient =
+    (globalThis as { __KORCA_WEB_CLIENT__?: boolean }).__KORCA_WEB_CLIENT__ === true
   const windowsTerminalCapabilityOwnerKey = getWindowsTerminalCapabilityOwnerKey(
     activeRuntimeEnvironmentId
   )
@@ -427,7 +428,7 @@ function TabBarInner({
               className="gap-2 rounded-[7px] px-2 py-1.5 text-[12px] leading-5 font-medium"
             >
               <ShellIcon shell={entry.shell} size={14} />
-              <span className="flex-1">New Terminal: {entry.label}</span>
+              <span className="flex-1">새 터미널: {entry.label}</span>
               {isDefault ? (
                 <DropdownMenuShortcut>{newTerminalShortcut}</DropdownMenuShortcut>
               ) : null}
@@ -454,8 +455,7 @@ function TabBarInner({
       className="gap-2 rounded-[7px] px-2 py-1.5 text-[12px] leading-5 font-medium"
     >
       <Globe className="size-4 text-muted-foreground" />
-      New Browser Tab
-      <DropdownMenuShortcut>{newBrowserShortcut}</DropdownMenuShortcut>
+      새 브라우저 탭<DropdownMenuShortcut>{newBrowserShortcut}</DropdownMenuShortcut>
     </DropdownMenuItem>
   ) : null
   const newMarkdownMenuItem =
@@ -465,7 +465,7 @@ function TabBarInner({
         className="gap-2 rounded-[7px] px-2 py-1.5 text-[12px] leading-5 font-medium"
       >
         <FilePlus className="size-4 text-muted-foreground" />
-        New Markdown
+        새 마크다운
         <DropdownMenuShortcut>{newFileShortcut}</DropdownMenuShortcut>
       </DropdownMenuItem>
     ) : null
@@ -825,12 +825,12 @@ function TabBarInner({
           <button
             className="ml-2 my-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent/50 hover:text-foreground"
             style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
-            title="New tab"
+            title="새 탭"
             // Why: aria-label matches the tooltip so E2E can locate the "+"
             // affordance via getByRole('button', { name: 'New tab' }). The
             // store-only createTab() round-trip that preceded this was a
             // tautology — it would pass even if the + button had been deleted.
-            aria-label="New tab"
+            aria-label="새 탭"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>

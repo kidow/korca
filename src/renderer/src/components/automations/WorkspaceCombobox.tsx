@@ -74,7 +74,7 @@ export function WorkspaceCombobox({
           className={cn('h-9 w-full justify-between px-3 text-sm font-normal', triggerClassName)}
         >
           <span className={cn('truncate', !selected && 'text-muted-foreground')}>
-            {selected?.displayName ?? 'Select workspace'}
+            {selected?.displayName ?? '워크스페이스 선택'}
           </span>
           <ChevronsUpDown className="size-4 opacity-50" />
         </Button>
@@ -88,9 +88,9 @@ export function WorkspaceCombobox({
         }}
       >
         <Command>
-          <CommandInput ref={setInputNode} placeholder="Search workspaces..." />
+          <CommandInput ref={setInputNode} placeholder="워크스페이스 검색..." />
           <CommandList className="max-h-72">
-            <CommandEmpty>No workspaces found.</CommandEmpty>
+            <CommandEmpty>워크스페이스를 찾지 못했습니다.</CommandEmpty>
             {worktrees.map((worktree) => (
               <CommandItem
                 key={worktree.id}

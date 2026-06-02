@@ -102,9 +102,8 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
   const deleteError = !isBatchDelete ? (deleteState?.error ?? null) : null
   const canForceDelete = !isBatchDelete && (deleteState?.canForceDelete ?? false)
   const confirmButtonRef = useRef<HTMLButtonElement>(null)
-  // Why: the main worktree is the repo's original clone directory — `git worktree remove`
-  // always rejects it. We block the delete button upfront so the user doesn't have to
-  // discover this limitation via a confusing force-delete dead-end.
+  // Why: `git worktree remove` always rejects the main worktree (original clone). Block
+  // the delete button upfront so the user doesn't hit a confusing force-delete dead-end.
   const isMainWorktree = !isBatchDelete && (worktree?.isMainWorktree ?? false)
   const childWorkspaceCount = lineageDelete.descendants.length
   const hasLineageChildren = childWorkspaceCount > 0
@@ -174,11 +173,11 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
     // Why: the toast confirms the preference was saved and points the user at
     // where to undo it. The "Open Settings" action deep-links to the General
     // pane so they never have to hunt for the toggle if they change their mind.
-    toast.success("We'll skip this confirmation next time.", {
-      description: 'You can change this in Settings.',
+    toast.success('다음부터는 이 확인을 건너뜁니다.', {
+      description: '이 설정은 설정에서 변경할 수 있습니다.',
       duration: 8000,
       action: {
-        label: 'Open Settings',
+        label: '설정 열기',
         onClick: () => {
           openSettingsPage()
           openSettingsTarget({
@@ -220,7 +219,7 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
         deletePromise
           .then((result) => {
             if (!result.ok) {
-              toast.error('Force delete failed', {
+              toast.error('강제 삭제에 실패했습니다', {
                 description: result.error
               })
               return
@@ -228,7 +227,7 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
             onDeleted?.([worktreeId])
           })
           .catch((err: unknown) => {
-            toast.error('Failed to delete workspace', {
+            toast.error('작업 공간 삭제에 실패했습니다', {
               description: err instanceof Error ? err.message : String(err)
             })
           })
@@ -296,14 +295,15 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
       >
         <DialogHeader>
           <DialogTitle className="text-sm">
-            {isBatchDelete ? 'Delete Workspaces' : 'Delete Workspace'}
+            {isBatchDelete ? '작업 공간 삭제' : '작업 공간 삭제'}
           </DialogTitle>
           <DialogDescription className="text-xs">
-            Remove <span className={deleteCopy.targetClassName}>{deleteCopy.targetLabel}</span>
+            <span className={deleteCopy.targetClassName}>{deleteCopy.targetLabel}</span>을
+            제거합니다
             {canDeleteAllLineage ? (
               <>
                 {' '}
-                and{' '}
+                및{' '}
                 <span className="font-medium text-foreground">
                   {lineageDeleteCopy.childTargetLabel}
                 </span>{' '}
@@ -362,8 +362,8 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
             <div className="flex items-start gap-2">
               <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
               <div className="min-w-0 flex-1">
-                This is the <span className="font-semibold">main worktree</span> (the original clone
-                directory). {deleteCopy.mainWorktreeBlocker}
+                이것은 <span className="font-semibold">메인 worktree</span>입니다(원본 clone
+                디렉터리). {deleteCopy.mainWorktreeBlocker}
               </div>
             </div>
           </div>
@@ -400,13 +400,13 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
               >
                 {dontAskAgain ? <Check className="size-3" strokeWidth={3} /> : null}
               </span>
-              Don&apos;t ask again
+              다시 묻지 않기
             </button>
           )}
 
         <DialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isDeleting}>
-            {isMainWorktree ? 'Close' : 'Cancel'}
+            {isMainWorktree ? '닫기' : '취소'}
           </Button>
           {!isMainWorktree &&
             (canForceDelete ? (
@@ -417,7 +417,7 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
                 disabled={isDeleting}
               >
                 {isDeleting ? <LoaderCircle className="size-4 animate-spin" /> : <Trash2 />}
-                {isDeleting ? 'Force Deleting…' : 'Force Delete'}
+                {isDeleting ? '강제 삭제 중…' : '강제 삭제'}
               </Button>
             ) : (
               <Button
@@ -428,12 +428,12 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
               >
                 {isDeleting ? <LoaderCircle className="size-4 animate-spin" /> : <Trash2 />}
                 {isDeleting
-                  ? 'Deleting…'
+                  ? '삭제 중…'
                   : isBatchDelete
-                    ? `Delete ${worktrees.length}`
+                    ? `작업 공간 ${worktrees.length}개 삭제`
                     : canDeleteAllLineage
-                      ? `Delete All ${lineageDelete.deleteAllTargets.length}`
-                      : 'Delete'}
+                      ? `전체 ${lineageDelete.deleteAllTargets.length}개 삭제`
+                      : '삭제'}
               </Button>
             ))}
         </DialogFooter>
@@ -441,5 +441,4 @@ const DeleteWorktreeDialog = React.memo(function DeleteWorktreeDialog() {
     </Dialog>
   )
 })
-
 export default DeleteWorktreeDialog

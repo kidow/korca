@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: the Linear issue page co-locates the
    full-page layout with its hydration/comment state so the selected issue
    surface stays coherent with the existing Linear drawer behavior. */
@@ -69,9 +70,9 @@ type LinearIssueWorkspaceProps = {
 async function copyTextToClipboard(text: string, label: string): Promise<void> {
   try {
     await window.api.ui.writeClipboardText(text)
-    toast.success(`${label} copied`)
+    toast.success(`${label}를 복사했습니다`)
   } catch {
-    toast.error(`Failed to copy ${label.toLowerCase()}`)
+    toast.error(`${label}를 복사하지 못했습니다`)
   }
 }
 
@@ -142,11 +143,11 @@ function LinearIssueSubIssueButton({
         if (fullIssue) {
           onOpenIssue(fullIssue)
         } else {
-          toast.error('Failed to load sub-issue')
+          toast.error('하위 이슈를 불러오지 못했습니다')
         }
       } catch (error) {
         if (mountedRef.current) {
-          toast.error(error instanceof Error ? error.message : 'Failed to load sub-issue')
+          toast.error(error instanceof Error ? error.message : '하위 이슈를 불러오지 못했습니다')
         }
       } finally {
         if (mountedRef.current) {
@@ -188,14 +189,14 @@ function LinearIssueSubIssueButton({
           }
           return { issueId: issue.id, subIssues: [...currentSubIssues, child] }
         })
-        toast.success(`Created ${result.identifier}`)
+        toast.success(`${result.identifier}을 생성했습니다`)
         setTitle('')
         setOpen(false)
       } else {
         toast.error(result.error)
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to create sub-issue')
+      toast.error(error instanceof Error ? error.message : '하위 이슈를 생성하지 못했습니다')
     } finally {
       setSubmitting(false)
     }
@@ -240,7 +241,7 @@ function LinearIssueSubIssueButton({
             className="flex h-9 items-center gap-2 rounded-md px-1 text-sm font-medium text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
             <Plus className="size-4" />
-            <span>Add sub-issues</span>
+            <span>하위 이슈 추가</span>
           </button>
         </PopoverTrigger>
         <PopoverContent className="w-80 p-3" align="start">
@@ -254,7 +255,7 @@ function LinearIssueSubIssueButton({
                   void handleCreate()
                 }
               }}
-              placeholder="Sub-issue title"
+              placeholder="하위 이슈 제목"
               className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
             <div className="flex justify-end">
@@ -264,7 +265,7 @@ function LinearIssueSubIssueButton({
                 disabled={!title.trim() || submitting}
               >
                 {submitting ? <LoaderCircle className="size-3.5 animate-spin" /> : null}
-                Create
+                생성
               </Button>
             </div>
           </div>
@@ -304,7 +305,7 @@ function LinearIssueSidebarProjectCard({
         })
         .catch((error) => {
           if (!cancelled) {
-            toast.error(error instanceof Error ? error.message : 'Failed to load projects')
+            toast.error(error instanceof Error ? error.message : '프로젝트를 불러오지 못했습니다')
           }
         })
         .finally(() => {
@@ -332,13 +333,13 @@ function LinearIssueSidebarProjectCard({
         if (result.ok) {
           onProjectChanged(project)
           patchLinearIssue(issue.id, { project })
-          toast.success('Project updated')
+          toast.success('프로젝트를 업데이트했습니다')
           setOpen(false)
         } else {
           toast.error(result.error)
         }
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Failed to update project')
+        toast.error(error instanceof Error ? error.message : '프로젝트를 업데이트하지 못했습니다')
       } finally {
         setSavingProjectId(null)
       }
@@ -349,7 +350,7 @@ function LinearIssueSidebarProjectCard({
   return (
     <section className="rounded-xl border border-border/60 bg-card text-card-foreground shadow-xs">
       <div className="flex h-10 items-center gap-1 border-b border-border/50 px-4 text-sm font-medium text-muted-foreground">
-        <span>Project</span>
+        <span>프로젝트</span>
         <ChevronDown className="size-3.5" />
       </div>
       <Popover open={open} onOpenChange={setOpen}>
@@ -360,7 +361,7 @@ function LinearIssueSidebarProjectCard({
           >
             <FolderKanban className="size-4 shrink-0" />
             <span className="min-w-0 flex-1 truncate">
-              {issue.project?.name ?? 'Add to project'}
+              {issue.project?.name ?? '프로젝트 추가'}
             </span>
             <ChevronDown className="size-3.5 shrink-0" />
           </button>
@@ -370,14 +371,14 @@ function LinearIssueSidebarProjectCard({
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search projects"
+              placeholder="프로젝트 검색"
               className="h-8 w-full rounded-md border border-input bg-background px-2 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
             <div className="max-h-64 overflow-y-auto scrollbar-sleek">
               {loading ? (
                 <div className="flex items-center gap-2 px-2 py-3 text-sm text-muted-foreground">
                   <LoaderCircle className="size-3.5 animate-spin" />
-                  Loading projects
+                  프로젝트 불러오는 중
                 </div>
               ) : projects.length > 0 ? (
                 projects.map((project) => (
@@ -402,7 +403,7 @@ function LinearIssueSidebarProjectCard({
                 ))
               ) : (
                 <div className="px-2 py-3 text-sm text-muted-foreground">
-                  {query.trim() ? 'No projects found.' : 'Search for a project to add.'}
+                  {query.trim() ? '찾은 프로젝트가 없습니다.' : '추가할 프로젝트를 검색하세요.'}
                 </div>
               )}
             </div>
@@ -419,7 +420,7 @@ export default function LinearIssueWorkspace({
   onOpenIssue,
   onClose,
   variant = 'sheet',
-  backLabel = 'Back'
+  backLabel = '뒤로'
 }: LinearIssueWorkspaceProps): React.JSX.Element {
   const settings = useAppStore((s) => s.settings)
   const [fullIssue, setFullIssue] = useState<LinearIssue | null>(null)
@@ -471,7 +472,7 @@ export default function LinearIssueWorkspace({
         setComments(fetched)
       } catch (error) {
         if (mountedRef.current && requestId === requestIdRef.current) {
-          setCommentsError(error instanceof Error ? error.message : 'Failed to load comments.')
+          setCommentsError(error instanceof Error ? error.message : '댓글을 불러오지 못했습니다.')
         }
       } finally {
         if (mountedRef.current && requestId === requestIdRef.current) {
@@ -569,7 +570,7 @@ export default function LinearIssueWorkspace({
       id: comment.id || createBrowserUuid(),
       body: comment.body,
       createdAt: comment.createdAt,
-      user: { displayName: 'You' }
+      user: { displayName: '나' }
     }
     optimisticCommentsRef.current.push(newComment)
     setComments((prev) => [...prev, newComment])
@@ -585,23 +586,23 @@ export default function LinearIssueWorkspace({
     }
     return [
       {
-        label: 'Copy URL',
+        label: 'URL 복사',
         icon: Clipboard,
         action: () => void copyTextToClipboard(displayed.url, 'URL')
       },
       {
-        label: 'Copy identifier',
+        label: '식별자 복사',
         icon: Clipboard,
-        action: () => void copyTextToClipboard(displayed.identifier, 'Identifier')
+        action: () => void copyTextToClipboard(displayed.identifier, '식별자')
       },
       {
-        label: 'Copy suggested branch name',
+        label: '제안된 브랜치 이름 복사',
         icon: GitBranch,
         action: () =>
-          void copyTextToClipboard(buildLinearIssueBranchName(displayed), 'Suggested branch name')
+          void copyTextToClipboard(buildLinearIssueBranchName(displayed), '제안된 브랜치 이름')
       },
       {
-        label: 'Copy prompt',
+        label: '프롬프트 복사',
         icon: Clipboard,
         action: () => {
           const renderedText = buildLinearIssueContextSnapshot(displayed, comments)
@@ -611,7 +612,7 @@ export default function LinearIssueWorkspace({
               version: 1,
               renderedText
             }) ?? renderedText
-          void copyTextToClipboard(prompt, 'Prompt')
+          void copyTextToClipboard(prompt, '프롬프트')
         }
       }
     ]
@@ -639,7 +640,7 @@ export default function LinearIssueWorkspace({
             {displayed.workspaceName ?? 'Linear'}
           </span>
           <ChevronRight className="size-3.5 shrink-0" />
-          <span className="shrink-0">Issues</span>
+          <span className="shrink-0">이슈</span>
           <ChevronRight className="size-3.5 shrink-0" />
           <span className="shrink-0 font-mono">{displayed.identifier}</span>
           <span className="min-w-0 truncate font-medium text-foreground">{displayed.title}</span>
@@ -653,13 +654,13 @@ export default function LinearIssueWorkspace({
                 variant="ghost"
                 size="icon-sm"
                 onClick={() => void copyTextToClipboard(displayed.url, 'URL')}
-                aria-label="Copy Linear URL"
+                aria-label="Linear URL 복사"
               >
                 <Link className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              Copy URL
+              URL 복사
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -667,14 +668,14 @@ export default function LinearIssueWorkspace({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                onClick={() => void copyTextToClipboard(displayed.identifier, 'Identifier')}
-                aria-label="Copy issue identifier"
+                onClick={() => void copyTextToClipboard(displayed.identifier, '식별자')}
+                aria-label="이슈 식별자 복사"
               >
                 <Clipboard className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              Copy identifier
+              식별자 복사
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -683,13 +684,13 @@ export default function LinearIssueWorkspace({
                 variant="ghost"
                 size="icon-sm"
                 onClick={handleUseIssue}
-                aria-label="Start workspace from issue"
+                aria-label="이슈로부터 워크스페이스 시작"
               >
                 <ArrowRight className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" sideOffset={6}>
-              Start workspace
+              워크스페이스 시작
             </TooltipContent>
           </Tooltip>
           {variant === 'sheet' ? (
@@ -699,13 +700,13 @@ export default function LinearIssueWorkspace({
                   variant="ghost"
                   size="icon-sm"
                   onClick={onClose}
-                  aria-label="Close Linear issue preview"
+                  aria-label="Linear 이슈 미리보기 닫기"
                 >
                   <X className="size-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={6}>
-                Close
+                닫기
               </TooltipContent>
             </Tooltip>
           ) : null}
@@ -721,7 +722,7 @@ export default function LinearIssueWorkspace({
 
             <section className="mt-12 border-t border-border/60 pt-9">
               <div className="mb-8 flex items-center justify-between gap-3">
-                <h2 className="text-xl font-semibold text-foreground">Activity</h2>
+                <h2 className="text-xl font-semibold text-foreground">활동</h2>
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <LinearIssueAvatar
                     avatarUrl={displayed.assignee?.avatarUrl}
@@ -738,7 +739,7 @@ export default function LinearIssueWorkspace({
                   className="size-5"
                 />
                 <span>
-                  {displayed.assignee?.displayName ?? 'Someone'} updated the issue ·{' '}
+                  {displayed.assignee?.displayName ?? '누군가'}가 이 이슈를 업데이트했습니다 ·{' '}
                   {formatLinearIssueRelativeTime(displayed.updatedAt)}
                 </span>
               </div>
@@ -758,7 +759,7 @@ export default function LinearIssueWorkspace({
                     ) : (
                       <RefreshCw className="size-3" />
                     )}
-                    Retry
+                    다시 시도
                   </Button>
                 </div>
               ) : null}
@@ -779,7 +780,7 @@ export default function LinearIssueWorkspace({
                       <div className="min-w-0 flex-1">
                         <div className="mb-1 flex min-w-0 items-center gap-2 text-sm">
                           <span className="truncate font-semibold text-foreground">
-                            {comment.user?.displayName ?? 'Unknown'}
+                            {comment.user?.displayName ?? '알 수 없음'}
                           </span>
                           <span className="shrink-0 text-muted-foreground">
                             {formatLinearIssueRelativeTime(comment.createdAt)}
@@ -821,7 +822,7 @@ export default function LinearIssueWorkspace({
             />
             <section className="rounded-xl border border-border/60 bg-card text-card-foreground shadow-xs">
               <div className="flex h-10 items-center gap-1 border-b border-border/50 px-4 text-sm font-medium text-muted-foreground">
-                <span>Actions</span>
+                <span>작업</span>
                 <ChevronDown className="size-3.5" />
               </div>
               <div className="space-y-1 p-3">
@@ -872,11 +873,11 @@ export default function LinearIssueWorkspace({
         }}
       >
         <VisuallyHidden.Root asChild>
-          <SheetTitle>{displayed?.title ?? 'Linear issue'}</SheetTitle>
+          <SheetTitle>{displayed?.title ?? 'Linear 이슈'}</SheetTitle>
         </VisuallyHidden.Root>
         <VisuallyHidden.Root asChild>
           <SheetDescription>
-            Preview, edit, and start work from the selected issue.
+            선택한 이슈를 미리 보고, 편집하고, 여기서 작업을 시작합니다.
           </SheetDescription>
         </VisuallyHidden.Root>
 

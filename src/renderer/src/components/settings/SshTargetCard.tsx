@@ -261,7 +261,7 @@ export function SshTargetCard({
               disabled={hasActionInFlight}
             >
               <ServerOff className="size-3" />
-              Disconnect
+              연결 해제
             </Button>
           </>
         ) : isSshTargetConnecting(status) ? (
@@ -269,7 +269,7 @@ export function SshTargetCard({
             {renderSecondaryIconActions(false)}
             <Button variant="ghost" size="xs" disabled className="gap-1.5">
               <Loader2 className="size-3 animate-spin" />
-              Connecting
+              연결 중
             </Button>
           </>
         ) : (
@@ -287,7 +287,7 @@ export function SshTargetCard({
               ) : (
                 <MonitorSmartphone className="size-3" />
               )}
-              Test
+              테스트
             </Button>
             <Button
               variant="ghost"
@@ -301,7 +301,7 @@ export function SshTargetCard({
               ) : (
                 <Server className="size-3" />
               )}
-              Connect
+              연결
             </Button>
           </>
         )}

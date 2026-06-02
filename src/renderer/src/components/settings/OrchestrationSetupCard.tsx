@@ -17,11 +17,11 @@ export function OrchestrationSetupCard(props: {
   const setupPanel = (
     <AgentSkillSetupPanel
       className={compact ? 'w-full max-w-[520px]' : undefined}
-      title="Orchestration skill"
-      description="Enables agents to hand off context and coordinate work through Korca."
+      title="오케스트레이션 스킬"
+      description="에이전트가 문맥을 넘기고 Korca 안에서 작업을 조율할 수 있게 합니다."
       command={ORCHESTRATION_SKILL_INSTALL_COMMAND}
-      terminalTitle="Orchestration setup"
-      terminalAriaLabel="Orchestration skill install terminal"
+      terminalTitle="오케스트레이션 설정"
+      terminalAriaLabel="오케스트레이션 스킬 설치 터미널"
       terminalWorktreeId="feature-wall-orchestration-skill-terminal"
       installed={skill.installed}
       loading={skill.loading}

@@ -117,13 +117,13 @@ export default function ProjectRow({
               <button
                 type="button"
                 onClick={onOpenInBrowser}
-                aria-label="Open in GitHub"
+                aria-label="GitHub에서 열기"
                 className="rounded p-1 hover:bg-muted"
               >
                 <ExternalLink className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>Open in GitHub</TooltipContent>
+            <TooltipContent>GitHub에서 열기</TooltipContent>
           </Tooltip>
         ) : null}
         {!disabled && row.itemType !== 'DRAFT_ISSUE' && row.content.number != null ? (
@@ -138,7 +138,7 @@ export default function ProjectRow({
                 <Play className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>Start work</TooltipContent>
+            <TooltipContent>작업 시작</TooltipContent>
           </Tooltip>
         ) : null}
       </div>

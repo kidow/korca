@@ -195,7 +195,7 @@ export function ShortcutsPane(): React.JSX.Element {
   const groupSummaries: ShortcutGroupSummary[] = [
     {
       id: 'all',
-      label: 'All shortcuts',
+      label: '모든 단축키',
       count: baseVisibleRows.filter((row) => matchesShortcutFilter(row, shortcutFilter)).length
     },
     ...shortcutGroups.map((group) => ({
@@ -343,8 +343,8 @@ export function ShortcutsPane(): React.JSX.Element {
     <div className="flex h-full min-h-0 flex-col gap-6 overflow-hidden">
       <section className="flex min-h-0 flex-1 flex-col space-y-3">
         <SettingsSubsectionHeader
-          title="Keyboard Shortcuts"
-          description="Customize shortcuts visually or edit the file directly."
+          title="키보드 단축키"
+          description="단축키를 시각적으로 조정하거나 파일을 직접 편집하세요."
         />
 
         <div className="grid min-h-0 flex-1 gap-6 xl:grid-cols-[16rem_minmax(0,1fr)]">

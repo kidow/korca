@@ -14,26 +14,37 @@ export function branchDisplayName(branch: string): string {
 }
 
 export function prStateLabel(state: PRState): string {
-  return state.charAt(0).toUpperCase() + state.slice(1)
+  switch (state) {
+    case 'open':
+      return '열림'
+    case 'closed':
+      return '닫힘'
+    case 'merged':
+      return '병합됨'
+    case 'draft':
+      return '초안'
+    default:
+      return state
+  }
 }
 
 export function checksLabel(status: CheckStatus): string {
   switch (status) {
     case 'success':
-      return 'Passing'
+      return '통과'
     case 'failure':
-      return 'Failing'
+      return '실패'
     case 'pending':
-      return 'Pending'
+      return '대기 중'
     case 'neutral':
       return ''
   }
 }
 
 export const CONFLICT_OPERATION_LABELS: Record<Exclude<GitConflictOperation, 'unknown'>, string> = {
-  merge: 'Merging',
-  rebase: 'Rebasing',
-  'cherry-pick': 'Cherry-picking'
+  merge: '병합 중',
+  rebase: '리베이스 중',
+  'cherry-pick': '체리픽 중'
 }
 
 // ── Stable empty arrays for tabs fallback ────────────────────────────

@@ -29,14 +29,14 @@ import { StatCard } from './StatCard'
 
 const RANGE_OPTIONS: CodexUsageRange[] = ['7d', '30d', '90d', 'all']
 const SCOPE_OPTIONS: { value: CodexUsageScope; label: string }[] = [
-  { value: 'korca', label: 'Korca worktrees only' },
-  { value: 'all', label: 'All local Codex usage' }
+  { value: 'korca', label: 'Korca 워크트리만' },
+  { value: 'all', label: '모든 로컬 Codex 사용량' }
 ]
 const RANGE_LABELS: Record<CodexUsageRange, string> = {
-  '7d': 'Last 7 days',
-  '30d': 'Last 30 days',
-  '90d': 'Last 90 days',
-  all: 'All time'
+  '7d': '최근 7일',
+  '30d': '최근 30일',
+  '90d': '최근 90일',
+  all: '전체 기간'
 }
 
 function formatTokens(value: number): string {
@@ -58,9 +58,9 @@ function formatCost(value: number | null): string {
 
 function formatUpdatedAt(timestamp: number | null): string {
   if (!timestamp) {
-    return 'Not scanned yet'
+    return '아직 스캔하지 않음'
   }
-  return `Updated ${new Date(timestamp).toLocaleString()}`
+  return `업데이트됨 ${new Date(timestamp).toLocaleString()}`
 }
 
 function formatSessionTime(timestamp: string): string {
@@ -106,16 +106,16 @@ export function CodexUsagePane(): React.JSX.Element {
       <div className="rounded-lg border border-border/60 bg-card/40 p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">Codex Usage Tracking</h3>
+            <h3 className="text-sm font-semibold text-foreground">Codex 사용량 추적</h3>
             <p className="text-sm text-muted-foreground">
-              Reads local Codex usage logs to show token, model, and session stats.
+              로컬 Codex 사용 로그를 읽어 토큰, 모델, 세션 통계를 보여줍니다.
             </p>
           </div>
           <button
             type="button"
             role="switch"
             aria-checked={false}
-            aria-label="Enable Codex usage analytics"
+            aria-label="Codex 사용량 추적 활성화"
             onClick={() => handleSetEnabled(true)}
             className="relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-muted-foreground/30 transition-colors"
           >
@@ -129,7 +129,7 @@ export function CodexUsagePane(): React.JSX.Element {
   if (!summary && (scanState.isScanning || scanState.lastScanCompletedAt === null)) {
     return (
       <ClaudeUsageLoadingState
-        title="Codex Usage Tracking"
+        title="Codex 사용량 추적"
         summaryCardCount={6}
         summaryGridClassName="md:grid-cols-3"
       />
@@ -142,10 +142,10 @@ export function CodexUsagePane(): React.JSX.Element {
     <div className="space-y-4 rounded-lg border border-border/60 bg-card/30 p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-foreground">Codex Usage Tracking</h3>
+          <h3 className="text-sm font-semibold text-foreground">Codex 사용량 추적</h3>
           <p className="mt-1 text-xs text-muted-foreground">
             {formatUpdatedAt(scanState.lastScanCompletedAt)}
-            {scanState.lastScanError ? ` • Last scan error: ${scanState.lastScanError}` : ''}
+            {scanState.lastScanError ? ` • 마지막 스캔 오류: ${scanState.lastScanError}` : ''}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2 self-start">
@@ -157,18 +157,18 @@ export function CodexUsagePane(): React.JSX.Element {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-xs" aria-label="Codex usage options">
+                    <Button variant="ghost" size="icon-xs" aria-label="Codex 사용량 옵션">
                       <SlidersHorizontal className="size-3.5" />
                     </Button>
                   </DropdownMenuTrigger>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Filters
+                  필터
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <DropdownMenuContent align="end" className="w-60">
-              <DropdownMenuLabel>Scope</DropdownMenuLabel>
+              <DropdownMenuLabel>범위</DropdownMenuLabel>
               <DropdownMenuRadioGroup
                 value={scope}
                 onValueChange={(value) => void setCodexUsageScope(value as CodexUsageScope)}
@@ -180,7 +180,7 @@ export function CodexUsagePane(): React.JSX.Element {
                 ))}
               </DropdownMenuRadioGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Range</DropdownMenuLabel>
+              <DropdownMenuLabel>기간</DropdownMenuLabel>
               <DropdownMenuRadioGroup
                 value={range}
                 onValueChange={(value) => void setCodexUsageRange(value as CodexUsageRange)}
@@ -201,13 +201,13 @@ export function CodexUsagePane(): React.JSX.Element {
                   size="icon-xs"
                   onClick={() => void refreshCodexUsage()}
                   disabled={scanState.isScanning}
-                  aria-label="Refresh Codex usage"
+                  aria-label="Codex 사용량 새로고침"
                 >
                   <RefreshCw className={`size-3.5 ${scanState.isScanning ? 'animate-spin' : ''}`} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={6}>
-                Refresh
+                새로고침
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -215,7 +215,7 @@ export function CodexUsagePane(): React.JSX.Element {
             type="button"
             role="switch"
             aria-checked={true}
-            aria-label="Enable Codex usage analytics"
+            aria-label="Codex 사용량 분석 활성화"
             onClick={() => handleSetEnabled(false)}
             className="relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent bg-foreground transition-colors"
           >
@@ -278,7 +278,7 @@ export function CodexUsagePane(): React.JSX.Element {
           <div className="grid gap-4 xl:grid-cols-2">
             <section className="rounded-lg border border-border/60 bg-card/40 p-4">
               <div className="mb-3">
-                <h4 className="text-sm font-semibold text-foreground">By model</h4>
+                <h4 className="text-sm font-semibold text-foreground">모델별</h4>
                 <p className="text-xs text-muted-foreground">
                   Top model: {summary?.topModel ?? 'n/a'}
                 </p>
@@ -303,7 +303,7 @@ export function CodexUsagePane(): React.JSX.Element {
 
             <section className="rounded-lg border border-border/60 bg-card/40 p-4">
               <div className="mb-3">
-                <h4 className="text-sm font-semibold text-foreground">By project</h4>
+                <h4 className="text-sm font-semibold text-foreground">프로젝트별</h4>
                 <p className="text-xs text-muted-foreground">
                   Top project: {summary?.topProject ?? 'n/a'}
                 </p>
@@ -328,7 +328,7 @@ export function CodexUsagePane(): React.JSX.Element {
 
           <section className="rounded-lg border border-border/60 bg-card/40 p-4">
             <div className="mb-3">
-              <h4 className="text-sm font-semibold text-foreground">Recent sessions</h4>
+              <h4 className="text-sm font-semibold text-foreground">최근 세션</h4>
               <p className="text-xs text-muted-foreground">
                 Most recent local Codex sessions in this scope.
               </p>
@@ -337,13 +337,13 @@ export function CodexUsagePane(): React.JSX.Element {
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="border-b border-border/60 text-left text-xs text-muted-foreground">
-                    <th className="px-2 py-2 font-medium">Last active</th>
-                    <th className="px-2 py-2 font-medium">Project</th>
-                    <th className="px-2 py-2 font-medium">Model</th>
-                    <th className="px-2 py-2 font-medium">Events</th>
-                    <th className="px-2 py-2 font-medium">Input</th>
-                    <th className="px-2 py-2 font-medium">Output</th>
-                    <th className="px-2 py-2 font-medium">Total</th>
+                    <th className="px-2 py-2 font-medium">최근 활동</th>
+                    <th className="px-2 py-2 font-medium">프로젝트</th>
+                    <th className="px-2 py-2 font-medium">모델</th>
+                    <th className="px-2 py-2 font-medium">이벤트</th>
+                    <th className="px-2 py-2 font-medium">입력</th>
+                    <th className="px-2 py-2 font-medium">출력</th>
+                    <th className="px-2 py-2 font-medium">합계</th>
                   </tr>
                 </thead>
                 <tbody>

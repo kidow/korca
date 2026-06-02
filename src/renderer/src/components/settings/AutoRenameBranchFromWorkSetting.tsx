@@ -308,11 +308,11 @@ export function AutoRenameBranchFromWorkSetting({
     >
       <div ref={setSettingRootRef} className="flex items-center justify-between gap-4">
         <div className="space-y-0.5">
-          <Label>Auto-Rename Branch</Label>
+          <Label>브랜치 자동 이름 변경</Label>
           <p className="text-xs text-muted-foreground">
-            When an agent starts working in a new workspace, Korca renames its auto-generated branch
-            (e.g. <code>Nautilus</code>) to a short name summarizing the task. Only branches Korca
-            named itself are renamed, and never after they have been pushed.
+            에이전트가 새 작업 공간에서 작업을 시작하면 Korca가 자동 생성한 브랜치 (예:{' '}
+            <code>Nautilus</code>)를 작업을 요약한 짧은 이름으로 바꿉니다. Korca가 직접 이름 지은
+            브랜치만 바꾸며, 이미 push된 뒤에는 바꾸지 않습니다.
           </p>
         </div>
         <button
@@ -343,7 +343,7 @@ export function AutoRenameBranchFromWorkSetting({
             size="sm"
             className="-ml-2 h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
           >
-            Advanced
+            고급
             <ChevronDown
               className={cn('size-3.5 transition-transform', advancedOpen && 'rotate-180')}
             />
@@ -353,7 +353,7 @@ export function AutoRenameBranchFromWorkSetting({
           <div className="mt-2 space-y-3 rounded-md border border-border/60 bg-muted/20 px-3 py-3">
             <div className="space-y-2">
               <div className="space-y-0.5">
-                <Label htmlFor="git-auto-rename-branch-name-prompt">Branch name prompt</Label>
+                <Label htmlFor="git-auto-rename-branch-name-prompt">브랜치 이름 프롬프트</Label>
                 <p className="text-xs text-muted-foreground">
                   Appended to Korca&apos;s{' '}
                   <Popover>
@@ -362,7 +362,7 @@ export function AutoRenameBranchFromWorkSetting({
                         type="button"
                         className="inline rounded-sm font-medium text-foreground underline decoration-border underline-offset-2 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       >
-                        built-in branch-name prompt
+                        내장 브랜치 이름 프롬프트
                       </button>
                     </PopoverTrigger>
                     <PopoverContent
@@ -377,9 +377,8 @@ export function AutoRenameBranchFromWorkSetting({
                       </div>
                     </PopoverContent>
                   </Popover>
-                  . Korca generates only the final segment, like{' '}
-                  <code className="font-mono">fix-login-flow</code>; your branch prefix setting
-                  still applies.
+                  . Korca는 <code className="font-mono">fix-login-flow</code>처럼 마지막 세그먼트만
+                  생성하며, 브랜치 접두사 설정은 그대로 적용됩니다.
                 </p>
               </div>
               <textarea
@@ -387,12 +386,12 @@ export function AutoRenameBranchFromWorkSetting({
                 rows={4}
                 value={branchNamePromptDraft}
                 onChange={(event) => setBranchNamePromptDraft(event.target.value)}
-                placeholder="Prefer domain nouns from the task, avoid ticket IDs, and keep names reviewer-friendly."
+                placeholder="작업의 도메인 명사를 우선하고, 티켓 ID는 피하며, 리뷰하기 쉬운 이름으로 유지하세요."
                 className="w-full resize-y rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-ring"
               />
               <div className="flex items-center justify-between gap-3">
                 <p className="text-[11px] text-muted-foreground">
-                  {branchNamePromptDirty ? 'Unsaved changes' : 'Saved'}
+                  {branchNamePromptDirty ? '저장되지 않은 변경 사항' : '저장됨'}
                 </p>
                 <div className="flex items-center gap-2">
                   {branchNamePromptDirty ? (
@@ -403,7 +402,7 @@ export function AutoRenameBranchFromWorkSetting({
                       onClick={onDiscardPrompt}
                       disabled={isSavingPrompt}
                     >
-                      Discard
+                      변경사항 버리기
                     </Button>
                   ) : null}
                   <Button
@@ -413,7 +412,7 @@ export function AutoRenameBranchFromWorkSetting({
                     onClick={() => void onSavePrompt()}
                     disabled={!branchNamePromptDirty || isSavingPrompt}
                   >
-                    {isSavingPrompt ? 'Saving...' : 'Save'}
+                    {isSavingPrompt ? '저장 중...' : '저장'}
                   </Button>
                 </div>
               </div>
@@ -421,9 +420,9 @@ export function AutoRenameBranchFromWorkSetting({
 
             <div className="flex flex-col gap-3 border-t border-border/50 pt-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-0.5">
-                <Label>Branch name model</Label>
+                <Label>브랜치 이름 모델</Label>
                 <p className="text-xs text-muted-foreground">
-                  Use a different model for branch name generation.
+                  브랜치 이름 생성에 다른 모델을 사용합니다.
                 </p>
               </div>
               {activeCapability ? (
@@ -437,7 +436,7 @@ export function AutoRenameBranchFromWorkSetting({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value={INHERIT_BRANCH_MODEL_VALUE} className="cursor-pointer">
-                        Use default model
+                        기본 모델 사용
                       </SelectItem>
                       {activeCapability.models.map((model) => (
                         <SelectItem key={model.id} value={model.id} className="cursor-pointer">
@@ -448,7 +447,7 @@ export function AutoRenameBranchFromWorkSetting({
                   </Select>
                   {selectedBranchModel?.thinkingLevels && selectedBranchThinking ? (
                     <div className="flex w-full items-center justify-end gap-2 sm:w-auto">
-                      <span className="text-[11px] text-muted-foreground">Thinking</span>
+                      <span className="text-[11px] text-muted-foreground">생각 중</span>
                       <Select
                         value={selectedBranchThinking}
                         onValueChange={(value) =>

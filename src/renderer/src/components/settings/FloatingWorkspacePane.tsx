@@ -78,8 +78,8 @@ export function FloatingWorkspacePane({
   return (
     <section className="space-y-4">
       <SearchableSetting
-        title="Floating Workspace"
-        description="Enable the floating workspace and choose where new tabs start."
+        title="떠다니는 작업 공간"
+        description="떠다니는 작업 공간을 켜고 새 탭의 시작 위치를 선택합니다."
         keywords={[
           'floating workspace',
           'floating terminal',
@@ -94,8 +94,8 @@ export function FloatingWorkspacePane({
         className="divide-y divide-border/40"
       >
         <SettingsSwitchRow
-          label="Enable Floating Workspace"
-          description="Shows the floating workspace button and panel."
+          label="떠다니는 작업 공간 사용"
+          description="떠다니는 작업 공간 버튼과 패널을 표시합니다."
           checked={settings.floatingTerminalEnabled}
           onChange={() => {
             if (!settings.floatingTerminalEnabled) {
@@ -109,8 +109,8 @@ export function FloatingWorkspacePane({
 
         <SettingsRow
           alignTop
-          label="Terminal Directory"
-          description="New floating terminal tabs start here. Markdown notes are saved in Korca's app-owned floating workspace."
+          label="터미널 디렉터리"
+          description="새로 연 떠다니는 터미널 탭의 시작 위치입니다. Markdown 메모는 Korca가 소유한 떠다니는 작업 공간에 저장됩니다."
           control={
             <div className="flex w-72 max-w-full gap-2">
               <Input
@@ -123,7 +123,7 @@ export function FloatingWorkspacePane({
                 type="button"
                 variant="outline"
                 size="icon"
-                aria-label="Choose floating workspace directory"
+                aria-label="떠다니는 작업 공간 디렉터리 선택"
                 onClick={() => void pickFloatingWorkspaceDirectory()}
               >
                 <FolderOpen className="size-4" />
@@ -133,8 +133,8 @@ export function FloatingWorkspacePane({
         />
 
         <SettingsRow
-          label="Toggle Button Location"
-          description="The keyboard shortcut works regardless of where the toggle is shown."
+          label="토글 버튼 위치"
+          description="토글이 어디에 표시되든 키보드 단축키는 동작합니다."
           control={
             <ToggleGroup
               type="single"
@@ -149,8 +149,8 @@ export function FloatingWorkspacePane({
                 useAppStore.getState().recordFeatureInteraction('floating-workspace')
               }}
             >
-              <ToggleGroupItem value="floating-button">Floating Button</ToggleGroupItem>
-              <ToggleGroupItem value="status-bar">Status Bar</ToggleGroupItem>
+              <ToggleGroupItem value="floating-button">떠다니는 버튼</ToggleGroupItem>
+              <ToggleGroupItem value="status-bar">상태 표시줄</ToggleGroupItem>
             </ToggleGroup>
           }
         />

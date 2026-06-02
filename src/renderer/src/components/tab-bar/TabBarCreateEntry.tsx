@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FilePlus, FileText, Globe, Loader2, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -168,7 +169,7 @@ export default function TabBarCreateEntry({
             setError(null)
           }}
           disabled={disabled}
-          aria-label="Open URL, file, or new file"
+          aria-label="URL, 파일 또는 새 파일 열기"
           aria-invalid={error ? true : undefined}
           placeholder="URL, file, or new file"
           className="h-8 rounded-[7px] pl-7 pr-2 text-[12px]"

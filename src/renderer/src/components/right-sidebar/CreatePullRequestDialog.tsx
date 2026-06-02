@@ -68,7 +68,7 @@ function reviewCopy(provider: HostedReviewProvider): {
         reviewLabel: '풀 리퀘스트',
         titleLabel: '풀 리퀘스트',
         providerName: 'GitHub'
-    }
+      }
 }
 
 function withObjectParticle(label: '풀 리퀘스트' | '병합 요청'): string {
@@ -385,7 +385,7 @@ export function CreatePullRequestDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="create-pr-title">Title</Label>
+            <Label htmlFor="create-pr-title">제목</Label>
             <Input
               id="create-pr-title"
               value={title}

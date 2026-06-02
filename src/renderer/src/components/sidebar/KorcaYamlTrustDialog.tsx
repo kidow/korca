@@ -103,19 +103,19 @@ const KorcaYamlTrustDialog = React.memo(function KorcaYamlTrustDialog() {
         <DialogHeader>
           <DialogTitle className="text-sm">
             {previouslyApproved
-              ? `${repoName}'s ${SCRIPT_KIND_LABEL[scriptKind]} changed — run the new version?`
-              : `Run ${SCRIPT_KIND_LABEL[scriptKind]} from ${repoName}?`}
+              ? `${repoName}의 ${SCRIPT_KIND_LABEL[scriptKind]}이(가) 변경되었습니다. 새 버전을 실행할까요?`
+              : `${repoName}의 ${SCRIPT_KIND_LABEL[scriptKind]}을(를) 실행할까요?`}
           </DialogTitle>
           <DialogDescription className="text-xs">
             {previouslyApproved ? (
               <>
-                <code>korca.yaml</code> changed since you last approved. Re-review before it runs{' '}
-                {SCRIPT_KIND_TRIGGER[scriptKind]}.
+                마지막 승인 이후 <code>korca.yaml</code>이 변경되었습니다. 실행되기 전에 다시
+                검토하세요 {SCRIPT_KIND_TRIGGER[scriptKind]}.
               </>
             ) : (
               <>
-                This repository&apos;s <code>korca.yaml</code> runs on your machine{' '}
-                {SCRIPT_KIND_TRIGGER[scriptKind]}. Only run if you trust {repoName}.
+                이 저장소의 <code>korca.yaml</code>은 {SCRIPT_KIND_TRIGGER[scriptKind]}에 사용자의
+                머신에서 실행됩니다. {repoName}를 신뢰할 때만 실행하세요.
               </>
             )}
           </DialogDescription>
@@ -124,7 +124,7 @@ const KorcaYamlTrustDialog = React.memo(function KorcaYamlTrustDialog() {
         {scriptContent && (
           <div className="rounded-md border border-border/70 bg-muted/35 px-3 py-2">
             <div className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-              {previouslyApproved ? `New ${scriptKind} script` : `${scriptKind} script`}
+              {previouslyApproved ? `새 ${scriptKind} 스크립트` : `${scriptKind} 스크립트`}
             </div>
             <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-all font-mono text-xs text-foreground scrollbar-sleek">
               {scriptContent}
@@ -146,15 +146,15 @@ const KorcaYamlTrustDialog = React.memo(function KorcaYamlTrustDialog() {
             onChange={(event) => setAlwaysTrust(event.target.checked)}
           />
           <span className="text-xs font-medium text-foreground">
-            Always trust <code>korca.yaml</code> in {repoName}
+            {repoName}에서 <code>korca.yaml</code>을 항상 신뢰
           </span>
         </label>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => resolveAndClose('skip')}>
-            Don&apos;t run
+            실행 안 함
           </Button>
-          <Button onClick={() => resolveAndClose('run')}>Run hooks</Button>
+          <Button onClick={() => resolveAndClose('run')}>훅 실행</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import { useEffect, useMemo, useState } from 'react'
 import { Folder, Link2, Plus, X } from 'lucide-react'
 import type { Repo } from '../../../../shared/types'
@@ -79,8 +80,8 @@ export function WorktreeSymlinksSection({
 
   return (
     <SearchableSetting
-      title="Worktree Symlinks"
-      description="Paths to symlink from the primary checkout into newly created worktrees."
+      title="작업 트리 심볼릭 링크"
+      description="기본 체크아웃에서 새로 만든 작업 트리로 심볼릭 링크할 경로입니다."
       keywords={[
         repo.displayName,
         'symlink',
@@ -95,28 +96,29 @@ export function WorktreeSymlinksSection({
     >
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h3 className="text-sm font-semibold">Worktree Symlinks</h3>
+          <h3 className="text-sm font-semibold">작업 트리 심볼릭 링크</h3>
           <p className="text-xs text-muted-foreground">
-            When a new worktree is created, each path listed here will be symlinked from the primary
-            checkout.
+            새 작업 트리가 만들어지면 여기에 적은 각 경로가 기본 체크아웃에서 심볼릭 링크됩니다.
           </p>
         </div>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button type="button" variant="outline" size="sm">
               <Plus className="size-3.5" />
-              Add Path
+              경로 추가
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-72 p-0">
             <Command shouldFilter={false}>
               <CommandInput
-                placeholder="Type a path (e.g. .env or node_modules)…"
+                placeholder="경로를 입력하세요(예: .env 또는 node_modules)…"
                 value={query}
                 onValueChange={setQuery}
               />
               <CommandList>
-                <CommandEmpty>No matches. Keep typing to add a custom path.</CommandEmpty>
+                <CommandEmpty>
+                  일치 항목 없음. 계속 입력하면 사용자 지정 경로를 추가할 수 있습니다.
+                </CommandEmpty>
                 {showLiteralItem ? (
                   <CommandItem
                     value={`__literal__:${queryTrimmed}`}
@@ -125,7 +127,7 @@ export function WorktreeSymlinksSection({
                   >
                     <Plus className="size-3.5 text-muted-foreground" />
                     <span className="text-xs">
-                      Add{' '}
+                      추가{' '}
                       <code className="rounded bg-muted px-1 py-0.5 text-[11px]">
                         {queryTrimmed}
                       </code>
@@ -151,7 +153,7 @@ export function WorktreeSymlinksSection({
                       <span className="truncate text-xs">{entry.name}</span>
                       {alreadyAdded ? (
                         <span className="ml-auto text-[10px] uppercase tracking-wide text-muted-foreground">
-                          added
+                          추가됨
                         </span>
                       ) : null}
                     </CommandItem>
@@ -165,7 +167,7 @@ export function WorktreeSymlinksSection({
 
       {paths.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border/60 bg-background/60 px-4 py-6 text-sm text-muted-foreground">
-          No symlink paths configured for this repository.
+          이 저장소에는 구성된 심볼릭 링크 경로가 없습니다.
         </div>
       ) : (
         <div className="rounded-xl border border-border/50 bg-background/70 px-4 py-3 shadow-sm">
@@ -175,9 +177,9 @@ export function WorktreeSymlinksSection({
             </div>
             <div className="min-w-0 flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <h4 className="text-sm font-medium">Linked paths</h4>
+                <h4 className="text-sm font-medium">연결된 경로</h4>
                 <span className="text-[11px] text-muted-foreground">
-                  {paths.length === 1 ? '1 path' : `${paths.length} paths`}
+                  {paths.length === 1 ? '1개 경로' : `${paths.length}개 경로`}
                 </span>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -192,7 +194,7 @@ export function WorktreeSymlinksSection({
                       size="icon-xs"
                       variant="ghost"
                       onClick={() => handleRemove(path)}
-                      aria-label={`Remove ${path}`}
+                      aria-label={`${path} 제거`}
                       className="size-4 shrink-0 rounded-sm"
                     >
                       <X className="size-3" />

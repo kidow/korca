@@ -33,8 +33,8 @@ export function RecentTabOrderControl({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="mru">Most recent</SelectItem>
-              <SelectItem value="sequential">Tab strip order</SelectItem>
+              <SelectItem value="mru">가장 최근</SelectItem>
+              <SelectItem value="sequential">탭 순서</SelectItem>
             </SelectContent>
           </Select>
         }

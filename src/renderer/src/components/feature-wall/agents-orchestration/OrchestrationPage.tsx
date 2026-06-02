@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { JSX } from 'react'
 import { ChevronDown, Workflow } from 'lucide-react'
@@ -287,7 +288,7 @@ export function OrchestrationPage(props: {
       <div className="relative flex min-w-0 flex-col gap-1.5">
         <WorkspaceCard
           variant="coordinator"
-          name="redesign auth flow"
+          name="auth 흐름 재설계"
           dataCard="coord"
           rows={[
             <AgentRow
@@ -315,10 +316,10 @@ export function OrchestrationPage(props: {
           <span
             className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-1.5 text-muted-foreground"
             style={{ height: 18, fontSize: 10, fontWeight: 500 }}
-            aria-label="2 child workspaces"
+            aria-label="하위 작업공간 2개"
           >
             <Workflow className="size-2.5" aria-hidden />
-            <span className="truncate">2 children</span>
+            <span className="truncate">하위 2개</span>
             <ChevronDown className="size-2.5" aria-hidden />
           </span>
         </div>
@@ -338,7 +339,7 @@ export function OrchestrationPage(props: {
             <div className="feature-wall-child-card-shell">
               <WorkspaceCard
                 variant="default"
-                name="PR 1/2: migrate users.sql"
+                name="PR 1/2: users.sql 마이그레이션"
                 dataCard="child"
                 childPadding
                 rows={[
@@ -363,7 +364,7 @@ export function OrchestrationPage(props: {
             <div className="feature-wall-child-card-shell">
               <WorkspaceCard
                 variant="default"
-                name="PR 2/2: withSession middleware"
+                name="PR 2/2: withSession 미들웨어"
                 dataCard="child-claude"
                 childPadding
                 rows={[

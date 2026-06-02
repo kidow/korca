@@ -33,20 +33,20 @@ export function DarkTerminalThemeSection({
     <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
       <div className="space-y-6">
         <div className="space-y-1">
-          <h3 className="text-sm font-semibold">Dark Theme</h3>
+          <h3 className="text-sm font-semibold">다크 테마</h3>
           <p className="text-xs text-muted-foreground">
-            Choose the theme used for terminal panes in dark mode.
+            다크 모드에서 사용할 터미널 테마를 선택하세요.
           </p>
         </div>
 
         <SearchableSetting
-          title="Dark Theme"
-          description="Choose the terminal theme used in dark mode."
+          title="다크 테마"
+          description="다크 모드에서 사용할 터미널 테마를 선택하세요."
           keywords={['terminal', 'theme', 'dark', 'preview']}
         >
           <ThemePicker
-            label="Dark Theme"
-            description="Choose the terminal theme used in dark mode."
+            label="다크 테마"
+            description="다크 모드에서 사용할 터미널 테마를 선택하세요."
             selectedTheme={settings.terminalThemeDark}
             query={themeSearchDark}
             onQueryChange={setThemeSearchDark}
@@ -55,13 +55,13 @@ export function DarkTerminalThemeSection({
         </SearchableSetting>
 
         <SearchableSetting
-          title="Dark Divider Color"
-          description="Controls the split divider line between panes in dark mode."
+          title="다크 분할선 색상"
+          description="다크 모드에서 패널 사이 분할선 색상을 조절합니다."
           keywords={['terminal', 'divider', 'dark', 'color']}
         >
           <ColorField
-            label="Dark Divider Color"
-            description="Controls the split divider line between panes in dark mode."
+            label="다크 분할선 색상"
+            description="다크 모드에서 패널 사이 분할선 색상을 조절합니다."
             value={settings.terminalDividerColorDark}
             fallback="#3f3f46"
             onChange={(value) => updateSettings({ terminalDividerColorDark: value })}
@@ -70,7 +70,7 @@ export function DarkTerminalThemeSection({
       </div>
 
       <TerminalSettingsPreview
-        title="Dark Mode Preview"
+        title="다크 모드 미리보기"
         settings={settings}
         systemPrefersDark={systemPrefersDark}
         previewFontFamily={previewFontFamily}
@@ -90,15 +90,15 @@ export function LightTerminalThemeSection({
   return (
     <section className="space-y-4">
       <SearchableSetting
-        title="Use Separate Theme In Light Mode"
-        description="When disabled, light mode reuses the dark terminal theme."
+        title="라이트 모드에 별도 테마 사용"
+        description="끄면 라이트 모드가 다크 터미널 테마를 그대로 사용합니다."
         keywords={['terminal', 'light mode', 'theme']}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <p className="text-sm font-medium">Use Separate Theme In Light Mode</p>
+          <p className="text-sm font-medium">라이트 모드에 별도 테마 사용</p>
           <p className="text-xs text-muted-foreground">
-            When disabled, light mode reuses the dark terminal theme.
+            끄면 라이트 모드가 다크 터미널 테마를 그대로 사용합니다.
           </p>
         </div>
         <button
@@ -126,20 +126,20 @@ export function LightTerminalThemeSection({
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
             <div className="space-y-6">
               <div className="space-y-1">
-                <h3 className="text-sm font-semibold">Light Theme</h3>
+                <h3 className="text-sm font-semibold">라이트 테마</h3>
                 <p className="text-xs text-muted-foreground">
-                  Configure the optional light-mode terminal appearance.
+                  선택 사항인 라이트 모드 터미널 모양을 설정합니다.
                 </p>
               </div>
 
               <SearchableSetting
-                title="Light Theme"
-                description="Choose the theme used when Korca is in light mode."
+                title="라이트 테마"
+                description="Korca가 라이트 모드일 때 사용할 테마를 선택하세요."
                 keywords={['terminal', 'theme', 'light', 'preview']}
               >
                 <ThemePicker
-                  label="Light Theme"
-                  description="Choose the theme used when Korca is in light mode."
+                  label="라이트 테마"
+                  description="Korca가 라이트 모드일 때 사용할 테마를 선택하세요."
                   selectedTheme={settings.terminalThemeLight}
                   query={themeSearchLight}
                   onQueryChange={setThemeSearchLight}
@@ -148,13 +148,13 @@ export function LightTerminalThemeSection({
               </SearchableSetting>
 
               <SearchableSetting
-                title="Light Divider Color"
-                description="Controls the split divider line between panes in light mode."
+                title="라이트 분할선 색상"
+                description="라이트 모드에서 패널 사이 분할선 색상을 조절합니다."
                 keywords={['terminal', 'divider', 'light', 'color']}
               >
                 <ColorField
-                  label="Light Divider Color"
-                  description="Controls the split divider line between panes in light mode."
+                  label="라이트 분할선 색상"
+                  description="라이트 모드에서 패널 사이 분할선 색상을 조절합니다."
                   value={settings.terminalDividerColorLight}
                   fallback="#d4d4d8"
                   onChange={(value) => updateSettings({ terminalDividerColorLight: value })}
@@ -163,7 +163,7 @@ export function LightTerminalThemeSection({
             </div>
 
             <TerminalSettingsPreview
-              title="Light Mode Preview"
+              title="라이트 모드 미리보기"
               settings={settings}
               systemPrefersDark={false}
               previewFontFamily={previewFontFamily}

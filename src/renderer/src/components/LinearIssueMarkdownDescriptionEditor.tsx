@@ -44,7 +44,7 @@ type LinearIssueMarkdownToolbarButtonProps = {
 const linearIssueMarkdownExtensions = [
   ...createRichMarkdownExtensions(),
   Placeholder.configure({
-    placeholder: 'No description provided.'
+    placeholder: '설명이 제공되지 않았습니다.'
   })
 ]
 
@@ -90,7 +90,7 @@ function applyLinearIssueLink(editor: Editor | null): void {
   }
 
   const previousHref = editor.getAttributes('link').href as string | undefined
-  const href = window.prompt('Link URL', previousHref ?? '')
+  const href = window.prompt('링크 URL', previousHref ?? '')
   if (href === null) {
     editor.chain().focus().run()
     return
@@ -123,16 +123,16 @@ function LinearIssueMarkdownToolbar({
   )
 
   return (
-    <div className="linear-issue-markdown-toolbar" aria-label="Issue description formatting">
+    <div className="linear-issue-markdown-toolbar" aria-label="이슈 설명 서식">
       <LinearIssueMarkdownToolbarButton
-        label="Body text"
+        label="본문"
         disabled={disabled}
         onClick={() => runCommand((nextEditor) => nextEditor.chain().focus().setParagraph().run())}
       >
         <Pilcrow className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label="Heading 1"
+        label="제목 1"
         active={editor?.isActive('heading', { level: 1 }) ?? false}
         disabled={disabled}
         onClick={() =>
@@ -142,7 +142,7 @@ function LinearIssueMarkdownToolbar({
         <Heading1 className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label="Heading 2"
+        label="제목 2"
         active={editor?.isActive('heading', { level: 2 }) ?? false}
         disabled={disabled}
         onClick={() =>
@@ -153,7 +153,7 @@ function LinearIssueMarkdownToolbar({
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarSeparator />
       <LinearIssueMarkdownToolbarButton
-        label="Bold"
+        label="굵게"
         active={editor?.isActive('bold') ?? false}
         disabled={disabled}
         onClick={() => runCommand((nextEditor) => nextEditor.chain().focus().toggleBold().run())}
@@ -161,7 +161,7 @@ function LinearIssueMarkdownToolbar({
         <Bold className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label="Italic"
+        label="기울임"
         active={editor?.isActive('italic') ?? false}
         disabled={disabled}
         onClick={() => runCommand((nextEditor) => nextEditor.chain().focus().toggleItalic().run())}
@@ -169,7 +169,7 @@ function LinearIssueMarkdownToolbar({
         <Italic className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label="Strike"
+        label="취소선"
         active={editor?.isActive('strike') ?? false}
         disabled={disabled}
         onClick={() => runCommand((nextEditor) => nextEditor.chain().focus().toggleStrike().run())}
@@ -177,7 +177,7 @@ function LinearIssueMarkdownToolbar({
         <Strikethrough className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label="Inline code"
+        label="인라인 코드"
         active={editor?.isActive('code') ?? false}
         disabled={disabled}
         onClick={() => runCommand((nextEditor) => nextEditor.chain().focus().toggleCode().run())}
@@ -186,7 +186,7 @@ function LinearIssueMarkdownToolbar({
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarSeparator />
       <LinearIssueMarkdownToolbarButton
-        label="Bullet list"
+        label="글머리 목록"
         active={editor?.isActive('bulletList') ?? false}
         disabled={disabled}
         onClick={() =>
@@ -196,7 +196,7 @@ function LinearIssueMarkdownToolbar({
         <List className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label="Numbered list"
+        label="번호 목록"
         active={editor?.isActive('orderedList') ?? false}
         disabled={disabled}
         onClick={() =>
@@ -206,7 +206,7 @@ function LinearIssueMarkdownToolbar({
         <ListOrdered className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label="Checklist"
+        label="체크리스트"
         active={editor?.isActive('taskList') ?? false}
         disabled={disabled}
         onClick={() =>
@@ -217,7 +217,7 @@ function LinearIssueMarkdownToolbar({
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarSeparator />
       <LinearIssueMarkdownToolbarButton
-        label="Quote"
+        label="인용"
         active={editor?.isActive('blockquote') ?? false}
         disabled={disabled}
         onClick={() =>
@@ -227,7 +227,7 @@ function LinearIssueMarkdownToolbar({
         <Quote className="size-3.5" />
       </LinearIssueMarkdownToolbarButton>
       <LinearIssueMarkdownToolbarButton
-        label={editor?.isActive('link') ? 'Remove link' : 'Link'}
+        label={editor?.isActive('link') ? '링크 제거' : '링크'}
         active={editor?.isActive('link') ?? false}
         disabled={disabled}
         onClick={() => runCommand(applyLinearIssueLink)}
@@ -259,7 +259,7 @@ export function LinearIssueMarkdownDescriptionEditor({
       attributes: {
         class: 'rich-markdown-editor',
         spellcheck: 'true',
-        'aria-label': 'Issue description'
+        'aria-label': '이슈 설명'
       },
       handleKeyDown: (_view, event) => {
         if (!isScreenSubmitShortcut(event)) {
@@ -332,10 +332,10 @@ export function LinearIssueMarkdownDescriptionEditor({
       <div className="linear-issue-markdown-save-hint pointer-events-none absolute bottom-1.5 right-2 z-10 flex items-center gap-1.5 text-[10px] text-muted-foreground/75">
         <span className="flex items-center gap-1">
           <span>{submitShortcutLabel}</span>
-          <span>save</span>
+          <span>저장</span>
         </span>
         <span className="text-muted-foreground/35">·</span>
-        <span>Markdown</span>
+        <span>마크다운</span>
       </div>
       {disabled ? (
         <LoaderCircle className="absolute right-2 top-2 size-4 animate-spin text-muted-foreground" />

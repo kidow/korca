@@ -102,7 +102,7 @@ type StatusSwitchGroupOptions = {
 }
 
 function getHostRuntimeLabel(): string {
-  return navigator.userAgent.includes('Windows') ? 'Windows' : 'This device'
+  return navigator.userAgent.includes('Windows') ? 'Windows' : '이 기기'
 }
 
 function getCodexAccountLabel(
@@ -110,9 +110,9 @@ function getCodexAccountLabel(
   accountId: string | null | undefined
 ): string {
   if (accountId == null) {
-    return 'System default'
+    return '시스템 기본값'
   }
-  return state.accounts.find((account) => account.id === accountId)?.email ?? 'Codex account'
+  return state.accounts.find((account) => account.id === accountId)?.email ?? 'Codex 계정'
 }
 
 function getCodexAccountDisplayLabel(account: CodexStatusAccount): string {
@@ -128,7 +128,7 @@ function getCodexStatusRuntimeLabel(target: CodexStatusRuntimeTarget): string {
   if (target.runtime === 'host') {
     return getHostRuntimeLabel()
   }
-  return target.wslDistro ? `WSL ${target.wslDistro}` : 'WSL default'
+  return target.wslDistro ? `WSL ${target.wslDistro}` : 'WSL 기본값'
 }
 
 function getCodexStatusRuntimeKey(target: CodexStatusRuntimeTarget): string {
@@ -234,7 +234,7 @@ export function buildCodexStatusSwitchGroups(
       targets: [
         {
           id: null,
-          label: 'System default',
+          label: '시스템 기본값',
           active: activeId === null,
           runtimeTarget: target
         },
@@ -393,7 +393,7 @@ export function buildClaudeStatusSwitchGroups(
       targets: [
         {
           id: null,
-          label: 'System default',
+          label: '시스템 기본값',
           active: activeId === null,
           runtimeTarget: target
         },
@@ -632,7 +632,7 @@ function ClaudeSwitcherMenu({
 
   useEffect(() => {
     void loadAccounts().catch((error) => {
-      console.error('Failed to load Claude accounts for status bar:', error)
+      console.error('상태바용 Claude 계정을 불러오지 못했습니다:', error)
     })
   }, [loadAccounts, open, claudeAccountSyncKey])
 
@@ -676,7 +676,7 @@ function ClaudeSwitcherMenu({
         setAccountsExpanded(false)
       }
     } catch (error) {
-      console.error('Failed to switch Claude account from status bar:', error)
+      console.error('상태바에서 Claude 계정을 전환하지 못했습니다:', error)
     } finally {
       if (mountedRef.current) {
         setIsSwitching(false)
@@ -695,7 +695,7 @@ function ClaudeSwitcherMenu({
     try {
       await refreshClaudeRateLimitsForTarget(group.runtimeTarget)
     } catch (error) {
-      console.error('Failed to switch Claude usage runtime:', error)
+      console.error('Claude 사용 런타임을 전환하지 못했습니다:', error)
     }
   }
 
@@ -723,19 +723,19 @@ function ClaudeSwitcherMenu({
       provider={claude}
       compact={compact}
       iconOnly={iconOnly}
-      ariaLabel="Open Claude details and account switcher"
+      ariaLabel="Claude 세부정보 및 계정 전환 열기"
       topContent={
         <AccountRuntimeToggle
           groups={switchGroups}
           value={selectedGroup?.key ?? selectedRuntimeKey}
           onChange={(group) => void handleSelectRuntime(group)}
-          ariaLabel="Claude usage runtime"
+          ariaLabel="Claude 사용 런타임"
         />
       }
       open={open}
       onOpenChange={handleOpenChange}
     >
-      <DropdownMenuLabel>Claude Account</DropdownMenuLabel>
+      <DropdownMenuLabel>Claude 계정</DropdownMenuLabel>
       <DropdownMenuItem
         onSelect={(event) => {
           event.preventDefault()
@@ -743,7 +743,7 @@ function ClaudeSwitcherMenu({
         }}
       >
         <span className="max-w-[180px] truncate text-[12px] text-foreground">
-          {activeTarget?.label ?? 'System default'}
+          {activeTarget?.label ?? '시스템 기본값'}
         </span>
         {accountsExpanded ? (
           <ChevronDown className="ml-auto size-3.5 text-muted-foreground/85" />
@@ -754,11 +754,11 @@ function ClaudeSwitcherMenu({
       {accountsExpanded ? (
         <div className="px-1 pb-1">
           <div className="px-2 py-1 text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
-            Switch to
+            전환 대상
           </div>
           <div className="max-h-[220px] overflow-y-auto rounded-md border border-border/60 bg-accent/5 p-1 scrollbar-sleek">
             {selectedGroup?.targets.length === 0 ? (
-              <div className="px-2 py-1.5 text-[11px] text-muted-foreground">No other accounts</div>
+              <div className="px-2 py-1.5 text-[11px] text-muted-foreground">다른 계정 없음</div>
             ) : null}
             {selectedGroup?.targets.map((target) => {
               const inactiveUsage = target.id
@@ -781,7 +781,7 @@ function ClaudeSwitcherMenu({
                       <span className="min-w-0 flex-1 truncate">{target.label}</span>
                       {target.active ? (
                         <span className="shrink-0 text-[10px] font-medium text-muted-foreground">
-                          Active
+                          활성
                         </span>
                       ) : null}
                     </div>
@@ -814,7 +814,7 @@ function ClaudeSwitcherMenu({
           openSettingsPage()
         }}
       >
-        Manage Accounts…
+        계정 관리…
       </DropdownMenuItem>
     </ProviderDetailsMenu>
   )
@@ -880,7 +880,7 @@ function InlineUsageBars({
         </div>
       )}
       {limits.status === 'error' && !limits.session && !limits.weekly && (
-        <span className="text-[10px] text-muted-foreground">Sign in to see usage</span>
+        <span className="text-[10px] text-muted-foreground">사용량을 보려면 로그인</span>
       )}
     </div>
   )
@@ -905,7 +905,9 @@ function InlineUsageSignInAction({
 }): React.JSX.Element {
   return (
     <div className={`flex w-full items-center gap-2 ${isFetching ? 'animate-pulse' : ''}`}>
-      <span className="min-w-0 flex-1 text-[10px] text-muted-foreground">Sign in to see usage</span>
+      <span className="min-w-0 flex-1 text-[10px] text-muted-foreground">
+        사용량을 보려면 로그인
+      </span>
       <Button
         type="button"
         variant="ghost"
@@ -928,7 +930,7 @@ function InlineUsageSignInAction({
         ) : (
           <RefreshCw className="size-3" />
         )}
-        Sign in
+        로그인
       </Button>
     </div>
   )
@@ -972,7 +974,7 @@ function ProviderSegment({
   compact: boolean
 }): React.JSX.Element {
   const provider = p?.provider ?? 'claude'
-  const statusLabel = p?.error && /rate limit/i.test(p.error) ? 'Limited' : 'Unavailable'
+  const statusLabel = p?.error && /rate limit/i.test(p.error) ? '제한됨' : '사용 불가'
 
   // Idle / initial load
   if (!p || p.status === 'idle') {
@@ -1130,7 +1132,7 @@ function CodexSwitcherMenu({
     // this component, so we refresh when the persisted account roster changes
     // or when the menu opens instead of leaving a stale account list mounted.
     void loadAccounts().catch((error) => {
-      console.error('Failed to load Codex accounts for status bar:', error)
+      console.error('상태바용 Codex 계정을 불러오지 못했습니다:', error)
     })
   }, [loadAccounts, open, codexAccountSyncKey])
 
@@ -1169,7 +1171,7 @@ function CodexSwitcherMenu({
         }
       }
     } catch (error) {
-      console.error('Failed to switch Codex account from status bar:', error)
+      console.error('상태바에서 Codex 계정을 전환하지 못했습니다:', error)
     } finally {
       if (mountedRef.current) {
         setIsSwitching(false)
@@ -1193,7 +1195,7 @@ function CodexSwitcherMenu({
         await fetchInactiveCodexAccountUsage()
       }
     } catch (error) {
-      console.error('Failed to re-authenticate Codex account from status bar:', error)
+      console.error('상태바에서 Codex 계정을 다시 인증하지 못했습니다:', error)
     } finally {
       if (mountedRef.current) {
         setReauthenticatingAccountId(null)
@@ -1212,7 +1214,7 @@ function CodexSwitcherMenu({
     try {
       await refreshCodexRateLimitsForTarget(group.runtimeTarget)
     } catch (error) {
-      console.error('Failed to switch Codex usage runtime:', error)
+      console.error('Codex 사용 런타임을 전환하지 못했습니다:', error)
     }
   }
 
@@ -1257,19 +1259,19 @@ function CodexSwitcherMenu({
       provider={codex}
       compact={compact}
       iconOnly={iconOnly}
-      ariaLabel="Open Codex details and account switcher"
+      ariaLabel="Codex 세부정보 및 계정 전환 열기"
       topContent={
         <AccountRuntimeToggle
           groups={switchGroups}
           value={selectedGroup?.key ?? selectedRuntimeKey}
           onChange={(group) => void handleSelectRuntime(group)}
-          ariaLabel="Codex usage runtime"
+          ariaLabel="Codex 사용 런타임"
         />
       }
       open={open}
       onOpenChange={handleOpenChange}
     >
-      <DropdownMenuLabel>Codex Account</DropdownMenuLabel>
+      <DropdownMenuLabel>Codex 계정</DropdownMenuLabel>
       <DropdownMenuItem
         onSelect={(event) => {
           event.preventDefault()
@@ -1279,7 +1281,7 @@ function CodexSwitcherMenu({
         <div className="flex min-w-0 flex-1 flex-col gap-0.5 py-0.5 text-[12px]">
           <div className="flex min-w-0 items-center gap-1.5">
             <span className="min-w-0 flex-1 truncate text-foreground">
-              {activeTarget?.label ?? 'System default'}
+              {activeTarget?.label ?? '시스템 기본값'}
             </span>
           </div>
         </div>
@@ -1329,7 +1331,7 @@ function CodexSwitcherMenu({
                           <span className="min-w-0 flex-1 truncate">{target.label}</span>
                           {target.active ? (
                             <span className="shrink-0 text-[10px] font-medium text-muted-foreground">
-                              Active
+                              활성
                             </span>
                           ) : null}
                         </div>
@@ -1375,7 +1377,7 @@ function CodexSwitcherMenu({
           openSettingsPage()
         }}
       >
-        Manage Accounts…
+        계정 관리…
       </DropdownMenuItem>
     </ProviderDetailsMenu>
   )
@@ -1590,8 +1592,8 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
   const compact = containerWidth < 900
   const iconOnly = containerWidth < 500
   const floatingTerminalActionLabel = floatingTerminalOpen
-    ? 'Minimize Floating Workspace'
-    : 'Show Floating Workspace'
+    ? '떠다니는 작업 공간 최소화'
+    : '떠다니는 작업 공간 표시'
 
   return (
     <div
@@ -1622,7 +1624,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
             provider={gemini}
             compact={compact}
             iconOnly={iconOnly}
-            ariaLabel="Open Gemini usage details"
+            ariaLabel="Gemini 사용량 세부정보 열기"
           />
         )}
         {showOpencodeGo && (
@@ -1630,7 +1632,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
             provider={opencodeGo}
             compact={compact}
             iconOnly={iconOnly}
-            ariaLabel="Open OpenCode Go usage details"
+            ariaLabel="OpenCode Go 사용량 세부정보 열기"
           />
         )}
         {anyVisible && (
@@ -1640,7 +1642,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
                 onClick={handleRefresh}
                 disabled={isRefreshing}
                 className="p-0.5 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
-                aria-label="Refresh rate limits"
+                aria-label="사용량 제한 새로고침"
               >
                 <RefreshCw
                   size={11}
@@ -1649,7 +1651,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
               </button>
             </TooltipTrigger>
             <TooltipContent side="top" sideOffset={6}>
-              Refresh usage data
+              사용량 데이터 새로고침
             </TooltipContent>
           </Tooltip>
         )}
@@ -1705,7 +1707,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
               }}
             >
               <ClaudeIcon size={14} />
-              Claude Usage
+              Claude 사용량
             </DropdownMenuCheckboxItem>
           )}
           {isStatusBarItemAvailable('codex', detectedAgentIds) && (
@@ -1717,7 +1719,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
               }}
             >
               <OpenAIIcon size={14} />
-              Codex Usage
+              Codex 사용량
             </DropdownMenuCheckboxItem>
           )}
           {isStatusBarItemAvailable('gemini', detectedAgentIds) && (
@@ -1729,7 +1731,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
               }}
             >
               <GeminiIcon size={14} />
-              Gemini Usage
+              Gemini 사용량
             </DropdownMenuCheckboxItem>
           )}
           <DropdownMenuCheckboxItem
@@ -1740,7 +1742,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
             }}
           >
             <OpenCodeGoIcon size={14} />
-            OpenCode Go Usage
+            OpenCode Go 사용량
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={statusBarItems.includes('ssh')}
@@ -1750,7 +1752,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
             }}
           >
             <Server className="size-3.5" />
-            SSH Status
+            SSH 상태
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={statusBarItems.includes('resource-usage')}
@@ -1760,7 +1762,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
             }}
           >
             <Activity className="size-3.5" />
-            Resource Manager
+            리소스 관리자
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={statusBarItems.includes('ports')}
@@ -1770,7 +1772,7 @@ function StatusBarInner({ floatingTerminalOpen }: StatusBarProps): React.JSX.Ele
             }}
           >
             <Plug className="size-3.5" />
-            Ports
+            포트
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>

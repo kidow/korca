@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: the Linear drawer co-locates read-only preview, edit controls, and comment input so the full issue surface stays in one file. */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
@@ -54,11 +55,11 @@ function LinearIcon({ className }: { className?: string }): React.JSX.Element {
 }
 
 const PRIORITY_LABELS: Record<number, string> = {
-  0: 'No priority',
-  1: 'Urgent',
-  2: 'High',
-  3: 'Medium',
-  4: 'Low'
+  0: '우선순위 없음',
+  1: '긴급',
+  2: '높음',
+  3: '보통',
+  4: '낮음'
 }
 
 const LINEAR_EDIT_CHIP_CLASS =
@@ -73,7 +74,7 @@ const LINEAR_EDIT_MENU_ITEM_WITH_ICON_CLASS =
 const LINEAR_ESTIMATE_PRESETS = [1, 2, 3, 5, 8] as const
 
 export function formatLinearEstimateLabel(estimate: number | null | undefined): string {
-  return estimate === null || estimate === undefined ? 'Set estimate' : `Estimate ${estimate}`
+  return estimate === null || estimate === undefined ? '예상치 설정' : `예상치 ${estimate}`
 }
 
 function formatLinearEstimateInput(estimate: number | null | undefined): string {
@@ -97,7 +98,7 @@ function LinearEditChipAdornment({
 function formatRelativeTime(input: string): string {
   const date = new Date(input)
   if (Number.isNaN(date.getTime())) {
-    return 'recently'
+    return '방금 전'
   }
   const diffMs = date.getTime() - Date.now()
   const diffMinutes = Math.round(diffMs / 60_000)
@@ -256,7 +257,7 @@ export function LinearIssueEditSection({
 
     const estimate = Number(trimmed)
     if (!Number.isInteger(estimate) || estimate < 0) {
-      toast.error('Estimate must be a non-negative integer')
+      toast.error('예상치는 0 이상의 정수여야 합니다')
       return
     }
 
@@ -345,7 +346,7 @@ export function LinearIssueEditSection({
   const labelsPending = isPending('labels')
   const labelSummary =
     localLabels.length === 0
-      ? '+ Label'
+      ? '+ 레이블'
       : localLabels.length === 1
         ? localLabels[0]
         : `${localLabels[0]} +${localLabels.length - 1}`
@@ -371,7 +372,7 @@ export function LinearIssueEditSection({
       <div className="space-y-3">
         <section className="rounded-xl border border-border/60 bg-card text-card-foreground shadow-xs">
           <div className="flex h-10 items-center gap-1 border-b border-border/50 px-4 text-sm font-medium text-muted-foreground">
-            <span>Properties</span>
+            <span>속성</span>
             <ChevronDown className="size-3.5" />
           </div>
           <div className="space-y-1 p-3">
@@ -402,7 +403,7 @@ export function LinearIssueEditSection({
                 ) : states.loading ? (
                   <div className="flex items-center gap-2 px-2 py-3 text-[12px] text-muted-foreground">
                     <LoaderCircle className="size-3 animate-spin" />
-                    Loading states
+                    상태를 불러오는 중
                   </div>
                 ) : states.data.length > 0 ? (
                   <div>
@@ -426,7 +427,7 @@ export function LinearIssueEditSection({
                   </div>
                 ) : (
                   <div className="px-2 py-3 text-center text-[12px] text-muted-foreground">
-                    No states found
+                    찾은 상태가 없습니다
                   </div>
                 )}
               </PopoverContent>
@@ -486,7 +487,7 @@ export function LinearIssueEditSection({
                     <UserRound className={propertyIconClass} />
                   )}
                   <span className="min-w-0 flex-1 truncate">
-                    {localAssignee ? localAssignee.displayName : 'Unassigned'}
+                    {localAssignee ? localAssignee.displayName : '미지정'}
                   </span>
                   <LinearEditChipAdornment loading={members.loading} pending={assigneePending} />
                 </button>
@@ -501,7 +502,7 @@ export function LinearIssueEditSection({
                     onClick={() => handleAssigneeChange('__unassign__')}
                     className={cn(LINEAR_EDIT_MENU_ITEM_CLASS, !localAssignee && 'bg-accent/50')}
                   >
-                    Unassigned
+                    미지정
                   </button>
                   {members.error ? (
                     <div className="px-2 py-3 text-center text-[12px] text-destructive">
@@ -510,7 +511,7 @@ export function LinearIssueEditSection({
                   ) : members.loading ? (
                     <div className="flex items-center gap-2 px-2 py-3 text-[12px] text-muted-foreground">
                       <LoaderCircle className="size-3 animate-spin" />
-                      Loading members
+                      멤버를 불러오는 중
                     </div>
                   ) : (
                     members.data.map((m) => (
@@ -573,7 +574,7 @@ export function LinearIssueEditSection({
                       }
                     }}
                     inputMode="numeric"
-                    placeholder="Custom estimate"
+                    placeholder="사용자 지정 예상치"
                     className="h-8 text-sm"
                   />
                   <div className="flex items-center justify-between gap-2">
@@ -583,7 +584,7 @@ export function LinearIssueEditSection({
                       size="sm"
                       onClick={() => handleEstimateChange(null)}
                     >
-                      Clear
+                      지우기
                     </Button>
                     <Button
                       type="button"
@@ -592,7 +593,7 @@ export function LinearIssueEditSection({
                       disabled={estimatePending}
                     >
                       {estimatePending ? <LoaderCircle className="size-3.5 animate-spin" /> : null}
-                      Save
+                      저장
                     </Button>
                   </div>
                 </div>
@@ -603,7 +604,7 @@ export function LinearIssueEditSection({
 
         <section className="rounded-xl border border-border/60 bg-card text-card-foreground shadow-xs">
           <div className="flex h-10 items-center gap-1 border-b border-border/50 px-4 text-sm font-medium text-muted-foreground">
-            <span>Labels</span>
+            <span>라벨</span>
             <ChevronDown className="size-3.5" />
           </div>
           <div className="p-3">
@@ -614,13 +615,13 @@ export function LinearIssueEditSection({
                   disabled={labelsPending}
                   className={propertyRowClass}
                   aria-label={
-                    localLabels.length ? `Labels: ${localLabels.join(', ')}` : 'Add label'
+                    localLabels.length ? `레이블: ${localLabels.join(', ')}` : '레이블 추가'
                   }
                   aria-busy={labelsPending || labels.loading}
                 >
                   <Tag className={propertyIconClass} />
                   <span className="min-w-0 flex-1 truncate">
-                    {localLabels.length ? labelSummary : 'Add label'}
+                    {localLabels.length ? labelSummary : '레이블 추가'}
                   </span>
                   <LinearEditChipAdornment loading={labels.loading} pending={labelsPending} />
                 </button>
@@ -636,7 +637,7 @@ export function LinearIssueEditSection({
                 ) : labels.loading ? (
                   <div className="flex items-center gap-2 px-2 py-3 text-[12px] text-muted-foreground">
                     <LoaderCircle className="size-3 animate-spin" />
-                    Loading labels
+                    라벨 불러오는 중
                   </div>
                 ) : labels.data.length > 0 ? (
                   <div>
@@ -667,7 +668,7 @@ export function LinearIssueEditSection({
                   </div>
                 ) : (
                   <div className="px-2 py-3 text-center text-[12px] text-muted-foreground">
-                    No labels found
+                    찾은 라벨 없음
                   </div>
                 )}
               </PopoverContent>
@@ -704,7 +705,7 @@ export function LinearIssueEditSection({
           ) : states.loading ? (
             <div className="flex items-center gap-2 px-2 py-3 text-[12px] text-muted-foreground">
               <LoaderCircle className="size-3 animate-spin" />
-              Loading states
+              상태 불러오는 중
             </div>
           ) : states.data.length > 0 ? (
             <div>
@@ -728,7 +729,7 @@ export function LinearIssueEditSection({
             </div>
           ) : (
             <div className="px-2 py-3 text-center text-[12px] text-muted-foreground">
-              No states found
+              찾은 상태 없음
             </div>
           )}
         </PopoverContent>
@@ -803,7 +804,7 @@ export function LinearIssueEditSection({
                 }
               }}
               inputMode="numeric"
-              placeholder="Custom estimate"
+              placeholder="사용자 지정 예상치"
               className="h-8 text-sm"
             />
             <div className="flex items-center justify-between gap-2">
@@ -813,7 +814,7 @@ export function LinearIssueEditSection({
                 size="sm"
                 onClick={() => handleEstimateChange(null)}
               >
-                Clear
+                지우기
               </Button>
               <Button
                 type="button"
@@ -822,7 +823,7 @@ export function LinearIssueEditSection({
                 disabled={estimatePending}
               >
                 {estimatePending ? <LoaderCircle className="size-3.5 animate-spin" /> : null}
-                Save
+                저장
               </Button>
             </div>
           </div>
@@ -839,7 +840,7 @@ export function LinearIssueEditSection({
             aria-busy={assigneePending || members.loading}
           >
             <span className="truncate">
-              {localAssignee ? localAssignee.displayName : '+ Assignee'}
+              {localAssignee ? localAssignee.displayName : '+ 담당자'}
             </span>
             <LinearEditChipAdornment loading={members.loading} pending={assigneePending} />
           </button>
@@ -851,7 +852,7 @@ export function LinearIssueEditSection({
               onClick={() => handleAssigneeChange('__unassign__')}
               className={cn(LINEAR_EDIT_MENU_ITEM_CLASS, !localAssignee && 'bg-accent/50')}
             >
-              Unassigned
+              미지정
             </button>
             {members.error ? (
               <div className="px-2 py-3 text-center text-[12px] text-destructive">
@@ -860,7 +861,7 @@ export function LinearIssueEditSection({
             ) : members.loading ? (
               <div className="flex items-center gap-2 px-2 py-3 text-[12px] text-muted-foreground">
                 <LoaderCircle className="size-3 animate-spin" />
-                Loading members
+                멤버를 불러오는 중
               </div>
             ) : (
               members.data.map((m) => (
@@ -888,7 +889,7 @@ export function LinearIssueEditSection({
             type="button"
             disabled={labelsPending}
             className={LINEAR_EDIT_CHIP_CLASS}
-            aria-label={localLabels.length ? `Labels: ${localLabels.join(', ')}` : 'Add label'}
+            aria-label={localLabels.length ? `레이블: ${localLabels.join(', ')}` : '레이블 추가'}
             aria-busy={labelsPending || labels.loading}
           >
             <span className="truncate">{labelSummary}</span>
@@ -901,7 +902,7 @@ export function LinearIssueEditSection({
           ) : labels.loading ? (
             <div className="flex items-center gap-2 px-2 py-3 text-[12px] text-muted-foreground">
               <LoaderCircle className="size-3 animate-spin" />
-              Loading labels
+              레이블을 불러오는 중
             </div>
           ) : labels.data.length > 0 ? (
             <div>
@@ -932,7 +933,7 @@ export function LinearIssueEditSection({
             </div>
           ) : (
             <div className="px-2 py-3 text-center text-[12px] text-muted-foreground">
-              No labels found
+              찾은 레이블이 없습니다
             </div>
           )}
         </PopoverContent>
@@ -996,11 +997,11 @@ export function LinearIssueCommentFooter({
           createdAt: new Date().toISOString()
         })
       } else {
-        toast.error(typed.error ?? 'Failed to add comment')
+        toast.error(typed.error ?? '댓글을 추가하지 못했습니다')
       }
     } catch (err) {
       if (mountedRef.current) {
-        toast.error(err instanceof Error ? err.message : 'Failed to add comment')
+        toast.error(err instanceof Error ? err.message : '댓글을 추가하지 못했습니다')
       }
     } finally {
       if (mountedRef.current) {
@@ -1033,19 +1034,19 @@ export function LinearIssueCommentFooter({
             autoGrow()
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Leave a comment..."
+          placeholder="댓글을 남기세요..."
           rows={3}
           className="scrollbar-sleek min-h-24 max-h-40 w-full resize-none overflow-y-auto rounded-t-xl bg-transparent px-5 py-4 text-sm placeholder:text-muted-foreground focus-visible:outline-none"
         />
         <div className="flex items-center justify-between px-4 pb-3">
           <span className="text-[11px] text-muted-foreground">
-            {submitShortcutLabel !== 'Unassigned' ? `${submitShortcutLabel} to comment` : ''}
+            {submitShortcutLabel !== '미지정' ? `${submitShortcutLabel}로 댓글 달기` : ''}
           </span>
           <Button
             size="icon-sm"
             onClick={handleSubmit}
             disabled={!body.trim() || submitting}
-            aria-label="Send comment"
+            aria-label="댓글 보내기"
           >
             {submitting ? (
               <LoaderCircle className="size-3.5 animate-spin" />
@@ -1071,7 +1072,7 @@ export function LinearIssueCommentFooter({
           autoGrow()
         }}
         onKeyDown={handleKeyDown}
-        placeholder="Add a comment…"
+        placeholder="댓글 추가…"
         rows={1}
         className="scrollbar-sleek min-h-[32px] max-h-[96px] flex-1 resize-none overflow-y-auto rounded-md border border-input bg-transparent px-3 py-2 text-[13px] placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
       />
@@ -1080,7 +1081,7 @@ export function LinearIssueCommentFooter({
         onClick={handleSubmit}
         disabled={!body.trim() || submitting}
         className="size-8 shrink-0"
-        aria-label="Send comment"
+        aria-label="댓글 보내기"
       >
         {submitting ? (
           <LoaderCircle className="size-3.5 animate-spin" />
@@ -1251,10 +1252,10 @@ export default function LinearItemDrawer({
         }}
       >
         <VisuallyHidden.Root asChild>
-          <SheetTitle>{displayed?.title ?? 'Linear issue'}</SheetTitle>
+          <SheetTitle>{displayed?.title ?? 'Linear 이슈'}</SheetTitle>
         </VisuallyHidden.Root>
         <VisuallyHidden.Root asChild>
-          <SheetDescription>Preview and edit the selected Linear issue.</SheetDescription>
+          <SheetDescription>선택한 Linear 이슈를 미리 보고 수정합니다.</SheetDescription>
         </VisuallyHidden.Root>
 
         {displayed && (
@@ -1305,13 +1306,13 @@ export default function LinearItemDrawer({
                         size="icon"
                         className="size-7"
                         onClick={onClose}
-                        aria-label="Close preview"
+                        aria-label="미리보기 닫기"
                       >
                         <X className="size-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom" sideOffset={6}>
-                      Close · Esc
+                      닫기 · Esc
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -1340,7 +1341,7 @@ export default function LinearItemDrawer({
 
               <div className="border-t border-border/40 px-4 py-4">
                 <div className="flex items-center gap-2 pb-3">
-                  <span className="text-[13px] font-medium text-foreground">Comments</span>
+                  <span className="text-[13px] font-medium text-foreground">댓글</span>
                   {comments.length > 0 && (
                     <span className="text-[12px] text-muted-foreground">{comments.length}</span>
                   )}
@@ -1350,7 +1351,7 @@ export default function LinearItemDrawer({
                     <LoaderCircle className="size-4 animate-spin text-muted-foreground" />
                   </div>
                 ) : comments.length === 0 ? (
-                  <p className="text-[13px] text-muted-foreground">No comments yet.</p>
+                  <p className="text-[13px] text-muted-foreground">아직 댓글이 없습니다.</p>
                 ) : (
                   <div className="flex flex-col gap-3">
                     {comments.map((comment) => (
@@ -1367,7 +1368,7 @@ export default function LinearItemDrawer({
                             />
                           )}
                           <span className="text-[13px] font-semibold text-foreground">
-                            {comment.user?.displayName ?? 'Unknown'}
+                            {comment.user?.displayName ?? '알 수 없음'}
                           </span>
                           <span className="text-[12px] text-muted-foreground">
                             · {formatRelativeTime(comment.createdAt)}
@@ -1396,9 +1397,9 @@ export default function LinearItemDrawer({
               <Button
                 onClick={() => onUse(displayed)}
                 className="w-full justify-center gap-2"
-                aria-label="Start workspace from issue"
+                aria-label="이슈에서 작업 공간 시작"
               >
-                Start workspace from issue
+                이슈에서 작업 공간 시작
                 <ArrowRight className="size-4" />
               </Button>
             </div>

@@ -18,7 +18,7 @@ function DismissButton({ onDismiss }: DismissButtonProps): React.JSX.Element {
           type="button"
           variant="ghost"
           size="icon-xs"
-          aria-label="Dismiss setup scripts"
+          aria-label="설정 스크립트 닫기"
           className="-mr-1 text-muted-foreground"
           onClick={onDismiss}
         >
@@ -26,7 +26,7 @@ function DismissButton({ onDismiss }: DismissButtonProps): React.JSX.Element {
         </Button>
       </TooltipTrigger>
       <TooltipContent side="top" sideOffset={4}>
-        Dismiss
+        닫기
       </TooltipContent>
     </Tooltip>
   )
@@ -47,11 +47,11 @@ export function DetectedSetupPreview({
     <div className="mt-3 border-t border-sidebar-border pt-3">
       <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
         <PackageCheck className="size-3.5" />
-        Detected setup
+        설정 스크립트 감지
       </div>
       <textarea
         value={setup}
-        aria-label="Detected setup script"
+        aria-label="감지된 설정 스크립트"
         onChange={(event) => onSetupChange(event.target.value)}
         spellCheck={false}
         rows={Math.min(Math.max(setup.split('\n').length, 2), 6)}
@@ -59,7 +59,7 @@ export function DetectedSetupPreview({
       />
       {provenance ? (
         <p className="mt-1.5 text-[11px] text-muted-foreground">
-          Detected from <code className="rounded bg-muted px-1 py-0.5">{provenance}</code>
+          <code className="rounded bg-muted px-1 py-0.5">{provenance}</code>에서 감지됨
         </p>
       ) : null}
     </div>
@@ -92,7 +92,7 @@ export function PackageManagerActions({
         ) : (
           <Check className="size-3.5" />
         )}
-        <span className={cn('truncate', isSaving && 'text-muted-foreground')}>Save</span>
+        <span className={cn('truncate', isSaving && 'text-muted-foreground')}>저장</span>
       </Button>
       <Button
         type="button"
@@ -102,7 +102,7 @@ export function PackageManagerActions({
         onClick={onConfigure}
       >
         <Settings className="size-3.5" />
-        <span className="truncate">Configure manually</span>
+        <span className="truncate">직접 설정</span>
       </Button>
     </div>
   )
@@ -124,37 +124,37 @@ export function SetupScriptPromptBody({
   candidateSource
 }: SetupScriptPromptBodyProps): React.JSX.Element {
   if (isInspectionError) {
-    return <>Couldn&apos;t verify this repo&apos;s setup script right now.</>
+    return <>지금은 이 저장소의 설정 스크립트를 확인할 수 없습니다.</>
   }
   if (sharedSetupIgnored) {
     return (
       <>
-        This repo is set to ignore <code>korca.yaml</code> setup scripts. Configure a local setup
-        command or change the script source in Settings.
+        이 저장소는 <code>korca.yaml</code> 설정 스크립트를 무시하도록 되어 있습니다. 로컬 설정
+        명령을 구성하거나 설정에서 스크립트 원본을 바꾸세요.
       </>
     )
   }
   if (isPackageManagerSuggestion) {
     return (
       <>
-        Setup scripts run automatically when you create a new worktree, so you don&apos;t have to
-        run the same command every time.
+        설정 스크립트는 새 워크트리를 만들 때 자동으로 실행되므로, 같은 명령을 매번 다시 실행할
+        필요가 없습니다.
       </>
     )
   }
   if (candidateSource) {
     return (
       <>
-        Detected setup config from <span className="break-words">{candidateSource}</span>. Save it
-        locally so every workspace starts ready automatically. You can move it to{' '}
-        <code>korca.yaml</code> later to share it.
+        <span className="break-words">{candidateSource}</span>에서 설정 구성을 감지했습니다.
+        저장하세요 로컬에 저장하면 모든 작업 공간이 자동으로 준비된 상태로 시작합니다. 나중에{' '}
+        <code>korca.yaml</code>로 옮겨 공유할 수 있습니다.
       </>
     )
   }
   return (
     <>
-      Add a local setup command so each new workspace starts ready automatically. You can move it to{' '}
-      <code>korca.yaml</code> later to share it for{' '}
+      로컬 설정 명령을 추가하면 새 작업 공간이 자동으로 준비된 상태로 시작합니다. 나중에{' '}
+      <code>korca.yaml</code>로 옮겨 공유할 수 있습니다. 대상:{' '}
       <span className="inline-flex items-center gap-1.5 align-baseline px-1.5 py-0.5 rounded-[4px] bg-accent border border-border dark:bg-accent/50 dark:border-border/60">
         <RepoBadgeMark color={repo.badgeColor} />
         <span className="text-[10px] font-semibold text-foreground truncate max-w-[8rem] leading-none lowercase">
@@ -184,7 +184,7 @@ export function InspectionErrorActions({
         onClick={onRetry}
       >
         <RefreshCw className="size-3.5" />
-        <span className="truncate">Retry</span>
+        <span className="truncate">다시 시도</span>
       </Button>
       <Button
         type="button"
@@ -194,7 +194,7 @@ export function InspectionErrorActions({
         onClick={onConfigure}
       >
         <Settings className="size-3.5" />
-        <span className="sr-only">Settings</span>
+        <span className="sr-only">설정</span>
       </Button>
     </div>
   )
@@ -214,7 +214,7 @@ export function ConfigureOnlyAction({ onConfigure }: ConfigureOnlyActionProps): 
       onClick={onConfigure}
     >
       <Settings className="size-3.5" />
-      <span className="truncate">Configure</span>
+      <span className="truncate">설정</span>
     </Button>
   )
 }
@@ -242,7 +242,7 @@ export function SaveLocalSetupAction({
       ) : (
         <Download className="size-3.5" />
       )}
-      <span className={cn('truncate', isSaving && 'text-muted-foreground')}>Save local setup</span>
+      <span className={cn('truncate', isSaving && 'text-muted-foreground')}>로컬 설정 저장</span>
     </Button>
   )
 }

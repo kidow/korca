@@ -11,7 +11,7 @@ import MermaidBlock from './MermaidBlock'
  * this list is just for quick picking in the UI.
  */
 const LANGUAGES = [
-  { value: '', label: 'Plain text' },
+  { value: '', label: '일반 텍스트' },
   { value: 'bash', label: 'Bash' },
   { value: 'c', label: 'C' },
   { value: 'cpp', label: 'C++' },
@@ -127,13 +127,13 @@ export function RichMarkdownCodeBlock({
         className="code-block-copy-btn"
         contentEditable={false}
         onClick={handleCopy}
-        aria-label="Copy code"
-        title="Copy code"
+        aria-label="코드 복사"
+        title="코드 복사"
       >
         {copied ? (
           <>
             <Check size={14} />
-            <span className="code-block-copy-label">Copied</span>
+            <span className="code-block-copy-label">복사됨</span>
           </>
         ) : (
           <Copy size={14} />

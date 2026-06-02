@@ -43,23 +43,23 @@ export function getDeleteWorktreeDialogCopy(args: {
     args.folderWorkspaceDeleteCount < args.worktreeCount
   return {
     targetLabel: args.isBatchDelete
-      ? `${args.worktreeCount} workspaces`
+      ? `작업 공간 ${args.worktreeCount}개`
       : args.worktree?.displayName,
     targetClassName: args.isBatchDelete
       ? 'font-medium text-foreground'
       : 'break-all font-medium text-foreground',
     descriptionSuffix: args.isBatchDelete
       ? allFolderWorkspaceDeletes
-        ? 'from Korca. Project folders on disk will not be deleted.'
+        ? 'Korca에서 제거됩니다. 디스크의 프로젝트 폴더는 삭제되지 않습니다.'
         : mixedFolderWorkspaceDeletes
-          ? 'from Korca. Git worktrees will also be removed from git and disk; folder workspaces will only remove the Korca workspace entry.'
-          : 'from git and delete their workspace folders.'
+          ? 'Korca에서 제거됩니다. Git worktree는 git과 디스크에서 함께 제거되고, 폴더 작업 공간은 Korca 작업 공간 항목만 제거됩니다.'
+          : 'Git에서 제거되고 작업 공간 폴더도 삭제됩니다.'
       : args.isFolderWorkspaceDelete
-        ? 'from Korca. The project folder on disk will not be deleted.'
-        : 'from git and delete its workspace folder.',
+        ? 'Korca에서 제거됩니다. 디스크의 프로젝트 폴더는 삭제되지 않습니다.'
+        : 'Git에서 제거되고 작업 공간 폴더도 삭제됩니다.',
     mainWorktreeBlocker: args.isFolderWorkspaceDelete
-      ? 'Remove the folder project instead of deleting this workspace.'
-      : 'Git does not allow removing the main worktree.'
+      ? '이 작업 공간 대신 폴더 프로젝트를 제거하세요.'
+      : 'Git은 메인 worktree를 제거할 수 없습니다.'
   }
 }
 
@@ -79,12 +79,12 @@ export function getDeleteWorktreeLineageDialogCopy(args: {
   return {
     childTargetLabel:
       args.childWorkspaceCount === 1
-        ? '1 child workspace'
-        : `${args.childWorkspaceCount} child workspaces`,
+        ? '하위 작업 공간 1개'
+        : `하위 작업 공간 ${args.childWorkspaceCount}개`,
     descriptionSuffix: allFolderWorkspaceDeletes
-      ? 'from Korca. Project folders on disk will not be deleted.'
+      ? 'Korca에서 제거됩니다. 디스크의 프로젝트 폴더는 삭제되지 않습니다.'
       : mixedFolderWorkspaceDeletes
-        ? 'from Korca. Git worktrees will also be removed from git and disk; folder workspaces will only remove the Korca workspace entry.'
-        : 'from git and delete their workspace folders.'
+        ? 'Korca에서 제거됩니다. Git worktree는 git과 디스크에서 함께 제거되고, 폴더 작업 공간은 Korca 작업 공간 항목만 제거됩니다.'
+        : 'Git에서 제거되고 작업 공간 폴더도 삭제됩니다.'
   }
 }

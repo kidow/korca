@@ -207,7 +207,7 @@ export async function openTabBarEntry(args: TabCreateEntryArgs): Promise<void> {
   const state = useAppStore.getState()
   const worktree = state.getKnownWorktreeById(args.worktreeId)
   if (!worktree) {
-    throw new Error('No active worktree.')
+    throw new Error('활성 워크트리가 없습니다.')
   }
   const runtimeContext: RuntimeFileOperationArgs = {
     settings: state.settings,

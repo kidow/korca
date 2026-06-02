@@ -57,7 +57,7 @@ export function FeatureSetupInlineTerminal({
       command={command}
       title="스킬 설정"
       ariaLabel="스킬 설정 명령"
-      description="Enter를 눌러 명령을 실행하고, npx 확인이 나오면 승인하세요. 나중에 설정에서 다시 할 수도 있습니다."
+      description="엔터를 눌러 명령을 실행하고, npx 확인이 나오면 승인하세요. 나중에 설정에서 다시 할 수도 있습니다."
       terminalHeightPx={180}
       terminalTopMarginPx={16}
       autoScrollIntoView={false}

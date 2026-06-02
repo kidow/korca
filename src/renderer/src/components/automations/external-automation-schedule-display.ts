@@ -40,6 +40,6 @@ export function getExternalAutomationScheduleDisplay(
   }
 
   return {
-    label: 'Schedule unavailable'
+    label: '일정을 사용할 수 없음'
   }
 }

@@ -9,23 +9,23 @@ export function HomeSlide({ tapping }: { tapping: boolean }): React.JSX.Element 
           <KorcaLogo />
           <span className="mp-app-brand-name">Korca</span>
         </div>
-        <button type="button" className="mp-icon-button" aria-label="Settings">
+        <button type="button" className="mp-icon-button" aria-label="설정">
           <SettingsIcon />
         </button>
       </div>
 
       <div className="mp-scroll-region">
         <div className="mp-greeting">
-          <div className="mp-greeting-title">Welcome back</div>
+          <div className="mp-greeting-title">다시 오신 것을 환영합니다</div>
         </div>
 
         <div className="mp-stat-row">
-          <Stat value="1,284" label="Agents spawned" />
-          <Stat value="142h" label="Agent time" />
-          <Stat value="96" label="PRs created" />
+          <Stat value="1,284" label="생성된 에이전트" />
+          <Stat value="142h" label="에이전트 시간" />
+          <Stat value="96" label="생성된 PR" />
         </div>
 
-        <div className="mp-section-label">Desktops</div>
+        <div className="mp-section-label">데스크톱</div>
         <div className={cn('mp-host-card', tapping && 'is-tapping')}>
           <div className="mp-host-icon">
             <DesktopIcon />
@@ -34,7 +34,7 @@ export function HomeSlide({ tapping }: { tapping: boolean }): React.JSX.Element 
             <div className="mp-host-name">MacBook Pro</div>
             <div className="mp-host-meta">
               <span className="mp-status-dot is-green" />
-              <span>Connected · 40 worktrees · 5 active</span>
+              <span>연결됨 · 작업 트리 40개 · 활성 5개</span>
             </div>
           </div>
           <div className="mp-chevron-right">
@@ -49,7 +49,7 @@ export function HomeSlide({ tapping }: { tapping: boolean }): React.JSX.Element 
             <div className="mp-host-name is-dim">M1 Mini · home</div>
             <div className="mp-host-meta">
               <span className="mp-status-dot is-muted" />
-              <span>Disconnected</span>
+              <span>연결 끊김</span>
             </div>
           </div>
           <div className="mp-chevron-right">
@@ -58,7 +58,7 @@ export function HomeSlide({ tapping }: { tapping: boolean }): React.JSX.Element 
         </div>
 
         <div className="mp-section-label" style={{ marginTop: 14 }}>
-          Resume
+          최근 작업
         </div>
         <div className="mp-resume-card">
           <div className="mp-resume-icon">
@@ -77,17 +77,17 @@ export function HomeSlide({ tapping }: { tapping: boolean }): React.JSX.Element 
         </div>
 
         <div className="mp-section-label" style={{ marginTop: 10 }}>
-          Tasks
+          작업
         </div>
         <div className="mp-task-home-card">
           <div className="mp-task-home-icon">
             <ListTodoIcon />
           </div>
           <div className="mp-host-main">
-            <div className="mp-task-home-title">Tasks</div>
+            <div className="mp-task-home-title">작업</div>
             <div className="mp-task-home-subtitle">GitHub · Linear</div>
           </div>
-          <div className="mp-task-home-providers" aria-label="GitHub and Linear">
+          <div className="mp-task-home-providers" aria-label="GitHub 및 Linear">
             <div className="mp-task-home-provider-button">
               <GithubIcon />
             </div>
@@ -101,25 +101,25 @@ export function HomeSlide({ tapping }: { tapping: boolean }): React.JSX.Element 
         </div>
 
         <div className="mp-section-label" style={{ marginTop: 14 }}>
-          Quick Actions
+          빠른 작업
         </div>
         <div className="mp-quick-actions">
           <div className="mp-quick-action">
             <div className="mp-quick-action-icon">
               <QrSmallIcon />
             </div>
-            <div className="mp-quick-action-label">Pair Desktop</div>
+            <div className="mp-quick-action-label">데스크톱 페어링</div>
           </div>
           <div className="mp-quick-action">
             <div className="mp-quick-action-icon">
               <PlusIcon />
             </div>
-            <div className="mp-quick-action-label">New Workspace</div>
+            <div className="mp-quick-action-label">새 워크스페이스</div>
           </div>
         </div>
 
         <div className="mp-section-label" style={{ marginTop: 14 }}>
-          Account usage
+          계정 사용량
         </div>
         <div className="mp-accounts-card">
           <AccountRow
@@ -166,8 +166,8 @@ function AccountRow({
       <div className="mp-accounts-info">
         <div className="mp-accounts-email">{email}</div>
         <div className="mp-accounts-bars">
-          <UsageBar label="5h" pct={sessionPct} />
-          <UsageBar label="7d" pct={weekPct} />
+          <UsageBar label="5시간" pct={sessionPct} />
+          <UsageBar label="7일" pct={weekPct} />
         </div>
       </div>
     </div>
@@ -187,7 +187,12 @@ function UsageBar({ label, pct }: { label: string; pct: number }): React.JSX.Ele
 
 function KorcaLogo(): React.JSX.Element {
   return (
-    <svg className="mp-korca-logo" viewBox="0 0 318.60232 202.66667" fill="currentColor" aria-hidden>
+    <svg
+      className="mp-korca-logo"
+      viewBox="0 0 318.60232 202.66667"
+      fill="currentColor"
+      aria-hidden
+    >
       <g transform="translate(-6.6666669,-70.666669)">
         <path d="m 177.81311,248.33334 c 23.82304,-41.29793 40.54045,-66.84626 49.51207,-75.66667 6.81685,-6.70196 10.07373,-8.7374 20.07265,-12.54475 34.57822,-13.16655 61.04674,-26.78733 72.37222,-37.24295 9.62924,-8.88966 9.34286,-9.01142 -23.43671,-9.964 -35.71756,-1.03796 -43.72989,0.42119 -62.17546,11.323 -16.72118,9.88265 -34.20103,30.11225 -42.74704,49.47157 -2.57353,5.82985 -14.81294,44.3056 -27.96399,87.90747 -2.86036,9.48343 -3.02466,11.71633 -0.86213,11.71633 0.44382,0 7.29659,-11.25 15.22839,-25 z m -65.14644,-8.32267 C 120,239.3326 130.5,237.50979 136,235.95998 c 5.5,-1.5498 12.25,-3.13783 15,-3.52895 2.75,-0.39111 5,-0.95485 5,-1.25275 0,-0.29789 2.15135,-7.58487 4.78078,-16.19328 8.49209,-27.80201 12.21334,-40.41629 21.13747,-71.65166 4.81891,-16.86667 11.23502,-39.185 14.25802,-49.596301 5.12803,-17.66103 5.74763,-23.07037 2.64253,-23.07037 -1.84887,0 -4.07048,6.908293 -16.72243,52.000001 -21.78975,77.65896 -20.80806,74.74393 -26.84794,79.72251 -7.5925,6.25838 -25.03916,14.82524 -36.10856,17.73044 -17.0947,4.48656 -33.410599,3.86724 -53.116765,-2.01622 -18.569242,-5.54403 -23.142662,-5.80284 -33.639754,-1.9037 -5.875424,2.18242 -9.864152,5.04363 -16.716684,11.99127 -4.95,5.0187 -9.0000001,10.02884 -9.0000001,11.13364 0,1.75174 5.9276921,2.00299 46.3333351,1.96383 25.483334,-0.0247 52.333338,-0.59969 59.666668,-1.27777 z M 252.69513,104.63708 c 12.18267,-3.48651 15.77304,-7.895503 9.63821,-11.835773 -10.19296,-6.546726 -36.19849,-1.77301 -41.19436,7.561863 -1.2556,2.3461 -0.98698,3.2037 1.68353,5.375 2.69471,2.19098 4.59991,2.47691 12.53928,1.88189 5.14899,-0.3859 12.94899,-1.72824 17.33334,-2.98298 z" />
       </g>

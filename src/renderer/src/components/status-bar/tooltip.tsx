@@ -8,19 +8,19 @@ import { ClaudeIcon, GeminiIcon, OpenAIIcon, OpenCodeGoIcon } from './icons'
 export function formatTimeAgo(ts: number): string {
   const diff = Date.now() - ts
   if (diff < 60_000) {
-    return 'just now'
+    return '방금 전'
   }
   const mins = Math.floor(diff / 60_000)
   if (mins < 60) {
-    return `${mins}m ago`
+    return `${mins}분 전`
   }
   const hours = Math.floor(mins / 60)
-  return `${hours}h ago`
+  return `${hours}시간 전`
 }
 
 function formatDuration(ms: number): string {
   if (ms <= 0) {
-    return 'now'
+    return '지금'
   }
   const totalMins = Math.floor(ms / 60_000)
   if (totalMins < 60) {
@@ -38,7 +38,7 @@ function formatDuration(ms: number): string {
 
 export function formatResetCountdown(ms: number): string {
   const duration = formatDuration(ms)
-  return duration === 'now' ? 'Resets now' : `Resets in ${duration}`
+  return duration === 'now' ? '지금 초기화' : `${duration} 뒤에 초기화`
 }
 
 // ---------------------------------------------------------------------------
@@ -74,7 +74,7 @@ function ErrorMessage({
   return (
     <div className="space-y-0.5">
       <div className={`text-[11px] font-medium ${labelClass}`}>
-        {stale ? 'Refresh failed — showing cached data' : 'Usage unavailable'}
+        {stale ? '새로고침 실패 - 캐시된 데이터를 표시 중' : '사용량을 사용할 수 없음'}
       </div>
       <div className={detailClass}>{message}</div>
     </div>
@@ -139,7 +139,7 @@ export function ProviderPanel({
   const emptyBarClass = inverted ? 'bg-background/20' : 'bg-muted'
 
   if (!p) {
-    return <span className={`text-xs ${mutedClass}`}>No data available</span>
+    return <span className={`text-xs ${mutedClass}`}>데이터 없음</span>
   }
 
   const name =
@@ -160,7 +160,7 @@ export function ProviderPanel({
           <ProviderIcon provider={p.provider} />
           {name}
         </div>
-        <div className={mutedClass}>{p.error ?? 'Unavailable'}</div>
+        <div className={mutedClass}>{p.error ?? '사용 불가'}</div>
       </div>
     )
   }
@@ -173,13 +173,15 @@ export function ProviderPanel({
           {name}
         </div>
         <div className="mt-2">
-          <ErrorMessage message={p.error ?? 'Unable to fetch usage'} inverted={inverted} />
+          <ErrorMessage message={p.error ?? '사용량을 가져올 수 없음'} inverted={inverted} />
         </div>
       </div>
     )
   }
 
-  const updatedAgo = p.updatedAt ? `Updated ${formatTimeAgo(p.updatedAt)}` : 'Not yet updated'
+  const updatedAgo = p.updatedAt
+    ? `${formatTimeAgo(p.updatedAt)}에 업데이트됨`
+    : '아직 업데이트되지 않음'
 
   const PanelWindowSection = ({
     w,
@@ -204,7 +206,7 @@ export function ProviderPanel({
           />
         </div>
         <div className={`flex justify-between ${mutedClass}`}>
-          <span>{leftPct}% left</span>
+          <span>{leftPct}% 남음</span>
           {resetLabel && <span>{resetLabel}</span>}
         </div>
       </div>

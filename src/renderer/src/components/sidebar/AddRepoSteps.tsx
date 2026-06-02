@@ -118,7 +118,7 @@ export function useRemoteRepo(
     try {
       await window.api.ssh.connect({ targetId })
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Connection failed')
+      toast.error(err instanceof Error ? err.message : '연결에 실패했습니다')
     }
   }, [])
 
@@ -191,7 +191,7 @@ export function useRemoteRepo(
       if (!mountedRef.current || gen !== remoteGenRef.current) {
         return
       }
-      toast.success('Remote project added', { description: repo.displayName })
+      toast.success('원격 프로젝트를 추가했습니다', { description: repo.displayName })
       setAddedRepo(repo)
       setExistingWorkspaceSource?.('ssh_remote_path')
       await fetchWorktrees(repo.id)
@@ -290,7 +290,7 @@ export function RemoteStep({
     return (
       <>
         <DialogHeader>
-          <DialogTitle>Browse remote filesystem</DialogTitle>
+          <DialogTitle>원격 파일 시스템 탐색</DialogTitle>
           <DialogDescription>
             Navigate to a directory and click Select to choose it.
           </DialogDescription>
@@ -311,18 +311,18 @@ export function RemoteStep({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Open remote project</DialogTitle>
+        <DialogTitle>원격 프로젝트 열기</DialogTitle>
         <DialogDescription>
-          Choose a connected SSH target and enter the path to a Git repository.
+          연결된 SSH 대상을 선택하고 Git 저장소 경로를 입력하세요.
         </DialogDescription>
       </DialogHeader>
 
       <div className="space-y-3 pt-1">
         <div className="space-y-1">
-          <label className="text-[11px] font-medium text-muted-foreground">SSH target</label>
+          <label className="text-[11px] font-medium text-muted-foreground">SSH 대상</label>
           {sshTargets.length === 0 ? (
             <div className="space-y-1.5 py-1">
-              <p className="text-xs text-muted-foreground">No SSH targets configured.</p>
+              <p className="text-xs text-muted-foreground">구성된 SSH 대상이 없습니다.</p>
               <Button
                 variant="outline"
                 size="sm"
@@ -349,7 +349,7 @@ export function RemoteStep({
         </div>
 
         <div className="space-y-1">
-          <label className="text-[11px] font-medium text-muted-foreground">Remote path</label>
+          <label className="text-[11px] font-medium text-muted-foreground">원격 경로</label>
           <div className="flex gap-2">
             <Input
               value={remotePath}
@@ -437,8 +437,8 @@ export function CloneStep({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Clone from URL</DialogTitle>
-        <DialogDescription>Enter the Git URL and choose where to clone it.</DialogDescription>
+        <DialogTitle>URL에서 클론</DialogTitle>
+        <DialogDescription>Git URL을 입력하고 클론 위치를 선택하세요.</DialogDescription>
       </DialogHeader>
 
       <div className="space-y-3 pt-1">
@@ -456,7 +456,7 @@ export function CloneStep({
         </div>
 
         <div className="space-y-1">
-          <label className="text-[11px] font-medium text-muted-foreground">Clone location</label>
+          <label className="text-[11px] font-medium text-muted-foreground">클론 위치</label>
           <div className="flex gap-2">
             <Input
               value={cloneDestination}

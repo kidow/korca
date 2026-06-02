@@ -194,7 +194,7 @@ export function FloatingTerminalToggleButton({
         <TooltipContent
           side="left"
           sideOffset={6}
-        >{`${open ? 'Minimize' : 'Show'} floating workspace (${shortcutLabel})`}</TooltipContent>
+        >{`${open ? '최소화' : '표시'} 떠있는 워크스페이스 (${shortcutLabel})`}</TooltipContent>
       </Tooltip>
     </FloatingTerminalIconContextMenu>
   )

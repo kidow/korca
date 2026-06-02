@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import { useEffect, useState } from 'react'
 import type { JSX } from 'react'
 import { ClaudeIcon, OpenAIIcon } from '../../status-bar/icons'
@@ -75,8 +76,8 @@ function Popover(props: {
   pulseKey: number
 }): JSX.Element {
   const { expanded, targeted, swapped, pulseKey } = props
-  const sessionPctText = swapped ? '100% left' : '4% left'
-  const sessionResetText = swapped ? 'Resets in 5h' : 'Resets in 47m'
+  const sessionPctText = swapped ? '100% 남음' : '4% 남음'
+  const sessionResetText = swapped ? '5시간 후 초기화' : '47분 후 초기화'
   const sessionFillWidth = swapped ? '100%' : '4%'
   const weeklyFillWidth = '62%'
 
@@ -97,12 +98,12 @@ function Popover(props: {
         </span>
         <div>
           <div className="text-[13.5px] font-bold leading-[1.1]">Codex</div>
-          <div className="text-[11px] text-muted-foreground">Updated 1m ago</div>
+          <div className="text-[11px] text-muted-foreground">1분 전에 업데이트됨</div>
         </div>
       </div>
 
       <UsageBar
-        title="Session"
+        title="세션"
         fillWidth={sessionFillWidth}
         warn={!swapped}
         metaLeft={
@@ -119,14 +120,14 @@ function Popover(props: {
         metaRight={<span>{sessionResetText}</span>}
       />
       <UsageBar
-        title="Weekly"
+        title="주간"
         fillWidth={weeklyFillWidth}
         warn={false}
-        metaLeft={<span>62% left</span>}
-        metaRight={<span>Resets in 4d 3h</span>}
+        metaLeft={<span>62% 남음</span>}
+        metaRight={<span>4일 3시간 후 초기화</span>}
       />
       <div className="h-px bg-border" />
-      <div className="text-[11px] font-semibold">Codex Account</div>
+      <div className="text-[11px] font-semibold">Codex 계정</div>
       <div className="flex items-center justify-between text-[11px]">
         <AccountNameSkeleton widthClassName={swapped ? 'w-24' : 'w-28'} />
         <span
@@ -155,12 +156,12 @@ function Popover(props: {
       >
         <div className="overflow-hidden min-h-0">
           <div className="pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
-            Switch to
+            전환
           </div>
           <div className="flex flex-col gap-0.5 rounded-lg border border-border bg-foreground/[0.025] p-[3px]">
             <SwitchAccount
               accountWidthClassName="w-24"
-              tag="Team"
+              tag="팀"
               fillPct={100}
               metaText="100%"
               highlighted={targeted}

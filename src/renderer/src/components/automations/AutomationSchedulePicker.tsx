@@ -171,7 +171,7 @@ export function AutomationSchedulePicker({
         className="popover-scroll-content scrollbar-sleek max-h-[var(--radix-popover-content-available-height)] w-[min(var(--radix-popover-trigger-width),calc(100vw-2rem))] min-w-[min(22rem,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] overflow-y-auto p-3"
       >
         <div className="grid gap-3">
-          <Field label="Cadence">
+          <Field label="주기">
             <Select
               value={draft.preset}
               onValueChange={(preset) =>
@@ -203,7 +203,7 @@ export function AutomationSchedulePicker({
           ) : (
             <>
               {draft.preset === 'weekly' ? (
-                <Field label="Day">
+                <Field label="요일">
                   <Select
                     value={draft.dayOfWeek}
                     onValueChange={(dayOfWeek) =>
@@ -224,7 +224,7 @@ export function AutomationSchedulePicker({
                 </Field>
               ) : null}
               {draft.preset === 'hourly' ? (
-                <Field label="Minute">
+                <Field label="분">
                   <Select
                     value={String(clockParts.minute)}
                     onValueChange={(minute) =>
@@ -248,7 +248,7 @@ export function AutomationSchedulePicker({
                   </Select>
                 </Field>
               ) : (
-                <Field label="Time">
+                <Field label="시간">
                   <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.8fr)] gap-2">
                     <Select
                       value={String(clockParts.hour12)}
@@ -261,7 +261,7 @@ export function AutomationSchedulePicker({
                       }
                     >
                       <SelectTrigger
-                        aria-label="Hour"
+                        aria-label="시"
                         className={cn('w-full min-w-0', FIELD_CONTROL_CLASS)}
                       >
                         <SelectValue />
@@ -285,7 +285,7 @@ export function AutomationSchedulePicker({
                       }
                     >
                       <SelectTrigger
-                        aria-label="Minute"
+                        aria-label="분"
                         className={cn('w-full min-w-0', FIELD_CONTROL_CLASS)}
                       >
                         <SelectValue />
@@ -309,7 +309,7 @@ export function AutomationSchedulePicker({
                       }
                     >
                       <SelectTrigger
-                        aria-label="AM or PM"
+                        aria-label="오전 또는 오후"
                         className={cn('w-full min-w-0', FIELD_CONTROL_CLASS)}
                       >
                         <SelectValue />

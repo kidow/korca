@@ -25,7 +25,7 @@ import type { GitHubViewer } from '../../../../shared/types'
 function formatSummary(report: CrashReportRecord): string {
   if (isReactErrorBoundaryReport(report)) {
     const surface = typeof report.details.surface === 'string' ? report.details.surface : null
-    return surface ? `React render error in ${surface}` : 'React render error'
+    return surface ? `${surface}에서 React 렌더 오류` : 'React 렌더 오류'
   }
   return `${report.processType} ${report.reason}${
     report.exitCode === null ? '' : ` (exit ${report.exitCode})`
@@ -34,20 +34,20 @@ function formatSummary(report: CrashReportRecord): string {
 
 function getDialogTitle(report: CrashReportRecord | null): string {
   return report && isReactErrorBoundaryReport(report)
-    ? 'Korca hit a recoverable UI error'
-    : 'Korca closed unexpectedly'
+    ? 'Korca에서 복구 가능한 UI 오류가 발생했습니다'
+    : 'Korca가 예기치 않게 종료되었습니다'
 }
 
 function getDialogDescription(report: CrashReportRecord | null): string {
   return report && isReactErrorBoundaryReport(report)
-    ? 'Send a privacy-safe diagnostic report to help us understand the failed UI surface.'
-    : 'Send a privacy-safe diagnostic report to help us understand what happened.'
+    ? '문제가 발생한 UI를 파악할 수 있도록 개인정보가 포함되지 않은 진단 보고서를 보내세요.'
+    : '무슨 일이 있었는지 파악할 수 있도록 개인정보가 포함되지 않은 진단 보고서를 보내세요.'
 }
 
 function getNotesPlaceholder(report: CrashReportRecord | null): string {
   return report && isReactErrorBoundaryReport(report)
-    ? 'Optional: what were you doing before this UI error?'
-    : 'Optional: what were you doing before Korca closed?'
+    ? '선택 사항: 이 UI 오류가 나기 전에 무엇을 하고 있었나요?'
+    : '선택 사항: Korca가 닫히기 전에 무엇을 하고 있었나요?'
 }
 
 export function CrashReportDialog(): React.JSX.Element {
@@ -196,7 +196,7 @@ export function CrashReportDialog(): React.JSX.Element {
       toast.error(result.error)
       return
     }
-    toast.success('Crash report copied.')
+    toast.success('크래시 보고서를 복사했습니다.')
   }
 
   const dismissReportIfNeeded = async (): Promise<void> => {
@@ -238,10 +238,10 @@ export function CrashReportDialog(): React.JSX.Element {
       }
       setReport(result.report)
       setNotes('')
-      toast.success('Crash report sent.')
+      toast.success('크래시 보고서를 보냈습니다.')
       closeDialog()
     } catch (error) {
-      toast.error('Failed to send crash report.')
+      toast.error('크래시 보고서를 보내지 못했습니다.')
       console.error('Failed to submit crash report:', error)
     } finally {
       if (mountedRef.current) {
@@ -295,7 +295,7 @@ export function CrashReportDialog(): React.JSX.Element {
               className="min-h-24 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
             <div className="space-y-1.5">
-              <div className="text-[11px] font-medium text-muted-foreground">Diagnostic text</div>
+              <div className="text-[11px] font-medium text-muted-foreground">진단 텍스트</div>
               <pre className="max-h-44 overflow-auto whitespace-pre-wrap break-words rounded-md border border-border bg-muted/20 p-3 font-mono text-[11px] leading-5 text-muted-foreground scrollbar-sleek">
                 {diagnosticText}
               </pre>
@@ -303,14 +303,14 @@ export function CrashReportDialog(): React.JSX.Element {
           </div>
         ) : (
           <div className="rounded-md border border-border/70 bg-muted/30 p-3 text-xs text-muted-foreground">
-            {loading ? 'Checking for crash reports...' : 'No crash report is available.'}
+            {loading ? '크래시 보고서를 확인하는 중...' : '사용 가능한 크래시 보고서가 없습니다.'}
           </div>
         )}
 
         <DialogFooter className="gap-2">
           <Button type="button" variant="outline" size="sm" onClick={handleCopy} disabled={!report}>
             <Clipboard className="size-3.5" />
-            Copy Details
+            세부 정보 복사
           </Button>
           <Button
             type="button"
@@ -319,11 +319,11 @@ export function CrashReportDialog(): React.JSX.Element {
             onClick={handleDismiss}
             disabled={submitting}
           >
-            Don&apos;t Send
+            보내지 않기
           </Button>
           <Button type="button" size="sm" onClick={handleSubmit} disabled={!report || submitting}>
             <Send className="size-3.5" />
-            Send Report
+            보고서 보내기
           </Button>
         </DialogFooter>
       </DialogContent>

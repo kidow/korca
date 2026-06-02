@@ -16,11 +16,11 @@ export type SmartWorkspaceSourceRow =
   | { kind: 'linear'; value: string; issue: LinearIssue }
 
 const EMPTY_HINT_BY_MODE: Record<SmartNameMode, string> = {
-  smart: 'Start typing to create a name or find a source.',
-  github: 'Start typing to search GitHub PRs and issues.',
-  gitlab: 'Start typing to search GitLab MRs and issues.',
-  branches: 'No matching branches.',
-  linear: 'Start typing to search Linear issues.',
+  smart: '이름을 만들거나 소스를 찾으려면 입력을 시작하세요.',
+  github: 'GitHub PR과 이슈를 찾으려면 입력을 시작하세요.',
+  gitlab: 'GitLab MR과 이슈를 찾으려면 입력을 시작하세요.',
+  branches: '일치하는 브랜치가 없습니다.',
+  linear: 'Linear 이슈를 찾으려면 입력을 시작하세요.',
   text: ''
 }
 

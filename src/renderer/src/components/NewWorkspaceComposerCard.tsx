@@ -261,40 +261,40 @@ export default function NewWorkspaceComposerCard({
   const submitShortcutModifierLabel = getScreenSubmitModifierLabel()
   const selectedRepoName = React.useMemo(() => {
     const repo = eligibleRepos.find((candidate) => candidate.id === repoId)
-    return repo?.displayName ?? repo?.path ?? 'This project'
+    return repo?.displayName ?? repo?.path ?? '이 프로젝트'
   }, [eligibleRepos, repoId])
   const sshStatusLabel = selectedRepoSshStatus
     ? SSH_STATUS_LABELS[selectedRepoSshStatus]
-    : 'Not connected'
+    : '연결되지 않음'
   const connectButtonLabel =
     selectedRepoSshStatus === 'disconnected' || selectedRepoSshStatus === null
-      ? 'Connect'
-      : 'Reconnect'
+      ? '연결'
+      : '다시 연결'
   const setupConfigLabel =
     setupConfig?.kind === 'default-tabs'
-      ? 'Default tab commands'
+      ? '기본 탭 명령'
       : setupConfig?.kind === 'setup-and-default-tabs'
-        ? 'Setup and default tab commands'
-        : 'Setup script'
+        ? '설정 및 기본 탭 명령'
+        : '설정 스크립트'
   const setupRunLabel =
     setupConfig?.kind === 'default-tabs'
-      ? 'Run default tab commands'
+      ? '기본 탭 명령 실행'
       : setupConfig?.kind === 'setup-and-default-tabs'
-        ? 'Run setup and default tab commands'
-        : 'Run setup command'
+        ? '설정 및 기본 탭 명령 실행'
+        : '설정 명령 실행'
   const setupAskLabel =
     setupConfig?.kind === 'default-tabs'
-      ? 'Run default tab commands now?'
+      ? '기본 탭 명령을 지금 실행할까요?'
       : setupConfig?.kind === 'setup-and-default-tabs'
-        ? 'Run setup and default tab commands now?'
-        : 'Run setup now?'
+        ? '설정 및 기본 탭 명령을 지금 실행할까요?'
+        : '지금 설정을 실행할까요?'
   const setupRunButtonLabel =
     setupConfig?.kind === 'default-tabs'
-      ? 'Run commands now'
+      ? '지금 명령 실행'
       : setupConfig?.kind === 'setup-and-default-tabs'
-        ? 'Run commands now'
-        : 'Run setup now'
-  const setupSkipButtonLabel = setupConfig?.kind === 'setup' ? 'Skip for now' : 'Skip commands'
+        ? '지금 명령 실행'
+        : '지금 설정 실행'
+  const setupSkipButtonLabel = setupConfig?.kind === 'setup' ? '나중에 건너뛰기' : '명령 건너뛰기'
 
   const handleSetDefaultAgent = React.useCallback(
     (next: TuiAgent | 'blank' | null) => {
@@ -373,7 +373,7 @@ export default function NewWorkspaceComposerCard({
       <div className="min-w-0 space-y-4 pt-3">
         <div className="space-y-1">
           <div className="flex items-center justify-between gap-2">
-            <label className="text-xs font-medium text-muted-foreground">Project</label>
+            <label className="text-xs font-medium text-muted-foreground">프로젝트</label>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -382,13 +382,13 @@ export default function NewWorkspaceComposerCard({
                   size="icon-xs"
                   onClick={handleAddRepo}
                   className="size-5 shrink-0 rounded-sm text-muted-foreground hover:text-foreground"
-                  aria-label="Add project"
+                  aria-label="프로젝트 추가"
                 >
                   <FolderPlus className="size-3" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={6}>
-                Add project
+                프로젝트 추가
               </TooltipContent>
             </Tooltip>
           </div>
@@ -397,7 +397,7 @@ export default function NewWorkspaceComposerCard({
             value={repoId}
             onValueChange={onRepoChange}
             onValueSelected={focusNameInput}
-            placeholder="Choose project"
+            placeholder="프로젝트 선택"
             // Why: programmatic .focus() from the Dialog's onOpenAutoFocus
             // handler does not reliably trigger :focus-visible in Chromium.
             // Mirror the Input component's standard ring (border-ring +
@@ -415,7 +415,7 @@ export default function NewWorkspaceComposerCard({
             >
               <div className="min-w-0">
                 <div className="truncate text-xs font-medium text-foreground">
-                  Connect {selectedRepoName}
+                  {selectedRepoName} 연결
                 </div>
                 <div className="mt-0.5 text-[11px] text-muted-foreground">{sshStatusLabel}</div>
               </div>
@@ -432,7 +432,7 @@ export default function NewWorkspaceComposerCard({
                 ) : (
                   <PlugZap className="size-3.5" />
                 )}
-                {selectedRepoConnectInProgress ? 'Connecting' : connectButtonLabel}
+                {selectedRepoConnectInProgress ? '연결 중' : connectButtonLabel}
               </Button>
             </div>
           ) : null}
@@ -441,15 +441,15 @@ export default function NewWorkspaceComposerCard({
         <div className="min-w-0 space-y-1">
           <div className="flex items-center justify-between gap-2">
             <label className="min-w-0 truncate text-xs font-medium text-muted-foreground">
-              {selectedRepoIsGit ? "Name or 'Create From'" : 'Workspace name'}{' '}
-              <span className="text-muted-foreground/70">[Optional]</span>
+              {selectedRepoIsGit ? "이름 또는 '생성 기준'" : '작업 공간 이름'}{' '}
+              <span className="text-muted-foreground/70">[선택 사항]</span>
             </label>
             {selectedRepoIsGit ? (
               <div className="flex min-w-0 items-center justify-end gap-1.5">
                 {autoRenameBranchFromWork ? (
                   <span className="flex min-w-0 items-center gap-1 truncate text-[11px] text-muted-foreground">
                     <Sparkles className="size-3 shrink-0" />
-                    <span className="truncate">Auto-named if left blank</span>
+                    <span className="truncate">비워 두면 자동 이름 지정</span>
                   </span>
                 ) : null}
                 <AutoRenameBranchHint />
@@ -470,7 +470,7 @@ export default function NewWorkspaceComposerCard({
             selectedSource={smartNameSelection}
             onClearSelectedSource={onClearSmartNameSelection}
             disabled={selectedRepoRequiresConnection}
-            disabledPlaceholder="Connect this repo first"
+            disabledPlaceholder="이 저장소를 먼저 연결하세요"
             textOnly={!selectedRepoIsGit}
             onPlainEnter={() => {
               // Why: Enter on the workspace name advances focus to the next
@@ -487,7 +487,7 @@ export default function NewWorkspaceComposerCard({
 
         <div className="space-y-1">
           <div className="flex items-center justify-between gap-2">
-            <label className="text-xs font-medium text-muted-foreground">Agent</label>
+            <label className="text-xs font-medium text-muted-foreground">에이전트</label>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -500,13 +500,13 @@ export default function NewWorkspaceComposerCard({
                   // on every workspace creation.
                   tabIndex={-1}
                   className="size-5 shrink-0 rounded-sm text-muted-foreground hover:text-foreground"
-                  aria-label="Open agent settings"
+                  aria-label="에이전트 설정 열기"
                 >
                   <Settings2 className="size-3" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={6}>
-                Configure agents
+                에이전트 설정
               </TooltipContent>
             </Tooltip>
           </div>
@@ -530,7 +530,7 @@ export default function NewWorkspaceComposerCard({
             onClick={onToggleAdvanced}
             className="-ml-2 text-xs"
           >
-            Advanced
+            고급
             <ChevronDown
               className={cn('size-4 transition-transform', advancedOpen && 'rotate-180')}
             />
@@ -565,19 +565,19 @@ export default function NewWorkspaceComposerCard({
                 // explicit name there's no source pill — the smart input is
                 // already the name field, so we don't duplicate it here.
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-muted-foreground">Name</label>
+                  <label className="text-xs font-medium text-muted-foreground">이름</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(event) => onNameValueChange(event.target.value)}
-                    placeholder="Workspace name"
+                    placeholder="작업 공간 이름"
                     className="w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1.5 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                   />
                 </div>
               ) : null}
 
               <div className="space-y-1">
-                <label className="text-xs font-medium text-muted-foreground">Note</label>
+                <label className="text-xs font-medium text-muted-foreground">메모</label>
                 <textarea
                   value={note}
                   onChange={(event) => onNoteChange(event.target.value)}
@@ -589,7 +589,7 @@ export default function NewWorkspaceComposerCard({
                     ta.style.height = 'auto'
                     ta.style.height = `${ta.scrollHeight}px`
                   }}
-                  placeholder="Write a note"
+                  placeholder="메모 작성"
                   rows={1}
                   className="w-full min-w-0 resize-none overflow-hidden rounded-md border border-input bg-transparent px-3 py-1.5 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 max-h-40"
                 />
@@ -605,8 +605,8 @@ export default function NewWorkspaceComposerCard({
                       {setupConfig.source === 'yaml'
                         ? 'korca.yaml'
                         : setupConfig.source === 'both'
-                          ? 'korca.yaml + local'
-                          : 'local settings'}
+                          ? 'korca.yaml + 로컬'
+                          : '로컬 설정'}
                     </span>
                   </div>
 
@@ -683,7 +683,7 @@ export default function NewWorkspaceComposerCard({
               ) : null}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Sparse checkout</label>
+                <label className="text-xs font-medium text-muted-foreground">희소 체크아웃</label>
                 <SparseCheckoutPresetSelect
                   repoId={repoId}
                   presets={sparsePresets}
@@ -693,7 +693,7 @@ export default function NewWorkspaceComposerCard({
                 />
                 {!canUseSparseCheckout ? (
                   <p className="text-[11px] text-muted-foreground">
-                    Only available for local Git projects.
+                    로컬 Git 프로젝트에서만 사용할 수 있습니다.
                   </p>
                 ) : null}
               </div>

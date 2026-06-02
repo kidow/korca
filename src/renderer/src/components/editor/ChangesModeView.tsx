@@ -53,7 +53,7 @@ export function ChangesModeView({
     return (
       <div className="flex h-full items-center justify-center px-6 text-center">
         <div className="space-y-2">
-          <div className="text-sm font-medium text-foreground">Binary file</div>
+          <div className="text-sm font-medium text-foreground">바이너리 파일</div>
           <div className="text-xs text-muted-foreground">
             Text diff is unavailable for this file.
           </div>

@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines -- Why: duplicated from GitHubItemDialog so the dedicated PR full-page surface can evolve its Primer-styled header without destabilizing the issue dialog; planned to refactor shared parts out later. */
 import React, {
   Suspense,
@@ -337,15 +338,15 @@ function buildMentionOptions({
     byLogin.set(key, { login, source, avatarUrl, name })
   }
 
-  add(item.author, item.type === 'pr' ? 'PR author' : 'Issue author')
+  add(item.author, item.type === 'pr' ? 'PR 작성자' : '이슈 작성자')
   for (const comment of comments) {
-    add(comment.author, 'Commenter', comment.authorAvatarUrl)
+    add(comment.author, '댓글 작성자', comment.authorAvatarUrl)
   }
   for (const user of participants) {
-    add(user.login, 'Participant', user.avatarUrl, user.name)
+    add(user.login, '참여자', user.avatarUrl, user.name)
   }
   for (const user of assignableUsers) {
-    add(user.login, 'Team member', user.avatarUrl, user.name)
+    add(user.login, '팀 구성원', user.avatarUrl, user.name)
   }
 
   return Array.from(byLogin.values())
@@ -366,17 +367,17 @@ function filterMentionOptions(options: MentionOption[], query: string): MentionO
 function getStateLabel(item: GitHubWorkItem): string {
   if (item.type === 'pr') {
     if (item.state === 'merged') {
-      return 'Merged'
+      return '병합됨'
     }
     if (item.state === 'draft') {
-      return 'Draft'
+      return '초안'
     }
     if (item.state === 'closed') {
-      return 'Closed'
+      return '닫힘'
     }
-    return 'Open'
+    return '열림'
   }
-  return item.state === 'closed' ? 'Closed' : 'Open'
+  return item.state === 'closed' ? '닫힘' : '열림'
 }
 
 function getStateTone(item: GitHubWorkItem): string {
@@ -866,7 +867,7 @@ function PRReviewersPanel({
         key={`${options.suggested ? 'suggested' : 'reviewer'}:${reviewer.login}`}
         type="button"
         aria-label={
-          selected ? `Unrequest reviewer ${reviewer.login}` : `Request reviewer ${reviewer.login}`
+          selected ? `검토자 ${reviewer.login} 요청 취소` : `검토자 ${reviewer.login} 요청`
         }
         aria-pressed={selected}
         className={cn(
@@ -1054,7 +1055,7 @@ function PRReviewersPanel({
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto scrollbar-sleek">
               {reviewerMetadata.loading ? (
-                <div className="px-3 py-2 text-[13px] text-muted-foreground">Loading...</div>
+                <div className="px-3 py-2 text-[13px] text-muted-foreground">불러오는 중...</div>
               ) : filteredReviewerCandidates.length > 0 ? (
                 <>
                   {suggestedReviewerRows.length > 0 ? (
@@ -1068,7 +1069,7 @@ function PRReviewersPanel({
                     </>
                   ) : null}
                   <div className="border-b border-border/70 bg-muted/50 px-3 py-1.5 text-[12px] font-semibold text-foreground">
-                        그 외 사용자
+                    그 외 사용자
                   </div>
                   {everyoneElseReviewerRows.length > 0 ? (
                     everyoneElseReviewerRows.map((reviewer, index) =>
@@ -1079,7 +1080,7 @@ function PRReviewersPanel({
                     )
                   ) : (
                     <div className="px-3 py-2 text-[13px] text-muted-foreground">
-                        일치하는 검토자가 없습니다.
+                      일치하는 검토자가 없습니다.
                     </div>
                   )}
                 </>
@@ -1530,7 +1531,7 @@ function PRViewedCheckbox({
           type="button"
           role="checkbox"
           aria-checked={checked}
-          aria-label={`${checked ? 'Unmark' : 'Mark'} ${filePath} as viewed`}
+          aria-label={`${checked ? '확인 해제' : '확인 표시'}: ${filePath}`}
           disabled={pending}
           onClick={(event) => {
             event.stopPropagation()
@@ -1556,11 +1557,11 @@ function PRViewedCheckbox({
               <Check className="size-3" strokeWidth={3} />
             ) : null}
           </span>
-          <span>Viewed</span>
+          <span>확인함</span>
         </button>
       </TooltipTrigger>
       <TooltipContent side="bottom" sideOffset={4}>
-        {checked ? 'Unmark viewed' : 'Mark viewed'}
+        {checked ? '확인 해제' : '확인 표시'}
       </TooltipContent>
     </Tooltip>
   )
@@ -1843,7 +1844,7 @@ function PRFilesCombinedDiffViewer({
               originalIsBinary: false,
               modifiedIsBinary: false
             },
-            error: 'Diff unavailable because the PR commit SHAs are missing.'
+            error: 'PR 커밋 SHA가 없어 diff를 사용할 수 없습니다.'
           }
         }
         const contents = await loadPRFileContents({
@@ -1866,7 +1867,7 @@ function PRFilesCombinedDiffViewer({
             originalIsBinary: false,
             modifiedIsBinary: false
           } as GitDiffResult,
-          error: error instanceof Error ? error.message : 'Failed to load diff.'
+          error: error instanceof Error ? error.message : 'diff를 불러오지 못했습니다.'
         }))
         .then(({ result, error }) => {
           loadingIndicesRef.current.delete(index)
@@ -2108,7 +2109,7 @@ function PRFilesCombinedDiffViewer({
       }
     ) => {
       if (!headSha) {
-        toast.error('Unable to comment without the PR head SHA.')
+        toast.error('PR head SHA 없이는 댓글을 달 수 없습니다.')
         return false
       }
       const result = await addPRReviewCommentForRepo({
@@ -2122,11 +2123,11 @@ function PRFilesCombinedDiffViewer({
         body
       })
       if (!result.ok) {
-        toast.error(result.error || 'Failed to add review comment.')
+        toast.error(result.error || '리뷰 댓글을 추가하지 못했습니다.')
         return false
       }
       onCommentAdded(result.comment)
-      toast.success('Review comment added.')
+      toast.success('검토 댓글을 추가했습니다.')
       return true
     },
     [headSha, onCommentAdded, prNumber, repoId, repoPath]
@@ -2243,7 +2244,7 @@ function PRFilesCombinedDiffViewer({
                     openSectionTitle="GitHub에서 파일 열기"
                     renderHeaderTrailingContent={renderViewedCheckbox}
                     onAddLineComment={handleAddLineComment}
-                    addLineCommentLabel="Comment"
+                    addLineCommentLabel="댓글"
                     addLineCommentPlaceholder="리뷰 댓글 추가"
                     getCommentableLineNumbers={(section) =>
                       fileByPath.get(section.path)?.reviewCommentLineNumbers
@@ -2389,9 +2390,7 @@ function CommentCodeContext({
   const canExpandAbove = from > 1
   const canExpandBelow = to < lines.length
   const canExpandBlock = blockRange.startLine < from || blockRange.endLine > to
-  const blockTooltip = shouldUseBlockRange
-    ? 'Show surrounding code block'
-    : 'Show nearby code context'
+  const blockTooltip = shouldUseBlockRange ? '주변 코드 블록 보기' : '가까운 코드 맥락 보기'
 
   if (selectedLines.length === 0) {
     return null
@@ -2413,7 +2412,7 @@ function CommentCodeContext({
             </span>
           )}
         </div>
-        <ButtonGroup className="text-muted-foreground" aria-label="Code context controls">
+        <ButtonGroup className="text-muted-foreground" aria-label="코드 맥락 제어">
           {(contextBefore > 0 || contextAfter > 0) && (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -2426,12 +2425,12 @@ function CommentCodeContext({
                     setContextBefore(0)
                     setContextAfter(0)
                   }}
-                  aria-label="Reset code context"
+                  aria-label="코드 컨텍스트 초기화"
                 >
                   <UndoDot className="size-3.5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Reset code context</TooltipContent>
+              <TooltipContent>코드 컨텍스트 초기화</TooltipContent>
             </Tooltip>
           )}
           <Tooltip>
@@ -2447,12 +2446,12 @@ function CommentCodeContext({
                     Math.min(current + CODE_CONTEXT_EXPAND_STEP, commentFrom - 1)
                   )
                 }
-                aria-label={`Show ${CODE_CONTEXT_EXPAND_STEP} more lines above`}
+                aria-label={`위쪽에 ${CODE_CONTEXT_EXPAND_STEP}줄 더 보기`}
               >
                 <ArrowUp className="size-3.5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Show more lines above</TooltipContent>
+            <TooltipContent>위쪽 줄 더 보기</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -2467,12 +2466,12 @@ function CommentCodeContext({
                     Math.min(current + CODE_CONTEXT_EXPAND_STEP, lines.length - commentTo)
                   )
                 }
-                aria-label={`Show ${CODE_CONTEXT_EXPAND_STEP} more lines below`}
+                aria-label={`아래쪽에 ${CODE_CONTEXT_EXPAND_STEP}줄 더 보기`}
               >
                 <ArrowDown className="size-3.5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Show more lines below</TooltipContent>
+            <TooltipContent>아래쪽 줄 더 보기</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -2574,7 +2573,7 @@ function ConversationTab({
   onCommentAdded: (comment: PRComment) => void
   onReviewersRequested: (reviewRequests: GitHubAssignableUser[]) => void
 }): React.JSX.Element {
-  const authorLabel = item.author ?? 'unknown'
+  const authorLabel = item.author ?? '알 수 없음'
   const [replyingTo, setReplyingTo] = useState<number | null>(null)
   const [commentFilter, setCommentFilter] = useState<PRCommentAudienceFilter>('all')
   const [bodyDraft, setBodyDraft] = useState(body)
@@ -2784,7 +2783,7 @@ function ConversationTab({
         )}
         {comment.isResolved && (
           <span className="rounded-full border border-border/60 bg-muted/40 px-1.5 py-0.5 text-[11px] text-muted-foreground">
-            resolved
+            해결됨
           </span>
         )}
         <div className="ml-auto flex shrink-0 items-center gap-1">
@@ -2797,12 +2796,12 @@ function ConversationTab({
                 onClick={() =>
                   setReplyingTo((current) => (current === comment.id ? null : comment.id))
                 }
-                aria-label="Reply to comment"
+                aria-label="댓글에 답글"
               >
                 <MessageSquarePlus className="size-3.5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Reply to comment</TooltipContent>
+            <TooltipContent>댓글에 답글</TooltipContent>
           </Tooltip>
           {comment.url && (
             <Tooltip>
@@ -2813,7 +2812,7 @@ function ConversationTab({
                   size="icon-xs"
                   className="size-7"
                   onClick={() => window.api.shell.openUrl(comment.url)}
-                aria-label="GitHub에서 댓글 열기"
+                  aria-label="GitHub에서 댓글 열기"
                 >
                   <ExternalLink className="size-3.5" />
                 </Button>
@@ -2843,9 +2842,7 @@ function ConversationTab({
         {resolvedReplyingTo === comment.id && (
           <CommentReplyForm
             className="mt-3"
-            placeholder={
-              comment.path ? '이 리뷰 스레드에 답글' : `@${comment.author}에게 답글`
-            }
+            placeholder={comment.path ? '이 리뷰 스레드에 답글' : `@${comment.author}에게 답글`}
             mentionOptions={mentionOptions}
             onCancel={() => setReplyingTo(null)}
             onSubmit={(replyBody) => handleReply(comment, replyBody)}
@@ -2882,7 +2879,7 @@ function ConversationTab({
         >
           <AccordionTrigger className="px-3 py-2 text-[13px] text-muted-foreground hover:bg-accent/30">
             <span className="min-w-0 truncate">
-              Resolved {group.kind === 'thread' ? 'thread' : 'comment'} by {root.author}
+              {group.kind === 'thread' ? '스레드' : '댓글'}을 {root.author}가 해결함
               {count > 1 ? ` (${count})` : ''}
             </span>
           </AccordionTrigger>
@@ -2908,7 +2905,7 @@ function ConversationTab({
         <div className="rounded-lg border border-border/50 bg-card shadow-xs">
           <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2 text-[12px] text-muted-foreground">
             <span className="font-medium text-foreground">{authorLabel}</span>
-            <span>updated {formatRelativeTime(item.updatedAt)}</span>
+            <span>{formatRelativeTime(item.updatedAt)}에 업데이트됨</span>
             {canEditBody && !loading && detailsLoaded ? (
               bodyEditing ? (
                 <div className="ml-auto flex items-center gap-1">
@@ -2924,7 +2921,7 @@ function ConversationTab({
                     }}
                   >
                     <X className="size-3.5" />
-                    Cancel
+                    취소
                   </Button>
                   <Button
                     type="button"
@@ -2938,7 +2935,7 @@ function ConversationTab({
                     ) : (
                       <Check className="size-3.5" />
                     )}
-                    Save
+                    저장
                   </Button>
                 </div>
               ) : (
@@ -2953,12 +2950,12 @@ function ConversationTab({
                         setBodyDraft(body)
                         setBodyEditing(true)
                       }}
-                      aria-label="Edit description"
+                      aria-label="설명 수정"
                     >
                       <Pencil className="size-3.5" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Edit description</TooltipContent>
+                  <TooltipContent>설명 수정</TooltipContent>
                 </Tooltip>
               )
             ) : null}
@@ -2985,7 +2982,7 @@ function ConversationTab({
                     void handleSaveBody()
                   }
                 }}
-                placeholder="Description"
+                placeholder="설명"
                 rows={12}
                 mentionOptions={mentionOptions}
                 wrapperClassName="flex min-h-64 w-full items-stretch"
@@ -3125,13 +3122,13 @@ function PRActionsPanel({
     if (!canMutateState || statePending) {
       return
     }
-    const label = nextState === 'closed' ? 'Close' : 'Reopen'
+    const label = nextState === 'closed' ? '닫기' : '다시 열기'
     const confirmed = await confirm({
       title: `${label} PR #${item.number}?`,
       description:
         nextState === 'closed'
-          ? 'This will close the pull request on GitHub.'
-          : 'This will reopen the pull request on GitHub.',
+          ? '이 작업은 GitHub에서 풀 리퀘스트를 닫습니다.'
+          : 'GitHub에서 풀 리퀘스트를 다시 엽니다.',
       confirmLabel: label,
       confirmVariant: nextState === 'closed' ? 'destructive' : 'default'
     })
@@ -3149,11 +3146,19 @@ function PRActionsPanel({
         number: item.number,
         updates: { state: nextState }
       })
-      toast.success(nextState === 'closed' ? '풀 리퀘스트를 닫았습니다.' : '풀 리퀘스트를 다시 열었습니다.')
+      toast.success(
+        nextState === 'closed' ? '풀 리퀘스트를 닫았습니다.' : '풀 리퀘스트를 다시 열었습니다.'
+      )
       onMutated()
     } catch (err) {
       applyStatePatch(previousState)
-      toast.error(err instanceof Error ? err.message : `Failed to ${label.toLowerCase()} PR`)
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : nextState === 'closed'
+            ? 'PR을 닫지 못했습니다'
+            : 'PR을 다시 열지 못했습니다'
+      )
     } finally {
       setStatePending(false)
     }
@@ -3166,7 +3171,7 @@ function PRActionsPanel({
     const label = GITHUB_PR_MERGE_METHOD_LABELS[method]
     const confirmed = await confirm({
       title: `${label} PR #${item.number}?`,
-      description: 'This will update the pull request on GitHub.',
+      description: 'GitHub의 풀 리퀘스트를 업데이트합니다.',
       confirmLabel: label
     })
     if (!confirmed) {
@@ -3189,7 +3194,7 @@ function PRActionsPanel({
       toast.success('풀 리퀘스트를 병합했습니다.')
       onMutated()
     } catch {
-      toast.error('Failed to merge pull request')
+      toast.error('풀 리퀘스트를 병합하지 못했습니다')
     } finally {
       setMergePending(false)
     }
@@ -3332,7 +3337,7 @@ function CommentReactions({
         <span
           key={reaction.content}
           className="inline-flex h-6 items-center gap-1 rounded-full border border-border/60 bg-muted/35 px-2 text-[12px] leading-none text-foreground"
-          aria-label={`${reaction.count} ${reaction.content} reaction${reaction.count === 1 ? '' : 's'}`}
+          aria-label={`${reaction.count}개의 ${reaction.content} 반응`}
         >
           <span aria-hidden="true">{REACTION_EMOJI[reaction.content]}</span>
           <span className="tabular-nums">{reaction.count}</span>
@@ -3409,10 +3414,10 @@ function CommentReplyForm({
       />
       <div className="mt-2 flex justify-end gap-2">
         <Button variant="ghost" size="sm" onClick={onCancel}>
-          Cancel
+          취소
         </Button>
         <Button size="sm" disabled={!body.trim() || submitting} onClick={() => void submit()}>
-          {submitting ? 'Posting…' : 'Reply'}
+          {submitting ? '게시 중…' : '작성'}
         </Button>
       </div>
     </div>
@@ -3436,30 +3441,30 @@ function getCheckConclusion(check: PRCheckDetail): NonNullable<PRCheckDetail['co
 function getCheckStatusLabel(check: PRCheckDetail): string {
   const conclusion = getCheckConclusion(check)
   if (conclusion === 'success') {
-    return 'Successful'
+    return '성공'
   }
   if (conclusion === 'failure') {
-    return 'Failed'
+    return '실패'
   }
   if (conclusion === 'cancelled') {
-    return 'Cancelled'
+    return '취소됨'
   }
   if (conclusion === 'timed_out') {
-    return 'Timed out'
+    return '시간 초과'
   }
   if (conclusion === 'neutral') {
-    return 'Neutral'
+    return '중립'
   }
   if (conclusion === 'skipped') {
-    return 'Skipped'
+    return '건너뜀'
   }
   if (check.status === 'queued') {
-    return 'Queued'
+    return '대기 중'
   }
   if (check.status === 'in_progress') {
-    return 'In progress'
+    return '진행 중'
   }
-  return 'Pending'
+  return '대기 중'
 }
 
 function getCheckCounts(checks: PRCheckDetail[]): {
@@ -3495,13 +3500,13 @@ function getChecksSummaryLabel(checks: PRCheckDetail[]): string {
     return '체크를 찾을 수 없습니다'
   }
   if (counts.failing > 0) {
-    return `${counts.failing} ${counts.failing === 1 ? 'check' : 'checks'} failing`
+    return `${counts.failing}개 검사 실패`
   }
   if (counts.pending > 0) {
-    return `${counts.pending} ${counts.pending === 1 ? 'check' : 'checks'} pending`
+    return `${counts.pending}개 검사 대기 중`
   }
   if (counts.passing === checks.length) {
-    return 'All checks passing'
+    return '모든 검사가 통과했습니다'
   }
   return `${counts.passing} of ${checks.length} checks passing`
 }
@@ -3633,7 +3638,7 @@ function ChecksTab({
 
   const handleRefresh = useCallback(async (): Promise<PRCheckDetail[] | null> => {
     if (!repoPath) {
-      toast.error('Unable to refresh checks without a repository path.')
+      toast.error('저장소 경로 없이는 체크를 새로고침할 수 없습니다.')
       return null
     }
     setRefreshing(true)
@@ -3649,7 +3654,7 @@ function ChecksTab({
       onChecksUpdated(nextChecks)
       return nextChecks
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to refresh checks')
+      toast.error(err instanceof Error ? err.message : '체크를 새로고침하지 못했습니다')
       return null
     } finally {
       setRefreshing(false)
@@ -3674,10 +3679,10 @@ function ChecksTab({
           toast.error(result.error)
           return
         }
-        toast.success(result.count === 1 ? 'Check rerun requested' : 'Check reruns requested')
+        toast.success('체크 재실행을 요청했습니다')
         await handleRefresh()
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : 'Failed to rerun checks')
+        toast.error(err instanceof Error ? err.message : '체크를 다시 실행하지 못했습니다')
       } finally {
         setRerunning(false)
       }
@@ -3691,7 +3696,7 @@ function ChecksTab({
       return
     }
     if (failedChecks.length === 0) {
-      toast.message('No broken checks to fix.')
+      toast.message('수정할 깨진 체크가 없습니다.')
       return
     }
 
@@ -3712,20 +3717,20 @@ function ChecksTab({
           launchSource: 'task_page',
           telemetrySource: 'sidebar',
           openModalFallback: () => {
-            toast.error('Unable to create a fix workspace automatically.')
+            toast.error('수정용 작업 공간을 자동으로 만들지 못했습니다.')
           }
         })
         return
       }
 
       if (!activateAndRevealWorktree(attachedWorkspace.id)) {
-        toast.error('Unable to open the workspace attached to this pull request.')
+        toast.error('이 풀 리퀘스트에 연결된 작업 공간을 열지 못했습니다.')
         return
       }
 
       const connectionId = getConnectionId(attachedWorkspace.id)
       if (connectionId === undefined) {
-        toast.error('Unable to resolve the workspace connection.')
+        toast.error('작업 공간 연결을 확인하지 못했습니다.')
         return
       }
 
@@ -3921,7 +3926,7 @@ function ChecksTab({
             )}
           />
           <div className="min-w-0 flex-1">
-            <div className="text-[13px] font-medium leading-5 text-foreground">Checks</div>
+            <div className="text-[13px] font-medium leading-5 text-foreground">검사</div>
             {list.length > 0 && (
               <div className="truncate text-[11px] leading-4 text-muted-foreground">
                 {summaryLabel}
@@ -4012,9 +4017,9 @@ function ChecksTab({
                 Status:{' '}
                 {details ? getCheckStatusLabel(detailsStatusCheck) : getCheckStatusLabel(check)}
               </span>
-              {startedAt && <span>Started {startedAt}</span>}
-              {completedAt && <span>Completed {completedAt}</span>}
-              {check.checkRunId && <span className="font-mono">check #{check.checkRunId}</span>}
+              {startedAt && <span>시작 {startedAt}</span>}
+              {completedAt && <span>완료 {completedAt}</span>}
+              {check.checkRunId && <span className="font-mono">체크 #{check.checkRunId}</span>}
             </div>
 
             {state?.error && <div className="text-[12px] text-muted-foreground">{state.error}</div>}
@@ -4106,7 +4111,7 @@ function ChecksTab({
                           {job.name}
                         </span>
                         <span className="shrink-0 text-[11px] text-muted-foreground">
-                          {job.conclusion ?? job.status ?? 'unknown'}
+                          {job.conclusion ?? job.status ?? '알 수 없음'}
                         </span>
                       </div>
                       {job.steps.length > 0 && (
@@ -4188,7 +4193,7 @@ function ChecksTab({
         {compactHeader}
         <div className="flex flex-col items-center justify-center gap-1 px-4 py-6 text-center">
           <CircleDashed className="size-4 text-muted-foreground/60" />
-          <div className="text-[12px] text-muted-foreground">No checks reported yet</div>
+          <div className="text-[12px] text-muted-foreground">아직 보고된 검사가 없습니다</div>
         </div>
       </>
     )
@@ -4196,13 +4201,13 @@ function ChecksTab({
   if (variant === 'page') {
     const countChips: { label: string; className: string }[] = []
     if (counts.passing > 0) {
-      countChips.push({ label: `${counts.passing} passing`, className: CHECK_COLOR.success })
+      countChips.push({ label: `${counts.passing}개 통과`, className: CHECK_COLOR.success })
     }
     if (counts.failing > 0) {
-      countChips.push({ label: `${counts.failing} failing`, className: CHECK_COLOR.failure })
+      countChips.push({ label: `${counts.failing}개 실패`, className: CHECK_COLOR.failure })
     }
     if (counts.pending > 0) {
-      countChips.push({ label: `${counts.pending} pending`, className: CHECK_COLOR.pending })
+      countChips.push({ label: `${counts.pending}개 대기 중`, className: CHECK_COLOR.pending })
     }
     if (counts.skipped + counts.neutral > 0) {
       countChips.push({
@@ -4852,7 +4857,7 @@ function GHEditSection({
             )}
           >
             <CircleDot className="size-3 text-emerald-500" />
-            Open
+            열림
           </button>
           <button
             type="button"
@@ -4863,7 +4868,7 @@ function GHEditSection({
             )}
           >
             <CircleDashed className="size-3 text-rose-500" />
-            Closed
+            닫힘
           </button>
         </PopoverContent>
       </Popover>
@@ -4877,7 +4882,7 @@ function GHEditSection({
             className="group/labels inline-flex items-center gap-1 rounded-full border border-border/30 bg-muted/20 px-2 py-0.5 text-[11px] transition hover:brightness-125 hover:ring-1 hover:ring-white/10 disabled:opacity-50"
           >
             {localLabels.length === 0 ? (
-              <span className="text-muted-foreground">+ Label</span>
+              <span className="text-muted-foreground">+ 레이블</span>
             ) : (
               localLabels.map((name) => (
                 <span key={name} className="text-[10px] text-muted-foreground">
@@ -4933,7 +4938,7 @@ function GHEditSection({
             className="group/assignees inline-flex items-center gap-1 rounded-full border border-border/30 bg-muted/20 px-2 py-0.5 text-[11px] transition hover:brightness-125 hover:ring-1 hover:ring-white/10 disabled:opacity-50"
           >
             {localAssignees.length === 0 ? (
-              <span className="text-muted-foreground">+ Assignee</span>
+              <span className="text-muted-foreground">+ 담당자</span>
             ) : (
               localAssignees.map((login) => (
                 <span key={login} className="text-[10px] text-muted-foreground">
@@ -5055,11 +5060,11 @@ function GHCommentComposer({
         // the real login/avatar immediately instead of waiting for a reopen.
         onCommentAdded(result.comment)
       } else {
-        toast.error(result.error ?? 'Failed to add comment')
+        toast.error(result.error ?? '댓글을 추가하지 못했습니다')
       }
     } catch (err) {
       if (mountedRef.current) {
-        toast.error(err instanceof Error ? err.message : 'Failed to add comment')
+        toast.error(err instanceof Error ? err.message : '댓글을 추가하지 못했습니다')
       }
     } finally {
       if (mountedRef.current) {
@@ -5088,7 +5093,7 @@ function GHCommentComposer({
           requestAnimationFrame(autoGrow)
         }}
         onKeyDown={handleKeyDown}
-        placeholder="Add a comment…"
+        placeholder="댓글을 남기세요…"
         rows={4}
         mentionOptions={mentionOptions}
         wrapperClassName="flex min-h-20 w-full items-stretch"
@@ -5098,14 +5103,14 @@ function GHCommentComposer({
         onClick={handleSubmit}
         disabled={!body.trim() || submitting}
         className="gap-2"
-        aria-label="Send comment"
+        aria-label="댓글 보내기"
       >
         {submitting ? (
           <LoaderCircle className="size-3.5 animate-spin" />
         ) : (
           <Send className="size-3.5" />
         )}
-        Comment
+        댓글
       </Button>
     </div>
   )
@@ -5222,7 +5227,7 @@ export default function PullRequestPage({
 
     const result = activateAndRevealWorktree(currentAttached.id)
     if (result === false) {
-      toast.error('Unable to open the workspace attached to this pull request.')
+      toast.error('이 풀 리퀘스트에 연결된 작업 공간을 열지 못했습니다.')
     }
   }, [effectiveRepoId, handleUseWorkItem, workItem])
 
@@ -5412,7 +5417,7 @@ export default function PullRequestPage({
         }
       })
       .catch((err) => {
-        const message = err instanceof Error ? err.message : 'Failed to load details'
+        const message = err instanceof Error ? err.message : '상세 정보를 불러오지 못했습니다'
         const invalidatedMidFlight = workItemDetailsCacheGeneration !== launchedAtGeneration
         if (invalidatedMidFlight) {
           return
@@ -5541,7 +5546,7 @@ export default function PullRequestPage({
   const handlePRFileViewedChange = useCallback(
     async (path: string, viewed: boolean): Promise<boolean> => {
       if (!repoPath || !details?.pullRequestId || !workItem || workItem.type !== 'pr') {
-        toast.error('Unable to sync viewed state for this pull request.')
+        toast.error('이 풀 리퀘스트의 확인 상태를 동기화하지 못했습니다.')
         return false
       }
       setPendingViewedPaths((prev) => new Set(prev).add(path))
@@ -5562,7 +5567,7 @@ export default function PullRequestPage({
           if (detailsCacheKey && previousState) {
             patchCachedPRFileViewedState(detailsCacheKey, path, previousState)
           }
-          toast.error('Failed to sync viewed state with GitHub.')
+          toast.error('GitHub와 본문 상태를 동기화하지 못했습니다.')
           return false
         }
         return true
@@ -5588,7 +5593,7 @@ export default function PullRequestPage({
         : localState === 'closed'
           ? 'bg-rose-600 text-white'
           : 'bg-emerald-600 text-white'
-  const stateBadgeLabel = workItem ? getStateLabel({ ...workItem, state: localState }) : 'Open'
+  const stateBadgeLabel = workItem ? getStateLabel({ ...workItem, state: localState }) : '열림'
 
   const content = workItem ? (
     <div className="flex h-full min-h-0 flex-col">
@@ -5677,9 +5682,7 @@ export default function PullRequestPage({
                   onClick={handleOpenOrUsePR}
                   className="gap-1.5 whitespace-nowrap font-semibold"
                   aria-label={
-                    attachedWorkspace
-                    ? 'PR에 연결된 작업 공간 재개'
-                      : 'PR에서 작업 공간 시작'
+                    attachedWorkspace ? 'PR에 연결된 작업 공간 재개' : 'PR에서 작업 공간 시작'
                   }
                 >
                   {attachedWorkspace ? '작업 공간 재개' : 'PR에서 작업 공간 시작'}
@@ -5717,25 +5720,25 @@ export default function PullRequestPage({
             {stateBadgeLabel}
           </span>
           <span className="flex flex-wrap items-center gap-1.5">
-            <span className="font-semibold text-foreground">{workItem.author ?? 'unknown'}</span>
-            <span>wants to merge into</span>
+            <span className="font-semibold text-foreground">{workItem.author ?? '알 수 없음'}</span>
+            <span>다음으로 병합하려고 합니다</span>
             {baseBranch ? (
               <span className="rounded-md bg-accent/40 px-1.5 py-0.5 font-mono text-[12px] text-accent-foreground">
                 {baseBranch}
               </span>
             ) : (
-              <span className="italic">base branch</span>
+              <span className="italic">기준 브랜치</span>
             )}
-            <span>from</span>
+            <span>에서 왔습니다</span>
             {headBranch ? (
               <span className="rounded-md bg-accent/40 px-1.5 py-0.5 font-mono text-[12px] text-accent-foreground">
                 {headBranch}
               </span>
             ) : (
-              <span className="italic">head branch</span>
+              <span className="italic">헤드 브랜치</span>
             )}
             <span className="text-muted-foreground/80">
-              · updated {formatRelativeTime(workItem.updatedAt)}
+              · {formatRelativeTime(workItem.updatedAt)}에 업데이트됨
             </span>
           </span>
           {attachedWorkspaceLabel ? (

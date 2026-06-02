@@ -687,7 +687,7 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
         entries.push({
           id: '__header_actions_settings__',
           type: 'section-header',
-          label: 'Actions & Settings'
+          label: '작업 및 설정'
         })
       }
       appendPaletteListEntries(entries, visibleMiddleItems)
@@ -1160,8 +1160,8 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
       }
     }
     return {
-      title: 'No active worktrees, settings, actions, or browser tabs',
-      subtitle: 'Create a workspace or open a page in Korca to get started.'
+      title: '활성 작업 공간, 설정, 작업, 브라우저 탭이 없습니다',
+      subtitle: '작업 공간을 만들거나 Korca에서 페이지를 열어 시작하세요.'
     }
   })()
 
@@ -1172,8 +1172,8 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
       shouldFilter={false}
       onOpenAutoFocus={handleOpenAutoFocus}
       onCloseAutoFocus={handleCloseAutoFocus}
-      title="Jump to..."
-      description="Search workspaces, settings, tabs, and actions"
+      title="이동..."
+      description="워크스페이스, 설정, 탭, 작업을 검색합니다"
       overlayClassName="bg-black/55 backdrop-blur-[2px]"
       contentClassName="top-[13%] w-[736px] max-w-[94vw] overflow-hidden rounded-xl border border-border/70 bg-background/96 shadow-[0_26px_84px_rgba(0,0,0,0.32)] backdrop-blur-xl"
       commandProps={{
@@ -1184,7 +1184,7 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
       }}
     >
       <CommandInput
-        placeholder="Search workspaces, settings, tabs, and actions..."
+        placeholder="워크스페이스, 설정, 탭, 작업을 검색..."
         value={query}
         onValueChange={handleQueryChange}
         wrapperClassName="mx-3 mt-3 rounded-lg border border-border/55 bg-muted/28 px-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"
@@ -1194,8 +1194,8 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
       <CommandList ref={listRef} className="max-h-[min(460px,62vh)] px-2.5 pb-2.5 pt-2">
         {isLoading && selectableItems.length === 0 && !showCreateAction ? (
           <PaletteState
-            title="Loading jump targets"
-            subtitle="Gathering your recent worktrees and open browser pages."
+            title="이동 대상을 불러오는 중"
+            subtitle="최근 작업 공간과 열려 있는 브라우저 페이지를 모으는 중입니다."
           />
         ) : selectableItems.length === 0 && !showCreateAction ? (
           <CommandEmpty className="py-0">
@@ -1288,7 +1288,7 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
                           <div className="flex min-w-0 items-center gap-2">
                             {sshConnectionId && (
                               <span
-                                aria-label={isSshDisconnected ? 'SSH disconnected' : 'SSH remote'}
+                                aria-label={isSshDisconnected ? 'SSH 연결 끊김' : 'SSH 원격'}
                                 className="shrink-0 inline-flex items-center"
                               >
                                 {isSshDisconnected ? (
@@ -1373,7 +1373,7 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
               if (entry.type === 'settings' || entry.type === 'quick-action') {
                 const result = entry.result
                 const Icon = result.icon
-                const kindLabel = entry.type === 'settings' ? 'Settings' : 'Action'
+                const kindLabel = entry.type === 'settings' ? '설정' : '작업'
                 return (
                   <CommandItem
                     key={entry.id}
@@ -1479,11 +1479,11 @@ export default function WorktreeJumpPalette(): React.JSX.Element | null {
       <div className="flex items-center justify-end border-t border-border/60 px-3.5 py-2.5 text-[11px] text-muted-foreground/82">
         <div className="flex items-center gap-2">
           <FooterKey>Enter</FooterKey>
-          <span>Open</span>
+          <span>열기</span>
           <FooterKey>Esc</FooterKey>
-          <span>Close</span>
+          <span>닫기</span>
           <FooterKey>↑↓</FooterKey>
-          <span>Move</span>
+          <span>이동</span>
         </div>
       </div>
       <div aria-live="polite" className="sr-only">

@@ -95,10 +95,10 @@ export function SshTargetRow({
           {isBusy ? (
             <>
               <Loader2 className="size-3 animate-spin" />
-              Connecting…
+              연결 중…
             </>
           ) : (
-            'Connect'
+            '연결'
           )}
         </button>
       )}

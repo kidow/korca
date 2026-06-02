@@ -77,7 +77,7 @@ function FileLoadErrorView({
       <div className="flex max-w-xl items-start gap-3 rounded-md border border-border bg-background p-4">
         <AlertCircle className="mt-0.5 size-4 flex-shrink-0 text-destructive" />
         <div className="min-w-0">
-          <div className="font-medium text-foreground">Unable to load file</div>
+          <div className="font-medium text-foreground">파일을 불러올 수 없습니다</div>
           <div className="mt-1 break-words">{message}</div>
           <Button type="button" variant="outline" size="sm" className="mt-3" onClick={onRetry}>
             <RefreshCw className="size-3.5" />
@@ -800,7 +800,7 @@ export function EditorContent({
     return (
       <div className="flex h-full items-center justify-center px-6 text-center">
         <div className="space-y-2">
-          <div className="text-sm font-medium text-foreground">Binary file changed</div>
+          <div className="text-sm font-medium text-foreground">바이너리 파일이 변경되었습니다</div>
           <div className="text-xs text-muted-foreground">
             {activeFile.diffSource === 'branch'
               ? 'Text diff is unavailable for this file in branch compare.'

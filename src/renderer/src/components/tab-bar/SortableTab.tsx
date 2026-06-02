@@ -46,7 +46,7 @@ type SortableTabProps = {
 }
 
 export const TAB_COLORS = [
-  { label: 'None', value: null },
+  { label: '없음', value: null },
   { label: 'Blue', value: '#3b82f6' },
   { label: 'Purple', value: '#a855f7' },
   { label: 'Pink', value: '#ec4899' },
@@ -369,8 +369,8 @@ export default function SortableTab({
             e.stopPropagation()
             onToggleExpand(tab.id)
           }}
-          title="Collapse pane"
-          aria-label="Collapse pane"
+          title="패널 접기"
+          aria-label="패널 접기"
         >
           <Minimize2 className="w-3 h-3" />
         </button>
@@ -438,19 +438,19 @@ export default function SortableTab({
         <DropdownMenuContent className="w-48" sideOffset={0} align="start">
           <DropdownMenuItem onSelect={() => onSplitGroup('up', tab.id)}>
             <Rows2 className="mr-1.5 size-3.5" />
-            Split Up
+            위로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('down', tab.id)}>
             <Rows2 className="mr-1.5 size-3.5" />
-            Split Down
+            아래로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('left', tab.id)}>
             <Columns2 className="mr-1.5 size-3.5" />
-            Split Left
+            왼쪽으로 분할
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onSplitGroup('right', tab.id)}>
             <Columns2 className="mr-1.5 size-3.5" />
-            Split Right
+            오른쪽으로 분할
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={onTogglePin}>
@@ -459,22 +459,22 @@ export default function SortableTab({
             ) : (
               <Pin className="mr-1.5 size-3.5" />
             )}
-            {isPinned ? 'Unpin Tab' : 'Pin Tab'}
+            {isPinned ? '탭 고정 해제' : '탭 고정'}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => !isPinned && onClose(tab.id)} disabled={isPinned}>
-            Close
+            닫기
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onCloseOthers(tab.id)} disabled={tabCount <= 1}>
-            Close Others
+            다른 탭 닫기
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => onCloseToRight(tab.id)} disabled={!hasTabsToRight}>
-            Close Tabs To The Right
+            오른쪽 탭 닫기
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={handleRenameOpen}>Change Title</DropdownMenuItem>
+          <DropdownMenuItem onSelect={handleRenameOpen}>제목 변경</DropdownMenuItem>
           <div className="px-2 pt-1.5 pb-1">
-            <div className="text-xs font-medium text-muted-foreground mb-1.5">Tab Color</div>
+            <div className="text-xs font-medium text-muted-foreground mb-1.5">탭 색상</div>
             <div className="flex flex-wrap gap-2">
               {TAB_COLORS.map((color) => {
                 const isSelected = tab.color === color.value

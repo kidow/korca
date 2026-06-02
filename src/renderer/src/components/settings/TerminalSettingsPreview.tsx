@@ -281,7 +281,7 @@ export function TerminalSettingsPreview({
           </div>
           <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
             <div className="flex items-center gap-2 rounded-md border border-border/50 bg-background/40 px-2 py-1">
-              <span className="text-xs font-medium text-muted-foreground">Pane divider</span>
+              <span className="text-xs font-medium text-muted-foreground">패널 구분선</span>
               <SettingsSwitch
                 checked={previewPaneDividerVisible}
                 onChange={() => setPreviewPaneDividerVisible((visible) => !visible)}

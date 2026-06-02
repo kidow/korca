@@ -117,7 +117,7 @@ export function NotificationStep({
     })
     if (!result.played) {
       if (mountedRef.current) {
-        toast.error('Notification sound could not be played')
+        toast.error('알림음을 재생하지 못했습니다.')
       }
     }
   }
@@ -148,7 +148,7 @@ export function NotificationStep({
 
   const handleSendTestNotification = async (): Promise<void> => {
     if (!notificationSettings) {
-      toast.error('Notification settings are still loading')
+      toast.error('알림 설정을 불러오는 중입니다.')
       return
     }
     await sendNotificationSettingsTestNotification(notificationSettings, getCustomSoundVolume())
@@ -157,7 +157,7 @@ export function NotificationStep({
   if (!notificationSettings) {
     return (
       <div className="rounded-xl border border-border bg-muted/20 px-5 py-4 text-sm text-muted-foreground">
-        Loading notification settings…
+        알림 설정을 불러오는 중…
       </div>
     )
   }

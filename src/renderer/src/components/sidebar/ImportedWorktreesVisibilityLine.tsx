@@ -27,8 +27,8 @@ type ImportedWorktreesVisibilityLineProps = {
 }
 
 const PREVIEW_LIMIT = 3
-const UNKNOWN_LOCATION_LABEL = 'Unknown location'
-const KEEP_HIDDEN_LABEL = 'Keep hidden - recover from the repo menu'
+const UNKNOWN_LOCATION_LABEL = '알 수 없는 위치'
+const KEEP_HIDDEN_LABEL = '숨김 유지 - 저장소 메뉴에서 복구'
 
 type ImportedWorktreePathGroup = {
   path: string
@@ -36,7 +36,7 @@ type ImportedWorktreePathGroup = {
 }
 
 function pluralizeWorktree(count: number): string {
-  return count === 1 ? 'worktree' : 'worktrees'
+  return count === 1 ? '작업 공간' : '작업 공간'
 }
 
 function getWorktreeKey(
@@ -93,7 +93,7 @@ export default function ImportedWorktreesVisibilityLine({
   const visibleWorktrees = hiddenWorktrees.slice(0, PREVIEW_LIMIT)
   const visibleWorktreeGroups = groupWorktreesByParentPath(visibleWorktrees)
   const remainingCount = Math.max(0, hiddenWorktrees.length - visibleWorktrees.length)
-  const keepHiddenAriaLabel = `Keep ${hiddenCount} discovered ${worktreeNoun} hidden for ${repoDisplayName}; recover from the repo menu`
+  const keepHiddenAriaLabel = `${repoDisplayName}에서 감지된 ${hiddenCount}개 ${worktreeNoun}를 숨긴 상태로 유지합니다. 저장소 메뉴에서 복구할 수 있습니다.`
 
   if (hiddenCount === 0) {
     return null
@@ -101,8 +101,8 @@ export default function ImportedWorktreesVisibilityLine({
 
   const lineText =
     placement === 'pinned-fallback'
-      ? `Hiding ${hiddenCount} discovered ${worktreeNoun} in ${repoDisplayName}`
-      : `Hiding ${hiddenCount} discovered ${worktreeNoun}`
+      ? `${repoDisplayName}에서 감지된 ${hiddenCount}개 ${worktreeNoun}를 숨기는 중`
+      : `감지된 ${hiddenCount}개 ${worktreeNoun}를 숨기는 중`
 
   return (
     <section
@@ -137,11 +137,11 @@ export default function ImportedWorktreesVisibilityLine({
           variant="ghost"
           size="xs"
           disabled={pending}
-          aria-label={`Show all ${hiddenCount} discovered ${worktreeNoun} for ${repoDisplayName}`}
+          aria-label={`${repoDisplayName}의 감지된 ${hiddenCount}개 ${worktreeNoun}를 모두 표시`}
           onClick={onShow}
           className="h-6 shrink-0 px-1.5 text-[11px] font-medium text-sidebar-primary hover:bg-sidebar-accent hover:text-sidebar-primary"
         >
-          Show all
+          모두 표시
         </Button>
         {onKeepHidden ? (
           <Tooltip>

@@ -35,7 +35,7 @@ export function InputPane({ settings, updateSettings }: InputPaneProps): React.J
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Middle-click Paste from Selection</Label>
+          <Label>가운데 클릭으로 선택 텍스트 붙여넣기</Label>
           <p className="text-xs text-muted-foreground">
             Enabled by default on Linux and macOS. Linux uses the system selection clipboard; other
             platforms use a private buffer.

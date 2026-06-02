@@ -53,7 +53,7 @@ export default function WorkspaceStatusAppearancePopover({
         data-workspace-status-appearance-popover=""
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
-        <div className="px-1 py-1 text-[11px] font-semibold text-muted-foreground">Color</div>
+        <div className="px-1 py-1 text-[11px] font-semibold text-muted-foreground">색상</div>
         <div className="grid grid-cols-8 gap-1">
           {WORKSPACE_STATUS_COLOR_OPTIONS.map((color) => (
             <Tooltip key={color.id}>
@@ -77,7 +77,7 @@ export default function WorkspaceStatusAppearancePopover({
           ))}
         </div>
 
-        <div className="mt-2 px-1 py-1 text-[11px] font-semibold text-muted-foreground">Icon</div>
+        <div className="mt-2 px-1 py-1 text-[11px] font-semibold text-muted-foreground">아이콘</div>
         <div className="grid grid-cols-6 gap-1">
           {WORKSPACE_STATUS_ICON_OPTIONS.map((icon) => (
             <Tooltip key={icon.id}>

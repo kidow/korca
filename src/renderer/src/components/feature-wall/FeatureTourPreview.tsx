@@ -20,26 +20,26 @@ export type FeatureTourPreviewFrameCopy = {
 export const FEATURE_TOUR_PREVIEW_COPY: readonly FeatureTourPreviewFrameCopy[] = [
   {
     id: 1,
-    title: 'Isolated workspaces',
+    title: '분리된 작업공간',
     caption:
-      'Ship several things at once. Each workspace keeps its branch, terminal, and agent activity together.'
+      '여러 작업을 동시에 처리하세요. 각 작업공간은 브랜치, 터미널, 에이전트 활동을 함께 유지합니다.'
   },
   {
     id: 2,
-    title: 'Agent orchestration',
-    caption: 'Hand off a goal and walk away. A coordinator agent fans out and ships parallel PRs.'
+    title: '에이전트 오케스트레이션',
+    caption: '목표를 넘겨주고 자리를 비우세요. 조율 에이전트가 분기해 병렬 PR을 만듭니다.'
   },
   {
     id: 3,
-    title: 'GitHub & Linear tasks',
+    title: 'GitHub · Linear 작업',
     caption:
-      'Skip the tab-switching. Pick from your GitHub or Linear backlog and start a workspace in one click.'
+      '탭 전환은 건너뛰세요. GitHub 또는 Linear 백로그에서 골라 한 번의 클릭으로 작업공간을 시작합니다.'
   },
   {
     id: 4,
-    title: 'Splittable terminal',
+    title: '분할 가능한 터미널',
     caption:
-      'Open any workspace to return to its terminal, then split panes for tests, logs, and agents.'
+      '어떤 작업공간이든 열어 터미널로 돌아가고, 테스트·로그·에이전트를 위해 패널을 나눌 수 있습니다.'
   }
 ]
 
@@ -47,7 +47,7 @@ function WorkspaceFrame(): JSX.Element {
   return (
     <div className="absolute inset-0 flex flex-col gap-5 bg-card px-4 py-4">
       <div className="text-[14.5px] font-semibold uppercase tracking-[0.07em] leading-none text-muted-foreground">
-        Isolated workspaces
+        분리된 작업공간
       </div>
       {/* Why: 3 cards in a row tells the "ship several at once" story by
           composition; the wide preview aspect (~4.9:1) makes a vertical stack
@@ -57,7 +57,7 @@ function WorkspaceFrame(): JSX.Element {
       <div className="grid grid-cols-3 gap-3 px-4">
         <FeatureTourWorkspaceCard
           status="working"
-          title="fix login race condition"
+          title="로그인 경합 조건 수정"
           agents={[
             { kind: 'claude', barWidth: '60%', state: 'working' },
             { kind: 'codex', barWidth: '52%', state: 'working' }
@@ -65,12 +65,12 @@ function WorkspaceFrame(): JSX.Element {
         />
         <FeatureTourWorkspaceCard
           status="done"
-          title="speed up CI pipeline"
+          title="CI 파이프라인 속도 개선"
           agents={[{ kind: 'opencode-go', barWidth: '70%', state: 'done' }]}
         />
         <FeatureTourWorkspaceCard
           status="working"
-          title="refactor billing webhook"
+          title="결제 웹훅 리팩터링"
           agents={[{ kind: 'claude', barWidth: '38%', state: 'working' }]}
         />
       </div>
@@ -104,7 +104,7 @@ function OrchestrationFrame(): JSX.Element {
   return (
     <div className="absolute inset-0 flex flex-col gap-5 bg-card px-4 py-4">
       <div className="text-[14.5px] font-semibold uppercase tracking-[0.07em] leading-none text-muted-foreground">
-        Agent orchestration
+        에이전트 오케스트레이션
       </div>
       <div className="relative w-full flex-1">
         {/* Why: viewBox is percent-units (100×100, preserveAspectRatio="none")
@@ -159,14 +159,14 @@ function OrchestrationFrame(): JSX.Element {
           <div className="flex items-center gap-2">
             <WorkingSpinner />
             <span className="truncate text-[15px] font-medium leading-none text-foreground">
-              redesign auth flow
+              인증 흐름 재설계
             </span>
           </div>
           <div className="mt-2 flex items-center gap-1.5 pl-3.5">
             <WorkingSpinner size="xs" />
             <ClaudeIcon size={13} />
             <span className="truncate text-[12.5px] leading-none text-muted-foreground">
-              orchestrating 3 agents
+              에이전트 3개를 조율하는 중
             </span>
           </div>
         </div>
@@ -221,7 +221,7 @@ function TasksFrame(): JSX.Element {
   return (
     <div className="absolute inset-0 flex flex-col gap-5 bg-card px-4 py-4">
       <div className="text-[14.5px] font-semibold uppercase tracking-[0.07em] leading-none text-muted-foreground">
-        GitHub &amp; Linear tasks
+        GitHub &amp; Linear 작업
       </div>
       <div className="relative grid flex-1 grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-center gap-4 px-4">
         <div className="flex flex-col gap-2">
@@ -239,11 +239,11 @@ function TasksFrame(): JSX.Element {
               GH #1842
             </span>
             <span className="truncate text-[15px] font-medium leading-none text-foreground">
-              Worktree picker truncates
+              작업공간 선택기 이름 잘림
             </span>
             <span className="feature-tour-tasks-pill relative ml-auto flex h-6 items-center justify-center overflow-hidden rounded-full border border-emerald-500/30 bg-emerald-500/15">
               <span className="feature-tour-tasks-pill-label flex items-center gap-1 whitespace-nowrap pl-3 pr-2.5 text-[13px] font-semibold leading-none tracking-[0.01em] text-primary-foreground">
-                Start
+                시작
                 <svg
                   width="11"
                   height="11"
@@ -280,7 +280,7 @@ function TasksFrame(): JSX.Element {
           <div className="flex items-center gap-2.5">
             <WorkingSpinner />
             <span className="truncate text-[15.5px] font-medium leading-none text-foreground">
-              fix/worktree-picker-truncates
+              작업공간 제목 잘림 수정
             </span>
             <span className="ml-auto inline-flex">
               <ClaudeIcon size={13} />
@@ -291,7 +291,7 @@ function TasksFrame(): JSX.Element {
             <ClaudeIcon size={12} />
             <span className="h-2 w-[55%] rounded-full bg-foreground/15" />
           </div>
-          <div className="text-[13.5px] leading-none text-muted-foreground">Linked to GH #1842</div>
+          <div className="text-[13.5px] leading-none text-muted-foreground">GH #1842와 연결됨</div>
         </div>
       </div>
     </div>
@@ -302,7 +302,7 @@ function TerminalFrame(): JSX.Element {
   return (
     <div className="absolute inset-0 flex flex-col gap-5 bg-card px-4 py-4">
       <div className="text-[14.5px] font-semibold uppercase tracking-[0.07em] leading-none text-muted-foreground">
-        Splittable terminal
+        분할 가능한 터미널
       </div>
       <div className="mx-4 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-border bg-background">
         <div className="flex items-center gap-1.5 border-b border-border bg-muted/40 px-2 py-1">
@@ -326,7 +326,7 @@ function TerminalFrame(): JSX.Element {
                 className="feature-tour-terminal-output truncate text-muted-foreground"
                 data-line="1"
               >
-                Running 12 tests
+                테스트 12개 실행 중
               </div>
               <div
                 className="feature-tour-terminal-output flex min-w-0 items-center gap-1.5"
@@ -355,21 +355,21 @@ function TerminalFrame(): JSX.Element {
                 data-line="1"
               >
                 <ClaudeIcon size={12} />
-                <span className="truncate text-muted-foreground">session started</span>
+                <span className="truncate text-muted-foreground">세션 시작됨</span>
               </div>
               <div
                 className="feature-tour-terminal-output flex min-w-0 items-center gap-1"
                 data-line="2"
               >
                 <span className="text-amber-600">&gt;</span>
-                <span className="truncate">review src/auth</span>
+                <span className="truncate">src/auth 검토</span>
               </div>
               <div
                 className="feature-tour-terminal-output flex min-w-0 items-center gap-1.5"
                 data-line="3"
               >
                 <span className="inline-block size-2 animate-spin rounded-full border-[1.5px] border-amber-600/20 border-t-amber-600" />
-                <span className="truncate text-muted-foreground">Thinking...</span>
+                <span className="truncate text-muted-foreground">생각하는 중...</span>
               </div>
             </div>
           </div>

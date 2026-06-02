@@ -98,16 +98,16 @@ export function SshPassphraseDialog(): React.JSX.Element | null {
       <DialogContent showCloseButton={false} className="max-w-[360px]">
         <DialogHeader>
           <DialogTitle className="text-sm">
-            {isPassword ? 'SSH Password' : 'SSH Key Passphrase'}
+            {isPassword ? 'SSH 비밀번호' : 'SSH 키 패스프레이즈'}
           </DialogTitle>
           <DialogDescription className="text-xs">
             {isPassword ? (
               <>
-                Enter the password for <span className="font-medium">{label}</span>
+                <span className="font-medium">{label}</span>의 비밀번호를 입력하세요
               </>
             ) : (
               <>
-                Enter the passphrase for <span className="font-medium">{label}</span>
+                <span className="font-medium">{label}</span>의 패스프레이즈를 입력하세요
               </>
             )}
           </DialogDescription>
@@ -117,7 +117,7 @@ export function SshPassphraseDialog(): React.JSX.Element | null {
             htmlFor="ssh-credential-input"
             className="text-[11px] font-medium text-muted-foreground mb-1 block"
           >
-            {isPassword ? `Password for ${request.detail}` : `Passphrase for ${request.detail}`}
+            {isPassword ? `${request.detail}의 비밀번호` : `${request.detail}의 패스프레이즈`}
           </label>
           <Input
             id="ssh-credential-input"
@@ -131,7 +131,7 @@ export function SshPassphraseDialog(): React.JSX.Element | null {
                 void handleSubmit()
               }
             }}
-            placeholder={isPassword ? 'Enter password' : 'Enter passphrase'}
+            placeholder={isPassword ? '비밀번호를 입력하세요' : '패스프레이즈를 입력하세요'}
             className="h-8 text-sm"
             disabled={submitting}
           />
@@ -143,10 +143,10 @@ export function SshPassphraseDialog(): React.JSX.Element | null {
             onClick={() => void handleCancel()}
             disabled={submitting}
           >
-            Cancel
+            취소
           </Button>
           <Button size="sm" onClick={() => void handleSubmit()} disabled={!value || submitting}>
-            {isPassword ? 'Connect' : 'Unlock'}
+            {isPassword ? '연결' : '잠금 해제'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -166,7 +166,7 @@ const SidebarNav = React.memo(function SidebarNav() {
             className={cn('size-4 shrink-0', !tasksActive && 'text-sidebar-foreground/30')}
             strokeWidth={tasksActive ? 2.25 : 1.75}
           />
-          <span className="flex-1">Tasks</span>
+          <span className="flex-1">작업</span>
           <span className="flex items-center gap-1">
             {visibleTaskProviders.includes('github') ? (
               <span
@@ -180,7 +180,7 @@ const SidebarNav = React.memo(function SidebarNav() {
                   openTaskPage({ taskSource: 'github' })
                 }}
                 className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:text-foreground"
-                aria-label="Open GitHub tasks"
+                aria-label="GitHub 작업 열기"
               >
                 <Github className="size-3.5" aria-hidden />
               </span>
@@ -197,7 +197,7 @@ const SidebarNav = React.memo(function SidebarNav() {
                   openTaskPage({ taskSource: 'gitlab' })
                 }}
                 className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:text-foreground"
-                aria-label="Open GitLab tasks"
+                aria-label="GitLab 작업 열기"
               >
                 <Gitlab className="size-3.5" aria-hidden />
               </span>
@@ -214,7 +214,7 @@ const SidebarNav = React.memo(function SidebarNav() {
                   openTaskPage({ taskSource: 'linear' })
                 }}
                 className="rounded p-0.5 text-muted-foreground/70 transition-colors hover:text-foreground"
-                aria-label="Open Linear tasks"
+                aria-label="Linear 작업 열기"
               >
                 <LinearIcon className="size-3.5" />
               </span>
@@ -237,7 +237,7 @@ const SidebarNav = React.memo(function SidebarNav() {
           className={cn('size-4 shrink-0', !automationsActive && 'text-sidebar-foreground/30')}
           strokeWidth={automationsActive ? 2.25 : 1.75}
         />
-        <span className="flex-1">Automations</span>
+        <span className="flex-1">자동화</span>
       </button>
       {showAgentsButton ? (
         <button
@@ -255,7 +255,7 @@ const SidebarNav = React.memo(function SidebarNav() {
             className={cn('size-4 shrink-0', !activityActive && 'text-sidebar-foreground/30')}
             strokeWidth={activityActive ? 2.25 : 1.75}
           />
-          <span className="flex-1">Agents</span>
+          <span className="flex-1">에이전트</span>
           {activityUnreadCount > 0 ? (
             <span className="rounded-full bg-primary px-1.5 py-px text-[10px] font-semibold text-primary-foreground">
               {activityUnreadCount}
@@ -287,7 +287,7 @@ const SidebarNav = React.memo(function SidebarNav() {
               <span className="flex-1">Korca Mobile</span>
               {mobileOnboardingBadge.visible ? (
                 <span className="rounded-full bg-primary px-1.5 py-px text-[10px] font-semibold text-primary-foreground">
-                  New
+                  새로움
                 </span>
               ) : null}
             </button>
@@ -295,7 +295,7 @@ const SidebarNav = React.memo(function SidebarNav() {
           <ContextMenuContent>
             <ContextMenuItem onSelect={hideMobileButton}>
               <EyeOff className="size-3.5" />
-              Hide from sidebar
+              사이드바에서 숨기기
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
@@ -303,11 +303,11 @@ const SidebarNav = React.memo(function SidebarNav() {
       <button
         type="button"
         onClick={() => openModal('worktree-palette')}
-        aria-label="Search worktrees and browser tabs"
+        aria-label="작업 트리와 브라우저 탭 검색"
         className="group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] font-medium tracking-tight text-sidebar-foreground/60 transition-colors hover:bg-sidebar-foreground/8"
       >
         <Search className="size-4 shrink-0 text-sidebar-foreground/30" strokeWidth={1.75} />
-        <span className="flex-1">Search</span>
+        <span className="flex-1">검색</span>
         <kbd className="hidden rounded border border-border/60 bg-background/40 px-1.5 py-px font-mono text-[10px] font-medium text-muted-foreground group-hover:inline-flex items-center">
           {worktreePaletteShortcut}
         </kbd>

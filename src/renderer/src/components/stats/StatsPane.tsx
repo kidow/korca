@@ -113,7 +113,7 @@ export function StatsPane(): React.JSX.Element {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="text-sm font-semibold text-foreground">Usage Analytics</h3>
+          <h3 className="text-sm font-semibold text-foreground">사용량 분석</h3>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

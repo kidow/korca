@@ -3,20 +3,20 @@ export function TerminalSlide(): React.JSX.Element {
     <div className="mp-device-screen">
       <div className="mp-session-chrome">
         <div className="mp-session-topbar">
-          <button type="button" className="mp-session-back" aria-label="Back">
+          <button type="button" className="mp-session-back" aria-label="뒤로">
             <ChevronLeftIcon />
           </button>
           <div className="mp-session-title-block">
             <div className="mp-session-title">feat/mobile-page</div>
             <div className="mp-session-meta-row">
               <span className="mp-status-dot is-green" />
-              <span>2 terminals · claude active</span>
+              <span>터미널 2개 · claude 활성</span>
             </div>
           </div>
-          <button type="button" className="mp-session-iconbtn" aria-label="Source control">
+          <button type="button" className="mp-session-iconbtn" aria-label="소스 제어">
             <BranchIcon />
           </button>
-          <button type="button" className="mp-session-iconbtn" aria-label="Files">
+          <button type="button" className="mp-session-iconbtn" aria-label="파일">
             <FolderIcon />
           </button>
         </div>
@@ -24,7 +24,7 @@ export function TerminalSlide(): React.JSX.Element {
         <div className="mp-session-tabbar">
           <div className="mp-session-tab is-active">claude</div>
           <div className="mp-session-tab">
-            <span>shell</span>
+            <span>셸</span>
           </div>
           <div className="mp-session-tab">
             <FileIcon />
@@ -44,21 +44,21 @@ export function TerminalSlide(): React.JSX.Element {
         </span>
         <span className="mp-term-line" />
         <span className="mp-term-line">
-          <span className="mp-term-tool">●</span> <span className="mp-term-mid">Read</span>{' '}
+          <span className="mp-term-tool">●</span> <span className="mp-term-mid">읽기</span>{' '}
           <span className="mp-term-dim">mobile/korca-mobile-sidebar-mock-v3.html</span>
         </span>
         <span className="mp-term-line">
           {'  '}
-          <span className="mp-term-comment">⎿ Read 2103 lines</span>
+          <span className="mp-term-comment">⎿ 2103줄 읽음</span>
         </span>
         <span className="mp-term-line" />
         <span className="mp-term-line">
-          <span className="mp-term-tool">●</span> <span className="mp-term-mid">Edit</span>{' '}
+          <span className="mp-term-tool">●</span> <span className="mp-term-mid">수정</span>{' '}
           <span className="mp-term-dim">mobile/korca-mobile-sidebar-mock-v3.html</span>
         </span>
         <span className="mp-term-line">
           {'  '}
-          <span className="mp-term-comment">⎿ Replaced pair-scan slide with terminal session</span>
+          <span className="mp-term-comment">⎿ pair-scan 슬라이드를 터미널 세션으로 교체함</span>
         </span>
         <span className="mp-term-line" />
         <span className="mp-term-line">
@@ -68,12 +68,12 @@ export function TerminalSlide(): React.JSX.Element {
         <span className="mp-term-line">
           {'  '}
           <span className="mp-term-comment">⎿ </span>
-          <span className="mp-term-ok">PASS</span>
+          <span className="mp-term-ok">통과</span>
           <span className="mp-term-comment"> src/transport/host-store.test.ts</span>
         </span>
         <span className="mp-term-line">
           {'     '}
-          <span className="mp-term-ok">PASS</span>
+          <span className="mp-term-ok">통과</span>
           <span className="mp-term-comment"> src/cache/worktree-cache.test.ts</span>
         </span>
         <span className="mp-term-line">
@@ -83,17 +83,15 @@ export function TerminalSlide(): React.JSX.Element {
         </span>
         <span className="mp-term-line" />
         <span className="mp-term-line">
-          <span className="mp-term-mid">
-            I&apos;ve replaced the pair-scan slide with a high-fidelity
-          </span>
+          <span className="mp-term-mid">pair-scan 슬라이드를 고해상도 터미널 화면으로</span>
         </span>
         <span className="mp-term-line">
           <span className="mp-term-mid">
-            terminal screen. Tokyonight palette, Menlo, real claude
+            터미널 화면으로 바꿨습니다. Tokyonight 팔레트, Menlo, 실제 claude
           </span>
         </span>
         <span className="mp-term-line">
-          <span className="mp-term-mid">tool-call formatting. Want me to add the diff next?</span>
+          <span className="mp-term-mid">tool-call 형식입니다. 다음에 diff를 추가할까요?</span>
         </span>
         <span className="mp-term-line" />
         <span className="mp-term-line">
@@ -103,10 +101,10 @@ export function TerminalSlide(): React.JSX.Element {
 
       <div className="mp-accessory-bar">
         <div className="mp-accessory-content">
-          <div className="mp-accessory-key is-icon" aria-label="Switch to phone mode">
+          <div className="mp-accessory-key is-icon" aria-label="폰 모드로 전환">
             <PhoneIcon />
           </div>
-          <div className="mp-accessory-key">Paste</div>
+          <div className="mp-accessory-key">붙여넣기</div>
           <div className="mp-accessory-key">Esc</div>
           <div className="mp-accessory-key">Tab</div>
           <div className="mp-accessory-key">⌫</div>
@@ -119,8 +117,8 @@ export function TerminalSlide(): React.JSX.Element {
       </div>
 
       <div className="mp-input-bar">
-        <div className="mp-text-input">Type a command…</div>
-        <div className="mp-round-button" aria-label="Voice dictation">
+        <div className="mp-text-input">명령을 입력하세요…</div>
+        <div className="mp-round-button" aria-label="음성 받아쓰기">
           <MicIcon />
         </div>
         <div className="mp-round-button" aria-label="Send">

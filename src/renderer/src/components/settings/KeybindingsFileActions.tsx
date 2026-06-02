@@ -131,7 +131,7 @@ export function KeybindingsFileActions(): React.JSX.Element {
       <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
         <div className="min-w-0">
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <p className="shrink-0 text-xs font-medium">Keybindings JSON</p>
+            <p className="shrink-0 text-xs font-medium">키바인딩 JSON</p>
           </div>
           <p className="truncate font-mono text-[11px] leading-4 text-muted-foreground">
             {keybindingSnapshot?.path ?? '~/.korca/keybindings.json'}
@@ -181,7 +181,7 @@ export function KeybindingsFileActions(): React.JSX.Element {
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => void reloadKeybindings()}>
                   <RefreshCw className="size-3.5" />
-                  Reload from Disk
+                  디스크에서 다시 불러오기
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

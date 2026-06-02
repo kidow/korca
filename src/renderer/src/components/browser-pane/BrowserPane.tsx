@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 /* eslint-disable max-lines */
 import {
   useCallback,
@@ -179,8 +180,8 @@ type BrowserOverlayAnchor = {
 }
 
 const BROWSER_ANNOTATION_INTENT_OPTIONS = [
-  { value: 'change', label: 'Change', icon: PencilLine },
-  { value: 'question', label: 'Question', icon: MessageCircleQuestionMark }
+  { value: 'change', label: '변경', icon: PencilLine },
+  { value: 'question', label: '질문', icon: MessageCircleQuestionMark }
 ] as const
 
 // Why: priority remains in the persisted annotation shape for backwards
@@ -202,7 +203,7 @@ function decodeRemoteBrowserFrameUrl(url: string): Promise<void> {
   }
   return new Promise((resolve, reject) => {
     image.onload = () => resolve()
-    image.onerror = () => reject(new Error('Remote browser frame failed to decode.'))
+    image.onerror = () => reject(new Error('원격 브라우저 프레임을 디코딩하지 못했습니다.'))
   })
 }
 
@@ -354,7 +355,7 @@ function PendingBrowserAnnotationCard({
         collisionPadding={12}
         portalContainer={portalContainer}
         className="z-40 w-[22rem] max-w-[calc(var(--radix-popover-content-available-width)-1rem)] p-3 shadow-[0_10px_24px_rgba(0,0,0,0.18)]"
-        aria-label="Add browser annotation"
+        aria-label="브라우저 주석 추가"
         onEscapeKeyDown={(event) => {
           event.preventDefault()
           onCancel()
@@ -371,13 +372,13 @@ function PendingBrowserAnnotationCard({
           </div>
         </div>
         <Label htmlFor="browser-annotation-comment" className="sr-only">
-          Annotation comment
+          주석 내용
         </Label>
         <textarea
           id="browser-annotation-comment"
           value={comment}
           onChange={(event) => setComment(event.target.value)}
-          placeholder="Describe what the agent should change here..."
+          placeholder="에이전트가 여기서 무엇을 바꿔야 하는지 적어 주세요..."
           maxLength={GRAB_BUDGET.annotationCommentMaxLength}
           className="h-24 w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
           autoFocus
@@ -398,7 +399,7 @@ function PendingBrowserAnnotationCard({
           }}
         />
         <div className="mt-2 min-w-0">
-          <Label className="mb-1 block text-xs text-muted-foreground">Intent</Label>
+          <Label className="mb-1 block text-xs text-muted-foreground">의도</Label>
           <ToggleGroup
             type="single"
             size="sm"
@@ -410,7 +411,7 @@ function PendingBrowserAnnotationCard({
               }
             }}
             className="h-8 w-full [&_[data-slot=toggle-group-item]]:h-8 [&_[data-slot=toggle-group-item]]:flex-1 [&_[data-slot=toggle-group-item]]:px-2"
-            aria-label="Annotation intent"
+            aria-label="주석 의도"
           >
             {BROWSER_ANNOTATION_INTENT_OPTIONS.map((option) => {
               const Icon = option.icon
@@ -430,7 +431,7 @@ function PendingBrowserAnnotationCard({
         </div>
         <div className="mt-3 flex justify-end gap-2">
           <Button size="sm" variant="ghost" className="h-8" onClick={onCancel}>
-            Cancel
+            취소
           </Button>
           <Button
             size="sm"
@@ -439,7 +440,7 @@ function PendingBrowserAnnotationCard({
             onClick={() => onAdd(trimmed, intent)}
           >
             <MessageSquarePlus className="size-3.5" />
-            Add
+            추가
             <span className="ml-1 inline-flex items-center gap-0.5 rounded border border-white/20 px-1.5 py-0.5 text-[10px] font-medium leading-none text-current/80">
               <span>{submitModifierLabel}</span>
               <CornerDownLeft className="size-3" />
@@ -495,7 +496,7 @@ function getBrowserDisplayTitle(title: string | null | undefined, url: string): 
     title === KORCA_BROWSER_BLANK_URL ||
     !title
   ) {
-    return 'New Tab'
+    return '새 탭'
   }
   return title
 }
@@ -1916,7 +1917,7 @@ function RemoteBrowserPagePane({
       kagiSessionLink
     })
     if (!nextUrl) {
-      const message = 'Enter a valid http(s) or localhost URL.'
+      const message = '유효한 http(s) 또는 localhost URL을 입력하세요.'
       setRemoteError(message)
       onUpdatePageState(browserTab.id, {
         loadError: {
@@ -2291,7 +2292,7 @@ function RemoteBrowserPagePane({
                         setContextMenu(null)
                       }}
                     >
-                      Open Link In Korca Browser
+                      Korca 브라우저에서 링크 열기
                     </button>
                     <button
                       role="menuitem"
@@ -2304,7 +2305,7 @@ function RemoteBrowserPagePane({
                         setContextMenu(null)
                       }}
                     >
-                      Open Link In Default Browser
+                      기본 브라우저에서 링크 열기
                     </button>
                     <button
                       role="menuitem"
@@ -2314,7 +2315,7 @@ function RemoteBrowserPagePane({
                         setContextMenu(null)
                       }}
                     >
-                      Copy Link Address
+                      링크 주소 복사
                     </button>
                     <div className="my-1 h-px bg-border/70" />
                   </>
@@ -2347,7 +2348,7 @@ function RemoteBrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Reload
+                  다시 불러오기
                 </button>
                 <div className="my-1 h-px bg-border/70" />
                 <button
@@ -2361,7 +2362,7 @@ function RemoteBrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Open Page In Default Browser
+                  페이지를 기본 브라우저에서 열기
                 </button>
                 <button
                   role="menuitem"
@@ -2371,7 +2372,7 @@ function RemoteBrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Copy Page URL
+                  페이지 URL 복사
                 </button>
               </div>
             </>,
@@ -2421,7 +2422,7 @@ function RemoteBrowserPagePane({
               variant="ghost"
               className="h-7 w-7 opacity-50"
               aria-disabled="true"
-              aria-label="Browser annotations unavailable in remote runtime"
+              aria-label="원격 런타임에서는 브라우저 주석을 사용할 수 없음"
               onClick={(event) => {
                 event.preventDefault()
               }}
@@ -2634,7 +2635,7 @@ function BrowserPagePane({
       const domainPreview = domains.slice(0, 3).join(', ')
       const more = domains.length > 3 ? ` +${domains.length - 3} more` : ''
       setResourceNotice(
-        `Imported ${importedCookies} cookies for ${domainPreview}${more}. Reload the page to use them.`
+        `${domainPreview}${more}에 대해 ${importedCookies}개의 쿠키를 가져왔습니다. 사용하려면 페이지를 다시 불러오세요.`
       )
       clearBrowserSessionImportState()
     } else if (browserSessionImportState.status === 'error' && browserSessionImportState.error) {
@@ -2739,7 +2740,7 @@ function BrowserPagePane({
     if (!grab.contextMenu) {
       const text = formatGrabPayloadAsText(grab.payload)
       void window.api.ui.writeClipboardText(text)
-      showGrabToast('Copied', 'success', grab.payload)
+      showGrabToast('복사됨', 'success', grab.payload)
     }
   }, [grab.state, grab.payload, grab.contextMenu, grabIntent, showGrabToast])
 
@@ -3812,15 +3813,15 @@ function BrowserPagePane({
           const text = formatGrabPayloadAsText(payload)
           void window.api.ui.writeClipboardText(text)
           recordFeatureInteraction('browser-grab')
-          showGrabToast('Copied', 'success', payload)
+          showGrabToast('복사됨', 'success', payload)
         } else {
           const dataUrl = payload.screenshot?.dataUrl
           if (dataUrl?.startsWith('data:image/png;base64,')) {
             void window.api.ui.writeClipboardImage(dataUrl)
             recordFeatureInteraction('browser-grab')
-            showGrabToast('Screenshotted', 'success', payload)
+            showGrabToast('스크린샷 복사됨', 'success', payload)
           } else {
-            showGrabToast('No screenshot available', 'error', payload)
+            showGrabToast('스크린샷을 사용할 수 없음', 'error', payload)
           }
         }
       }
@@ -3848,7 +3849,7 @@ function BrowserPagePane({
             browserPageId: browserTabIdRef.current
           })
           if (!result.ok) {
-            showGrabToast('No element hovered', 'error')
+            showGrabToast('호버된 요소가 없습니다', 'error')
             return
           }
           const payload = result.payload as BrowserGrabPayload
@@ -3925,7 +3926,7 @@ function BrowserPagePane({
     const text = formatGrabPayloadAsText(payload)
     void window.api.ui.writeClipboardText(text)
     recordFeatureInteraction('browser-grab')
-    showGrabToast('Copied', 'success', payload)
+    showGrabToast('복사됨', 'success', payload)
     grab.rearm()
   }, [grab, recordFeatureInteraction, showGrabToast])
 
@@ -3941,7 +3942,7 @@ function BrowserPagePane({
     }
     void window.api.ui.writeClipboardImage(dataUrl)
     recordFeatureInteraction('browser-grab')
-    showGrabToast('Screenshotted', 'success', payload)
+    showGrabToast('스크린샷 복사됨', 'success', payload)
     grab.rearm()
   }, [grab, recordFeatureInteraction, showGrabToast])
 
@@ -3963,7 +3964,7 @@ function BrowserPagePane({
       setPendingAnnotationPayload(null)
       setBrowserAnnotationTrayOpen(true)
       recordFeatureInteraction('browser-annotations')
-      showGrabToast('Annotation added', 'success', payload)
+      showGrabToast('주석이 추가되었습니다', 'success', payload)
       grab.rearm()
     },
     [
@@ -4003,7 +4004,7 @@ function BrowserPagePane({
           worktreeId,
           source: 'browser-annotations',
           prompt: browserAnnotationsPrompt,
-          label: 'Browser annotations',
+          label: '브라우저 주석',
           launchSource: 'notes_send'
         })
       } else {
@@ -4028,7 +4029,7 @@ function BrowserPagePane({
           worktreeId,
           source: 'browser-annotations',
           prompt: browserAnnotationsPrompt,
-          label: 'Browser annotations',
+          label: '브라우저 주석',
           launchSource: 'notes_send'
         })
       } else {
@@ -4179,7 +4180,7 @@ function BrowserPagePane({
       onUpdatePageStateRef.current(browserTab.id, {
         loadError: {
           code: 0,
-          description: 'Enter a valid http(s) or localhost URL.',
+          description: '유효한 http(s) 또는 localhost URL을 입력하세요.',
           // Why: the user may have pasted a Kagi URL with a token; redact
           // before persisting it into BrowserPage.loadError.
           validatedUrl: redactKagiSessionToken(addressBarValue.trim()) || 'about:blank'
@@ -4192,7 +4193,7 @@ function BrowserPagePane({
 
   // Why: the store initially holds 'about:blank', but once the webview loads
   // with the safe data: URL, handleDidStopLoading writes the resolved URL back.
-  // Match both so the "New Browser Tab" overlay stays visible for blank tabs.
+  // Match both so the blank-tab overlay stays visible for blank tabs.
   const isBlankTab = browserTab.url === 'about:blank' || browserTab.url === KORCA_BROWSER_BLANK_URL
   const externalUrl = getOpenableExternalUrl(webviewRef.current, browserTab.url)
   const currentBrowserUrl = getCurrentBrowserUrl(webviewRef.current, browserTab.url)
@@ -4263,13 +4264,13 @@ function BrowserPagePane({
       const webview = webviewRef.current
       const rect = webview?.getBoundingClientRect()
       if (!webview || !rect) {
-        setResourceNotice('Browser page is not ready for file drops.')
+        setResourceNotice('브라우저 페이지가 파일 드롭을 받을 준비가 되지 않았습니다.')
         return
       }
       const pageX = event.clientX - rect.left
       const pageY = event.clientY - rect.top
       if (pageX < 0 || pageY < 0 || pageX > rect.width || pageY > rect.height) {
-        setResourceNotice('Drop files over the browser page, not the toolbar.')
+        setResourceNotice('도구 모음이 아니라 브라우저 페이지 위에 파일을 놓으세요.')
         return
       }
 
@@ -4319,7 +4320,7 @@ function BrowserPagePane({
                         setContextMenu(null)
                       }}
                     >
-                      Open Link In Korca Browser
+                      Korca 브라우저에서 링크 열기
                     </button>
                     <button
                       role="menuitem"
@@ -4332,7 +4333,7 @@ function BrowserPagePane({
                         setContextMenu(null)
                       }}
                     >
-                      Open Link In Default Browser
+                      기본 브라우저에서 링크 열기
                     </button>
                     <button
                       role="menuitem"
@@ -4342,7 +4343,7 @@ function BrowserPagePane({
                         setContextMenu(null)
                       }}
                     >
-                      Copy Link Address
+                      링크 주소 복사
                     </button>
                     <div className="my-1 h-px bg-border/70" />
                   </>
@@ -4356,7 +4357,7 @@ function BrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Back
+                  뒤로
                 </button>
                 <button
                   role="menuitem"
@@ -4367,7 +4368,7 @@ function BrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Forward
+                  앞으로
                 </button>
                 <button
                   role="menuitem"
@@ -4377,7 +4378,7 @@ function BrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Reload
+                  새로고침
                 </button>
                 <div className="my-1 h-px bg-border/70" />
                 <button
@@ -4391,7 +4392,7 @@ function BrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Open Page In Default Browser
+                  페이지를 기본 브라우저에서 열기
                 </button>
                 <button
                   role="menuitem"
@@ -4401,7 +4402,7 @@ function BrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Copy Page URL
+                  페이지 URL 복사
                 </button>
                 <div className="my-1 h-px bg-border/70" />
                 <button
@@ -4412,7 +4413,7 @@ function BrowserPagePane({
                     setContextMenu(null)
                   }}
                 >
-                  Inspect Page
+                  페이지 검사
                 </button>
               </div>
             </>,
@@ -4486,14 +4487,14 @@ function BrowserPagePane({
                 )}
                 onClick={() => startGrabIntent('copy')}
                 disabled={isBlankTab}
-                aria-label="Grab page element"
+                aria-label="페이지 요소 그랩"
               >
                 <Crosshair className="size-4" />
               </Button>
             </span>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={4}>
-            {`Grab page element (${grabElementShortcut})`}
+            {`페이지 요소 그랩 (${grabElementShortcut})`}
           </TooltipContent>
         </Tooltip>
 
@@ -4515,7 +4516,7 @@ function BrowserPagePane({
                 )}
                 onClick={() => startGrabIntent('annotate')}
                 disabled={isBlankTab}
-                aria-label="Annotate page element"
+                aria-label="페이지 요소에 주석 달기"
               >
                 <MessageSquarePlus className="size-4" />
                 {browserAnnotations.length > 0 ? (
@@ -4527,7 +4528,7 @@ function BrowserPagePane({
             </span>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={4}>
-            Annotate page element
+            페이지 요소에 주석 달기
           </TooltipContent>
         </Tooltip>
 
@@ -4536,7 +4537,7 @@ function BrowserPagePane({
           variant="ghost"
           className="h-7 w-7"
           onClick={() => void window.api.browser.openDevTools({ browserPageId: browserTab.id })}
-          title="Open browser devtools"
+          title="브라우저 개발자 도구 열기"
         >
           <SquareCode className="size-4" />
         </Button>
@@ -4551,7 +4552,7 @@ function BrowserPagePane({
             }
             void window.api.shell.openUrl(externalUrl)
           }}
-          title="Open in default browser"
+          title="기본 브라우저에서 열기"
           disabled={!externalUrl}
         >
           <ExternalLink className="size-4" />
@@ -4571,8 +4572,8 @@ function BrowserPagePane({
             <div className="truncate font-medium text-foreground">{downloadState.filename}</div>
             <div className="truncate text-muted-foreground">
               {downloadState.status === 'requested'
-                ? `Download from ${downloadState.origin}`
-                : `Downloading from ${downloadState.origin}${downloadProgressLabel ? ` • ${downloadProgressLabel}` : ''}`}
+                ? `${downloadState.origin}에서 다운로드`
+                : `${downloadState.origin}에서 다운로드 중${downloadProgressLabel ? ` • ${downloadProgressLabel}` : ''}`}
             </div>
           </div>
           {downloadState.status === 'requested' ? (
@@ -4587,7 +4588,7 @@ function BrowserPagePane({
                   })
                 }}
               >
-                Save
+                저장
               </Button>
               <Button
                 size="sm"
@@ -4599,12 +4600,12 @@ function BrowserPagePane({
                   })
                 }}
               >
-                Cancel
+                취소
               </Button>
             </>
           ) : (
             <span className="shrink-0 text-muted-foreground">
-              {downloadProgressLabel ?? 'Downloading'}
+              {downloadProgressLabel ?? '다운로드 중'}
             </span>
           )}
         </div>
@@ -4616,7 +4617,7 @@ function BrowserPagePane({
             type="button"
             onClick={() => setResourceNotice(null)}
             className="shrink-0 text-muted-foreground/60 hover:text-foreground"
-            aria-label="Dismiss"
+            aria-label="닫기"
           >
             ✕
           </button>
@@ -4637,16 +4638,16 @@ function BrowserPagePane({
           />
           <span className="min-w-0 flex-1 truncate">
             {grab.state === 'error'
-              ? `Grab failed: ${grab.error ?? 'Unknown error'}`
+              ? `그랩 실패: ${grab.error ?? '알 수 없는 오류'}`
               : grabIntent === 'annotate'
                 ? pendingAnnotationPayload
-                  ? 'Add feedback for the selected element.'
+                  ? '선택한 요소에 피드백을 추가하세요.'
                   : browserAnnotations.length > 0
-                    ? `${browserAnnotations.length} annotation${browserAnnotations.length === 1 ? '' : 's'} ready. Select another element or copy all feedback.`
-                    : 'Click an element to add feedback for the agent.'
+                    ? `주석 ${browserAnnotations.length}개가 준비되었습니다. 다른 요소를 선택하거나 모든 피드백을 복사하세요.`
+                    : '요소를 클릭해 에이전트용 피드백을 추가하세요.'
                 : grab.state === 'confirming'
-                  ? 'Copied — press S to screenshot, or select another element'
-                  : 'Click or hover an element, then press C to copy or S to screenshot.'}
+                  ? '복사됨 - S를 눌러 스크린샷을 찍거나 다른 요소를 선택하세요.'
+                  : '요소를 클릭하거나 호버한 뒤 C로 복사하고 S로 스크린샷을 찍으세요.'}
           </span>
           {grabIntent === 'annotate' && browserAnnotations.length > 0 ? (
             <>
@@ -4660,12 +4661,12 @@ function BrowserPagePane({
                     <DropdownMenuTrigger asChild>
                       <Button size="xs" variant="outline" className="h-6 gap-1.5">
                         <Send className="size-3" />
-                        Send
+                        전송
                       </Button>
                     </DropdownMenuTrigger>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" sideOffset={6}>
-                    Send feedback to a new agent
+                    새 에이전트에게 피드백 전송
                   </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent
@@ -4695,7 +4696,7 @@ function BrowserPagePane({
                 ) : (
                   <Copy className="size-3" />
                 )}
-                {browserAnnotationsCopied ? 'Copied' : 'Copy All'}
+                {browserAnnotationsCopied ? '복사됨' : '모두 복사'}
               </Button>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -4704,13 +4705,13 @@ function BrowserPagePane({
                     variant="ghost"
                     className="h-6 w-6 text-muted-foreground hover:text-foreground"
                     onClick={handleClearBrowserAnnotations}
-                    aria-label="Clear browser annotations"
+                    aria-label="브라우저 주석 지우기"
                   >
                     <Trash2 className="size-3" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Clear annotations
+                  주석 지우기
                 </TooltipContent>
               </Tooltip>
             </>
@@ -4722,7 +4723,7 @@ function BrowserPagePane({
               grab.cancel()
             }}
           >
-            Cancel
+            취소
           </button>
         </div>
       ) : null}
@@ -4740,7 +4741,9 @@ function BrowserPagePane({
                 <Globe className="size-5 text-muted-foreground" />
               </div>
               <h2 className="text-base font-semibold text-foreground/85">
-                {loadErrorMeta.host ? `Can't reach ${loadErrorMeta.host}` : "Can't load this page"}
+                {loadErrorMeta.host
+                  ? `${loadErrorMeta.host}에 연결할 수 없습니다`
+                  : '이 페이지를 불러올 수 없습니다'}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 {formatLoadFailureDescription(browserTab.loadError, loadErrorMeta)}
@@ -4753,7 +4756,7 @@ function BrowserPagePane({
                   size="sm"
                   variant="outline"
                   className="h-9 gap-2 px-3"
-                  title="Retry"
+                  title="다시 시도"
                   onClick={() => {
                     const webview = webviewRef.current
                     if (!webview) {
@@ -4766,31 +4769,31 @@ function BrowserPagePane({
                   }}
                 >
                   <RefreshCw className="size-4" />
-                  <span>Refresh</span>
+                  <span>새로고침</span>
                 </Button>
                 <Button
                   size="sm"
                   variant="ghost"
                   className="h-9 gap-2 px-3"
-                  title="Copy failed page URL"
+                  title="실패한 페이지 URL 복사"
                   onClick={() => {
                     // Why: failed guests often leave users stranded on a blank
                     // error surface. Put the current URL on the clipboard from
                     // the recovery UI itself so they can retry elsewhere
                     // without having to discover the toolbar overflow first.
                     void window.api.ui.writeClipboardText(currentBrowserUrl)
-                    setResourceNotice('Copied the current page URL.')
+                    setResourceNotice('현재 페이지 URL을 복사했습니다.')
                   }}
                 >
                   <Copy className="size-4" />
-                  <span>Copy Address</span>
+                  <span>주소 복사</span>
                 </Button>
                 {externalUrl ? (
                   <Button
                     size="sm"
                     variant="ghost"
                     className="h-9 gap-2 px-3"
-                    title="Open failed page in default browser"
+                    title="실패한 페이지를 기본 브라우저에서 열기"
                     onClick={() => {
                       // Why: page failures inside Korca can still be recoverable
                       // in the system browser, especially for OAuth, captive
@@ -4802,7 +4805,7 @@ function BrowserPagePane({
                     }}
                   >
                     <ExternalLink className="size-4" />
-                    <span>Open Externally</span>
+                    <span>외부 브라우저에서 열기</span>
                   </Button>
                 ) : null}
               </div>
@@ -4816,9 +4819,9 @@ function BrowserPagePane({
                 <Globe className="size-5 text-muted-foreground" />
               </div>
               <div className="text-center">
-                <p className="text-base font-semibold text-foreground/85">New Tab</p>
+                <p className="text-base font-semibold text-foreground/85">새 탭</p>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Type a URL above to start browsing.
+                  위에 URL을 입력해 탐색을 시작하세요.
                 </p>
               </div>
             </div>
@@ -4843,7 +4846,7 @@ function BrowserPagePane({
             <div className="flex items-center gap-2 border-b border-border px-3 py-2">
               <MessageSquarePlus className="size-4 text-muted-foreground" />
               <div className="min-w-0 flex-1 text-sm font-medium">
-                {browserAnnotations.length} annotation{browserAnnotations.length === 1 ? '' : 's'}
+                {browserAnnotations.length}개 주석
               </div>
               <DropdownMenu
                 modal={false}
@@ -4855,12 +4858,12 @@ function BrowserPagePane({
                     <DropdownMenuTrigger asChild>
                       <Button size="xs" variant="outline" className="gap-1.5">
                         <Send className="size-3" />
-                        Send
+                        전송
                       </Button>
                     </DropdownMenuTrigger>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" sideOffset={6}>
-                    Send feedback to a new agent
+                    새 에이전트에게 피드백 전송
                   </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent
@@ -4890,7 +4893,7 @@ function BrowserPagePane({
                 ) : (
                   <Copy className="size-3" />
                 )}
-                {browserAnnotationsCopied ? 'Copied' : 'Copy'}
+                {browserAnnotationsCopied ? '복사됨' : '복사'}
               </Button>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -4899,13 +4902,13 @@ function BrowserPagePane({
                     variant="ghost"
                     className="text-muted-foreground hover:text-foreground"
                     onClick={handleClearBrowserAnnotations}
-                    aria-label="Clear browser annotations"
+                    aria-label="브라우저 주석 지우기"
                   >
                     <Trash2 className="size-3" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={6}>
-                  Clear annotations
+                  주석 지우기
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -4936,7 +4939,7 @@ function BrowserPagePane({
                     variant="ghost"
                     className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100"
                     onClick={() => handleDeleteBrowserAnnotation(annotation.id)}
-                    aria-label={`Delete annotation ${index + 1}`}
+                    aria-label={`주석 ${index + 1} 삭제`}
                   >
                     <Trash2 className="size-3" />
                   </Button>
@@ -4986,13 +4989,13 @@ function BrowserPagePane({
           <DropdownMenuContent align="start" sideOffset={4}>
             <DropdownMenuItem onSelect={handleGrabCopy}>
               <Copy className="size-3.5" />
-              Copy Contents
+              내용 복사
               <DropdownMenuShortcut>C</DropdownMenuShortcut>
             </DropdownMenuItem>
             {grab.payload?.screenshot?.dataUrl?.startsWith('data:image/png;base64,') ? (
               <DropdownMenuItem onSelect={handleGrabCopyScreenshot}>
                 <Image className="size-3.5" />
-                Copy Screenshot
+                스크린샷 복사
                 <DropdownMenuShortcut>S</DropdownMenuShortcut>
               </DropdownMenuItem>
             ) : null}
@@ -5003,7 +5006,7 @@ function BrowserPagePane({
                 grab.cancel()
               }}
             >
-              Cancel
+              취소
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -5067,13 +5070,13 @@ function BrowserPagePane({
                         if (dataUrl?.startsWith('data:image/png;base64,')) {
                           void window.api.ui.writeClipboardImage(dataUrl)
                           setGrabToast((prev) =>
-                            prev ? { ...prev, message: 'Screenshotted' } : null
+                            prev ? { ...prev, message: '스크린샷을 복사했습니다' } : null
                           )
                         }
                       }}
                     >
                       <Image className="size-3.5" />
-                      Copy Screenshot
+                      스크린샷 복사
                       <DropdownMenuShortcut>S</DropdownMenuShortcut>
                     </DropdownMenuItem>
                   </DropdownMenuContent>

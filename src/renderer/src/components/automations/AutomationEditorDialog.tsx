@@ -149,17 +149,17 @@ export function AutomationEditorDialog({
             <div className="min-w-0 flex-1 space-y-2">
               <DialogTitle className="text-sm font-medium">
                 {isEditing
-                  ? 'Edit automation'
+                  ? '자동화 수정'
                   : isEditingExternal
-                    ? 'Edit Hermes automation'
+                    ? 'Hermes 자동화 수정'
                     : isHermesCreate
-                      ? 'Create Hermes automation'
-                      : 'Create automation'}
+                      ? 'Hermes 자동화 만들기'
+                      : '자동화 만들기'}
               </DialogTitle>
               <Input
                 value={draft.name}
-                placeholder="Weekday repo audit"
-                aria-label="Automation name"
+                placeholder="평일 저장소 점검"
+                aria-label="자동화 이름"
                 className="h-10 max-w-md border-input bg-input/30 px-3 text-lg font-semibold text-foreground shadow-xs placeholder:text-muted-foreground dark:bg-input/30"
                 onChange={(event) =>
                   onDraftChange((current) => ({ ...current, name: event.target.value }))
@@ -194,7 +194,7 @@ export function AutomationEditorDialog({
                       className={PICKER_TRIGGER_CLASS}
                     >
                       <Sparkles className="size-4" />
-                      Use template
+                      템플릿 사용
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-96 p-3">
@@ -223,23 +223,23 @@ export function AutomationEditorDialog({
               {draft.scheduleWarning}
             </div>
           ) : null}
-          <Field label="Prompt">
+          <Field label="프롬프트">
             <textarea
               value={draft.prompt}
-              placeholder="Run the weekly dependency audit and summarize risky changes."
+              placeholder="매주 종속성 점검을 실행하고 위험한 변경 사항을 요약하세요."
               onChange={(event) =>
                 onDraftChange((current) => ({ ...current, prompt: event.target.value }))
               }
               className="min-h-[260px] w-full resize-none rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
             />
             <p className="mt-1 text-xs text-muted-foreground">
-              Supports skills, file paths, and built-in commands like{' '}
+              스킬, 파일 경로, 그리고 다음과 같은 내장 명령을 지원합니다:{' '}
               <code className="rounded bg-muted px-1 font-mono text-[11px]">/goal</code>.
             </p>
           </Field>
           {isHermesCreate ? null : (
             <div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_9rem]">
-              <Field label="Precheck">
+              <Field label="사전 검사">
                 <textarea
                   value={draft.precheckCommand}
                   placeholder="gh pr list --json number -q '.[0].number'"
@@ -252,7 +252,7 @@ export function AutomationEditorDialog({
                   className="min-h-[68px] w-full resize-none rounded-md border border-input bg-transparent px-3 py-2 font-mono text-sm shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
                 />
               </Field>
-              <Field label="Timeout">
+              <Field label="시간 제한">
                 <Select
                   value={draft.precheckTimeoutSeconds}
                   onValueChange={(precheckTimeoutSeconds) =>
@@ -263,11 +263,11 @@ export function AutomationEditorDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent position="popper" side="bottom" align="start" sideOffset={4}>
-                    <SelectItem value="30">30 sec</SelectItem>
-                    <SelectItem value="60">1 min</SelectItem>
-                    <SelectItem value="120">2 min</SelectItem>
-                    <SelectItem value="300">5 min</SelectItem>
-                    <SelectItem value="600">10 min</SelectItem>
+                    <SelectItem value="30">30초</SelectItem>
+                    <SelectItem value="60">1분</SelectItem>
+                    <SelectItem value="120">2분</SelectItem>
+                    <SelectItem value="300">5분</SelectItem>
+                    <SelectItem value="600">10분</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
@@ -283,12 +283,12 @@ export function AutomationEditorDialog({
                 : 'grid gap-3 sm:grid-cols-2 lg:grid-cols-4'
             }
           >
-            <Field label="Project">
+            <Field label="프로젝트">
               <RepoCombobox
                 repos={repos}
                 value={draft.projectId}
                 onValueChange={onProjectChange}
-                placeholder="Select project"
+                placeholder="프로젝트 선택"
                 triggerClassName={`h-9 w-full min-w-0 ${PICKER_TRIGGER_CLASS}`}
                 showStandaloneAddButton={false}
               />
@@ -296,20 +296,20 @@ export function AutomationEditorDialog({
             <Field
               label={
                 <span className="inline-flex items-center gap-1">
-                  Workspace
+                  워크스페이스
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        aria-label="Workspace mode help"
+                        aria-label="워크스페이스 모드 도움말"
                         className="rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50"
                       >
                         <Info className="size-3.5" />
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={6} className="max-w-72">
-                      Worktree runs in the selected workspace. New run creates a fresh workspace
-                      from the selected branch each time.
+                      선택한 워크스페이스에서 워크트리가 실행됩니다. 새 실행은 매번 선택한
+                      브랜치에서 새 워크스페이스를 만듭니다.
                     </TooltipContent>
                   </Tooltip>
                 </span>
@@ -343,10 +343,10 @@ export function AutomationEditorDialog({
                     className="grid w-full grid-cols-2"
                   >
                     <ToggleGroupItem value="existing" className={MODE_TOGGLE_ITEM_CLASS}>
-                      Worktree
+                      워크트리
                     </ToggleGroupItem>
                     <ToggleGroupItem value="new_per_run" className={MODE_TOGGLE_ITEM_CLASS}>
-                      New run
+                      새 실행
                     </ToggleGroupItem>
                   </ToggleGroup>
                   {draft.workspaceMode === 'existing' ? (
@@ -377,7 +377,7 @@ export function AutomationEditorDialog({
               )}
             </Field>
             {isHermesTarget ? null : (
-              <Field label="Agent">
+              <Field label="에이전트">
                 <AgentCombobox
                   agents={visibleAgents}
                   value={draft.agentId}
@@ -397,7 +397,7 @@ export function AutomationEditorDialog({
                 onDraftChange={onDraftChange}
               />
             )}
-            <Field label="Schedule">
+            <Field label="일정">
               <AutomationSchedulePicker
                 draft={draft}
                 triggerClassName={PICKER_TRIGGER_CLASS}
@@ -411,21 +411,21 @@ export function AutomationEditorDialog({
               <Field
                 label={
                   <span className="inline-flex items-center gap-1">
-                    Grace
+                    유예
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
-                          aria-label="Missed-run grace help"
+                          aria-label="누락 실행 유예 도움말"
                           className="rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50"
                         >
                           <Info className="size-3.5" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="top" sideOffset={6} className="max-w-72">
-                        If Korca or the execution host was unavailable at the scheduled time, Korca
-                        runs one missed occurrence when it becomes available within this window.
-                        Older missed runs are skipped.
+                        예약 시각에 Korca 또는 실행 호스트를 사용할 수 없었다면, 이 기간 안에 다시
+                        가능해졌을 때 한 번의 누락 실행을 처리합니다. 더 오래된 누락 실행은
+                        건너뜁니다.
                       </TooltipContent>
                     </Tooltip>
                   </span>
@@ -441,13 +441,13 @@ export function AutomationEditorDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent position="popper" side="bottom" align="start" sideOffset={4}>
-                    <SelectItem value="0">No grace</SelectItem>
-                    <SelectItem value="30">30 minutes</SelectItem>
-                    <SelectItem value="60">1 hour</SelectItem>
-                    <SelectItem value="180">3 hours</SelectItem>
-                    <SelectItem value="720">12 hours</SelectItem>
-                    <SelectItem value="1440">24 hours</SelectItem>
-                    <SelectItem value="2880">48 hours</SelectItem>
+                    <SelectItem value="0">유예 없음</SelectItem>
+                    <SelectItem value="30">30분</SelectItem>
+                    <SelectItem value="60">1시간</SelectItem>
+                    <SelectItem value="180">3시간</SelectItem>
+                    <SelectItem value="720">12시간</SelectItem>
+                    <SelectItem value="1440">24시간</SelectItem>
+                    <SelectItem value="2880">48시간</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
@@ -455,7 +455,7 @@ export function AutomationEditorDialog({
           </div>
           <div className="mt-4 flex justify-end gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              취소
             </Button>
             <Button
               variant="outline"
@@ -467,10 +467,10 @@ export function AutomationEditorDialog({
                 <Plus className="size-4" />
               )}
               {isEditing || isEditingExternal
-                ? 'Save Changes'
+                ? '변경 사항 저장'
                 : isSaving || isHermesCreate
-                  ? 'Save'
-                  : 'Create'}
+                  ? '저장'
+                  : '만들기'}
             </Button>
           </div>
         </div>

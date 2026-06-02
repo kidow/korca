@@ -34,7 +34,7 @@ export function RuntimeAccessGrantList({
   return (
     <div className={className}>
       <div className="mb-2 flex items-center justify-between gap-3">
-        <h3 className="text-sm font-medium">Shared Server Access</h3>
+        <h3 className="text-sm font-medium">공유 서버 접근</h3>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -55,7 +55,7 @@ export function RuntimeAccessGrantList({
       </div>
 
       {grants.length === 0 ? (
-        <p className="text-muted-foreground text-sm">No shared server access yet.</p>
+        <p className="text-muted-foreground text-sm">아직 공유 서버 접근이 없습니다.</p>
       ) : (
         <div className="space-y-2">
           {grants.map((grant) => {
@@ -70,7 +70,7 @@ export function RuntimeAccessGrantList({
                   <div className="flex min-w-0 items-center gap-2">
                     <span className="truncate text-sm font-medium">{grant.name}</span>
                     {isCurrent ? (
-                      <span className="text-muted-foreground shrink-0 text-xs">Current link</span>
+                      <span className="text-muted-foreground shrink-0 text-xs">현재 링크</span>
                     ) : null}
                   </div>
                   <div className="text-muted-foreground text-xs">

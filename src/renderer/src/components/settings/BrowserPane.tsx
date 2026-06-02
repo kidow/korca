@@ -162,8 +162,8 @@ export function BrowserPane({
 
       {showSearchEngine ? (
         <SearchableSetting
-          title="Default Search Engine"
-          description="Search engine used when typing non-URL text in the address bar."
+          title="기본 검색 엔진"
+          description="주소창에 URL이 아닌 텍스트를 입력했을 때 사용할 검색 엔진입니다."
           keywords={[
             'browser',
             'search',
@@ -180,9 +180,9 @@ export function BrowserPane({
           className="flex items-start justify-between gap-4 py-2"
         >
           <div className="space-y-0.5">
-            <Label>Default Search Engine</Label>
+            <Label>기본 검색 엔진</Label>
             <p className="text-xs text-muted-foreground">
-              Used when typing non-URL text in the address bar.
+              주소창에 URL이 아닌 텍스트를 입력했을 때 사용됩니다.
             </p>
           </div>
           <div className="flex shrink-0 flex-col items-end gap-2">
@@ -211,7 +211,7 @@ export function BrowserPane({
 
       {showLinkRouting ? (
         <SearchableSetting
-          title="Link Routing"
+          title="링크 라우팅"
           description={linkRoutingDescription}
           keywords={[
             'browser',
@@ -227,7 +227,7 @@ export function BrowserPane({
           className="flex items-center justify-between gap-4 py-2"
         >
           <div className="space-y-0.5">
-            <Label>Link Routing</Label>
+            <Label>링크 라우팅</Label>
             <p className="text-xs text-muted-foreground">{linkRoutingDescription}</p>
           </div>
           <button
@@ -250,8 +250,8 @@ export function BrowserPane({
       {showCookies ? (
         <SearchableSetting
           id="browser-session-cookies"
-          title="Session & Cookies"
-          description="Manage browser profiles and import cookies from Chrome, Edge, Comet, or other browsers."
+          title="세션 및 쿠키"
+          description="브라우저 프로필을 관리하고 Chrome, Edge, Comet 또는 다른 브라우저에서 쿠키를 가져옵니다."
           keywords={[
             'cookies',
             'session',
@@ -267,10 +267,10 @@ export function BrowserPane({
         >
           <div className="flex items-center justify-between gap-3">
             <div className="space-y-0.5">
-              <Label>Session &amp; Cookies</Label>
+              <Label>세션 및 쿠키</Label>
               <p className="text-xs text-muted-foreground">
-                Select a default profile for new browser tabs. Import cookies and switch profiles
-                per-tab via the <strong>···</strong> toolbar menu.
+                새 브라우저 탭에 사용할 기본 프로필을 선택합니다. 쿠키 가져오기와 프로필 전환은
+                탭별로 <strong>···</strong> 도구 모음 메뉴에서 할 수 있습니다.
               </p>
             </div>
             <Button
@@ -280,7 +280,7 @@ export function BrowserPane({
               className="shrink-0 gap-1.5"
             >
               <Plus className="size-3" />
-              Add Profile
+              프로필 추가
             </Button>
           </div>
 
@@ -326,7 +326,7 @@ export function BrowserPane({
       >
         <DialogContent className="sm:max-w-sm" showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle className="text-base">New Browser Profile</DialogTitle>
+            <DialogTitle className="text-base">새 브라우저 프로필</DialogTitle>
           </DialogHeader>
           <form
             onSubmit={async (e) => {
@@ -346,9 +346,9 @@ export function BrowserPane({
                 if (profile) {
                   setNewProfileDialogOpen(false)
                   setNewProfileName('')
-                  toast.success(`Profile "${profile.label}" created.`)
+                  toast.success(`"${profile.label}" 프로필을 만들었습니다.`)
                 } else {
-                  toast.error('Failed to create profile.')
+                  toast.error('프로필을 만들지 못했습니다.')
                 }
               } finally {
                 if (mountedRef.current) {
@@ -360,7 +360,7 @@ export function BrowserPane({
             <Input
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
-              placeholder="Profile name"
+              placeholder="프로필 이름"
               autoFocus
               maxLength={50}
               className="mb-4"
@@ -375,14 +375,14 @@ export function BrowserPane({
                   setNewProfileName('')
                 }}
               >
-                Cancel
+                취소
               </Button>
               <Button
                 type="submit"
                 size="sm"
                 disabled={!newProfileName.trim() || isCreatingProfile}
               >
-                {isCreatingProfile ? 'Creating…' : 'Create'}
+                {isCreatingProfile ? '생성 중…' : '생성'}
               </Button>
             </DialogFooter>
           </form>

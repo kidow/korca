@@ -89,14 +89,12 @@ export function useFileExplorerImport({
           }
 
           if (failed.length > 0) {
-            const noun = failed.length === 1 ? 'file' : 'files'
-            toast.error(`Failed to import ${failed.length} ${noun}.`)
+            toast.error(`파일 ${failed.length}개를 가져오지 못했습니다.`)
           } else if (skipped.length > 0 && imported.length === 0) {
-            const noun = skipped.length === 1 ? 'file' : 'files'
-            toast.error(`Skipped ${skipped.length} ${noun}.`)
+            toast.error(`파일 ${skipped.length}개를 건너뛰었습니다.`)
           }
         } catch (err) {
-          toast.error(extractIpcErrorMessage(err, 'Failed to import files.'))
+          toast.error(extractIpcErrorMessage(err, '파일을 가져오지 못했습니다.'))
         } finally {
           clearNativeDragStateRef.current()
         }

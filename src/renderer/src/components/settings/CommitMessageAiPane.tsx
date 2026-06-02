@@ -512,7 +512,7 @@ export function CommitMessageAiPane({
             prev[agentId]?.hostKey === discoveryHostKey
               ? (prev[agentId]?.models ?? capability.models)
               : capability.models,
-          error: error instanceof Error ? error.message : 'Failed to discover models'
+          error: error instanceof Error ? error.message : '모델을 찾지 못했습니다'
         }
       }))
     }
@@ -832,8 +832,7 @@ export function CommitMessageAiPane({
   if (
     matchesSettingsSearch(searchQuery, {
       title: '소스 컨트롤 AI 사용',
-      description:
-        '소스 컨트롤의 커밋, 풀 리퀘스트, 브랜치 이름 흐름에 AI 생성을 추가합니다.',
+      description: '소스 컨트롤의 커밋, 풀 리퀘스트, 브랜치 이름 흐름에 AI 생성을 추가합니다.',
       keywords: ['ai', 'commit', 'message', 'generate', 'agent', 'enabled']
     })
   ) {
@@ -848,8 +847,8 @@ export function CommitMessageAiPane({
         <div className="space-y-0.5">
           <Label>소스 컨트롤 AI 사용</Label>
           <p className="text-xs text-muted-foreground">
-            커밋 메시지와 풀 리퀘스트 세부 정보에 생성 버튼을 추가합니다. 워크트리가 있는
-            위치에서 선택한 에이전트 CLI를 실행합니다.
+            커밋 메시지와 풀 리퀘스트 세부 정보에 생성 버튼을 추가합니다. 워크트리가 있는 위치에서
+            선택한 에이전트 CLI를 실행합니다.
           </p>
         </div>
         <button
@@ -889,15 +888,15 @@ export function CommitMessageAiPane({
         <div className="space-y-0.5">
           <Label>에이전트</Label>
           <p className="text-xs text-muted-foreground">
-            Korca는 이 CLI를 백그라운드에서 실행해 커밋 메시지와 풀 리퀘스트 세부 정보를
-            생성합니다. 워크트리가 있는 위치에 설치되어 있어야 합니다. 로컬 워크트리는
-            내 컴퓨터, 원격 워크트리는 SSH 호스트여야 합니다.
+            Korca는 이 CLI를 백그라운드에서 실행해 커밋 메시지와 풀 리퀘스트 세부 정보를 생성합니다.
+            워크트리가 있는 위치에 설치되어 있어야 합니다. 로컬 워크트리는 내 컴퓨터, 원격
+            워크트리는 SSH 호스트여야 합니다.
           </p>
         </div>
         <div className="flex flex-col items-end gap-1">
           <Select value={activeAgentSelectValue} onValueChange={onAgentChange}>
             <SelectTrigger size="sm" className="h-8 w-[260px] shrink-0 text-xs">
-            <SelectValue placeholder="미설정" />
+              <SelectValue placeholder="미설정" />
             </SelectTrigger>
             <SelectContent>
               {agentCapabilities.map((capability) => {
@@ -932,8 +931,8 @@ export function CommitMessageAiPane({
           </Select>
           {unsupportedDefaultAgentLabel ? (
             <p className="max-w-[260px] text-right text-[11px] text-muted-foreground">
-              기본 에이전트가 {unsupportedDefaultAgentLabel}이며, 아직 소스 컨트롤 AI를
-              지원하지 않습니다. 지원되는 에이전트나 사용자 지정을 선택하세요.
+              기본 에이전트가 {unsupportedDefaultAgentLabel}이며, 아직 소스 컨트롤 AI를 지원하지
+              않습니다. 지원되는 에이전트나 사용자 지정을 선택하세요.
             </p>
           ) : null}
           {unsupportedSelectedAgentLabel ? (
@@ -973,8 +972,8 @@ export function CommitMessageAiPane({
             <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">
               {CUSTOM_PROMPT_PLACEHOLDER}
             </code>
-            를 사용하세요. 프롬프트는 하나의 인자로 전달됩니다. 이 값을 빼면 프롬프트는
-            stdin으로 전달됩니다.{' '}
+            를 사용하세요. 프롬프트는 하나의 인자로 전달됩니다. 이 값을 빼면 프롬프트는 stdin으로
+            전달됩니다.{' '}
             <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">claude -p</code> 같은
             CLI에 유용합니다. 따옴표는 인자 묶기 용도일 뿐이며, 셸을 실행하지 않으므로{' '}
             <code className="rounded bg-muted/60 px-1 py-0.5 text-[10px]">$VAR</code>와 백틱은
@@ -1234,8 +1233,8 @@ export function CommitMessageAiPane({
         <div className="space-y-0.5">
           <Label htmlFor="source-control-ai-commit-prompt">커밋 메시지 프롬프트</Label>
           <p className="text-xs text-muted-foreground">
-            이 프롬프트는 커밋 메시지를 생성할 때만 추가됩니다. Conventional Commits,
-            티켓 접두사, 팀이 선호하는 다른 커밋 스타일에 사용할 수 있습니다.
+            이 프롬프트는 커밋 메시지를 생성할 때만 추가됩니다. Conventional Commits, 티켓 접두사,
+            팀이 선호하는 다른 커밋 스타일에 사용할 수 있습니다.
           </p>
         </div>
         <textarea
@@ -1387,8 +1386,8 @@ export function CommitMessageAiPane({
         <div className="space-y-0.5">
           <Label>PR 생성 기본값</Label>
           <p className="text-xs text-muted-foreground">
-            제공자에 관계없는 PR 작성 화면의 기본값입니다. 저장소 설정에서 각 항목을 개별로
-            덮어쓸 수 있습니다.
+            제공자에 관계없는 PR 작성 화면의 기본값입니다. 저장소 설정에서 각 항목을 개별로 덮어쓸
+            수 있습니다.
           </p>
         </div>
         <div className="space-y-2">

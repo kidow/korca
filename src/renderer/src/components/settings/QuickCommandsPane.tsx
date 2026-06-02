@@ -61,10 +61,10 @@ function getScopeLabel(
   repoById: Map<string, Pick<Repo, 'displayName' | 'path' | 'badgeColor'>>
 ): string {
   if (scope.type === 'global') {
-    return 'Global'
+    return '전역'
   }
   const repo = repoById.get(scope.repoId)
-  return repo ? getRepoLabel(repo) : 'Missing project'
+  return repo ? getRepoLabel(repo) : '프로젝트 없음'
 }
 
 export function QuickCommandsPane({
@@ -163,19 +163,19 @@ export function QuickCommandsPane({
 
   const renderTriggerLabel = (): React.JSX.Element => {
     if (showAll) {
-      return <span>All commands</span>
+      return <span>모든 명령</span>
     }
     const includesGlobal = effectiveSelection.has(GLOBAL_SCOPE_KEY)
     const selectedRepos = repos.filter((r) => effectiveSelection.has(r.id))
     const parts: string[] = []
     if (includesGlobal) {
-      parts.push('Global')
+      parts.push('전역')
     }
     if (selectedRepos.length > 0) {
       const [first, ...rest] = selectedRepos
       parts.push(rest.length > 0 ? `${first.displayName} +${rest.length}` : first.displayName)
     }
-    return <span className="truncate">{parts.join(', ') || 'None'}</span>
+    return <span className="truncate">{parts.join(', ') || '없음'}</span>
   }
 
   const saveCommand = (next: TerminalQuickCommand): void => {
@@ -192,9 +192,9 @@ export function QuickCommandsPane({
 
   const removeCommand = async (command: TerminalQuickCommand): Promise<void> => {
     const confirmed = await confirm({
-      title: `Delete "${command.label || 'Untitled'}"?`,
-      description: 'This quick command will be removed from your saved list.',
-      confirmLabel: 'Delete',
+      title: `"${command.label || '제목 없음'}"을 삭제할까요?`,
+      description: '이 빠른 명령은 저장된 목록에서 제거됩니다.',
+      confirmLabel: '삭제',
       confirmVariant: 'destructive'
     })
     if (!confirmed) {
@@ -213,10 +213,9 @@ export function QuickCommandsPane({
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3 py-2">
         <div className="space-y-1">
-          <Label>Saved Commands</Label>
+          <Label>저장된 명령</Label>
           <p className="text-xs text-muted-foreground">
-            Run them from the Quick Commands button in the tab bar, or right-click inside any
-            terminal.
+            탭 바의 빠른 명령 버튼이나 터미널 내부의 우클릭 메뉴에서 실행할 수 있습니다.
           </p>
         </div>
         <Button
@@ -226,7 +225,7 @@ export function QuickCommandsPane({
           onClick={() => setEditor({ mode: 'add', command: createDraftForCurrentFilter() })}
         >
           <Plus />
-          Add Command
+          명령 추가
         </Button>
       </div>
 
@@ -265,7 +264,7 @@ export function QuickCommandsPane({
                       showAll ? 'opacity-70' : 'opacity-0'
                     )}
                   />
-                  <span>All commands</span>
+                  <span>모든 명령</span>
                 </button>
               </div>
               <CommandList>
@@ -280,7 +279,7 @@ export function QuickCommandsPane({
                       effectiveSelection.has(GLOBAL_SCOPE_KEY) ? 'opacity-70' : 'opacity-0'
                     )}
                   />
-                  <span>Global</span>
+                  <span>전역</span>
                 </CommandItem>
                 {repos.map((repo) => {
                   const isSelected = effectiveSelection.has(repo.id)
@@ -315,8 +314,8 @@ export function QuickCommandsPane({
         {visibleCommands.length === 0 ? (
           <div className="px-3 py-6 text-sm text-muted-foreground">
             {commands.length === 0
-              ? 'No quick commands saved.'
-              : 'No commands in the selected scopes.'}
+              ? '저장된 빠른 명령이 없습니다.'
+              : '선택한 범위에 명령이 없습니다.'}
           </div>
         ) : (
           <div className="max-h-[60vh] space-y-2 overflow-y-auto p-2 scrollbar-sleek">
@@ -357,22 +356,22 @@ export function QuickCommandsPane({
                       >
                         {isTerminalAgentQuickCommand(command)
                           ? `${getAgentLabel(command.agent)}: ${getTerminalQuickCommandBody(command)}`
-                          : getTerminalQuickCommandBody(command) || 'No command text'}
+                          : getTerminalQuickCommandBody(command) || '명령 텍스트 없음'}
                       </span>
                     </div>
                   </div>
                   <div className="shrink-0 text-[11px] font-medium text-foreground/75">
                     {isTerminalAgentQuickCommand(command)
-                      ? 'Agent'
+                      ? '에이전트'
                       : command.appendEnter
-                        ? 'Enter'
-                        : 'Insert'}
+                        ? '엔터'
+                        : '삽입'}
                   </div>
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label={`Edit ${command.label || 'quick command'}`}
+                    aria-label={`${command.label || '빠른 명령'} 편집`}
                     onClick={() => setEditor({ mode: 'edit', command })}
                   >
                     <Pencil />

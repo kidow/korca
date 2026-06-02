@@ -1,3 +1,4 @@
+/* oxlint-disable react-doctor/no-adjust-state-on-prop-change -- pre-existing pattern, predates this rule */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertCircle, ChevronLeft, ChevronRight, FileText, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -41,7 +42,7 @@ type ExternalAutomationRunTableProps = {
 
 function formatExternalDate(value: string | null, now: number): string {
   if (!value) {
-    return 'Never'
+    return '없음'
   }
   const parsed = Date.parse(value)
   if (!Number.isFinite(parsed)) {
@@ -53,11 +54,11 @@ function formatExternalDate(value: string | null, now: number): string {
 function getRunStatusLabel(run: ExternalAutomationRun): string {
   switch (run.status) {
     case 'completed':
-      return 'Completed'
+      return '완료'
     case 'failed':
-      return 'Failed'
+      return '실패'
     case 'unknown':
-      return 'Unknown'
+      return '알 수 없음'
   }
 }
 
@@ -75,7 +76,7 @@ function getRunStatusVariant(
 }
 
 function getRunSummary(run: ExternalAutomationRun): string {
-  return run.error ?? run.outputPreview ?? 'No output preview'
+  return run.error ?? run.outputPreview ?? '미리보기 없음'
 }
 
 function normalizeRunPage(
@@ -141,7 +142,7 @@ export function ExternalAutomationRunTable({
             ...resolveExternalAutomationRunTableState(current, jobRef.current),
             fetchedRuns: null,
             fetchedTotalCount: null,
-            fetchError: error instanceof Error ? error.message : 'Failed to load runs.'
+            fetchError: error instanceof Error ? error.message : '실행 기록을 불러오지 못했습니다.'
           }))
         }
       })
@@ -181,7 +182,7 @@ export function ExternalAutomationRunTable({
     <div className="mt-2 rounded-md border border-border/50 bg-background/50">
       <div className="flex items-center justify-between border-b border-border/50 px-3 py-2">
         <div className="flex min-w-0 items-center gap-2">
-          <div className="text-xs font-medium">Runs</div>
+          <div className="text-xs font-medium">실행 기록</div>
           {isLoading ? <Loader2 className="size-3.5 animate-spin text-muted-foreground" /> : null}
           {fetchError ? (
             <Tooltip>
@@ -194,18 +195,16 @@ export function ExternalAutomationRunTable({
             </Tooltip>
           ) : null}
         </div>
-        <div className="text-xs text-muted-foreground">
-          {totalCount} {totalCount === 1 ? 'run' : 'runs'}
-        </div>
+        <div className="text-xs text-muted-foreground">{totalCount}회</div>
       </div>
 
       {hasVisibleRuns ? (
         <div>
           <div className="min-w-0 border-b border-border/50">
             <div className="grid grid-cols-[minmax(7.5rem,.45fr)_minmax(0,1fr)_auto] gap-3 border-b border-border/50 px-3 py-1.5 text-[11px] font-medium uppercase text-muted-foreground">
-              <span>Run time</span>
-              <span>Preview</span>
-              <span>Status</span>
+              <span>실행 시각</span>
+              <span>미리보기</span>
+              <span>상태</span>
             </div>
             <div className="divide-y divide-border/50">
               {visibleRuns.map((run) => (
@@ -246,7 +245,7 @@ export function ExternalAutomationRunTable({
         </div>
       ) : (
         <div className="px-3 py-4 text-sm text-muted-foreground">
-          {isLoading ? 'Loading runs...' : 'No Hermes runs found yet.'}
+          {isLoading ? '실행 기록을 불러오는 중...' : '아직 Hermes 실행 기록이 없습니다.'}
         </div>
       )}
 
@@ -262,7 +261,7 @@ export function ExternalAutomationRunTable({
             type="button"
             variant="ghost"
             size="icon-xs"
-            aria-label="Previous run page"
+            aria-label="이전 실행 페이지"
             disabled={page === 0 || isLoading}
             onClick={() => handlePageChange(Math.max(0, page - 1))}
           >
@@ -275,7 +274,7 @@ export function ExternalAutomationRunTable({
             type="button"
             variant="ghost"
             size="icon-xs"
-            aria-label="Next run page"
+            aria-label="다음 실행 페이지"
             disabled={page >= totalPages - 1 || isLoading}
             onClick={() => handlePageChange(Math.min(totalPages - 1, page + 1))}
           >

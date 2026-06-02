@@ -492,7 +492,7 @@ function hostedReviewCreationCopy(provider: HostedReviewProvider | null | undefi
         reviewLabel: '풀 리퀘스트',
         titleLabel: '풀 리퀘스트',
         providerName: 'GitHub'
-    }
+      }
 }
 
 function withObjectParticle(label: '풀 리퀘스트' | '병합 요청'): string {
@@ -647,13 +647,13 @@ export function resolvePullRequestGenerationCancel(
 }
 
 const CONFLICT_KIND_LABELS: Record<GitConflictKind, string> = {
-  both_modified: 'Both modified',
-  both_added: 'Both added',
+  both_modified: '양쪽 수정',
+  both_added: '양쪽 추가',
   deleted_by_us: '우리가 삭제함',
   deleted_by_them: '상대가 삭제함',
-  added_by_us: 'Added by us',
-  added_by_them: 'Added by them',
-  both_deleted: 'Both deleted'
+  added_by_us: '우리가 추가함',
+  added_by_them: '상대가 추가함',
+  both_deleted: '양쪽 삭제'
 }
 
 export function shouldRenderCommitArea(
@@ -1270,7 +1270,7 @@ function SourceControlInner(): React.JSX.Element {
       if (ok) {
         setPendingDiffCommentsClear(null)
       } else {
-        toast.error('Failed to clear notes.')
+        toast.error('메모를 지우지 못했습니다.')
       }
     } finally {
       setIsClearingDiffComments(false)
@@ -2370,7 +2370,7 @@ function SourceControlInner(): React.JSX.Element {
         const abortGitOperation = isRebase ? abortRuntimeGitRebase : abortRuntimeGitMerge
         await abortGitOperation(context)
       } catch (error) {
-        const message = error instanceof Error ? error.message : `Failed to abort ${label}`
+        const message = error instanceof Error ? error.message : `${label}을 중단하지 못했습니다.`
         toast.error(isRebase ? '리베이스 중단 실패' : '병합 중단 실패', {
           description: message
         })
@@ -2475,12 +2475,15 @@ function SourceControlInner(): React.JSX.Element {
           })
         ])
       } catch {
-        toast.warning(`${withObjectParticle(copy.titleLabel)} 만들었지만 Korca가 아직 새로고침하지 못했습니다.`, {
-          action: {
-            label: `${copy.providerName}에서 열기`,
-            onClick: () => window.api.shell.openUrl(result.url)
+        toast.warning(
+          `${withObjectParticle(copy.titleLabel)} 만들었지만 Korca가 아직 새로고침하지 못했습니다.`,
+          {
+            action: {
+              label: `${copy.providerName}에서 열기`,
+              onClick: () => window.api.shell.openUrl(result.url)
+            }
           }
-        })
+        )
       }
     },
     [
@@ -2604,7 +2607,9 @@ function SourceControlInner(): React.JSX.Element {
             record,
             requestId,
             error:
-              error instanceof Error ? error.message : '풀 리퀘스트 세부 정보를 생성하지 못했습니다.'
+              error instanceof Error
+                ? error.message
+                : '풀 리퀘스트 세부 정보를 생성하지 못했습니다.'
           })
           if (!nextRecord) {
             return prev
@@ -3616,7 +3621,7 @@ function SourceControlInner(): React.JSX.Element {
       if (gitHistoryRequestByWorktreeRef.current[worktreeId] !== requestId) {
         return
       }
-      const message = error instanceof Error ? error.message : 'Failed to load commits'
+      const message = error instanceof Error ? error.message : '커밋을 불러오지 못했습니다.'
       setGitHistoryByWorktree((prev) => {
         const previous = prev[worktreeId]
         return {
@@ -3759,7 +3764,7 @@ function SourceControlInner(): React.JSX.Element {
           item.id
         )
         if (result.summary.status !== 'ready') {
-          toast.error(result.summary.errorMessage ?? 'Failed to load commit diff')
+          toast.error(result.summary.errorMessage ?? '커밋 diff를 불러오지 못했습니다.')
           return
         }
         openCommitAllDiffs(
@@ -3771,7 +3776,7 @@ function SourceControlInner(): React.JSX.Element {
           item.message
         )
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : 'Failed to load commit diff')
+        toast.error(error instanceof Error ? error.message : '커밋 diff를 불러오지 못했습니다.')
       }
     },
     [activeWorktreeId, openCommitAllDiffs, worktreePath]
@@ -4062,9 +4067,12 @@ function SourceControlInner(): React.JSX.Element {
           }
         })
         if (result.aborted) {
-          toast.error('Discard all failed — unable to unstage files before discard', {
-            description: errors[0] instanceof Error ? errors[0].message : undefined
-          })
+          toast.error(
+            '전체 버리기에 실패했습니다. 버리기 전에 파일 스테이징을 해제하지 못했습니다.',
+            {
+              description: errors[0] instanceof Error ? errors[0].message : undefined
+            }
+          )
         } else if (result.failed.length > 0) {
           // Why: only include the first error message to avoid a huge toast
           // body on bulk failures; a short sample of failed paths gives users
@@ -4072,12 +4080,9 @@ function SourceControlInner(): React.JSX.Element {
           const firstMsg = errors[0] instanceof Error ? errors[0].message : undefined
           const sample = result.failed.slice(0, 3).join(', ')
           const more = result.failed.length > 3 ? `, +${result.failed.length - 3} more` : ''
-          toast.error(
-            `Failed to discard ${result.failed.length} file${result.failed.length === 1 ? '' : 's'}`,
-            {
-              description: firstMsg ? `${firstMsg} (e.g. ${sample}${more})` : `${sample}${more}`
-            }
-          )
+          toast.error(`${result.failed.length}개 파일을 버리지 못했습니다.`, {
+            description: firstMsg ? `${firstMsg} (e.g. ${sample}${more})` : `${sample}${more}`
+          })
         }
         if (!result.aborted) {
           await refreshActiveGitStatusAfterMutation()
@@ -4577,7 +4582,9 @@ function SourceControlInner(): React.JSX.Element {
                                 // A generic "Discard all" label hides that severity —
                                 // label explicitly for the destructive variant.
                                 title={
-                                  area === 'untracked' ? '추적되지 않은 항목 전체 삭제' : '모두 버리기'
+                                  area === 'untracked'
+                                    ? '추적되지 않은 항목 전체 삭제'
+                                    : '모두 버리기'
                                 }
                                 onClick={(event) => {
                                   event.stopPropagation()
@@ -4969,9 +4976,7 @@ function SourceControlAiInstructionGuidanceButton({
   guidance: SourceControlAiInstructionGuidance
 }): React.JSX.Element {
   const label =
-    guidance.operation === 'commitMessage'
-      ? '커밋 메시지 지침 추가'
-      : '풀 리퀘스트 지침 추가'
+    guidance.operation === 'commitMessage' ? '커밋 메시지 지침 추가' : '풀 리퀘스트 지침 추가'
   const target = guidance.repoBacked
     ? '저장소 설정 > Source Control AI'
     : '설정 > Git > Source Control AI'
@@ -5120,14 +5125,14 @@ function PullRequestComposer({
               'truncate font-mono',
               baseSameAsBranch ? 'text-destructive' : 'text-foreground'
             )}
-            title={normalizedBase || 'base'}
+            title={normalizedBase || '기준 브랜치'}
           >
-            {normalizedBase || 'base'}
+            {normalizedBase || '기준 브랜치'}
           </span>
         </div>
 
         <div className="relative space-y-2">
-        <input
+          <input
             aria-label={`${copy.titleLabel} 제목`}
             value={title}
             disabled={fieldsLocked}
@@ -5167,7 +5172,7 @@ function PullRequestComposer({
             the full width. The dropdown chevron makes the picker affordance
             obvious; the inline label clarifies that this is the merge target. */}
         <div className="flex items-center gap-2">
-          <span className="shrink-0 text-[11px] text-muted-foreground">Base</span>
+          <span className="shrink-0 text-[11px] text-muted-foreground">기준</span>
           <div className="relative min-w-0 flex-1">
             <input
               aria-label={`${copy.titleLabel} 기준 브랜치`}
@@ -5177,7 +5182,7 @@ function PullRequestComposer({
                 setBaseQuery(event.target.value)
                 setBase(event.target.value)
               }}
-              placeholder="main"
+              placeholder="기본 브랜치"
               className="h-7 w-full min-w-0 rounded-md border border-border bg-background px-2 pr-6 font-mono text-xs text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
             />
             <ChevronDown
@@ -5299,7 +5304,9 @@ function PullRequestComposer({
         {baseSameAsBranch ? (
           <p className="flex items-start gap-1 text-[11px] text-destructive">
             <TriangleAlert className="mt-px size-3 shrink-0" aria-hidden="true" />
-            <span>{withObjectParticle(copy.reviewLabel)} 만들기 전에 다른 기준 브랜치를 선택하세요.</span>
+            <span>
+              {withObjectParticle(copy.reviewLabel)} 만들기 전에 다른 기준 브랜치를 선택하세요.
+            </span>
           </p>
         ) : null}
         {baseSearchError ? (
@@ -5398,7 +5405,7 @@ function CommitFailureFixSplitButton({
             disabled={isLaunching || !canLaunch}
             onClick={() => void onFixWithDefaultAgent()}
             title="이 커밋 실패를 고치기 위해 기본 AI 에이전트를 시작"
-            aria-label="Fix commit failure with AI"
+            aria-label="AI로 커밋 실패 수정"
           >
             {isLaunching ? (
               <RefreshCw className={cn(iconClassName, 'animate-spin')} />
@@ -5451,7 +5458,9 @@ function CommitFailureFixSplitButton({
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>프롬프트 사용자 지정</DialogTitle>
-            <DialogDescription>이 실패한 커밋에 한 번만 적용할 지침을 추가합니다.</DialogDescription>
+            <DialogDescription>
+              이 실패한 커밋에 한 번만 적용할 지침을 추가합니다.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
             <Label htmlFor={customInstructionId} className="text-xs">
@@ -5461,7 +5470,7 @@ function CommitFailureFixSplitButton({
               id={customInstructionId}
               value={customInstruction}
               onChange={(event) => setCustomInstruction(event.target.value)}
-              placeholder="Focus on the staged files only, and prefer the smallest lint-safe change."
+              placeholder="스테이징된 파일만 대상으로 하고, 린트에 안전한 가장 작은 변경을 우선하세요."
               rows={5}
               className="w-full resize-none rounded-md border border-border bg-background px-2.5 py-2 text-xs text-foreground outline-none placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-ring"
             />
@@ -5509,7 +5518,7 @@ function CommitFailureFixSplitButton({
               ) : (
                 <Sparkle className="size-4" />
               )}
-              Start default agent
+              기본 에이전트 시작
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -5720,7 +5729,7 @@ export function CommitArea({
             rows={rows}
             value={commitMessage}
             onChange={(e) => onCommitMessageChange(e.target.value)}
-            placeholder="Message"
+            placeholder="커밋 메시지"
             aria-label="커밋 메시지"
             aria-describedby={describedBy || undefined}
             // Why: reserve right padding so typed text does not slide under the
@@ -5971,7 +5980,7 @@ export function CommitArea({
               />
               <DialogClose asChild>
                 <Button type="button" variant="outline" size="sm">
-                  Close
+                  닫기
                 </Button>
               </DialogClose>
             </DialogFooter>
@@ -6021,7 +6030,7 @@ export function CompareSummary({
     return (
       <div className="flex items-center gap-2 text-xs text-muted-foreground">
         <RefreshCw className="size-3.5 animate-spin" />
-        <span>{summary?.baseRef ?? '…'}와 비교 중</span>
+        <span>{summary?.baseRef ?? '…'}와 비교하는 중</span>
       </div>
     )
   }
@@ -6955,7 +6964,7 @@ function SourceControlEntryContextMenu({
     <ContextMenu onOpenChange={onOpenChange}>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-52">
-          <ContextMenuItem onSelect={handleOpenInFileExplorer} disabled={!absolutePath}>
+        <ContextMenuItem onSelect={handleOpenInFileExplorer} disabled={!absolutePath}>
           <FolderOpen className="size-3.5" />
           파일 탐색기에서 열기
         </ContextMenuItem>
@@ -6973,7 +6982,7 @@ function EmptyState({
 }): React.JSX.Element {
   return (
     <div className="px-4 py-6">
-        <div className="text-sm font-medium text-foreground">{heading}</div>
+      <div className="text-sm font-medium text-foreground">{heading}</div>
       <div className="mt-1 text-xs text-muted-foreground">{supportingText}</div>
     </div>
   )

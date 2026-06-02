@@ -22,30 +22,30 @@ export const PHASE1_BEATS: readonly Beat[] = [
   {
     from: 'coord-claude',
     to: 'child-codex',
-    recipientMsg: 'Adding the email_verified column…'
+    recipientMsg: 'email_verified 열을 추가하는 중…'
   },
   {
     from: 'coord-claude',
     to: 'child-claude',
-    recipientMsg: 'Wiring withSession middleware…'
+    recipientMsg: 'withSession 미들웨어를 연결하는 중…'
   },
   {
     from: 'child-codex',
     to: 'coord-claude',
-    coordMsg: 'PR 1/2 ready',
+    coordMsg: 'PR 1/2 준비 완료',
     senderFinishes: true
   },
   {
     from: 'child-claude',
     to: 'coord-claude',
-    coordMsg: 'PR 2/2 ready',
+    coordMsg: 'PR 2/2 준비 완료',
     senderFinishes: true
   }
 ]
 
-export const COORD_INITIAL_MSG = 'Splitting auth rewrite into 2 PRs…'
-export const CHILD_CODEX_INITIAL_MSG = 'Writing the users table migration…'
-export const CHILD_CLAUDE_INITIAL_MSG = 'Sketching withSession middleware…'
+export const COORD_INITIAL_MSG = 'auth 리라이트를 2개의 PR로 나누는 중…'
+export const CHILD_CODEX_INITIAL_MSG = 'users 테이블 마이그레이션을 작성하는 중…'
+export const CHILD_CLAUDE_INITIAL_MSG = 'withSession 미들웨어를 그리는 중…'
 
 export type AgentRowState = 'working' | 'done'
 

@@ -47,7 +47,7 @@ function BindingPreview({
   if (bindings.length === 0) {
     return (
       <span className="flex min-h-7 items-center">
-        <span className="text-xs text-muted-foreground">Unassigned</span>
+        <span className="text-xs text-muted-foreground">할당 안 됨</span>
       </span>
     )
   }
@@ -88,7 +88,7 @@ export function ShortcutBindingRow({
   }, [recording])
 
   const statusMessage = error ?? (warnings.length > 0 ? warnings.join(' ') : '')
-  const recordingMessage = recording ? 'Listening for shortcut. Esc cancels recording.' : ''
+  const recordingMessage = recording ? '단축키를 듣는 중입니다. Esc로 녹음을 취소합니다.' : ''
   const helperMessage = statusMessage || recordingMessage
 
   const handleRecordKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>): void => {
@@ -123,7 +123,7 @@ export function ShortcutBindingRow({
   return (
     <SearchableSetting
       title={item.title}
-      description={`${groupTitle} shortcut`}
+      description={`${groupTitle} 단축키`}
       keywords={[...item.searchKeywords]}
       className="group relative grid min-h-[54px] max-w-none grid-cols-1 gap-x-3 rounded-md px-2 py-1.5 transition-colors hover:bg-accent/40 lg:grid-cols-[minmax(0,1fr)_minmax(12rem,auto)] lg:grid-rows-[minmax(1.75rem,auto)_1rem] lg:items-start"
     >
@@ -131,7 +131,7 @@ export function ShortcutBindingRow({
         <span className="truncate text-sm text-foreground">{item.title}</span>
         {modified ? (
           <Badge variant="outline" className="shrink-0 text-[11px]">
-            Modified
+            수정됨
           </Badge>
         ) : null}
         {terminalStatus ? (
@@ -166,7 +166,7 @@ export function ShortcutBindingRow({
         <HoverCardTrigger asChild>
           <button
             type="button"
-            aria-label={`Shortcut actions for ${item.title}`}
+            aria-label={`${item.title} 단축키 작업`}
             className="mt-1 flex min-w-0 items-center rounded-md outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 lg:col-start-2 lg:row-start-1 lg:mt-0 lg:self-center lg:justify-self-end"
           >
             <BindingPreview bindings={effective} platform={platform} />
@@ -189,8 +189,8 @@ export function ShortcutBindingRow({
                   size="icon-sm"
                   aria-label={
                     recording
-                      ? `Press shortcut keys for ${item.title}. Escape cancels.`
-                      : `Change shortcut for ${item.title}`
+                      ? `${item.title}의 단축키를 누르세요. Escape로 취소합니다.`
+                      : `${item.title} 단축키 변경`
                   }
                   aria-invalid={Boolean(error)}
                   aria-pressed={recording}
@@ -213,7 +213,7 @@ export function ShortcutBindingRow({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                {recording ? 'Listening for shortcut' : 'Change shortcut'}
+                {recording ? '단축키 입력 대기 중' : '단축키 변경'}
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -229,7 +229,7 @@ export function ShortcutBindingRow({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Disable
+                비활성화
               </TooltipContent>
             </Tooltip>
             <Tooltip>
@@ -245,7 +245,7 @@ export function ShortcutBindingRow({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" sideOffset={4}>
-                Reset
+                재설정
               </TooltipContent>
             </Tooltip>
           </div>

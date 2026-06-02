@@ -582,7 +582,7 @@ function LinearStateCell({
             ...getLinearStatePillStyle(issue.state.color),
             cursor: pending ? 'default' : 'pointer'
           }}
-          aria-label={`Change Linear state from ${issue.state.name}`}
+          aria-label={`Linear 상태를 ${issue.state.name}에서 변경`}
           aria-busy={pending || states.loading}
         >
           <span
@@ -1100,7 +1100,9 @@ function GitHubIssueAssigneeSelector({
           {error ? (
             <div className="px-2 py-2 text-xs text-destructive">{error}</div>
           ) : assignees.length === 0 ? (
-            <div className="px-2 py-2 text-xs text-muted-foreground">할당 가능한 사용자가 없습니다.</div>
+            <div className="px-2 py-2 text-xs text-muted-foreground">
+              할당 가능한 사용자가 없습니다.
+            </div>
           ) : (
             assignees.map((assignee) => {
               const selected = selectedLogins.has(assignee.login.toLowerCase())
@@ -1225,7 +1227,7 @@ function GHAssigneesCell({
             throw new Error(res.error)
           }
         } else {
-      throw new Error('이 이슈에 대한 GitHub 저장소 컨텍스트가 없습니다.')
+          throw new Error('이 이슈에 대한 GitHub 저장소 컨텍스트가 없습니다.')
         }
       } catch (err) {
         patchWorkItem(item.id, { assignees: previousAssignees }, item.repoId)
@@ -1275,7 +1277,7 @@ function GHAssigneesCell({
           aria-label={
             assignees.length
               ? `Assigned to ${assignees.map((a) => a.login).join(', ')}`
-              : 'Assign issue'
+              : '이슈 할당'
           }
           aria-busy={pendingLogin !== null}
           onClick={(event) => event.stopPropagation()}
@@ -1301,13 +1303,17 @@ function GHAssigneesCell({
         onClick={(event) => event.stopPropagation()}
       >
         {!owner || !repoName ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">이슈에 저장소 슬러그가 없습니다.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">
+            이슈에 저장소 슬러그가 없습니다.
+          </div>
         ) : metadata.loading ? (
           <div className="px-2 py-2 text-xs text-muted-foreground">불러오는 중…</div>
         ) : metadata.error ? (
           <div className="px-2 py-2 text-xs text-destructive">{metadata.error}</div>
         ) : metadata.data.length === 0 ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">할당 가능한 사용자가 없습니다.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">
+            할당 가능한 사용자가 없습니다.
+          </div>
         ) : (
           metadata.data.map((user) => {
             const isOn = assignees.some((a) => a.login.toLowerCase() === user.login.toLowerCase())
@@ -1777,11 +1783,9 @@ function PRReviewCell({
         align="start"
         onClick={(event) => event.stopPropagation()}
       >
-          <div className="border-b border-border/70 px-3 py-2">
-            <div className="text-[13px] font-semibold text-foreground">
-              최대 15명의 검토자를 요청
-            </div>
-          </div>
+        <div className="border-b border-border/70 px-3 py-2">
+          <div className="text-[13px] font-semibold text-foreground">최대 15명의 검토자를 요청</div>
+        </div>
         <div className="border-b border-border/70 p-3">
           <Input
             ref={setReviewerInputNode}
@@ -1956,7 +1960,7 @@ function PRMergeCell({
   const [merging, setMerging] = useState(false)
   const confirm = useConfirmationDialog()
   if (item.type !== 'pr') {
-    return <span className="text-[11px] text-muted-foreground">Issue</span>
+    return <span className="text-[11px] text-muted-foreground">이슈</span>
   }
   const mergePresentation = presentGitHubPRMergeState(item)
   const mergeMethods = resolveGitHubPRMergeMethods(item.mergeMethodSettings)
@@ -2012,13 +2016,21 @@ function PRMergeCell({
         prRepo: item.prRepo ?? null
       })
       if (result.ok) {
-        toast.success(enabled ? '자동 병합을 사용하도록 설정했습니다.' : '자동 병합을 사용하지 않도록 설정했습니다.')
+        toast.success(
+          enabled
+            ? '자동 병합을 사용하도록 설정했습니다.'
+            : '자동 병합을 사용하지 않도록 설정했습니다.'
+        )
         onRefresh()
       } else {
         toast.error(result.error)
       }
     } catch {
-      toast.error(enabled ? '자동 병합을 사용하도록 설정하지 못했습니다.' : '자동 병합을 사용하지 않도록 설정하지 못했습니다.')
+      toast.error(
+        enabled
+          ? '자동 병합을 사용하도록 설정하지 못했습니다.'
+          : '자동 병합을 사용하지 않도록 설정하지 못했습니다.'
+      )
     } finally {
       setMerging(false)
     }
@@ -2126,14 +2138,14 @@ function PaginationBar({
 
   return (
     <nav
-      aria-label="Pagination"
+      aria-label="페이지네이션"
       className="flex items-center justify-center gap-1 border-t border-border/50 px-4 py-3"
     >
       <button
         type="button"
         disabled={currentPage === 0 || loadingTarget !== null}
         onClick={() => onPageChange(currentPage - 1)}
-        aria-label="Previous page"
+        aria-label="이전 페이지"
         className={btnClass}
       >
         <ChevronLeft className="size-4" />
@@ -2155,7 +2167,7 @@ function PaginationBar({
             type="button"
             disabled={loadingTarget !== null && loadingTarget !== entry}
             onClick={() => onPageChange(entry)}
-            aria-label={`Page ${entry + 1}`}
+            aria-label={`페이지 ${entry + 1}`}
             aria-current={entry === currentPage ? 'page' : undefined}
             className={numClass(entry)}
           >
@@ -2172,7 +2184,7 @@ function PaginationBar({
         type="button"
         disabled={currentPage >= totalPages - 1 || loadingTarget !== null}
         onClick={() => onPageChange(currentPage + 1)}
-        aria-label="Next page"
+        aria-label="다음 페이지"
         className={btnClass}
       >
         Next
@@ -2926,7 +2938,7 @@ export default function TaskPage(): React.JSX.Element {
   const openLinearProjectContext = useCallback(
     (project: LinearProjectSummary, options?: { parentView?: LinearCustomViewSummary | null }) => {
       if (!project.workspaceId) {
-        toast.error('Linear project is missing workspace context.')
+        toast.error('Linear 프로젝트에 워크스페이스 컨텍스트가 없습니다.')
         return
       }
       const parentView = options?.parentView ?? null
@@ -2954,7 +2966,7 @@ export default function TaskPage(): React.JSX.Element {
   const openLinearCustomViewContext = useCallback(
     (view: LinearCustomViewSummary) => {
       if (!view.workspaceId) {
-        toast.error('Linear view is missing workspace context.')
+        toast.error('Linear 뷰에 워크스페이스 컨텍스트가 없습니다.')
         return
       }
       clearSelectedLinearIssue()
@@ -3053,7 +3065,7 @@ export default function TaskPage(): React.JSX.Element {
             setSelectedLinearProject(null)
             setSelectedLinearProjectDetail(null)
             setLinearProjectParentView(null)
-            setLinearProjectsError('Saved Linear project was not found.')
+            setLinearProjectsError('저장된 Linear 프로젝트를 찾지 못했습니다.')
             setTaskResumeState({ linearContext: undefined })
             return
           }
@@ -3066,7 +3078,7 @@ export default function TaskPage(): React.JSX.Element {
             setSelectedLinearProject(null)
             setSelectedLinearProjectDetail(null)
             setLinearProjectParentView(null)
-            setLinearProjectsError('Failed to restore saved Linear project.')
+            setLinearProjectsError('저장된 Linear 프로젝트를 복원하지 못했습니다.')
             setTaskResumeState({ linearContext: undefined })
           }
         })
@@ -3090,7 +3102,7 @@ export default function TaskPage(): React.JSX.Element {
           setLinearCustomViewsLoading(false)
           if (!restoredView) {
             setSelectedLinearCustomView(null)
-            setLinearCustomViewsError('Saved Linear view was not found.')
+            setLinearCustomViewsError('저장된 Linear 뷰를 찾지 못했습니다.')
             setTaskResumeState({ linearContext: undefined })
             return
           }
@@ -3100,7 +3112,7 @@ export default function TaskPage(): React.JSX.Element {
           if (!cancelled) {
             setSelectedLinearCustomView(null)
             setLinearCustomViewsLoading(false)
-            setLinearCustomViewsError('Failed to restore saved Linear view.')
+            setLinearCustomViewsError('저장된 Linear 뷰를 복원하지 못했습니다.')
             setTaskResumeState({ linearContext: undefined })
           }
         })
@@ -3148,7 +3160,7 @@ export default function TaskPage(): React.JSX.Element {
       })
       .catch(() => {
         if (!cancelled) {
-          console.warn('[TaskPage] Failed to fetch Linear teams')
+          console.warn('[TaskPage] Linear 팀을 불러오지 못했습니다')
         }
       })
     return () => {
@@ -3922,7 +3934,7 @@ export default function TaskPage(): React.JSX.Element {
           setCurrentPage(target < loadedPages ? target : loadedPages - 1)
         }
       } catch (err) {
-        console.error('Failed to load next page:', err)
+        console.error('다음 페이지를 불러오지 못했습니다:', err)
       } finally {
         setPaginationLoading(false)
         setLoadingTargetPage(null)
@@ -4118,7 +4130,7 @@ export default function TaskPage(): React.JSX.Element {
         if (cancelled) {
           return
         }
-        setTasksError(err instanceof Error ? err.message : 'Failed to load GitHub work.')
+        setTasksError(err instanceof Error ? err.message : 'GitHub 작업을 불러오지 못했습니다.')
         setFailedCount(0) // the per-repo banner would be misleading next to tasksError
         setTasksLoading(false)
         setTasksRefreshing(false)
@@ -4230,7 +4242,7 @@ export default function TaskPage(): React.JSX.Element {
       // preset updates the persisted settings instead of only changing the
       // current page state.
       void updateSettings({ defaultTaskViewPreset: presetId }).catch(() => {
-        toast.error('Failed to save default task view.')
+        toast.error('기본 작업 뷰를 저장하지 못했습니다.')
       })
     },
     [updateSettings]
@@ -4434,10 +4446,10 @@ export default function TaskPage(): React.JSX.Element {
             assignees: newIssueAssignees.map((assignee) => assignee.login)
           })
       if (!result.ok) {
-        toast.error(result.error || 'Failed to create issue.')
+        toast.error(result.error || '이슈를 생성하지 못했습니다.')
         return
       }
-      toast.success(`Opened issue #${result.number}`, {
+      toast.success(`이슈 #${result.number}을 열었습니다`, {
         action: result.url
           ? {
               label: '보기',
@@ -4524,7 +4536,7 @@ export default function TaskPage(): React.JSX.Element {
       newLinearIssueProjectId === selectedLinearProject.id &&
       newLinearIssueTargetTeam.workspaceId !== selectedLinearProject.workspaceId
     ) {
-      toast.error('Select a team from the project workspace before filing this issue.')
+      toast.error('이 이슈를 등록하기 전에 프로젝트 워크스페이스에서 팀을 선택하세요.')
       return
     }
     setNewLinearIssueSubmitting(true)
@@ -4541,10 +4553,10 @@ export default function TaskPage(): React.JSX.Element {
         labelIds: newLinearIssueLabelIds.length > 0 ? newLinearIssueLabelIds : undefined
       })
       if (!result.ok) {
-        toast.error(result.error || 'Failed to create issue.')
+        toast.error(result.error || '이슈를 생성하지 못했습니다.')
         return
       }
-      toast.success(`Created ${result.identifier}`, {
+      toast.success(`${result.identifier}을 생성했습니다`, {
         action: result.url
           ? {
               label: '보기',
@@ -4756,7 +4768,7 @@ export default function TaskPage(): React.JSX.Element {
         if (cancelled) {
           return
         }
-        setLinearError(err instanceof Error ? err.message : 'Failed to load Linear issues.')
+        setLinearError(err instanceof Error ? err.message : 'Linear 이슈를 불러오지 못했습니다.')
         setLinearLoading(false)
       })
 
@@ -4816,7 +4828,7 @@ export default function TaskPage(): React.JSX.Element {
       .catch((error) => {
         if (!cancelled) {
           setLinearProjectsError(
-            error instanceof Error ? error.message : 'Failed to load projects.'
+            error instanceof Error ? error.message : '프로젝트를 불러오지 못했습니다.'
           )
           setLinearProjectsLoading(false)
         }
@@ -4856,7 +4868,7 @@ export default function TaskPage(): React.JSX.Element {
             setSelectedLinearProject(null)
             setLinearProjectParentView(null)
             setLinearProjectDetailError(null)
-            setLinearProjectsError('Project was not found.')
+            setLinearProjectsError('프로젝트를 찾지 못했습니다.')
             setTaskResumeState({ linearContext: undefined })
           }
         }
@@ -4864,7 +4876,7 @@ export default function TaskPage(): React.JSX.Element {
       .catch((error) => {
         if (!cancelled) {
           setLinearProjectDetailError(
-            error instanceof Error ? error.message : 'Failed to load project.'
+            error instanceof Error ? error.message : '프로젝트를 불러오지 못했습니다.'
           )
           setLinearProjectDetailLoading(false)
         }
@@ -4896,7 +4908,7 @@ export default function TaskPage(): React.JSX.Element {
       .catch((error) => {
         if (!cancelled) {
           setLinearProjectIssuesError(
-            error instanceof Error ? error.message : 'Failed to load project issues.'
+            error instanceof Error ? error.message : '프로젝트 이슈를 불러오지 못했습니다.'
           )
           setLinearProjectIssuesLoading(false)
         }
@@ -4931,7 +4943,7 @@ export default function TaskPage(): React.JSX.Element {
       .catch((error) => {
         if (!cancelled) {
           setLinearCustomViewsError(
-            error instanceof Error ? error.message : 'Failed to load views.'
+            error instanceof Error ? error.message : '뷰를 불러오지 못했습니다.'
           )
           setLinearCustomViewsLoading(false)
         }
@@ -4990,7 +5002,7 @@ export default function TaskPage(): React.JSX.Element {
       .catch((error) => {
         if (!cancelled) {
           setLinearCustomViewContentsError(
-            error instanceof Error ? error.message : 'Failed to load view contents.'
+            error instanceof Error ? error.message : '뷰 내용을 불러오지 못했습니다.'
           )
           setLinearCustomViewContentsLoading(false)
         }
@@ -5101,7 +5113,7 @@ export default function TaskPage(): React.JSX.Element {
         })
         .catch(() => {
           setLinearLoading(false)
-          toast.error('Failed to switch Linear workspace.')
+          toast.error('Linear 워크스페이스를 전환하지 못했습니다.')
         })
     },
     [clearSelectedLinearIssue, linearMode, selectLinearWorkspace, setTaskResumeState]
@@ -5111,7 +5123,7 @@ export default function TaskPage(): React.JSX.Element {
     (next: ReadonlySet<string>, persisted: string[] | null): void => {
       setLinearTeamSelection(new Set(next))
       void updateSettings({ defaultLinearTeamSelection: persisted }).catch(() => {
-        toast.error('Failed to save team selection.')
+        toast.error('팀 선택을 저장하지 못했습니다.')
       })
     },
     [updateSettings]
@@ -5124,7 +5136,7 @@ export default function TaskPage(): React.JSX.Element {
         setAvailableTeams(teams)
       })
       .catch(() => {
-        console.warn('[TaskPage] Failed to refresh Linear teams')
+        console.warn('[TaskPage] Linear 팀 새로고침에 실패했습니다')
       })
   }, [checkLinearConnection, listLinearTeams, selectedLinearWorkspaceId])
 
@@ -5167,13 +5179,13 @@ export default function TaskPage(): React.JSX.Element {
                           size="icon"
                           className="size-7 rounded-full"
                           onClick={closeTaskPage}
-                          aria-label="Close tasks"
+                          aria-label="작업 닫기"
                         >
                           <X className="size-4" />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" sideOffset={6}>
-                        Close · Esc
+                        닫기 · Esc
                       </TooltipContent>
                     </Tooltip>
                     <div className="mx-1 h-5 w-px bg-border/50" aria-hidden />
@@ -5189,7 +5201,7 @@ export default function TaskPage(): React.JSX.Element {
                                 taskSourceManuallyChangedRef.current = true
                                 openTaskPage({ taskSource: source.id })
                                 void updateSettings({ defaultTaskSource: source.id }).catch(() => {
-                                  toast.error('Failed to save default task source.')
+                                  toast.error('기본 작업 소스를 저장하지 못했습니다.')
                                 })
                               }}
                               aria-label={source.label}
@@ -5307,14 +5319,14 @@ export default function TaskPage(): React.JSX.Element {
                             onChange={(next) => {
                               setRepoSelection(next)
                               void updateSettings({ defaultRepoSelection: [...next] }).catch(() => {
-                                toast.error('Failed to save project selection.')
+                                toast.error('프로젝트 선택을 저장하지 못했습니다.')
                               })
                             }}
                             onSelectAll={() => {
                               const allIds = new Set(eligibleRepos.map((r) => r.id))
                               setRepoSelection(allIds)
                               void updateSettings({ defaultRepoSelection: null }).catch(() => {
-                                toast.error('Failed to save project selection.')
+                                toast.error('프로젝트 선택을 저장하지 못했습니다.')
                               })
                             }}
                             triggerClassName="h-8 w-auto max-w-[220px] rounded-md border border-border/50 bg-muted/50 px-2 text-xs font-medium shadow-sm transition hover:bg-muted/50 focus:ring-2 focus:ring-ring/20 focus:outline-none"
@@ -5416,7 +5428,7 @@ export default function TaskPage(): React.JSX.Element {
                         {taskSearchInput || appliedTaskSearch ? (
                           <button
                             type="button"
-                            aria-label="Clear search"
+                            aria-label="검색 지우기"
                             onClick={handleResetGithubTaskSearch}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
                           >
@@ -5457,9 +5469,9 @@ export default function TaskPage(): React.JSX.Element {
                               onClick={handleRefreshGithubTasks}
                               disabled={githubTasksBusy}
                               aria-busy={githubTasksBusy}
-                            aria-label={
-                              githubTasksBusy ? 'GitHub 작업 새로고침 중' : 'GitHub 작업 새로고침'
-                            }
+                              aria-label={
+                                githubTasksBusy ? 'GitHub 작업 새로고침 중' : 'GitHub 작업 새로고침'
+                              }
                               className="size-8 cursor-pointer border-border/50 bg-transparent hover:bg-muted/50 backdrop-blur-md disabled:pointer-events-auto disabled:cursor-wait supports-[backdrop-filter]:bg-transparent"
                             >
                               {githubTasksBusy ? (
@@ -5554,7 +5566,7 @@ export default function TaskPage(): React.JSX.Element {
                       <div
                         className="flex items-center gap-1 text-xs"
                         role="group"
-                        aria-label="Linear task mode"
+                        aria-label="Linear 작업 모드"
                       >
                         {LINEAR_MODE_OPTIONS.map((mode) => {
                           const active = linearMode === mode.id
@@ -5598,14 +5610,14 @@ export default function TaskPage(): React.JSX.Element {
                                 setNewLinearIssueOpen(true)
                               }}
                               disabled={availableTeams.length === 0}
-                              aria-label="New Linear issue"
+                              aria-label="새 Linear 이슈"
                               className="size-8 border-border/50 bg-transparent hover:bg-muted/50 backdrop-blur-md supports-[backdrop-filter]:bg-transparent"
                             >
                               <Plus className="size-4" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent side="bottom" sideOffset={6}>
-                            New Linear issue
+                            새 Linear 이슈
                           </TooltipContent>
                         </Tooltip>
                         <Tooltip>
@@ -5621,7 +5633,7 @@ export default function TaskPage(): React.JSX.Element {
                                     ? linearProjectsLoading || linearProjectDetailLoading
                                     : linearCustomViewsLoading || linearCustomViewContentsLoading
                               }
-                              aria-label="Refresh Linear"
+                              aria-label="Linear 새로고침"
                               className="size-8 border-border/50 bg-transparent hover:bg-muted/50 backdrop-blur-md supports-[backdrop-filter]:bg-transparent"
                             >
                               {linearMode === 'issues' && linearLoading ? (
@@ -5638,7 +5650,7 @@ export default function TaskPage(): React.JSX.Element {
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent side="bottom" sideOffset={6}>
-                            Refresh Linear
+                            Linear 새로고침
                           </TooltipContent>
                         </Tooltip>
                       </div>
@@ -5703,13 +5715,13 @@ export default function TaskPage(): React.JSX.Element {
                                   setLinearRefreshNonce((n) => n + 1)
                                 }
                               }}
-                              placeholder="Search Linear issues..."
+                              placeholder="Linear 이슈 검색..."
                               className="h-8 rounded-md border-border/50 bg-background pl-8 pr-8 text-xs"
                             />
                             {linearSearchInput ? (
                               <button
                                 type="button"
-                                aria-label="Clear search"
+                                aria-label="검색 지우기"
                                 onClick={() => {
                                   setLinearSearchInput('')
                                   setAppliedLinearSearch('')
@@ -5731,13 +5743,13 @@ export default function TaskPage(): React.JSX.Element {
                           <Input
                             value={linearProjectSearchInput}
                             onChange={(e) => setLinearProjectSearchInput(e.target.value)}
-                            placeholder="Search Linear projects..."
+                            placeholder="Linear 프로젝트 검색..."
                             className="h-8 rounded-md border-border/50 bg-background pl-8 pr-8 text-xs"
                           />
                           {linearProjectSearchInput ? (
                             <button
                               type="button"
-                              aria-label="Clear search"
+                              aria-label="검색 지우기"
                               onClick={() => {
                                 setLinearProjectSearchInput('')
                                 setAppliedLinearProjectSearch('')
@@ -5754,7 +5766,7 @@ export default function TaskPage(): React.JSX.Element {
                       <div
                         className="mt-3 flex min-w-0 flex-wrap items-center gap-2"
                         role="group"
-                        aria-label="Linear view type"
+                        aria-label="Linear 보기 유형"
                       >
                         {LINEAR_CUSTOM_VIEW_MODEL_OPTIONS.map((option) => {
                           const active = option.id === linearCustomViewModel
@@ -5816,14 +5828,14 @@ export default function TaskPage(): React.JSX.Element {
                           onChange={(next) => {
                             setRepoSelection(next)
                             void updateSettings({ defaultRepoSelection: [...next] }).catch(() => {
-                              toast.error('Failed to save project selection.')
+                              toast.error('프로젝트 선택을 저장하지 못했습니다.')
                             })
                           }}
                           onSelectAll={() => {
                             const allIds = new Set(eligibleRepos.map((r) => r.id))
                             setRepoSelection(allIds)
                             void updateSettings({ defaultRepoSelection: null }).catch(() => {
-                              toast.error('Failed to save project selection.')
+                              toast.error('프로젝트 선택을 저장하지 못했습니다.')
                             })
                           }}
                           triggerClassName="h-8 w-full rounded-md border border-border/50 bg-muted/50 px-2 text-xs font-medium shadow-sm transition hover:bg-muted/50 focus:ring-2 focus:ring-ring/20 focus:outline-none"
@@ -5872,8 +5884,8 @@ export default function TaskPage(): React.JSX.Element {
                                 disabled={gitlabLoading || gitlabTodosLoading}
                                 aria-label={
                                   gitlabView === 'todos'
-                                    ? 'Refresh My Todos'
-                                    : 'Refresh GitLab work items'
+                                    ? '내 할 일 새로고침'
+                                    : 'GitLab 작업 항목 새로고침'
                                 }
                                 className="border-border/50 bg-transparent hover:bg-muted/50 backdrop-blur-md supports-[backdrop-filter]:bg-transparent"
                               >
@@ -5886,8 +5898,8 @@ export default function TaskPage(): React.JSX.Element {
                             </TooltipTrigger>
                             <TooltipContent side="bottom" sideOffset={6}>
                               {gitlabView === 'todos'
-                                ? 'Refresh My Todos'
-                                : 'Refresh GitLab work items'}
+                                ? '내 할 일 새로고침'
+                                : 'GitLab 작업 항목 새로고침'}
                             </TooltipContent>
                           </Tooltip>
                         </div>
@@ -5906,7 +5918,7 @@ export default function TaskPage(): React.JSX.Element {
                 initialTab={dialogInitialTab}
                 repoPath={dialogRepoPath}
                 repoId={dialogWorkItem.repoId}
-                backLabel="Pull requests"
+                backLabel="풀 리퀘스트"
                 onUse={(item) => {
                   setDialogWorkItem(null)
                   handleUseWorkItem(item)
@@ -5921,7 +5933,7 @@ export default function TaskPage(): React.JSX.Element {
                 repoPath={dialogRepoPath}
                 repoId={dialogWorkItem.repoId}
                 variant="page"
-                backLabel="GitHub list"
+                backLabel="GitHub 목록"
                 onUse={(item) => {
                   setDialogWorkItem(null)
                   handleUseWorkItem(item)
@@ -5946,19 +5958,19 @@ export default function TaskPage(): React.JSX.Element {
                     githubTaskGridClass
                   )}
                 >
-                  <span className={GITHUB_TASK_STICKY_ID_HEADER_CLASS}>ID</span>
-                  <span className={GITHUB_TASK_STICKY_TITLE_HEADER_CLASS}>Title / Context</span>
-                  {activeGithubTaskKind === 'issues' ? <span>Assignees</span> : null}
+                  <span className={GITHUB_TASK_STICKY_ID_HEADER_CLASS}>번호</span>
+                  <span className={GITHUB_TASK_STICKY_TITLE_HEADER_CLASS}>제목 / 맥락</span>
+                  {activeGithubTaskKind === 'issues' ? <span>담당자</span> : null}
                   {showPRManagementColumns ? (
                     <>
-                      <span>Reviewers</span>
-                      <span>Checks</span>
-                      <span>Merge</span>
+                      <span>리뷰어</span>
+                      <span>검사</span>
+                      <span>병합</span>
                     </>
                   ) : (
-                    <span>Status</span>
+                    <span>상태</span>
                   )}
-                  <span>Updated</span>
+                  <span>업데이트됨</span>
                   <span />
                 </div>
 
@@ -5972,7 +5984,8 @@ export default function TaskPage(): React.JSX.Element {
                   // Why: per-repo partial-failure signal — distinct from a hard
                   // IPC reject (tasksError). The two are mutually exclusive.
                   <div className="border-b border-border/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-200">
-                    {failedCount} of {selectedRepos.length} projects failed to load
+                    {failedCount}개 프로젝트를 불러오지 못했습니다. 전체 {selectedRepos.length}개 중
+                    실패했습니다.
                   </div>
                 ) : null}
 
@@ -6013,7 +6026,7 @@ export default function TaskPage(): React.JSX.Element {
                           {retryingRepoPaths.has(s.repoPath) ? (
                             <span className="flex items-center gap-1">
                               <LoaderCircle className="h-3 w-3 animate-spin" />
-                            다시 시도 중…
+                              다시 시도 중…
                             </span>
                           ) : (
                             '다시 시도'
@@ -6083,7 +6096,9 @@ export default function TaskPage(): React.JSX.Element {
                 failedCount === 0 &&
                 perRepoSourceState.every((s) => !s.error) ? (
                   <div className="px-4 py-10 text-center">
-                    <p className="text-base font-medium text-foreground">일치하는 GitHub 작업이 없습니다</p>
+                    <p className="text-base font-medium text-foreground">
+                      일치하는 GitHub 작업이 없습니다
+                    </p>
                     <p className="mt-2 text-sm text-muted-foreground">
                       검색어를 바꾸거나 지우세요.
                     </p>
@@ -6160,7 +6175,7 @@ export default function TaskPage(): React.JSX.Element {
                               </h3>
                               {item.type === 'pr' && item.state === 'draft' ? (
                                 <span className="shrink-0 rounded-full border border-slate-500/30 bg-slate-500/10 px-1.5 py-0 text-[10px] font-medium text-slate-600 dark:text-slate-300">
-                                  Draft
+                                  초안
                                 </span>
                               ) : null}
                               {selectedRepos.length > 1 && itemRepo ? (
@@ -6175,7 +6190,7 @@ export default function TaskPage(): React.JSX.Element {
                               ) : null}
                             </div>
                             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                              <span>{item.author ?? 'unknown author'}</span>
+                              <span>{item.author ?? '알 수 없는 작성자'}</span>
                               {selectedRepos.length === 1 && itemRepo ? (
                                 <span>{itemRepo.displayName}</span>
                               ) : null}
@@ -6265,8 +6280,8 @@ export default function TaskPage(): React.JSX.Element {
                                     )}
                                     aria-label={
                                       attachedWorkspace
-                                ? 'PR에 연결된 작업 공간 이어하기'
-                                : 'PR에서 작업 공간 시작'
+                                        ? 'PR에 연결된 작업 공간 이어하기'
+                                        : 'PR에서 작업 공간 시작'
                                     }
                                   >
                                     {attachedWorkspace ? '이어하기' : '시작'}
@@ -6437,7 +6452,7 @@ export default function TaskPage(): React.JSX.Element {
                         todo.targetType === 'MergeRequest'
                           ? `MR !${todo.targetIid ?? ''}`
                           : todo.targetType === 'Issue'
-                            ? `Issue #${todo.targetIid ?? ''}`
+                            ? `이슈 #${todo.targetIid ?? ''}`
                             : todo.targetType
                       }
                     >
@@ -6445,7 +6460,7 @@ export default function TaskPage(): React.JSX.Element {
                         {/* Why: GitLab action_name uses snake_case (assigned,
                             review_requested, build_failed). Replace _ with
                             space so the row reads like a sentence. */}
-                      {todo.actionName.replace(/_/g, ' ')}
+                        {todo.actionName.replace(/_/g, ' ')}
                       </span>
                       <span className="min-w-0 truncate text-sm">{todo.targetTitle}</span>
                       <span className="min-w-0 truncate font-mono text-[11px] text-muted-foreground">
@@ -6465,7 +6480,7 @@ export default function TaskPage(): React.JSX.Element {
           ) : taskSource === 'gitlab' ? (
             <div className="flex min-h-0 max-h-full flex-col rounded-md border border-t-0 border-border/50 bg-muted/50 overflow-hidden rounded-t-none shadow-sm">
               <div className="flex-none grid grid-cols-[80px_minmax(0,3fr)_120px_110px_50px] gap-3 border-b border-border/50 px-3 py-2 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                <span>ID</span>
+                <span>번호</span>
                 <span>제목</span>
                 <span>유형 / 상태</span>
                 <span>갱신</span>
@@ -6542,7 +6557,7 @@ export default function TaskPage(): React.JSX.Element {
                       </span>
                       <span className="min-w-0 truncate text-sm">{item.title}</span>
                       <span className="text-xs text-muted-foreground">
-                      {item.type === 'mr' ? 'MR' : '이슈'} · {item.state}
+                        {item.type === 'mr' ? 'MR' : '이슈'} · {item.state}
                       </span>
                       <span className="text-xs text-muted-foreground">
                         {item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : ''}
@@ -6587,7 +6602,7 @@ export default function TaskPage(): React.JSX.Element {
             <LinearIssueWorkspace
               issue={selectedLinearIssue}
               variant="page"
-              backLabel={activeLinearIssueContextLabel ?? 'Linear list'}
+              backLabel={activeLinearIssueContextLabel ?? 'Linear 목록'}
               onUse={handleUseLinearItem}
               onOpenIssue={openRelatedLinearIssue}
               onClose={closeTaskDetailPage}
@@ -6822,7 +6837,7 @@ export default function TaskPage(): React.JSX.Element {
                         setLinearProjectParentView(null)
                         setTaskResumeState({ linearContext: undefined })
                       }}
-                      aria-label="Back"
+                      aria-label="뒤로"
                     >
                       <ChevronLeft className="size-3.5" />
                     </Button>
@@ -7003,9 +7018,9 @@ export default function TaskPage(): React.JSX.Element {
                     <p className="mt-2 text-sm text-muted-foreground">
                       {activeLinearIssueContextLabel
                         ? '이 Linear 컨텍스트와 일치하는 이슈가 없습니다.'
-                          : linearSearchInput
-                            ? '다른 검색어를 시도하세요.'
-                            : '할당된 이슈가 없습니다. 다른 검색어를 시도해 보세요.'}
+                        : linearSearchInput
+                          ? '다른 검색어를 시도하세요.'
+                          : '할당된 이슈가 없습니다. 다른 검색어를 시도해 보세요.'}
                     </p>
                   </div>
                 ) : null}
@@ -7018,8 +7033,8 @@ export default function TaskPage(): React.JSX.Element {
                       가져온 이슈 중 선택한 팀과 일치하는 항목이 없습니다
                     </p>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      더 많은 팀을 선택하거나 새로고침해 보세요. 팀 필터는 현재 가져온 이슈
-                      집합에만 적용됩니다.
+                      더 많은 팀을 선택하거나 새로고침해 보세요. 팀 필터는 현재 가져온 이슈 집합에만
+                      적용됩니다.
                     </p>
                   </div>
                 ) : null}
@@ -7331,7 +7346,7 @@ export default function TaskPage(): React.JSX.Element {
                                     event.stopPropagation()
                                     handleUseLinearItem(issue)
                                   }}
-                                      aria-label={`${issue.identifier}에서 작업 공간 시작`}
+                                  aria-label={`${issue.identifier}에서 작업 공간 시작`}
                                 >
                                   <ArrowRight className="size-3.5" />
                                 </Button>
@@ -7564,7 +7579,7 @@ export default function TaskPage(): React.JSX.Element {
                   생성 중…
                 </>
               ) : (
-                  '이슈 생성'
+                '이슈 생성'
               )}
             </Button>
           </DialogFooter>

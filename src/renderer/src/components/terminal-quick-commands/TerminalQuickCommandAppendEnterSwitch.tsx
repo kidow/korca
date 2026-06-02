@@ -10,16 +10,14 @@ export function TerminalQuickCommandAppendEnterSwitch({
   return (
     <div className="flex items-center justify-between gap-4 rounded-md border border-border/50 px-3 py-2">
       <div className="space-y-0.5">
-        <div className="text-sm font-medium">Append Enter</div>
-        <div className="text-xs text-muted-foreground">
-          Submit immediately instead of only inserting text.
-        </div>
+        <div className="text-sm font-medium">엔터 추가</div>
+        <div className="text-xs text-muted-foreground">텍스트만 넣지 말고 바로 제출합니다.</div>
       </div>
       <button
         type="button"
         role="switch"
         aria-checked={appendEnter}
-        aria-label="Toggle append Enter"
+        aria-label="엔터 추가 전환"
         onClick={onToggle}
         className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors ${
           appendEnter ? 'bg-foreground' : 'bg-muted-foreground/30'

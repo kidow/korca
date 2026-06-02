@@ -334,7 +334,7 @@ export function RuntimePairingUrlGenerator({
     <div ref={setContainerNode} className={containerClassName}>
       {showHeader ? (
         <div className="space-y-1">
-          <Label id="runtime-share-server-label">Share this Korca server</Label>
+          <Label id="runtime-share-server-label">이 Korca 서버 공유</Label>
           <p className="text-xs text-muted-foreground">
             Create a revocable access grant for browser or desktop clients.
           </p>
@@ -395,7 +395,7 @@ export function RuntimePairingUrlGenerator({
                 </div>
               </div>
               <div className="min-w-0 space-y-1">
-                <Label htmlFor="runtime-pairing-custom-address">Custom address</Label>
+                <Label htmlFor="runtime-pairing-custom-address">사용자 지정 주소</Label>
                 <Input
                   id="runtime-pairing-custom-address"
                   value={customAddress}
@@ -426,7 +426,7 @@ export function RuntimePairingUrlGenerator({
 
           {webClientUrl ? (
             <GeneratedUrlRow
-              label="Open in browser"
+              label="브라우저에서 열기"
               description="Use this URL from a browser that can reach the selected address."
               value={webClientUrl}
               copied={copiedTarget === 'web'}
@@ -434,7 +434,7 @@ export function RuntimePairingUrlGenerator({
             />
           ) : runtimePairingUrl ? (
             <UnavailableUrlRow
-              label="Open in browser"
+              label="브라우저에서 열기"
               description="Browser link unavailable in this build. The pairing URL still works for Korca clients."
             />
           ) : null}

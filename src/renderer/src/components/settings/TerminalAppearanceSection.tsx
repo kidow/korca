@@ -73,8 +73,8 @@ export function TerminalAppearanceSection({
         <div className="min-w-0 space-y-3">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <SettingsSubsectionHeader
-              title="Terminal Typography"
-              description="Default terminal typography for new panes and live updates."
+              title="터미널 타이포그래피"
+              description="새 창과 실시간 업데이트에 사용할 기본 터미널 타이포그래피입니다."
             />
             <Button
               variant="outline"
@@ -83,19 +83,19 @@ export function TerminalAppearanceSection({
               onClick={() => void ghostty.handleClick()}
             >
               <img src={ghosttyIcon} alt="" aria-hidden="true" className="size-4" />
-              Import from Ghostty
+              Ghostty에서 가져오기
             </Button>
           </div>
 
           <div className="divide-y divide-border/40">
             <SearchableSetting
-              title="Font Size"
-              description="Default terminal font size for new panes and live updates."
+              title="글꼴 크기"
+              description="새 창과 실시간 업데이트에 사용할 기본 터미널 글꼴 크기입니다."
               keywords={['terminal', 'typography', 'text size']}
             >
               <SettingsRow
-                label="Font Size"
-                description="Default terminal font size for new panes and live updates."
+                label="글꼴 크기"
+                description="새 창과 실시간 업데이트에 사용할 기본 터미널 글꼴 크기입니다."
                 control={
                   <div className="flex items-center gap-2">
                     <Button
@@ -140,14 +140,14 @@ export function TerminalAppearanceSection({
             </SearchableSetting>
 
             <SearchableSetting
-              title="Font Family"
-              description="Default terminal font family for new panes and live updates."
+              title="글꼴 패밀리"
+              description="새 창과 실시간 업데이트에 사용할 기본 터미널 글꼴 패밀리입니다."
               keywords={['terminal', 'typography', 'font']}
             >
               <SettingsRow
                 alignTop
-                label="Font Family"
-                description="Default terminal font family for new panes and live updates."
+                label="글꼴 패밀리"
+                description="새 창과 실시간 업데이트에 사용할 기본 터미널 글꼴 패밀리입니다."
                 control={
                   <FontAutocomplete
                     value={settings.terminalFontFamily}
@@ -160,13 +160,13 @@ export function TerminalAppearanceSection({
             </SearchableSetting>
 
             <SearchableSetting
-              title="Font Weight"
-              description="Controls the terminal text font weight."
+              title="글꼴 두께"
+              description="터미널 텍스트의 글꼴 두께를 조절합니다."
               keywords={['terminal', 'typography', 'weight']}
             >
               <NumberField
-                label="Font Weight"
-                description="Controls the terminal text font weight."
+                label="글꼴 두께"
+                description="터미널 텍스트의 글꼴 두께를 조절합니다."
                 value={normalizeTerminalFontWeight(settings.terminalFontWeight)}
                 defaultValue={DEFAULT_TERMINAL_FONT_WEIGHT}
                 min={TERMINAL_FONT_WEIGHT_MIN}
@@ -182,13 +182,13 @@ export function TerminalAppearanceSection({
             </SearchableSetting>
 
             <SearchableSetting
-              title="Line Height"
-              description="Controls the terminal line height multiplier."
+              title="줄 높이"
+              description="터미널 줄 높이 배율을 조절합니다."
               keywords={['terminal', 'typography', 'line height', 'spacing']}
             >
               <NumberField
-                label="Line Height"
-                description="Controls the terminal line height multiplier."
+                label="줄 높이"
+                description="터미널 줄 높이 배율을 조절합니다."
                 value={settings.terminalLineHeight}
                 defaultValue={1}
                 min={1}
@@ -204,7 +204,7 @@ export function TerminalAppearanceSection({
             </SearchableSetting>
 
             <SearchableSetting
-              title="Font Ligatures"
+              title="글꼴 리거처"
               description='Render programming ligatures (e.g. =>, !=, ===) for fonts that ship them. "Auto" enables ligatures only for known ligature fonts (Fira Code, JetBrains Mono, Cascadia Code, Iosevka, etc.).'
               keywords={[
                 'terminal',
@@ -223,14 +223,14 @@ export function TerminalAppearanceSection({
                 label="Font Ligatures"
                 description={
                   settings.terminalLigatures === 'on'
-                    ? 'Always on. Fonts without ligatures simply render as-is.'
+                    ? '항상 켬. 리거처가 없는 글꼴은 그대로 렌더링합니다.'
                     : settings.terminalLigatures === 'off'
-                      ? 'Always off, even for fonts that ship them.'
+                      ? '항상 끔. 리거처가 있는 글꼴도 적용하지 않습니다.'
                       : fontFamilyHasKnownLigatures(settings.terminalFontFamily)
-                        ? `Auto - enabled for "${settings.terminalFontFamily}".`
-                        : `Auto - disabled for "${
+                        ? `자동 - "${settings.terminalFontFamily}"에 대해 활성화됨.`
+                        : `자동 - "${
                             settings.terminalFontFamily || 'the current font'
-                          }".`
+                          }"에 대해 비활성화됨.`
                 }
                 control={
                   <SettingsSegmentedControl
@@ -238,9 +238,9 @@ export function TerminalAppearanceSection({
                     value={settings.terminalLigatures ?? 'auto'}
                     onChange={(option) => updateSettings({ terminalLigatures: option })}
                     options={[
-                      { value: 'auto', label: 'Auto' },
-                      { value: 'on', label: 'On' },
-                      { value: 'off', label: 'Off' }
+                      { value: 'auto', label: '자동' },
+                      { value: 'on', label: '켬' },
+                      { value: 'off', label: '끔' }
                     ]}
                   />
                 }
@@ -248,20 +248,20 @@ export function TerminalAppearanceSection({
               {/* Why: surface the resolved state explicitly so the "Auto" label
                   isn't ambiguous when a user is staring at it. */}
               <p className="sr-only" aria-live="polite">
-                Ligatures are currently{' '}
+                리거처는 현재{' '}
                 {resolveTerminalLigaturesEnabled(
                   settings.terminalLigatures,
                   settings.terminalFontFamily
                 )
-                  ? 'enabled'
-                  : 'disabled'}
+                  ? '활성화됨'
+                  : '비활성화됨'}
                 .
               </p>
             </SearchableSetting>
           </div>
         </div>
         <TerminalSettingsPreview
-          title="Preview"
+          title="미리보기"
           settings={settings}
           systemPrefersDark={systemPrefersDark}
           previewFontFamily={previewFontFamily}
@@ -272,28 +272,28 @@ export function TerminalAppearanceSection({
     matchesSettingsSearch(searchQuery, TERMINAL_CURSOR_SEARCH_ENTRIES) ? (
       <section key="cursor" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Terminal Cursor"
-          description="Default cursor appearance for Korca terminal panes."
+          title="터미널 커서"
+          description="Korca 터미널 창의 기본 커서 모양입니다."
         />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Cursor Shape"
-            description="Default cursor appearance for Korca terminal panes."
+            title="커서 모양"
+            description="Korca 터미널 창의 기본 커서 모양입니다."
             keywords={['terminal', 'cursor', 'bar', 'block', 'underline']}
           >
             <SettingsRow
-              label="Cursor Shape"
-              description="Default cursor appearance for Korca terminal panes."
+              label="커서 모양"
+              description="Korca 터미널 창의 기본 커서 모양입니다."
               control={
                 <SettingsSegmentedControl
-                  ariaLabel="Cursor Shape"
+                  ariaLabel="커서 모양"
                   value={settings.terminalCursorStyle}
                   onChange={(option) => updateSettings({ terminalCursorStyle: option })}
                   options={[
-                    { value: 'bar', label: 'Bar' },
-                    { value: 'block', label: 'Block' },
-                    { value: 'underline', label: 'Underline' }
+                    { value: 'bar', label: '막대' },
+                    { value: 'block', label: '블록' },
+                    { value: 'underline', label: '밑줄' }
                   ]}
                 />
               }
@@ -301,13 +301,13 @@ export function TerminalAppearanceSection({
           </SearchableSetting>
 
           <SearchableSetting
-            title="Blinking Cursor"
-            description="Uses the blinking variant of the selected cursor shape."
+            title="깜빡이는 커서"
+            description="선택한 커서 모양의 깜빡이는 변형을 사용합니다."
             keywords={['terminal', 'cursor', 'blink']}
           >
             <SettingsSwitchRow
-              label="Blinking Cursor"
-              description="Uses the blinking variant of the selected cursor shape."
+              label="깜빡이는 커서"
+              description="선택한 커서 모양의 깜빡이는 변형을 사용합니다."
               checked={settings.terminalCursorBlink}
               onChange={() =>
                 updateSettings({ terminalCursorBlink: !settings.terminalCursorBlink })
@@ -316,13 +316,13 @@ export function TerminalAppearanceSection({
           </SearchableSetting>
 
           <SearchableSetting
-            title="Cursor Opacity"
-            description="Opacity of the terminal cursor."
+            title="커서 불투명도"
+            description="터미널 커서의 불투명도입니다."
             keywords={['terminal', 'cursor', 'opacity', 'transparency']}
           >
             <NumberField
-              label="Cursor Opacity"
-              description="Opacity of the terminal cursor."
+              label="커서 불투명도"
+              description="터미널 커서의 불투명도입니다."
               value={settings.terminalCursorOpacity ?? 1}
               defaultValue={1}
               min={0}
@@ -342,19 +342,19 @@ export function TerminalAppearanceSection({
     matchesSettingsSearch(searchQuery, TERMINAL_PANE_APPEARANCE_SEARCH_ENTRIES) ? (
       <section key="pane-appearance" className="space-y-3">
         <SettingsSubsectionHeader
-          title="Terminal Panes"
-          description="Control inactive pane dimming and split divider thickness."
+          title="터미널 창"
+          description="비활성 창의 어둡게 표시와 분할선 두께를 조절합니다."
         />
 
         <div className="divide-y divide-border/40">
           <SearchableSetting
-            title="Inactive Pane Opacity"
-            description="Opacity applied to panes that are not currently active."
+            title="비활성 창 불투명도"
+            description="현재 활성화되지 않은 창에 적용되는 불투명도입니다."
             keywords={['pane', 'opacity', 'dimming']}
           >
             <NumberField
-              label="Inactive Pane Opacity"
-              description="Opacity applied to panes that are not currently active."
+              label="비활성 창 불투명도"
+              description="현재 활성화되지 않은 창에 적용되는 불투명도입니다."
               value={paneStyleOptions.inactivePaneOpacity}
               defaultValue={0.8}
               min={0}
@@ -369,13 +369,13 @@ export function TerminalAppearanceSection({
             />
           </SearchableSetting>
           <SearchableSetting
-            title="Divider Thickness"
-            description="Thickness of the pane divider line."
+            title="분할선 두께"
+            description="창 분할선의 두께입니다."
             keywords={['pane', 'divider', 'thickness']}
           >
             <NumberField
-              label="Divider Thickness"
-              description="Thickness of the pane divider line."
+              label="분할선 두께"
+              description="창 분할선의 두께입니다."
               value={paneStyleOptions.dividerThicknessPx}
               defaultValue={1}
               min={1}

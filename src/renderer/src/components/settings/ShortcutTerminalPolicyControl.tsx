@@ -39,8 +39,8 @@ export function ShortcutTerminalPolicyControl({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="korca-first">Korca first</SelectItem>
-              <SelectItem value="terminal-first">Terminal first</SelectItem>
+              <SelectItem value="korca-first">Korca 우선</SelectItem>
+              <SelectItem value="terminal-first">터미널 우선</SelectItem>
             </SelectContent>
           </Select>
         }

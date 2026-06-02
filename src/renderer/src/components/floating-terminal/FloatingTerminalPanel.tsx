@@ -632,7 +632,7 @@ export function FloatingTerminalPanel({
         return
       }
       createBrowserTab(FLOATING_TERMINAL_WORKTREE_ID, url, {
-        title: 'New Browser Tab',
+        title: '새 브라우저 탭',
         focusAddressBar: true,
         targetGroupId: activeGroup?.id
       })
@@ -1404,9 +1404,9 @@ export function FloatingTerminalPanel({
         >
           <div className="space-y-2">
             <div className="space-y-0.5">
-              <p className="text-sm font-medium">Enable orchestration</p>
+              <p className="text-sm font-medium">오케스트레이션 사용</p>
               <p className="text-xs leading-5 text-muted-foreground">
-                Set up the Korca CLI and agent skill so agents can coordinate through Korca.
+                에이전트가 Korca를 통해 협업할 수 있도록 Korca CLI와 에이전트 스킬을 설정합니다.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -1417,7 +1417,7 @@ export function FloatingTerminalPanel({
                 className="flex-1"
                 onClick={dismissOrchestrationSetup}
               >
-                Dismiss
+                닫기
               </Button>
               <Button
                 type="button"
@@ -1426,7 +1426,7 @@ export function FloatingTerminalPanel({
                 className="flex-1"
                 onClick={() => setOrchestrationDialogOpen(true)}
               >
-                Enable
+                사용
               </Button>
             </div>
           </div>
@@ -1455,11 +1455,11 @@ export function FloatingTerminalPanel({
       >
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-sm">Unsaved Changes</DialogTitle>
+            <DialogTitle className="text-sm">저장되지 않은 변경 사항</DialogTitle>
             <DialogDescription className="text-xs">
               {saveDialogFile
-                ? `"${saveDialogFile.relativePath.split('/').pop()}" has unsaved changes. Do you want to save before closing?`
-                : 'This file has unsaved changes.'}
+                ? `"${saveDialogFile.relativePath.split('/').pop()}"에 저장되지 않은 변경 사항이 있습니다. 닫기 전에 저장할까요?`
+                : '이 파일에는 저장되지 않은 변경 사항이 있습니다.'}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
@@ -1469,7 +1469,7 @@ export function FloatingTerminalPanel({
               size="sm"
               onClick={handleFloatingSaveDialogCancel}
             >
-              Cancel
+              취소
             </Button>
             <Button
               type="button"
@@ -1477,10 +1477,10 @@ export function FloatingTerminalPanel({
               size="sm"
               onClick={handleFloatingSaveDialogDiscard}
             >
-              Don&apos;t Save
+              저장하지 않음
             </Button>
             <Button type="button" size="sm" onClick={handleFloatingSaveDialogSave}>
-              Save
+              저장
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1529,7 +1529,7 @@ function FloatingTerminalEmptyState({
           onClick={onNewTerminal}
         >
           <TerminalSquare className="size-3.5 opacity-90" />
-          <span className="truncate text-left leading-none">New Terminal</span>
+          <span className="truncate text-left leading-none">새 터미널</span>
           <FloatingEmptyStateShortcut keys={newTerminalShortcutKeys} />
         </Button>
         <Button
@@ -1539,7 +1539,7 @@ function FloatingTerminalEmptyState({
           onClick={onNewMarkdown}
         >
           <FileText className="size-3.5 opacity-90" />
-          <span className="truncate text-left leading-none">New Markdown Note</span>
+          <span className="truncate text-left leading-none">새 마크다운 메모</span>
           <FloatingEmptyStateShortcut keys={newMarkdownShortcutKeys} />
         </Button>
         <Button
@@ -1549,7 +1549,7 @@ function FloatingTerminalEmptyState({
           onClick={onOpenMarkdown}
         >
           <FileText className="size-3.5 opacity-90" />
-          <span className="truncate text-left leading-none">Open Markdown Note</span>
+          <span className="truncate text-left leading-none">마크다운 메모 열기</span>
           <FloatingEmptyStateShortcut keys={openMarkdownShortcutKeys} />
         </Button>
         <Button
@@ -1559,7 +1559,7 @@ function FloatingTerminalEmptyState({
           onClick={onNewBrowser}
         >
           <Globe className="size-3.5 opacity-90" />
-          <span className="truncate text-left leading-none">New Browser</span>
+          <span className="truncate text-left leading-none">새 브라우저</span>
           <FloatingEmptyStateShortcut keys={newBrowserShortcutKeys} />
         </Button>
         <Button
@@ -1569,7 +1569,7 @@ function FloatingTerminalEmptyState({
           onClick={onClose}
         >
           <Minus className="size-3.5 opacity-90" />
-          <span className="truncate text-left leading-none">Minimize</span>
+          <span className="truncate text-left leading-none">최소화</span>
           <FloatingEmptyStateShortcut keys={closeShortcutKeys} />
         </Button>
       </div>

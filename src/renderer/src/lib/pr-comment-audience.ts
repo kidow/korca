@@ -6,9 +6,9 @@ export const PR_COMMENT_AUDIENCE_FILTERS: {
   value: PRCommentAudienceFilter
   label: string
 }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'human', label: 'Humans' },
-  { value: 'bot', label: 'Bots' }
+  { value: 'all', label: '전체' },
+  { value: 'human', label: '사람' },
+  { value: 'bot', label: '봇' }
 ]
 
 const BOT_LOGIN_SUFFIX = '[bot]'
@@ -85,10 +85,10 @@ export function filterPRCommentsByAudience(
 export function getPRCommentAudienceEmptyLabel(filter: PRCommentAudienceFilter): string {
   switch (filter) {
     case 'bot':
-      return 'No bot comments.'
+      return '봇 댓글이 없습니다.'
     case 'human':
-      return 'No human comments.'
+      return '사람 댓글이 없습니다.'
     case 'all':
-      return 'No comments yet.'
+      return '아직 댓글이 없습니다.'
   }
 }

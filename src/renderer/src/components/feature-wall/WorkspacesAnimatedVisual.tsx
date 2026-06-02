@@ -12,9 +12,9 @@ type WorkspaceMock = {
 }
 
 const WORKSPACES: readonly WorkspaceMock[] = [
-  { id: 'a', name: 'set up korca.yaml', agents: ['claude'] },
-  { id: 'b', name: 'fix login race condition', agents: ['claude', 'opencode', 'codex'] },
-  { id: 'c', name: 'speed up CI pipeline', agents: ['claude', 'codex'] }
+  { id: 'a', name: 'korca.yaml 설정', agents: ['claude'] },
+  { id: 'b', name: '로그인 경합 조건 수정', agents: ['claude', 'opencode', 'codex'] },
+  { id: 'c', name: 'CI 파이프라인 속도 개선', agents: ['claude', 'codex'] }
 ]
 
 const SELECTED_ID = WORKSPACES[0].id

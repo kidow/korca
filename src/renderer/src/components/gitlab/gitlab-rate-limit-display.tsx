@@ -108,7 +108,7 @@ function GitLabRateLimitRows({
   if (!rest) {
     return (
       <div className="text-xs text-muted-foreground">
-        This GitLab host did not return rate-limit headers.
+        이 GitLab 호스트는 rate-limit 헤더를 반환하지 않았습니다.
       </div>
     )
   }
@@ -141,9 +141,11 @@ export function GitLabRateLimitPanel({ className }: { className?: string }): Rea
         <div className="space-y-0.5">
           <div className="flex items-center gap-1.5 text-sm font-medium text-foreground">
             <Gauge className="size-4" />
-            GitLab API Budget
+            GitLab API 사용량
           </div>
-          <p className="text-xs text-muted-foreground">Korca uses REST through the GitLab CLI.</p>
+          <p className="text-xs text-muted-foreground">
+            Korca는 GitLab CLI를 통해 REST를 사용합니다.
+          </p>
         </div>
         <Button
           type="button"
@@ -151,17 +153,17 @@ export function GitLabRateLimitPanel({ className }: { className?: string }): Rea
           size="icon-xs"
           onClick={() => void refresh(true)}
           disabled={isFetching}
-          aria-label="Refresh GitLab API budget"
+          aria-label="GitLab API 사용량 새로고침"
         >
           <RefreshCw className={cn('size-3.5', isFetching && 'animate-spin')} />
         </Button>
       </div>
       {hasError ? (
-        <div className="text-xs text-muted-foreground">GitLab API budget is unavailable.</div>
+        <div className="text-xs text-muted-foreground">GitLab API 사용량을 사용할 수 없습니다.</div>
       ) : snapshot ? (
         <GitLabRateLimitRows snapshot={snapshot} />
       ) : (
-        <div className="text-xs text-muted-foreground">Loading GitLab API budget...</div>
+        <div className="text-xs text-muted-foreground">GitLab API 사용량을 불러오는 중...</div>
       )}
     </div>
   )

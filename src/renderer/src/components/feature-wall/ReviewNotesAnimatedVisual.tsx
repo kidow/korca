@@ -342,7 +342,7 @@ export function ReviewNotesAnimatedVisual(props: { reducedMotion: boolean }): JS
         <span className="ravs-diff-path">src/server/migrate.ts (diff)</span>
         <span className="ravs-ai-chip" data-ai-notes-chip>
           <button type="button" className="ravs-count-btn">
-            <MessageIcon /> AI notes{' '}
+            <MessageIcon /> AI 노트{' '}
             <span className="ravs-count-num" data-ai-count>
               0
             </span>
@@ -371,20 +371,20 @@ export function ReviewNotesAnimatedVisual(props: { reducedMotion: boolean }): JS
         </button>
         <div className="ravs-popover" data-note-popover>
           <div className="ravs-pop-label">
-            Line <span data-pop-line>?</span>
+            줄 <span data-pop-line>?</span>
           </div>
           <div className="ravs-pop-input" data-pop-input />
           <div className="ravs-pop-footer">
             <button type="button" className="ravs-pop-btn is-cancel">
-              Cancel
+              취소
             </button>
             <button type="button" className="ravs-pop-btn is-add">
-              Add note <CornerEnterIcon />
+              노트 추가 <CornerEnterIcon />
             </button>
           </div>
         </div>
         <div className="ravs-send-menu" data-send-menu>
-          <div className="ravs-menu-section">Send notes to</div>
+          <div className="ravs-menu-section">노트 전송 대상</div>
           <div className="ravs-menu-row" data-send-row="claude">
             <ClaudeLogo />
             <span>Claude Code</span>

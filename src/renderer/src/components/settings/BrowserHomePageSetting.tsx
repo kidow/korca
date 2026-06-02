@@ -19,15 +19,15 @@ export function BrowserHomePageSetting({
 }: BrowserHomePageSettingProps): React.JSX.Element {
   return (
     <SearchableSetting
-      title="Default Home Page"
-      description="URL opened when creating a new browser tab. Leave empty to open a blank tab."
+      title="기본 홈 페이지"
+      description="새 브라우저 탭을 만들 때 열릴 URL입니다. 비워 두면 빈 탭이 열립니다."
       keywords={['browser', 'home', 'homepage', 'default', 'url', 'new tab', 'blank']}
       className="flex items-start justify-between gap-4 py-2"
     >
       <div className="min-w-0 shrink space-y-0.5">
-        <Label>Default Home Page</Label>
+        <Label>기본 홈 페이지</Label>
         <p className="text-xs text-muted-foreground">
-          URL opened when creating a new browser tab. Leave empty to open a blank tab.
+          새 브라우저 탭을 만들 때 열릴 URL입니다. 비워 두면 빈 탭이 열립니다.
         </p>
       </div>
       <form
@@ -42,7 +42,7 @@ export function BrowserHomePageSetting({
           const normalized = normalizeBrowserNavigationUrl(trimmed)
           if (normalized && normalized !== KORCA_BROWSER_BLANK_URL) {
             onSave(normalized)
-            toast.success('Home page saved.')
+            toast.success('홈 페이지를 저장했습니다.')
           }
         }}
       >
@@ -56,7 +56,7 @@ export function BrowserHomePageSetting({
           className="h-7 w-52 text-xs"
         />
         <Button type="submit" size="sm" variant="outline" className="h-7 text-xs">
-          Save
+          저장
         </Button>
       </form>
     </SearchableSetting>

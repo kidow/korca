@@ -56,10 +56,10 @@ export function SingleSelectList({
     trimmed.length > 0 &&
     !filtered.some((o) => o.key.toLowerCase() === trimmed.toLowerCase())
   const fallback = loading
-    ? 'Loading…'
+    ? '불러오는 중…'
     : showCustom
-      ? 'Press Enter to use the typed value.'
-      : (error ?? emptyText ?? 'No matches')
+      ? '입력한 값을 사용하려면 엔터를 누르세요.'
+      : (error ?? emptyText ?? '일치 항목 없음')
 
   return (
     <Command shouldFilter={false}>
@@ -77,7 +77,7 @@ export function SingleSelectList({
             onSelect={() => onSelect(trimmed)}
             className="items-center gap-2 px-3 py-1.5 text-xs"
           >
-            <span className="text-muted-foreground">Use</span>
+            <span className="text-muted-foreground">사용</span>
             <span className="truncate font-medium">{trimmed}</span>
           </CommandItem>
         ) : null}
@@ -87,7 +87,7 @@ export function SingleSelectList({
             onSelect={() => onSelect(null)}
             className="gap-2 px-3 py-1.5 text-xs text-muted-foreground"
           >
-            Clear
+            지우기
           </CommandItem>
         ) : null}
         {filtered.map((opt) => {
@@ -134,7 +134,7 @@ export function MultiSelectList({
   const [query, setQuery] = useState('')
   const filtered = useMemo(() => filterOptions(options, query), [options, query])
   const selectedSet = useMemo(() => new Set(selected), [selected])
-  const fallback = loading ? 'Loading…' : (error ?? emptyText ?? 'No matches')
+  const fallback = loading ? '불러오는 중…' : (error ?? emptyText ?? '일치 항목 없음')
 
   const toggle = (key: string): void => {
     const next = new Set(selectedSet)
@@ -162,7 +162,7 @@ export function MultiSelectList({
             onSelect={() => onChange([])}
             className="gap-2 px-3 py-1.5 text-xs text-muted-foreground"
           >
-            Clear ({selected.length})
+            지우기 ({selected.length})
           </CommandItem>
         ) : null}
         {filtered.map((opt) => {

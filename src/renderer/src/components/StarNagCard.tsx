@@ -100,7 +100,7 @@ export function StarNagCard(): React.JSX.Element | null {
             <div className="flex items-center gap-2">
               <Star className="size-4 fill-amber-400/60 text-amber-400/80" />
               <h3 id="star-nag-heading" className="text-sm font-semibold">
-                Enjoying Korca?
+                Korca가 마음에 드시나요?
               </h3>
             </div>
             <Button
@@ -108,20 +108,21 @@ export function StarNagCard(): React.JSX.Element | null {
               size="icon"
               className="size-7 shrink-0"
               onClick={handleClose}
-              aria-label="Dismiss"
+              aria-label="닫기"
             >
               <X className="size-3.5" />
             </Button>
           </div>
 
           <p className="text-sm text-muted-foreground">
-            If Korca has saved you time, a GitHub star goes a long way. It helps other developers
-            discover the project and keeps the team motivated to ship improvements.
+            Korca가 시간을 아껴줬다면 GitHub 별점이 큰 도움이 됩니다. 다른 개발자가 프로젝트를 찾는
+            데 도움이 되고, 팀이 개선 작업을 계속하는 데도 힘이 됩니다.
           </p>
 
           {error ? (
             <p className="text-xs text-destructive">
-              Could not star the repo. Make sure <code>gh</code> is authenticated and try again.
+              저장소에 별점을 남기지 못했습니다. <code>gh</code> 인증이 되어 있는지 확인한 뒤 다시
+              시도하세요.
             </p>
           ) : null}
 
@@ -133,7 +134,7 @@ export function StarNagCard(): React.JSX.Element | null {
             className="mt-0.5 w-full gap-1.5"
           >
             <Star className="size-3.5" />
-            {busy ? 'Starring…' : 'Star on GitHub'}
+            {busy ? '별점 남기는 중…' : 'GitHub에 별점 주기'}
           </Button>
         </div>
       </Card>

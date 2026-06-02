@@ -47,7 +47,7 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
         setSshTargetsMetadata(result)
       } catch {
         if (!opts?.signal?.aborted && mountedRef.current) {
-          toast.error('Failed to load SSH targets')
+          toast.error('SSH 대상 목록을 불러오지 못했습니다')
         }
       }
     },
@@ -63,19 +63,19 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
   const handleSave = async (): Promise<void> => {
     const { host, configHost, username, port } = getSshTargetDraftConnectionFields(form)
     if (!host) {
-      toast.error('Host or SSH config alias is required')
+      toast.error('호스트 또는 SSH 설정 별칭이 필요합니다')
       return
     }
 
     if (isNaN(port) || port < 1 || port > 65535) {
-      toast.error('Port must be between 1 and 65535')
+      toast.error('포트는 1에서 65535 사이여야 합니다')
       return
     }
 
     const graceSeconds = parseRelayGracePeriodSeconds(form)
     if (!isRelayGracePeriodValid(form, graceSeconds)) {
       toast.error(
-        `Relay grace period must be between 60 and ${MAX_SSH_RELAY_GRACE_PERIOD_SECONDS} seconds, or choose keep alive until reset`
+        `릴레이 유예 시간은 60초 이상 ${MAX_SSH_RELAY_GRACE_PERIOD_SECONDS}초 이하여야 하며, 아니면 재설정까지 유지하도록 선택하세요`
       )
       return
     }
@@ -100,14 +100,14 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
       if (!mountedRef.current) {
         return
       }
-      toast.success(editingId ? 'Target updated' : 'Target added')
+      toast.success(editingId ? '대상을 업데이트했습니다' : '대상을 추가했습니다')
       setShowForm(false)
       setEditingId(null)
       setForm(EMPTY_FORM)
       await loadTargets()
     } catch (err) {
       if (mountedRef.current) {
-        toast.error(err instanceof Error ? err.message : 'Failed to save target')
+        toast.error(err instanceof Error ? err.message : '대상을 저장하지 못했습니다')
       }
     }
   }
@@ -134,12 +134,12 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
       // reconnect metadata; clear it so focused SSH tabs stop retrying it.
       clearRemovedSshTargetState(id)
       if (mountedRef.current) {
-        toast.success('Target removed')
+        toast.success('대상을 제거했습니다')
       }
       await loadTargets()
     } catch (err) {
       if (mountedRef.current) {
-        toast.error(err instanceof Error ? err.message : 'Failed to remove target')
+        toast.error(err instanceof Error ? err.message : '대상을 제거하지 못했습니다')
       }
     }
   }
@@ -155,7 +155,7 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
       await window.api.ssh.connect({ targetId })
       recordFeatureInteraction('ssh')
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Connection failed')
+      toast.error(err instanceof Error ? err.message : '연결에 실패했습니다')
     }
   }
 
@@ -164,16 +164,16 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
       await window.api.ssh.disconnect({ targetId })
       recordFeatureInteraction('ssh')
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Disconnect failed')
+      toast.error(err instanceof Error ? err.message : '연결 해제에 실패했습니다')
     }
   }
 
   const handleTerminateSessions = async (targetId: string): Promise<void> => {
     try {
       await terminateSessionsWithReconnect(targetId)
-      toast.success('Remote terminals ended')
+      toast.success('원격 터미널을 종료했습니다')
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to end remote terminals')
+      toast.error(err instanceof Error ? err.message : '원격 터미널을 종료하지 못했습니다')
     }
   }
 
@@ -181,12 +181,12 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
     try {
       await window.api.ssh.resetRelay({ targetId })
       if (mountedRef.current) {
-        toast.success('Remote relay reset')
+        toast.success('원격 릴레이를 초기화했습니다')
       }
       await loadTargets()
     } catch (err) {
       if (mountedRef.current) {
-        toast.error(err instanceof Error ? err.message : 'Failed to reset remote relay')
+        toast.error(err instanceof Error ? err.message : '원격 릴레이를 초기화하지 못했습니다')
       }
     }
   }
@@ -198,14 +198,14 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
       recordFeatureInteraction('ssh')
       if (mountedRef.current) {
         if (result.success) {
-          toast.success('Connection successful')
+          toast.success('연결에 성공했습니다')
         } else {
-          toast.error(result.error ?? 'Connection test failed')
+          toast.error(result.error ?? '연결 테스트에 실패했습니다')
         }
       }
     } catch (err) {
       if (mountedRef.current) {
-        toast.error(err instanceof Error ? err.message : 'Test failed')
+        toast.error(err instanceof Error ? err.message : '테스트에 실패했습니다')
       }
     } finally {
       if (mountedRef.current) {
@@ -224,15 +224,15 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
       recordFeatureInteraction('ssh')
       if (mountedRef.current) {
         if (imported.length === 0) {
-          toast('No new hosts found in ~/.ssh/config')
+          toast('~/.ssh/config에서 새 호스트를 찾지 못했습니다')
         } else {
-          toast.success(`Imported ${imported.length} host${imported.length > 1 ? 's' : ''}`)
+          toast.success(`호스트 ${imported.length}개를 가져왔습니다`)
         }
       }
       await loadTargets()
     } catch (err) {
       if (mountedRef.current) {
-        toast.error(err instanceof Error ? err.message : 'Import failed')
+        toast.error(err instanceof Error ? err.message : '가져오기에 실패했습니다')
       }
     }
   }
@@ -248,9 +248,9 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
       {/* Header row */}
       <div className="flex items-center justify-between gap-3">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium">Targets</p>
+          <p className="text-sm font-medium">대상</p>
           <p className="text-xs text-muted-foreground">
-            Add a remote host to connect to it in Korca.
+            원격 호스트를 추가해 Korca에서 연결하세요.
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
@@ -261,7 +261,7 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
             className="gap-1.5"
           >
             <Upload className="size-3" />
-            Import
+            가져오기
           </Button>
           {!showForm ? (
             <Button
@@ -275,7 +275,7 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
               className="gap-1.5"
             >
               <Plus className="size-3" />
-              Add Target
+              대상 추가
             </Button>
           ) : null}
         </div>
@@ -292,7 +292,7 @@ export function SshPane(_props: SshPaneProps): React.JSX.Element {
             {/* Target list */}
             {targets.length === 0 && !showForm ? (
               <div className="flex items-center justify-center rounded-lg border border-dashed border-border/60 bg-card/30 px-4 py-5 text-sm text-muted-foreground">
-                No SSH targets configured.
+                SSH 대상이 아직 없습니다.
               </div>
             ) : (
               <div className="space-y-2">
