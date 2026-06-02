@@ -1066,7 +1066,7 @@ export function HostedReviewHeaderLink({
         className={className}
         onClick={(e) => {
           e.stopPropagation()
-          // Why: GitHub PR and GitLab MR details live in Orca's Checks tab; keep
+          // Why: GitHub PR and GitLab MR details live in Korca's Checks tab; keep
           // the sidebar workflow in-app instead of opening the browser.
           onOpenHostedReviewInChecks()
         }}
@@ -2475,7 +2475,7 @@ function SourceControlInner(): React.JSX.Element {
           })
         ])
       } catch {
-        toast.warning(`${withObjectParticle(copy.titleLabel)} 만들었지만 Orca가 아직 새로고침하지 못했습니다.`, {
+        toast.warning(`${withObjectParticle(copy.titleLabel)} 만들었지만 Korca가 아직 새로고침하지 못했습니다.`, {
           action: {
             label: `${copy.providerName}에서 열기`,
             onClick: () => window.api.shell.openUrl(result.url)
@@ -3646,7 +3646,7 @@ function SourceControlInner(): React.JSX.Element {
     }
 
     // Why: branch compare shells out to git every tick. The panel only needs
-    // background freshness while Orca is visible; hidden-window time should not
+    // background freshness while Korca is visible; hidden-window time should not
     // burn subprocess work or timer wakeups.
     return installWindowVisibilityInterval({
       run: () => void refreshBranchCompareRef.current(),

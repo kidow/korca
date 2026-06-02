@@ -10,10 +10,10 @@ import type { CliInstallMethod, CliInstallStatus } from '../../shared/cli-instal
 import { buildAppImageCliWrapper } from './appimage-cli-wrapper'
 
 const execFileAsync = promisify(execFile)
-const DEFAULT_MAC_COMMAND_PATH = '/usr/local/bin/orca'
-const DEV_COMMAND_NAME = 'orca-dev'
-const LINUX_COMMAND_NAME = 'orca-ide'
-const LEGACY_LINUX_COMMAND_NAME = 'orca'
+const DEFAULT_MAC_COMMAND_PATH = '/usr/local/bin/korca'
+const DEV_COMMAND_NAME = 'korca-dev'
+const LINUX_COMMAND_NAME = 'korca-ide'
+const LEGACY_LINUX_COMMAND_NAME = 'korca'
 const DEV_LAUNCHER_DIR = ['cli', 'bin']
 const WINDOWS_PATH_COMMAND_TIMEOUT_MS = 5_000
 
@@ -64,8 +64,8 @@ export class CliInstaller {
       // Why: development builds must not claim the production shell command.
       return DEV_COMMAND_NAME
     }
-    // Why: packaged Linux uses `orca-ide` to avoid shadowing GNOME Orca's /usr/bin/orca.
-    return this.platform === 'linux' ? LINUX_COMMAND_NAME : 'orca'
+    // Why: packaged Linux uses `korca-ide` to avoid shadowing GNOME Korca's /usr/bin/korca.
+    return this.platform === 'linux' ? LINUX_COMMAND_NAME : 'korca'
   }
 
   constructor(options: CliInstallerOptions = {}) {
@@ -82,7 +82,7 @@ export class CliInstaller {
       join(this.homePath, 'AppData', 'Local')
     this.processPathEnv = options.processPathEnv ?? process.env.PATH ?? process.env.Path ?? null
     this.commandPathOverride =
-      options.commandPathOverride ?? process.env.ORCA_CLI_INSTALL_PATH ?? null
+      options.commandPathOverride ?? process.env.KORCA_CLI_INSTALL_PATH ?? null
     // Why: resolved once at construction — existsSync must not run on every
     // getStatus() call (hot path). /usr/local/bin is absent by default on Apple
     // Silicon Macs (Homebrew moved to /opt/homebrew); fall back to ~/.local/bin
@@ -93,7 +93,7 @@ export class CliInstaller {
     const candidateMacPath = options.defaultMacCommandPath ?? DEFAULT_MAC_COMMAND_PATH
     this.macCommandPath = existsSync(dirname(candidateMacPath))
       ? candidateMacPath
-      : join(this.homePath, '.local', 'bin', 'orca')
+      : join(this.homePath, '.local', 'bin', 'korca')
     this.privilegedRunner = options.privilegedRunner ?? runMacPrivilegedCommand
     this.userPathReader = options.userPathReader ?? (() => readWindowsUserPath())
     this.userPathWriter = options.userPathWriter ?? ((value) => writeWindowsUserPath(value))
@@ -128,7 +128,7 @@ export class CliInstaller {
         this.isLinuxAppImage() && this.appImagePath
           ? `The AppImage file at ${this.appImagePath} is missing. Move it back or re-run CLI registration from the current AppImage location.`
           : this.isPackaged
-            ? 'The bundled CLI launcher is missing from this Orca build.'
+            ? 'The bundled CLI launcher is missing from this Korca build.'
             : 'Development mode uses a generated launcher for validation only.'
       return {
         platform: this.platform,
@@ -163,7 +163,7 @@ export class CliInstaller {
       throw new Error(status.detail ?? 'CLI registration is unavailable on this build.')
     }
     if (status.state === 'conflict') {
-      throw new Error(`Refusing to replace non-Orca command at ${status.commandPath}.`)
+      throw new Error(`Refusing to replace non-Korca command at ${status.commandPath}.`)
     }
 
     // eslint-disable-next-line unicorn/prefer-ternary -- Why: the install path performs async side effects and is easier to audit as an explicit branch than as an awaited ternary.
@@ -174,7 +174,7 @@ export class CliInstaller {
       await this.installAppImageWrapper(status.commandPath, status.launcherPath)
       await this.removeLegacyLinuxCommandIfManaged(status.launcherPath)
     } else if (this.isWindowsPackagedBundledCommand(status.commandPath, status.launcherPath)) {
-      // Why: packaged Windows already ships resources/bin/orca.cmd. Registration
+      // Why: packaged Windows already ships resources/bin/korca.cmd. Registration
       // only owns the user PATH entry; rewriting the asset makes it recurse.
     } else {
       // Why: mkdir stays here for the Windows wrapper path — the target dir is
@@ -209,10 +209,10 @@ export class CliInstaller {
       return status
     }
     if (status.state === 'conflict') {
-      throw new Error(`Refusing to remove non-Orca command at ${status.commandPath}.`)
+      throw new Error(`Refusing to remove non-Korca command at ${status.commandPath}.`)
     }
     if (status.state === 'stale') {
-      throw new Error(`Refusing to remove a command not owned by Orca at ${status.commandPath}.`)
+      throw new Error(`Refusing to remove a command not owned by Korca at ${status.commandPath}.`)
     }
 
     if (status.installMethod === 'symlink') {
@@ -266,7 +266,7 @@ export class CliInstaller {
         return join(this.homePath, '.local', 'bin', DEV_COMMAND_NAME)
       }
       if (this.platform === 'win32') {
-        return join(this.localAppDataPath, 'Programs', 'Orca Dev', 'bin', `${DEV_COMMAND_NAME}.cmd`)
+        return join(this.localAppDataPath, 'Programs', 'Korca Dev', 'bin', `${DEV_COMMAND_NAME}.cmd`)
       }
     }
 
@@ -278,14 +278,14 @@ export class CliInstaller {
       // Why: Linux does not have a single privileged global shell-command flow
       // equivalent to macOS's /usr/local/bin integration. ~/.local/bin is the
       // least surprising user-scoped location that many distros already expose.
-      // Why `orca-ide`: GNOME Orca (the screen reader) ships /usr/bin/orca on
-      // most Linux distros. Using `orca-ide` avoids shadowing that system
+      // Why `korca-ide`: GNOME Korca (the screen reader) ships /usr/bin/korca on
+      // most Linux distros. Using `korca-ide` avoids shadowing that system
       // command, matching the executableName already used for the Electron binary.
       return join(this.homePath, '.local', 'bin', LINUX_COMMAND_NAME)
     }
 
     if (this.platform === 'win32') {
-      return join(this.localAppDataPath, 'Programs', 'Orca', 'resources', 'bin', 'orca.cmd')
+      return join(this.localAppDataPath, 'Programs', 'Korca', 'resources', 'bin', 'korca.cmd')
     }
 
     return null
@@ -375,8 +375,8 @@ export class CliInstaller {
         return
       }
 
-      // Why: after the Linux command rename, the old Orca-owned `orca` symlink
-      // would keep shadowing GNOME Orca even though the new command is installed.
+      // Why: after the Linux command rename, the old Korca-owned `korca` symlink
+      // would keep shadowing GNOME Korca even though the new command is installed.
       await unlink(legacyCommandPath)
     } catch (error) {
       if (isMissingError(error)) {
@@ -404,7 +404,7 @@ export class CliInstaller {
 
     // Why: AppImage upgrades can leave a legacy symlink into a now-gone FUSE
     // mount; the stable AppImage path is not a sibling of that old target.
-    return /(?:^|[/\\])resources[/\\]bin[/\\]orca$/.test(resolvedTarget)
+    return /(?:^|[/\\])resources[/\\]bin[/\\]korca$/.test(resolvedTarget)
   }
 
   private async installWindowsWrapper(commandPath: string, launcherPath: string): Promise<void> {
@@ -435,7 +435,7 @@ export class CliInstaller {
           supported: true,
           state: 'conflict',
           currentTarget: null,
-          detail: `${commandPath} exists but is not an Orca launcher script.`
+          detail: `${commandPath} exists but is not an Korca launcher script.`
         })
       }
 
@@ -462,7 +462,7 @@ export class CliInstaller {
           supported: true,
           state: 'not_installed',
           currentTarget: null,
-          detail: `Register ${commandPath} to use Orca from the terminal.`
+          detail: `Register ${commandPath} to use Korca from the terminal.`
         })
       }
       throw error
@@ -483,7 +483,7 @@ export class CliInstaller {
           supported: true,
           state: 'conflict',
           currentTarget: null,
-          detail: `${commandPath} exists but is not an Orca symlink.`
+          detail: `${commandPath} exists but is not an Korca symlink.`
         })
       }
 
@@ -503,8 +503,8 @@ export class CliInstaller {
         detail: isInstalled
           ? `Registered at ${commandPath}.`
           : isManagedStaleTarget
-            ? `${commandPath} points to an older Orca launcher.`
-            : `${commandPath} points to a non-Orca launcher.`
+            ? `${commandPath} points to an older Korca launcher.`
+            : `${commandPath} points to a non-Korca launcher.`
       })
     } catch (error) {
       if (isMissingError(error)) {
@@ -515,7 +515,7 @@ export class CliInstaller {
           supported: true,
           state: 'not_installed',
           currentTarget: null,
-          detail: `Register ${commandPath} to use Orca from the terminal.`
+          detail: `Register ${commandPath} to use Korca from the terminal.`
         })
       }
       throw error
@@ -538,7 +538,7 @@ export class CliInstaller {
     }
 
     if (this.platform === 'darwin') {
-      // Why: prior packaged installs can leave a symlink to an older Orca.app
+      // Why: prior packaged installs can leave a symlink to an older Korca.app
       // resources launcher, but arbitrary user-owned symlinks must not be replaced.
       return /(?:^|[/\\])[^/\\]+\.app[/\\]Contents[/\\]Resources[/\\]bin[/\\][^/\\]+$/.test(
         resolvedTarget
@@ -565,7 +565,7 @@ export class CliInstaller {
     const siblingDevLauncherDir = resolve(siblingDevUserDataPath, ...DEV_LAUNCHER_DIR)
 
     // Why: development builds generate launchers under the sibling `*-dev`
-    // profile; packaged Orca must be able to reclaim that public command.
+    // profile; packaged Korca must be able to reclaim that public command.
     return (
       basename(siblingDevUserDataPath) === `${basename(packagedUserDataPath)}-dev` &&
       isPathInsideOrEqual(siblingDevLauncherDir, resolvedTarget)
@@ -603,7 +603,7 @@ export class CliInstaller {
           supported: true,
           state: 'conflict',
           currentTarget: null,
-          detail: `${commandPath} exists but is not an Orca launcher script.`
+          detail: `${commandPath} exists but is not an Korca launcher script.`
         })
       }
 
@@ -642,7 +642,7 @@ export class CliInstaller {
           supported: true,
           state: 'not_installed',
           currentTarget: null,
-          detail: `Register ${commandPath} to use Orca from Command Prompt or PowerShell.`
+          detail: `Register ${commandPath} to use Korca from Command Prompt or PowerShell.`
         })
       }
       throw error
@@ -698,7 +698,7 @@ export class CliInstaller {
         pathConfigured,
         state: 'not_installed',
         currentTarget: null,
-        detail: `Register ${status.commandPath} to use Orca from Command Prompt or PowerShell.`
+        detail: `Register ${status.commandPath} to use Korca from Command Prompt or PowerShell.`
       }
     }
 
@@ -773,7 +773,7 @@ async function ensureDevLauncher(args: {
   )
   await mkdir(dirname(launcherPath), { recursive: true })
 
-  // Why: packaged Orca ships real platform launchers under resources/bin, but
+  // Why: packaged Korca ships real platform launchers under resources/bin, but
   // development builds do not have that stable asset layout. Generating a
   // launcher in userData lets us validate the shell-command flow without
   // changing the packaged registration contract.
@@ -797,13 +797,13 @@ function buildUnixDevLauncher(
 set -euo pipefail
 ELECTRON=${quoteShell(execPathValue)}
 CLI=${quoteShell(cliEntryPath)}
-export ORCA_USER_DATA_PATH=${quoteShell(userDataPath)}
-if [ -z "\${ORCA_APP_EXECUTABLE:-}" ]; then
-  export ORCA_APP_EXECUTABLE="$ELECTRON"
-  export ORCA_APP_EXECUTABLE_NEEDS_APP_ROOT=1
+export KORCA_USER_DATA_PATH=${quoteShell(userDataPath)}
+if [ -z "\${KORCA_APP_EXECUTABLE:-}" ]; then
+  export KORCA_APP_EXECUTABLE="$ELECTRON"
+  export KORCA_APP_EXECUTABLE_NEEDS_APP_ROOT=1
 fi
-export ORCA_NODE_OPTIONS="\${NODE_OPTIONS-}"
-export ORCA_NODE_REPL_EXTERNAL_MODULE="\${NODE_REPL_EXTERNAL_MODULE-}"
+export KORCA_NODE_OPTIONS="\${NODE_OPTIONS-}"
+export KORCA_NODE_REPL_EXTERNAL_MODULE="\${NODE_REPL_EXTERNAL_MODULE-}"
 unset NODE_OPTIONS
 unset NODE_REPL_EXTERNAL_MODULE
 ELECTRON_RUN_AS_NODE=1 "$ELECTRON" "$CLI" "$@"
@@ -819,13 +819,13 @@ function buildWindowsDevLauncher(
 setlocal
 set "ELECTRON=${escapeWindowsBatchValue(execPathValue)}"
 set "CLI=${escapeWindowsBatchValue(cliEntryPath)}"
-set "ORCA_USER_DATA_PATH=${escapeWindowsBatchValue(userDataPath)}"
-if not defined ORCA_APP_EXECUTABLE (
-  set "ORCA_APP_EXECUTABLE=%ELECTRON%"
-  set "ORCA_APP_EXECUTABLE_NEEDS_APP_ROOT=1"
+set "KORCA_USER_DATA_PATH=${escapeWindowsBatchValue(userDataPath)}"
+if not defined KORCA_APP_EXECUTABLE (
+  set "KORCA_APP_EXECUTABLE=%ELECTRON%"
+  set "KORCA_APP_EXECUTABLE_NEEDS_APP_ROOT=1"
 )
-set "ORCA_NODE_OPTIONS=%NODE_OPTIONS%"
-set "ORCA_NODE_REPL_EXTERNAL_MODULE=%NODE_REPL_EXTERNAL_MODULE%"
+set "KORCA_NODE_OPTIONS=%NODE_OPTIONS%"
+set "KORCA_NODE_REPL_EXTERNAL_MODULE=%NODE_REPL_EXTERNAL_MODULE%"
 set NODE_OPTIONS=
 set NODE_REPL_EXTERNAL_MODULE=
 set ELECTRON_RUN_AS_NODE=1
@@ -836,8 +836,8 @@ set ELECTRON_RUN_AS_NODE=1
 function buildWindowsForwarder(launcherPath: string): string {
   return `@echo off
 setlocal
-set "ORCA_LAUNCHER=${escapeWindowsBatchValue(launcherPath)}"
-"%ORCA_LAUNCHER%" %*
+set "KORCA_LAUNCHER=${escapeWindowsBatchValue(launcherPath)}"
+"%KORCA_LAUNCHER%" %*
 `
 }
 
@@ -920,7 +920,7 @@ async function writeWindowsUserPath(value: string): Promise<void> {
   await runWindowsPathCommand([
     '-NoProfile',
     '-Command',
-    // Why: PATH registration must stay user-scoped on Windows so the Orca
+    // Why: PATH registration must stay user-scoped on Windows so the Korca
     // desktop app can manage the public shell command without requiring
     // elevation or mutating machine-wide environment state.
     `[Environment]::SetEnvironmentVariable('Path', ${quotePowerShell(value)}, 'User')`
@@ -978,13 +978,13 @@ export function getBundledLauncherPath(
   resourcesPath: string
 ): string | null {
   if (platform === 'darwin') {
-    return join(resourcesPath, 'bin', 'orca')
+    return join(resourcesPath, 'bin', 'korca')
   }
   if (platform === 'linux') {
     return join(resourcesPath, 'bin', LINUX_COMMAND_NAME)
   }
   if (platform === 'win32') {
-    return join(resourcesPath, 'bin', 'orca.cmd')
+    return join(resourcesPath, 'bin', 'korca.cmd')
   }
   return null
 }

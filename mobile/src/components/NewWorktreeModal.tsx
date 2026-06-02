@@ -21,7 +21,7 @@ import { WORKTREE_CREATE_TIMEOUT_MS } from '../tasks/workspace-create-timeout'
 import {
   isSetupHookTrusted,
   normalizeSetupHookTrust,
-  trustedOrcaHooksWithSetupApproval,
+  trustedKorcaHooksWithSetupApproval,
   wasSetupHookPreviouslyApproved,
   type SetupHookTrust
 } from '../tasks/setup-hook-trust'
@@ -30,7 +30,7 @@ import {
   isMobileTuiAgentEnabled,
   MOBILE_TUI_AGENT_LAUNCH_COMMANDS
 } from '../tasks/mobile-tui-agents'
-import type { PersistedTrustedOrcaHooks, TuiAgent } from '../../../src/shared/types'
+import type { PersistedTrustedKorcaHooks, TuiAgent } from '../../../src/shared/types'
 import type { SshConnectionState } from '../../../src/shared/ssh-types'
 import {
   NEW_WORKTREE_AGENT_OPTIONS as AGENT_OPTIONS,
@@ -230,7 +230,7 @@ function NewWorktreeModalContent({
   const [note, setNote] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [setupHookDetails, setSetupHookDetails] = useState<SetupHookDetails | null>(null)
-  const [trustedOrcaHooks, setTrustedOrcaHooks] = useState<PersistedTrustedOrcaHooks>({})
+  const [trustedKorcaHooks, setTrustedKorcaHooks] = useState<PersistedTrustedKorcaHooks>({})
   const [setupTrustPrompt, setSetupTrustPrompt] = useState<SetupTrustPrompt | null>(null)
   const [setupDecisionChoice, setSetupDecisionChoice] = useState<Exclude<
     SetupDecision,
@@ -304,9 +304,9 @@ function NewWorktreeModalContent({
         }
         if (uiResponse.ok) {
           const result = (uiResponse as RpcSuccess).result as {
-            ui?: { trustedOrcaHooks?: PersistedTrustedOrcaHooks }
+            ui?: { trustedKorcaHooks?: PersistedTrustedKorcaHooks }
           }
-          setTrustedOrcaHooks(result.ui?.trustedOrcaHooks ?? {})
+          setTrustedKorcaHooks(result.ui?.trustedKorcaHooks ?? {})
         }
         if (repoResponse.ok) {
           const result = (repoResponse as RpcSuccess).result as { repos: Repo[] }
@@ -501,17 +501,17 @@ function NewWorktreeModalContent({
     if (!client) {
       return
     }
-    const next = trustedOrcaHooksWithSetupApproval({
-      trust: trustedOrcaHooks,
+    const next = trustedKorcaHooksWithSetupApproval({
+      trust: trustedKorcaHooks,
       repoId,
       contentHash,
       alwaysTrust
     })
-    const response = await client.sendRequest('ui.set', { trustedOrcaHooks: next })
+    const response = await client.sendRequest('ui.set', { trustedKorcaHooks: next })
     if (!response.ok) {
       throw new Error(response.error.message)
     }
-    setTrustedOrcaHooks(next)
+    setTrustedKorcaHooks(next)
   }
 
   async function handleCreate(options: CreateOptions = {}) {
@@ -598,16 +598,16 @@ function NewWorktreeModalContent({
         setupDecision === 'run' &&
         setupTrust &&
         setupTrust.contentHash !== options.approvedSetupContentHash &&
-        !isSetupHookTrusted(trustedOrcaHooks, selectedRepo.id, setupTrust.contentHash)
+        !isSetupHookTrusted(trustedKorcaHooks, selectedRepo.id, setupTrust.contentHash)
       ) {
-        // Why: desktop prompts before running repo-owned orca.yaml setup hooks.
+        // Why: desktop prompts before running repo-owned korca.yaml setup hooks.
         // Mobile stores the same trust hash so approvals carry across surfaces.
         setSetupTrustPrompt({
           repoId: selectedRepo.id,
           repoName: selectedRepo.displayName,
           scriptContent: setupTrust.scriptContent,
           contentHash: setupTrust.contentHash,
-          previouslyApproved: wasSetupHookPreviouslyApproved(trustedOrcaHooks, selectedRepo.id)
+          previouslyApproved: wasSetupHookPreviouslyApproved(trustedKorcaHooks, selectedRepo.id)
         })
         return
       }
@@ -827,7 +827,7 @@ function NewWorktreeModalContent({
                       {setupSource && (
                         <View style={styles.sourceBadge}>
                           <Text style={styles.sourceBadgeText}>
-                            {setupSource === 'orca.yaml' ? 'ORCA.YAML' : 'HOOKS'}
+                            {setupSource === 'korca.yaml' ? 'KORCA.YAML' : 'HOOKS'}
                           </Text>
                         </View>
                       )}
@@ -937,7 +937,7 @@ function NewWorktreeModalContent({
                   : `Run setup from ${setupTrustPrompt.repoName}?`}
               </Text>
               <Text style={styles.subtitle}>
-                This repository's orca.yaml runs before the workspace starts. Only run it if you
+                This repository's korca.yaml runs before the workspace starts. Only run it if you
                 trust this repository.
               </Text>
             </View>

@@ -20,44 +20,44 @@ describe('resolveRepoBackedProjectDialogState', () => {
 
 describe('resolveMissingRepoProjectDialogState', () => {
   it('waits for the slug index before closing missing-repo dialogs', () => {
-    const slugDialog = { origin: { owner: 'stablyai', repo: 'orca' } }
-    const repoNotInOrca = { owner: 'stablyai', repo: 'orca', url: null }
+    const slugDialog = { origin: { owner: 'stablyai', repo: 'korca' } }
+    const repoNotInKorca = { owner: 'stablyai', repo: 'korca', url: null }
 
     expect(
       resolveMissingRepoProjectDialogState({
         slugIndexReady: false,
         slugDialog,
-        repoNotInOrca,
+        repoNotInKorca,
         lookupSlug: () => ['repo-1']
       })
-    ).toEqual({ slugDialog, repoNotInOrca })
+    ).toEqual({ slugDialog, repoNotInKorca })
   })
 
   it('clears slug fallback dialogs once the repo slug resolves', () => {
-    const slugDialog = { origin: { owner: 'stablyai', repo: 'orca' } }
-    const repoNotInOrca = { owner: 'other', repo: 'tool', url: null }
+    const slugDialog = { origin: { owner: 'stablyai', repo: 'korca' } }
+    const repoNotInKorca = { owner: 'other', repo: 'tool', url: null }
     const result = resolveMissingRepoProjectDialogState({
       slugIndexReady: true,
       slugDialog,
-      repoNotInOrca,
-      lookupSlug: (slug) => (slug === 'stablyai/orca' ? ['repo-1'] : [])
+      repoNotInKorca,
+      lookupSlug: (slug) => (slug === 'stablyai/korca' ? ['repo-1'] : [])
     })
 
     expect(result.slugDialog).toBeNull()
-    expect(result.repoNotInOrca).toBe(repoNotInOrca)
+    expect(result.repoNotInKorca).toBe(repoNotInKorca)
   })
 
-  it('clears repo-not-in-orca dialogs once the repo slug resolves', () => {
+  it('clears repo-not-in-korca dialogs once the repo slug resolves', () => {
     const slugDialog = { origin: { owner: 'other', repo: 'tool' } }
-    const repoNotInOrca = { owner: 'stablyai', repo: 'orca', url: null }
+    const repoNotInKorca = { owner: 'stablyai', repo: 'korca', url: null }
     const result = resolveMissingRepoProjectDialogState({
       slugIndexReady: true,
       slugDialog,
-      repoNotInOrca,
-      lookupSlug: (slug) => (slug === 'stablyai/orca' ? ['repo-1'] : [])
+      repoNotInKorca,
+      lookupSlug: (slug) => (slug === 'stablyai/korca' ? ['repo-1'] : [])
     })
 
     expect(result.slugDialog).toBe(slugDialog)
-    expect(result.repoNotInOrca).toBeNull()
+    expect(result.repoNotInKorca).toBeNull()
   })
 })

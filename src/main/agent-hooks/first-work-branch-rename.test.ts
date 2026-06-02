@@ -98,7 +98,7 @@ function makeDeps(overrides: Partial<FirstWorkBranchRenameDeps> = {}): {
       getRepo: () => repo,
       getAgentEnvResolvers: () => undefined,
       getCurrentDisplayName: () => 'Nautilus-8',
-      canRenameOrcaCreatedBranch: () => true,
+      canRenameKorcaCreatedBranch: () => true,
       setDisplayName,
       resolveWorktreeIdForTab: () => WORKTREE_ID,
       onRenamed,
@@ -274,7 +274,7 @@ describe('maybeAutoRenameBranchOnFirstWork', () => {
   })
 
   it('leaves ineligible branches untouched even when their leaf is a creature name', async () => {
-    const { deps, onRenamed } = makeDeps({ canRenameOrcaCreatedBranch: () => false })
+    const { deps, onRenamed } = makeDeps({ canRenameKorcaCreatedBranch: () => false })
     await maybeAutoRenameBranchOnFirstWork(workingEvent(), deps)
     expect(generateBranchNameMock).not.toHaveBeenCalled()
     expect(onRenamed).not.toHaveBeenCalled()

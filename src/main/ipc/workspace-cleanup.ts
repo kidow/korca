@@ -7,7 +7,7 @@ import { gitExecFileAsync } from '../git/runner'
 import { listRepoWorktrees, createFolderWorktree } from '../repo-worktrees'
 import { getSshGitProvider } from '../providers/ssh-git-dispatch'
 import type { IGitProvider, IPtyProvider } from '../providers/types'
-import type { OrcaRuntimeService } from '../runtime/orca-runtime'
+import type { KorcaRuntimeService } from '../runtime/korca-runtime'
 import { listRegisteredPtys } from '../memory/pty-registry'
 import { getSshPtyProvider } from './pty'
 import { isFolderRepo } from '../../shared/repo-kind'
@@ -49,7 +49,7 @@ type GitEvidence = {
 }
 
 type WorkspaceCleanupHandlerDeps = {
-  runtime?: OrcaRuntimeService
+  runtime?: KorcaRuntimeService
   getLocalPtyProvider?: () => IPtyProvider
 }
 
@@ -231,7 +231,7 @@ async function scanRepoWorkspaces(args: {
     } else if (repo.connectionId) {
       provider = getSshGitProvider(repo.connectionId) ?? null
       if (!provider) {
-        // Why: cleanup should reflect only workspaces Orca can currently
+        // Why: cleanup should reflect only workspaces Korca can currently
         // inspect. Disconnected SSH repos are skipped in broad scans.
         return {
           scannedAt,
@@ -256,7 +256,7 @@ async function scanRepoWorkspaces(args: {
   } catch (error) {
     console.error('Workspace cleanup repo scan failed', error)
     if (repo.connectionId && !targetWorktreeId) {
-      // Why: broad cleanup only shows remote workspaces Orca can inspect now.
+      // Why: broad cleanup only shows remote workspaces Korca can inspect now.
       // A connected SSH repo that fails mid-scan is omitted, not bannered.
       return { scannedAt, candidates: [], errors: [] }
     }

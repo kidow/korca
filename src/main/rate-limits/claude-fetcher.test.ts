@@ -69,7 +69,7 @@ describe('fetchClaudeRateLimits', () => {
     readFileMock.mockRejectedValue(new Error('missing file'))
     vi.mocked(readActiveClaudeKeychainCredentialsStrict).mockResolvedValue(null)
     vi.mocked(readManagedClaudeKeychainCredentials).mockResolvedValue(null)
-    appGetPathMock.mockReturnValue('/tmp/orca-claude-fetcher-test')
+    appGetPathMock.mockReturnValue('/tmp/korca-claude-fetcher-test')
     resolveProxyMock.mockResolvedValue('DIRECT')
     netFetchMock.mockResolvedValue(
       new Response(
@@ -327,11 +327,11 @@ describe('fetchClaudeRateLimits', () => {
 
   it('does not read inactive managed credentials from unowned auth paths', async () => {
     setPlatform('linux')
-    tempDir = mkdtempSync(join(tmpdir(), 'orca-claude-fetcher-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'korca-claude-fetcher-'))
     appGetPathMock.mockReturnValue(tempDir)
     const unownedAuthPath = join(tempDir, 'unowned', 'auth')
     mkdirSync(unownedAuthPath, { recursive: true })
-    writeFileSync(join(unownedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(unownedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(
       join(unownedAuthPath, '.credentials.json'),
       JSON.stringify({

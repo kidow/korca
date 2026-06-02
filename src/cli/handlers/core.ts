@@ -1,6 +1,6 @@
 import type { CommandHandler } from '../dispatch'
 import { formatCliStatus, formatStatus, printResult } from '../format'
-import { RuntimeClientError, serveOrcaApp } from '../runtime-client'
+import { RuntimeClientError, serveKorcaApp } from '../runtime-client'
 
 function getOptionalServePort(flags: Map<string, string | boolean>): string | null {
   if (!flags.has('port')) {
@@ -19,7 +19,7 @@ function getOptionalServePort(flags: Map<string, string | boolean>): string | nu
 
 export const CORE_HANDLERS: Record<string, CommandHandler> = {
   open: async ({ client, json }) => {
-    const result = await client.openOrca()
+    const result = await client.openKorca()
     printResult(result, json, formatCliStatus)
   },
   serve: async ({ flags, json }) => {
@@ -30,7 +30,7 @@ export const CORE_HANDLERS: Record<string, CommandHandler> = {
       )
     }
     const port = getOptionalServePort(flags)
-    const exitCode = await serveOrcaApp({
+    const exitCode = await serveKorcaApp({
       json,
       port,
       pairingAddress:

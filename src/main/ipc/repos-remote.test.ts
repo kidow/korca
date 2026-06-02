@@ -523,7 +523,7 @@ describe('projectGroups IPC validation', () => {
 
   it('returns partial local scan results after cancellation', async () => {
     vi.mocked(isGitRepo).mockReturnValue(false)
-    const root = await mkdtemp(join(tmpdir(), 'orca-nested-local-cancel-'))
+    const root = await mkdtemp(join(tmpdir(), 'korca-nested-local-cancel-'))
     try {
       await mkdir(join(root, 'api', '.git'), { recursive: true })
       await mkdir(join(root, 'web', '.git'), { recursive: true })
@@ -1092,7 +1092,7 @@ describe('repos:add + repos:clone', () => {
   const tempRoots: string[] = []
 
   const createTempRoot = async (): Promise<string> => {
-    const root = await mkdtemp(join(tmpdir(), 'orca-repos-clone-'))
+    const root = await mkdtemp(join(tmpdir(), 'korca-repos-clone-'))
     tempRoots.push(root)
     return root
   }
@@ -1130,7 +1130,7 @@ describe('repos:add + repos:clone', () => {
     expect(result).toHaveProperty('repo.badgeColor', DEFAULT_REPO_BADGE_COLOR)
   })
 
-  it('defaults new git repos:add records to hiding non-Orca worktrees', async () => {
+  it('defaults new git repos:add records to hiding non-Korca worktrees', async () => {
     const result = await handlers.get('repos:add')!(null, { path: '/tmp/from-add', kind: 'git' })
 
     expect(mockStore.addRepo).toHaveBeenCalledWith(
@@ -1170,13 +1170,13 @@ describe('repos:add + repos:clone', () => {
     const destination = await createTempRoot()
 
     const result = await handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
 
     expect(mockStore.addRepo).toHaveBeenCalledWith(
       expect.objectContaining({
-        path: join(destination, 'orca'),
+        path: join(destination, 'korca'),
         badgeColor: DEFAULT_REPO_BADGE_COLOR,
         kind: 'git',
         externalWorktreeVisibility: 'hide',
@@ -1189,11 +1189,11 @@ describe('repos:add + repos:clone', () => {
 
   it('preserves existing badgeColor when repos:clone upgrades folder->git after dedupe', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const existing = {
       id: 'folder-repo',
       path: clonePath,
-      displayName: 'orca',
+      displayName: 'korca',
       badgeColor: '#8b5cf6',
       addedAt: 1,
       kind: 'folder'
@@ -1203,7 +1203,7 @@ describe('repos:add + repos:clone', () => {
     mockStore.updateRepo.mockReturnValue(upgraded)
 
     const result = await handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
 
@@ -1248,7 +1248,7 @@ describe('repos:add + repos:clone', () => {
 
     await expect(
       handlers.get('repos:clone')!(null, {
-        url: 'https://example.com/orca.git',
+        url: 'https://example.com/korca.git',
         destination
       })
     ).rejects.toThrow('Clone destination must be an absolute path')
@@ -1262,7 +1262,7 @@ describe('repos:add + repos:clone', () => {
 
     await expect(
       handlers.get('repos:clone')!(null, {
-        url: 'https://example.com/team\\orca.git',
+        url: 'https://example.com/team\\korca.git',
         destination
       })
     ).rejects.toThrow('Invalid repository name derived from URL')
@@ -1274,15 +1274,15 @@ describe('repos:add + repos:clone', () => {
     const destination = await createTempRoot()
 
     const result = await handlers.get('repos:clone')!(null, {
-      url: 'C:\\src\\orca.git',
+      url: 'C:\\src\\korca.git',
       destination
     })
 
     expect(gitSpawnMock).toHaveBeenCalledWith(
-      ['clone', '--progress', '--', 'C:\\src\\orca.git', join(destination, 'orca')],
+      ['clone', '--progress', '--', 'C:\\src\\korca.git', join(destination, 'korca')],
       expect.objectContaining({ cwd: destination })
     )
-    expect(result).toHaveProperty('path', join(destination, 'orca'))
+    expect(result).toHaveProperty('path', join(destination, 'korca'))
   })
 
   it('treats cloneAbort with no active clone as a no-op', async () => {
@@ -1291,14 +1291,14 @@ describe('repos:add + repos:clone', () => {
 
   it('does not remove an existing target directory when aborting a pending clone', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     await mkdir(clonePath)
     await writeFile(join(clonePath, 'user-file.txt'), 'keep me')
     const proc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(proc)
 
     const clonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1313,13 +1313,13 @@ describe('repos:add + repos:clone', () => {
 
   it('does not remove an existing target file when aborting a pending clone', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     await writeFile(clonePath, 'existing file')
     const proc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(proc)
 
     const clonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1333,12 +1333,12 @@ describe('repos:add + repos:clone', () => {
 
   it('removes a fresh clone target only after the aborted process closes unsuccessfully', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const proc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(proc)
 
     const clonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1353,13 +1353,13 @@ describe('repos:add + repos:clone', () => {
 
   it('removes an owned fresh clone target when git exits unsuccessfully', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const partialFile = join(clonePath, 'partial.txt')
     const proc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(proc)
 
     const clonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1374,13 +1374,13 @@ describe('repos:add + repos:clone', () => {
 
   it('removes an owned fresh clone target when git spawn emits an error', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const partialFile = join(clonePath, 'partial.txt')
     const proc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(proc)
 
     const clonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1394,12 +1394,12 @@ describe('repos:add + repos:clone', () => {
 
   it('keeps a fresh clone target when abort races with a successful close', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const proc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(proc)
 
     const clonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1416,7 +1416,7 @@ describe('repos:add + repos:clone', () => {
 
   it('dedupes retry when abort races with a successful clone close', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const repos: unknown[] = []
     mockStore.getRepos.mockImplementation(() => repos)
     mockStore.addRepo.mockImplementation((repo: unknown) => {
@@ -1427,14 +1427,14 @@ describe('repos:add + repos:clone', () => {
     gitSpawnMock.mockReturnValueOnce(firstProc).mockReturnValueOnce(secondProc)
 
     const firstClonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
 
     await handlers.get('repos:cloneAbort')!(null, undefined)
     const secondClonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await new Promise((resolve) => setImmediate(resolve))
@@ -1450,7 +1450,7 @@ describe('repos:add + repos:clone', () => {
 
   it('serializes concurrent clones for the same target', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const repos: unknown[] = []
     mockStore.getRepos.mockImplementation(() => repos)
     mockStore.addRepo.mockImplementation((repo: unknown) => {
@@ -1460,11 +1460,11 @@ describe('repos:add + repos:clone', () => {
     gitSpawnMock.mockReturnValueOnce(firstProc)
 
     const firstClonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     const secondClonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1478,14 +1478,14 @@ describe('repos:add + repos:clone', () => {
 
   it('waits for pending abort cleanup before retrying the same clone target', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const partialFile = join(clonePath, 'partial.txt')
     const firstProc = createMockCloneProcess()
     const secondProc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(firstProc).mockReturnValueOnce(secondProc)
 
     const firstClonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))
@@ -1493,7 +1493,7 @@ describe('repos:add + repos:clone', () => {
     await handlers.get('repos:cloneAbort')!(null, undefined)
 
     const secondClonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await new Promise((resolve) => setImmediate(resolve))
@@ -1515,13 +1515,13 @@ describe('repos:add + repos:clone', () => {
 
   it('skips abort cleanup when the claimed target is replaced before close', async () => {
     const destination = await createTempRoot()
-    const clonePath = join(destination, 'orca')
+    const clonePath = join(destination, 'korca')
     const replacementFile = join(clonePath, 'replacement.txt')
     const proc = createMockCloneProcess()
     gitSpawnMock.mockReturnValueOnce(proc)
 
     const clonePromise = handlers.get('repos:clone')!(null, {
-      url: 'https://example.com/orca.git',
+      url: 'https://example.com/korca.git',
       destination
     })
     await waitForAssertion(() => expect(gitSpawnMock).toHaveBeenCalledTimes(1))

@@ -21,7 +21,7 @@ export function decodePairingUrl(url: string): PairingOffer | null {
 // extraction here makes QR scan, paste, and external deep-link flows
 // accept the same URL shapes.
 export function extractPairingCodeFromUrl(url: string): string | null {
-  if (!url.startsWith('orca://pair')) {
+  if (!url.startsWith('korca://pair')) {
     return null
   }
   const queryIndex = url.indexOf('?')
@@ -40,7 +40,7 @@ export function extractPairingCodeFromUrl(url: string): string | null {
   return null
 }
 
-// Why: accept either an `orca://pair?...` URL or the bare base64
+// Why: accept either an `korca://pair?...` URL or the bare base64
 // string so the paste-pair flow can take whichever the user actually
 // copied from desktop.
 export function parsePairingCode(input: string): PairingOffer | null {
@@ -49,7 +49,7 @@ export function parsePairingCode(input: string): PairingOffer | null {
     return null
   }
   try {
-    if (trimmed.startsWith('orca://pair')) {
+    if (trimmed.startsWith('korca://pair')) {
       return decodePairingUrl(trimmed)
     }
     return decodePairingBase64(trimmed)

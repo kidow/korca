@@ -7,14 +7,14 @@ import { join, delimiter } from 'path'
 import { randomUUID } from 'crypto'
 import { type BrowserWindow, type WebContents, ipcMain, app } from 'electron'
 export { getBashShellReadyRcfileContent } from '../providers/local-pty-shell-ready'
-import type { OrcaRuntimeService } from '../runtime/orca-runtime'
+import type { KorcaRuntimeService } from '../runtime/korca-runtime'
 import type { Store } from '../persistence'
 import type { GlobalSettings } from '../../shared/types'
 import { openCodeHookService } from '../opencode/hook-service'
 import { agentHookServer } from '../agent-hooks/server'
 import { isAgentStatusHooksEnabled } from '../agent-hooks/managed-agent-hook-controls'
 import { piTitlebarExtensionService } from '../pi/titlebar-extension-service'
-import { ORCA_PI_AGENT_STATUS_EXTENSION_FILE } from '../pi/agent-status-extension-source'
+import { KORCA_PI_AGENT_STATUS_EXTENSION_FILE } from '../pi/agent-status-extension-source'
 import { detectPiAgentKindFromCommand, type PiAgentKind } from '../../shared/pi-agent-kind'
 import { isPwshAvailable } from '../pwsh'
 import { LocalPtyProvider } from '../providers/local-pty-provider'
@@ -60,7 +60,7 @@ import {
 } from '../agent-hooks/migration-unsupported-pty-state'
 import { parseWslPath } from '../wsl'
 import { mergePersistedWindowsPath } from '../pty/windows-environment-path'
-import { addOrcaWslInteropEnv } from '../pty/wsl-orca-env'
+import { addKorcaWslInteropEnv } from '../pty/wsl-korca-env'
 import type { CodexAccountSelectionTarget } from '../codex-accounts/runtime-selection'
 import { isHostCodexHomeForWsl, isWslCodexHomeForHost } from '../pty/codex-home-wsl-env'
 import { buildConfiguredProxyEnv, type NetworkProxySettings } from '../../shared/network-proxy'
@@ -97,14 +97,14 @@ const ptyPaneKey = new Map<string, string>()
 const paneKeyPtyId = new Map<string, string>()
 
 const AGENT_HOOK_RUNTIME_ENV_KEYS = [
-  'ORCA_AGENT_HOOK_PORT',
-  'ORCA_AGENT_HOOK_TOKEN',
-  'ORCA_AGENT_HOOK_ENV',
-  'ORCA_AGENT_HOOK_VERSION',
-  'ORCA_AGENT_HOOK_ENDPOINT',
+  'KORCA_AGENT_HOOK_PORT',
+  'KORCA_AGENT_HOOK_TOKEN',
+  'KORCA_AGENT_HOOK_ENV',
+  'KORCA_AGENT_HOOK_VERSION',
+  'KORCA_AGENT_HOOK_ENDPOINT',
   // Why: PR 2778 briefly exported this scoped Claude settings path. Keep
   // deleting stale inherited values so older PTYs cannot leak the reverted path.
-  'ORCA_CLAUDE_AGENT_STATUS_SETTINGS'
+  'KORCA_CLAUDE_AGENT_STATUS_SETTINGS'
 ] as const
 
 export function getPtyIdForPaneKey(paneKey: string): string | undefined {
@@ -316,7 +316,7 @@ function shouldSkipCodexHomeEnvForWindowsShell(
   return isWslShellName(shellPath) || (typeof cwd === 'string' && parseWslPath(cwd) !== null)
 }
 
-const CODEX_HOME_ENV_KEYS = ['CODEX_HOME', 'ORCA_CODEX_HOME'] as const
+const CODEX_HOME_ENV_KEYS = ['CODEX_HOME', 'KORCA_CODEX_HOME'] as const
 type GetSelectedCodexHomePath = (target?: CodexAccountSelectionTarget) => string | null
 type PrepareClaudeAuth = (
   target?: ClaudeAccountSelectionTarget
@@ -361,9 +361,9 @@ function resolvePiAgentSourceDir(
   baseEnv: Record<string, string>,
   kind: PiAgentKind
 ): string | undefined {
-  const sourceKey = kind === 'omp' ? 'ORCA_OMP_SOURCE_AGENT_DIR' : 'ORCA_PI_SOURCE_AGENT_DIR'
-  const overlayKey = kind === 'omp' ? 'ORCA_OMP_CODING_AGENT_DIR' : 'ORCA_PI_CODING_AGENT_DIR'
-  const otherOverlayKey = kind === 'omp' ? 'ORCA_PI_CODING_AGENT_DIR' : 'ORCA_OMP_CODING_AGENT_DIR'
+  const sourceKey = kind === 'omp' ? 'KORCA_OMP_SOURCE_AGENT_DIR' : 'KORCA_PI_SOURCE_AGENT_DIR'
+  const overlayKey = kind === 'omp' ? 'KORCA_OMP_CODING_AGENT_DIR' : 'KORCA_PI_CODING_AGENT_DIR'
+  const otherOverlayKey = kind === 'omp' ? 'KORCA_PI_CODING_AGENT_DIR' : 'KORCA_OMP_CODING_AGENT_DIR'
 
   const sourceDir = readEnvWithProcessFallback(baseEnv, sourceKey)
   if (sourceDir) {
@@ -373,7 +373,7 @@ function resolvePiAgentSourceDir(
   const publicDir = readEnvWithProcessFallback(baseEnv, 'PI_CODING_AGENT_DIR')
   const ownOverlayDir = readEnvWithProcessFallback(baseEnv, overlayKey)
   const otherOverlayDir = readEnvWithProcessFallback(baseEnv, otherOverlayKey)
-  // Why: if PI_CODING_AGENT_DIR is just a restored Orca overlay from either
+  // Why: if PI_CODING_AGENT_DIR is just a restored Korca overlay from either
   // kind and the matching source shadow is absent, remirroring it would leak
   // another agent's overlay tree into this launch. Fall through to defaults.
   if (publicDir && publicDir !== ownOverlayDir && publicDir !== otherOverlayDir) {
@@ -391,23 +391,23 @@ function resolveScopedPiAgentSourceDir(
   baseEnv: Record<string, string>,
   kind: PiAgentKind
 ): string | undefined {
-  const sourceKey = kind === 'omp' ? 'ORCA_OMP_SOURCE_AGENT_DIR' : 'ORCA_PI_SOURCE_AGENT_DIR'
+  const sourceKey = kind === 'omp' ? 'KORCA_OMP_SOURCE_AGENT_DIR' : 'KORCA_PI_SOURCE_AGENT_DIR'
   return readEnvWithProcessFallback(baseEnv, sourceKey)
 }
 
 function getPiAgentStatusExtensionPath(agentDir: string): string {
-  return join(agentDir, 'extensions', ORCA_PI_AGENT_STATUS_EXTENSION_FILE)
+  return join(agentDir, 'extensions', KORCA_PI_AGENT_STATUS_EXTENSION_FILE)
 }
 
 function clearPiAgentShadowEnv(baseEnv: Record<string, string>, kind: PiAgentKind): void {
   if (kind === 'omp') {
-    delete baseEnv.ORCA_OMP_CODING_AGENT_DIR
-    delete baseEnv.ORCA_OMP_SOURCE_AGENT_DIR
-    delete baseEnv.ORCA_OMP_STATUS_EXTENSION
+    delete baseEnv.KORCA_OMP_CODING_AGENT_DIR
+    delete baseEnv.KORCA_OMP_SOURCE_AGENT_DIR
+    delete baseEnv.KORCA_OMP_STATUS_EXTENSION
     return
   }
-  delete baseEnv.ORCA_PI_CODING_AGENT_DIR
-  delete baseEnv.ORCA_PI_SOURCE_AGENT_DIR
+  delete baseEnv.KORCA_PI_CODING_AGENT_DIR
+  delete baseEnv.KORCA_PI_SOURCE_AGENT_DIR
 }
 
 function exposePiAgentOverlayEnv(
@@ -417,24 +417,24 @@ function exposePiAgentOverlayEnv(
   sourceDir: string | undefined
 ): void {
   if (kind === 'omp') {
-    baseEnv.ORCA_OMP_CODING_AGENT_DIR = overlayDir
-    baseEnv.ORCA_OMP_STATUS_EXTENSION = getPiAgentStatusExtensionPath(overlayDir)
+    baseEnv.KORCA_OMP_CODING_AGENT_DIR = overlayDir
+    baseEnv.KORCA_OMP_STATUS_EXTENSION = getPiAgentStatusExtensionPath(overlayDir)
     if (sourceDir) {
-      // Why: preserve the original OMP root across nested Orca terminals; the
+      // Why: preserve the original OMP root across nested Korca terminals; the
       // public env var is intentionally restored to the current PTY overlay.
-      baseEnv.ORCA_OMP_SOURCE_AGENT_DIR = sourceDir
+      baseEnv.KORCA_OMP_SOURCE_AGENT_DIR = sourceDir
     } else {
-      delete baseEnv.ORCA_OMP_SOURCE_AGENT_DIR
+      delete baseEnv.KORCA_OMP_SOURCE_AGENT_DIR
     }
     return
   }
-  baseEnv.ORCA_PI_CODING_AGENT_DIR = overlayDir
+  baseEnv.KORCA_PI_CODING_AGENT_DIR = overlayDir
   if (sourceDir) {
-    // Why: preserve the original Pi root across nested Orca terminals; the
+    // Why: preserve the original Pi root across nested Korca terminals; the
     // public env var is intentionally restored to the current PTY overlay.
-    baseEnv.ORCA_PI_SOURCE_AGENT_DIR = sourceDir
+    baseEnv.KORCA_PI_SOURCE_AGENT_DIR = sourceDir
   } else {
-    delete baseEnv.ORCA_PI_SOURCE_AGENT_DIR
+    delete baseEnv.KORCA_PI_SOURCE_AGENT_DIR
   }
 }
 
@@ -458,9 +458,9 @@ function getInheritedAgentHookEnvKeysToDelete(
   return AGENT_HOOK_RUNTIME_ENV_KEYS.filter((key) => env[key] === undefined)
 }
 
-// Why: when agent status is disabled, a nested Orca terminal can still pass
+// Why: when agent status is disabled, a nested Korca terminal can still pass
 // through a prior PTY's OpenCode/Pi overlay env. Restore the user's original
-// source dir when Orca recorded one, otherwise strip only values known to be ours.
+// source dir when Korca recorded one, otherwise strip only values known to be ours.
 function restoreOrStripOverlayEnv(
   baseEnv: Record<string, string>,
   keys: {
@@ -483,7 +483,7 @@ function restoreOrStripOverlayEnv(
 /**
  * Mutates `baseEnv` in place with all host-local PTY env vars and returns it.
  *
- * This is the single source of truth for the env shape an Orca PTY needs
+ * This is the single source of truth for the env shape an Korca PTY needs
  * BEFORE the provider-specific wrapper (LocalPtyProvider's TERM/LANG defaults,
  * DaemonPtyAdapter's subprocess env). Callers are responsible for the SSH
  * guard — if `args.connectionId` is set, do NOT call this function, because
@@ -507,8 +507,8 @@ export function buildPtyHostEnv(
   // in lock-step across spawn paths without pushing process.env onto the
   // IPC wire unnecessarily.
   const preexistingOpenCodeConfigDir =
-    baseEnv.ORCA_OPENCODE_SOURCE_CONFIG_DIR ??
-    process.env.ORCA_OPENCODE_SOURCE_CONFIG_DIR ??
+    baseEnv.KORCA_OPENCODE_SOURCE_CONFIG_DIR ??
+    process.env.KORCA_OPENCODE_SOURCE_CONFIG_DIR ??
     baseEnv.OPENCODE_CONFIG_DIR ??
     process.env.OPENCODE_CONFIG_DIR ??
     readShellStartupEnvVar(
@@ -530,36 +530,36 @@ export function buildPtyHostEnv(
 
   if (opts.agentStatusHooksEnabled) {
     // Why: OPENCODE_CONFIG_DIR is a singular path, not a colon-list, so a user
-    // value cannot coexist with an Orca-only injection. Hand the user's value
+    // value cannot coexist with an Korca-only injection. Hand the user's value
     // (when present) to the hook service and let it materialize a per-PTY
-    // mirror overlay that lets the user's plugins and Orca's status plugin
+    // mirror overlay that lets the user's plugins and Korca's status plugin
     // load together — same pattern Pi uses below for PI_CODING_AGENT_DIR. See
     // docs/opencode-config-dir-collision.md.
     Object.assign(baseEnv, openCodeHookService.buildPtyEnv(id, preexistingOpenCodeConfigDir))
     if (baseEnv.OPENCODE_CONFIG_DIR) {
       // Why: ~/.zshrc can re-export the user's default after spawn; shell-ready
       // wrappers restore this PTY-scoped value after user startup files run.
-      baseEnv.ORCA_OPENCODE_CONFIG_DIR = baseEnv.OPENCODE_CONFIG_DIR
+      baseEnv.KORCA_OPENCODE_CONFIG_DIR = baseEnv.OPENCODE_CONFIG_DIR
       if (preexistingOpenCodeConfigDir) {
-        // Why: terminals launched from another Orca terminal inherit the overlay
+        // Why: terminals launched from another Korca terminal inherit the overlay
         // as OPENCODE_CONFIG_DIR; keep the original source so overlays do not
         // mirror overlays and drop the user's real config.
-        baseEnv.ORCA_OPENCODE_SOURCE_CONFIG_DIR = preexistingOpenCodeConfigDir
+        baseEnv.KORCA_OPENCODE_SOURCE_CONFIG_DIR = preexistingOpenCodeConfigDir
       }
     }
   } else {
     restoreOrStripOverlayEnv(baseEnv, {
       primary: 'OPENCODE_CONFIG_DIR',
-      overlay: 'ORCA_OPENCODE_CONFIG_DIR',
-      source: 'ORCA_OPENCODE_SOURCE_CONFIG_DIR'
+      overlay: 'KORCA_OPENCODE_CONFIG_DIR',
+      source: 'KORCA_OPENCODE_SOURCE_CONFIG_DIR'
     })
   }
 
-  // Why: Claude/Codex native hooks run inside the shell process, so Orca
+  // Why: Claude/Codex native hooks run inside the shell process, so Korca
   // must inject the loopback receiver coordinates before the agent starts.
   // Without these env vars the global hook config cannot map callbacks back
-  // to the correct Orca pane.
-  // Why: nested Orca terminals can inherit another process's hook endpoint or
+  // to the correct Korca pane.
+  // Why: nested Korca terminals can inherit another process's hook endpoint or
   // token. Strip all hook runtime coordinates before injecting this PTY's fresh
   // server values so callbacks route to the owning app/runtime.
   for (const key of AGENT_HOOK_RUNTIME_ENV_KEYS) {
@@ -609,40 +609,40 @@ export function buildPtyHostEnv(
     // so a nested PTY does not inherit a stale overlay from either agent.
     restoreOrStripOverlayEnv(baseEnv, {
       primary: 'PI_CODING_AGENT_DIR',
-      overlay: 'ORCA_PI_CODING_AGENT_DIR',
-      source: 'ORCA_PI_SOURCE_AGENT_DIR'
+      overlay: 'KORCA_PI_CODING_AGENT_DIR',
+      source: 'KORCA_PI_SOURCE_AGENT_DIR'
     })
     restoreOrStripOverlayEnv(baseEnv, {
       primary: 'PI_CODING_AGENT_DIR',
-      overlay: 'ORCA_OMP_CODING_AGENT_DIR',
-      source: 'ORCA_OMP_SOURCE_AGENT_DIR'
+      overlay: 'KORCA_OMP_CODING_AGENT_DIR',
+      source: 'KORCA_OMP_SOURCE_AGENT_DIR'
     })
-    delete baseEnv.ORCA_OMP_STATUS_EXTENSION
+    delete baseEnv.KORCA_OMP_STATUS_EXTENSION
   }
 
-  // Why: Codex account switching now materializes auth into an Orca-scoped
-  // runtime home, and Codex launched inside Orca terminals must use that same
+  // Why: Codex account switching now materializes auth into an Korca-scoped
+  // runtime home, and Codex launched inside Korca terminals must use that same
   // prepared home as quota fetches and other entry points. Keep the override
-  // PTY-scoped so dev/prod Orcas do not share hooks through ~/.codex.
+  // PTY-scoped so dev/prod Korcas do not share hooks through ~/.codex.
   if (opts.skipCodexHomeEnv) {
     delete baseEnv.CODEX_HOME
-    delete baseEnv.ORCA_CODEX_HOME
+    delete baseEnv.KORCA_CODEX_HOME
   } else if (opts.selectedCodexHomePath) {
     baseEnv.CODEX_HOME = opts.selectedCodexHomePath
     // Why: user startup files may re-export CODEX_HOME; shell-ready wrappers
     // restore this runtime home before Codex can be launched from the prompt.
-    baseEnv.ORCA_CODEX_HOME = opts.selectedCodexHomePath
+    baseEnv.KORCA_CODEX_HOME = opts.selectedCodexHomePath
   }
 
-  // Why: in dev mode the `orca` CLI defaults to the production userData
-  // path, which routes status updates to the packaged Orca instead of this
-  // dev instance. Injecting ORCA_USER_DATA_PATH ensures CLI calls from
+  // Why: in dev mode the `korca` CLI defaults to the production userData
+  // path, which routes status updates to the packaged Korca instead of this
+  // dev instance. Injecting KORCA_USER_DATA_PATH ensures CLI calls from
   // agents running inside dev terminals reach the correct runtime. We also
-  // prepend the dev CLI launcher directory to PATH so `orca` resolves to
-  // the dev build (which supports ORCA_USER_DATA_PATH) instead of the
-  // production binary at /usr/local/bin/orca.
+  // prepend the dev CLI launcher directory to PATH so `korca` resolves to
+  // the dev build (which supports KORCA_USER_DATA_PATH) instead of the
+  // production binary at /usr/local/bin/korca.
   if (!opts.isPackaged) {
-    baseEnv.ORCA_USER_DATA_PATH ??= opts.userDataPath
+    baseEnv.KORCA_USER_DATA_PATH ??= opts.userDataPath
     const devCliBin = join(opts.userDataPath, 'cli', 'bin')
     const inheritedPath = readInheritedPath(baseEnv)
     // Why: avoid a trailing delimiter when PATH is empty — some shells
@@ -653,15 +653,15 @@ export function buildPtyHostEnv(
   }
 
   // Why: GitHub attribution should only affect commands launched from
-  // Orca's own PTYs. Injecting lightweight PATH shims at spawn-time keeps
-  // the behavior local to Orca instead of rewriting user git config or
+  // Korca's own PTYs. Injecting lightweight PATH shims at spawn-time keeps
+  // the behavior local to Korca instead of rewriting user git config or
   // touching external shells.
   if (!opts.githubAttributionEnabled) {
-    delete baseEnv.ORCA_ENABLE_GIT_ATTRIBUTION
-    delete baseEnv.ORCA_GIT_COMMIT_TRAILER
-    delete baseEnv.ORCA_GH_PR_FOOTER
-    delete baseEnv.ORCA_GH_ISSUE_FOOTER
-    delete baseEnv.ORCA_ATTRIBUTION_SHIM_DIR
+    delete baseEnv.KORCA_ENABLE_GIT_ATTRIBUTION
+    delete baseEnv.KORCA_GIT_COMMIT_TRAILER
+    delete baseEnv.KORCA_GH_PR_FOOTER
+    delete baseEnv.KORCA_GH_ISSUE_FOOTER
+    delete baseEnv.KORCA_ATTRIBUTION_SHIM_DIR
   }
   applyTerminalAttributionEnv(baseEnv, {
     enabled: opts.githubAttributionEnabled,
@@ -875,7 +875,7 @@ export function unbindLocalProviderListeners(): void {
 
 export function registerPtyHandlers(
   mainWindow: BrowserWindow,
-  runtime?: OrcaRuntimeService,
+  runtime?: KorcaRuntimeService,
   getSelectedCodexHomePath?: GetSelectedCodexHomePath,
   getSettings?: () => GlobalSettings,
   prepareClaudeAuth?: PrepareClaudeAuth,
@@ -935,19 +935,19 @@ export function registerPtyHandlers(
         })
         // Why: agents need their own terminal handle at process start so they
         // can self-identify in orchestration messages without an extra RPC.
-        const requestedHandle = baseEnv.ORCA_TERMINAL_HANDLE
+        const requestedHandle = baseEnv.KORCA_TERMINAL_HANDLE
         const preAllocatedHandle =
           requestedHandle && trustedTerminalHandleEnv.has(requestedHandle)
             ? requestedHandle
             : runtime?.preAllocateHandleForPty(id)
         if (requestedHandle && requestedHandle !== preAllocatedHandle) {
-          delete env.ORCA_TERMINAL_HANDLE
+          delete env.KORCA_TERMINAL_HANDLE
         }
         if (preAllocatedHandle) {
-          env.ORCA_TERMINAL_HANDLE = preAllocatedHandle
+          env.KORCA_TERMINAL_HANDLE = preAllocatedHandle
         }
         if (ctx?.isWsl === true) {
-          addOrcaWslInteropEnv(env)
+          addKorcaWslInteropEnv(env)
         }
         return env
       },
@@ -1397,7 +1397,7 @@ export function registerPtyHandlers(
         ? { ...args.env, ...claudeAuth.envPatch }
         : args.env
       if (args.preAllocatedHandle) {
-        env = { ...env, ORCA_TERMINAL_HANDLE: args.preAllocatedHandle }
+        env = { ...env, KORCA_TERMINAL_HANDLE: args.preAllocatedHandle }
       }
       const selectedCodexHomePath = isDaemonHostSpawn
         ? getCompatibleSelectedCodexHomePath(
@@ -1495,7 +1495,7 @@ export function registerPtyHandlers(
       // Why: runtime-owned CLI PTYs bypass the renderer `pty:spawn` handler,
       // so record their spawn-time paneKey here too. Synthetic hook titles and
       // paneKey-scoped cache cleanup both depend on this reverse lookup.
-      const paneKey = rememberPaneKeyForPty(result.id, env?.ORCA_PANE_KEY)
+      const paneKey = rememberPaneKeyForPty(result.id, env?.KORCA_PANE_KEY)
       if (!args.connectionId) {
         registerPty({
           ptyId: result.id,
@@ -1669,7 +1669,7 @@ export function registerPtyHandlers(
         tabId?: string
         leafId?: string
         // Why: telemetry-plan.md§Agent launch semantics. The renderer
-        // threads what Orca was *asked* to launch through this field; main
+        // threads what Korca was *asked* to launch through this field; main
         // fires `agent_started` only after `provider.spawn` resolves. Loose
         // typing on the IPC boundary because the main-side schema
         // validator is the single enforcement point — `track()` will drop
@@ -1751,26 +1751,26 @@ export function registerPtyHandlers(
           : undefined
       // Why: the renderer sets pane env for SSH too. Only forward it to the
       // remote when the relay hook path is enabled; otherwise a newer relay
-      // could emit statuses this Orca build is not prepared to route.
+      // could emit statuses this Korca build is not prepared to route.
       let sshSourceEnv = args.env
       if (args.connectionId && !isRemoteAgentHooksEnabled()) {
         if (
           sshSourceEnv &&
-          ('ORCA_PANE_KEY' in sshSourceEnv ||
-            'ORCA_TAB_ID' in sshSourceEnv ||
-            'ORCA_WORKTREE_ID' in sshSourceEnv)
+          ('KORCA_PANE_KEY' in sshSourceEnv ||
+            'KORCA_TAB_ID' in sshSourceEnv ||
+            'KORCA_WORKTREE_ID' in sshSourceEnv)
         ) {
           const stripped = { ...sshSourceEnv }
-          delete stripped.ORCA_PANE_KEY
-          delete stripped.ORCA_TAB_ID
-          delete stripped.ORCA_WORKTREE_ID
+          delete stripped.KORCA_PANE_KEY
+          delete stripped.KORCA_TAB_ID
+          delete stripped.KORCA_WORKTREE_ID
           sshSourceEnv = stripped
         }
       }
       const baseEnvWithAuth = claudeAuth
         ? { ...sshSourceEnv, ...claudeAuth.envPatch }
         : sshSourceEnv
-      const spawnPaneKey = baseEnvWithAuth?.ORCA_PANE_KEY
+      const spawnPaneKey = baseEnvWithAuth?.KORCA_PANE_KEY
       const parsedSpawnPaneKey = parseValidPaneKey(spawnPaneKey)
       const verifiedPaneKey =
         parsedSpawnPaneKey &&
@@ -1795,23 +1795,23 @@ export function registerPtyHandlers(
       const stablePaneKey = verifiedPaneKey ?? migrationUnsupportedPaneKey
       const baseEnv = baseEnvWithAuth ? { ...baseEnvWithAuth } : undefined
       if (baseEnv && stablePaneKey) {
-        baseEnv.ORCA_PANE_KEY = stablePaneKey
+        baseEnv.KORCA_PANE_KEY = stablePaneKey
         if (typeof args.tabId === 'string') {
-          baseEnv.ORCA_TAB_ID = args.tabId
+          baseEnv.KORCA_TAB_ID = args.tabId
         } else if (!args.connectionId) {
-          delete baseEnv.ORCA_TAB_ID
+          delete baseEnv.KORCA_TAB_ID
         }
         if (typeof args.worktreeId === 'string') {
-          baseEnv.ORCA_WORKTREE_ID = args.worktreeId
+          baseEnv.KORCA_WORKTREE_ID = args.worktreeId
         } else if (!args.connectionId) {
-          delete baseEnv.ORCA_WORKTREE_ID
+          delete baseEnv.KORCA_WORKTREE_ID
         }
       } else if (baseEnv) {
-        // Why: ORCA_PANE_KEY crosses into shells and hook registries. Only the
+        // Why: KORCA_PANE_KEY crosses into shells and hook registries. Only the
         // key proven to match this spawn's tab+leaf may leave the IPC boundary.
-        delete baseEnv.ORCA_PANE_KEY
-        delete baseEnv.ORCA_TAB_ID
-        delete baseEnv.ORCA_WORKTREE_ID
+        delete baseEnv.KORCA_PANE_KEY
+        delete baseEnv.KORCA_TAB_ID
+        delete baseEnv.KORCA_WORKTREE_ID
       }
       const validatedPaneKey = stablePaneKey
       const validatedLeafId = verifiedLeafId ?? metadataLeafId
@@ -1888,7 +1888,7 @@ export function registerPtyHandlers(
         }
       }
       const spawnEnv = preAllocatedHandle
-        ? { ...env, ORCA_TERMINAL_HANDLE: preAllocatedHandle }
+        ? { ...env, KORCA_TERMINAL_HANDLE: preAllocatedHandle }
         : env
       const envToDelete = claudeAuth?.stripAuthEnv
         ? [...CLAUDE_AUTH_ENV_VARS, 'ANTHROPIC_CUSTOM_HEADERS']
@@ -2014,7 +2014,7 @@ export function registerPtyHandlers(
       ptyOwnership.set(result.id, args.connectionId ?? null)
       const relayResultId = getRelayPtyId(args.connectionId, result.id)
       if (store && args.connectionId) {
-        // Why: remote PTYs live in the SSH relay grace window after Orca
+        // Why: remote PTYs live in the SSH relay grace window after Korca
         // detaches. Persist their IDs immediately so reconnect can reattach
         // instead of treating the tab as a fresh shell.
         store.upsertSshRemotePtyLease({
@@ -2122,7 +2122,7 @@ export function registerPtyHandlers(
       if (isClaudeLaunch) {
         markClaudePtySpawned(result.id)
       }
-      // Why: renderer sets ORCA_PANE_KEY in `args.env` for every pane-owned
+      // Why: renderer sets KORCA_PANE_KEY in `args.env` for every pane-owned
       // spawn (see pty-connection.ts). Recording the mapping here lets
       // clearProviderPtyState clear the agent-hooks server's per-paneKey
       // caches when the PTY exits.
@@ -2464,13 +2464,13 @@ export function registerPtyHandlers(
 }
 
 export function registerHeadlessPtyRuntime(
-  runtime: OrcaRuntimeService,
+  runtime: KorcaRuntimeService,
   getSelectedCodexHomePath?: GetSelectedCodexHomePath,
   getSettings?: () => GlobalSettings,
   prepareClaudeAuth?: PrepareClaudeAuth,
   store?: Store
 ): void {
-  // Why: headless `orca serve` has no renderer window, but the runtime still
+  // Why: headless `korca serve` has no renderer window, but the runtime still
   // needs the same PTY controller and provider listeners as desktop so remote
   // clients can create, stream, inspect, and stop terminals.
   const headlessWindow = {

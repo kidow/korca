@@ -116,9 +116,9 @@ export const WORKTREE_HANDLERS: Record<string, CommandHandler> = {
   'worktree create': async ({ flags, client, cwd, json }) => {
     assertParentFlagsCompatible(flags)
     const callerTerminalHandle =
-      typeof process.env.ORCA_TERMINAL_HANDLE === 'string' &&
-      process.env.ORCA_TERMINAL_HANDLE.length > 0
-        ? process.env.ORCA_TERMINAL_HANDLE
+      typeof process.env.KORCA_TERMINAL_HANDLE === 'string' &&
+      process.env.KORCA_TERMINAL_HANDLE.length > 0
+        ? process.env.KORCA_TERMINAL_HANDLE
         : undefined
     const explicitParentWorktree = await getOptionalWorktreeSelector(
       flags,
@@ -130,8 +130,8 @@ export const WORKTREE_HANDLERS: Record<string, CommandHandler> = {
     let cwdParentWorktree: string | undefined
     if (!explicitParentWorktree && !noParent) {
       try {
-        // Why: agent shells can lose ORCA_TERMINAL_HANDLE while still running
-        // inside an Orca worktree. Cwd keeps CLI-created children nestable.
+        // Why: agent shells can lose KORCA_TERMINAL_HANDLE while still running
+        // inside an Korca worktree. Cwd keeps CLI-created children nestable.
         cwdParentWorktree = await resolveCurrentWorktreeSelector(cwd, client)
       } catch {
         cwdParentWorktree = undefined

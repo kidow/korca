@@ -86,9 +86,9 @@ export class ClaudeRuntimeAuthService {
   private readonly pathResolver = new ClaudeRuntimePathResolver()
   private mutationQueue: Promise<unknown> = Promise.resolve()
   private lastSyncedAccountId: string | null = null
-  // Why: tracks the credentials Orca last wrote to the shared credentials file.
+  // Why: tracks the credentials Korca last wrote to the shared credentials file.
   // On managed→system-default transition, if the file differs from this value,
-  // an external login (e.g. `claude auth login`) overwrote it — so Orca adopts
+  // an external login (e.g. `claude auth login`) overwrote it — so Korca adopts
   // the file as the new system default instead of restoring a stale snapshot.
   private lastWrittenCredentialsJson: string | null = null
   private hasMaterializedRuntimeAuth = false
@@ -215,7 +215,7 @@ export class ClaudeRuntimeAuthService {
     if (activeAccount.managedAuthRuntime === 'wsl') {
       if (!this.getOwnedManagedAuthPath(activeAccount)) {
         console.warn(
-          '[claude-runtime-auth] Active WSL managed account is not owned by Orca, restoring system default'
+          '[claude-runtime-auth] Active WSL managed account is not owned by Korca, restoring system default'
         )
         const nextSelection = setSelectedClaudeAccountIdForTarget(
           normalizeClaudeRuntimeSelection(settings),
@@ -255,7 +255,7 @@ export class ClaudeRuntimeAuthService {
 
     if (!this.getOwnedManagedAuthPath(activeAccount)) {
       console.warn(
-        '[claude-runtime-auth] Active managed account is not owned by Orca, restoring system default'
+        '[claude-runtime-auth] Active managed account is not owned by Korca, restoring system default'
       )
       if (this.lastSyncedAccountId !== null) {
         if (
@@ -314,7 +314,7 @@ export class ClaudeRuntimeAuthService {
     }
 
     // Why: Claude CLI refreshes expired OAuth tokens and writes them back to
-    // .credentials.json. If we detect the runtime file differs from what Orca
+    // .credentials.json. If we detect the runtime file differs from what Korca
     // last wrote, the CLI must have refreshed — so we preserve those tokens
     // back to managed storage before overwriting runtime with managed state.
     if (this.lastSyncedAccountId === activeAccount.id) {
@@ -894,7 +894,7 @@ export class ClaudeRuntimeAuthService {
   ): Promise<void> {
     const managedAuthPath = this.getOwnedManagedAuthPath(account)
     if (!managedAuthPath) {
-      throw new Error('Managed Claude auth storage is not owned by Orca.')
+      throw new Error('Managed Claude auth storage is not owned by Korca.')
     }
     if (process.platform === 'darwin') {
       await writeManagedClaudeKeychainCredentials(account.id, credentialsJson)
@@ -920,7 +920,7 @@ export class ClaudeRuntimeAuthService {
     const wslInfo = parseWslUncPath(account.managedAuthPath)
     if (wslInfo) {
       if (
-        !wslInfo.linuxPath.includes('/.local/share/orca/claude-accounts/') ||
+        !wslInfo.linuxPath.includes('/.local/share/korca/claude-accounts/') ||
         !wslInfo.linuxPath.endsWith('/auth')
       ) {
         return null
@@ -939,11 +939,11 @@ export class ClaudeRuntimeAuthService {
                 [
                   'set -euo pipefail',
                   `candidate=${shellQuote(wslInfo.linuxPath)}`,
-                  'managed_root="${HOME%/}/.local/share/orca/claude-accounts"',
+                  'managed_root="${HOME%/}/.local/share/korca/claude-accounts"',
                   'candidate_real=$(readlink -f -- "$candidate")',
                   'managed_root_real=$(readlink -f -- "$managed_root")',
-                  'test -f "$candidate_real/.orca-managed-claude-auth"',
-                  `test "$(cat "$candidate_real/.orca-managed-claude-auth")" = ${shellQuote(account.id)}`,
+                  'test -f "$candidate_real/.korca-managed-claude-auth"',
+                  `test "$(cat "$candidate_real/.korca-managed-claude-auth")" = ${shellQuote(account.id)}`,
                   'case "$candidate_real" in "$managed_root_real"/*/auth) printf "%s\\n" "$candidate_real" ;; *) exit 35 ;; esac'
                 ].join('\n')
               )
@@ -1126,7 +1126,7 @@ export class ClaudeRuntimeAuthService {
       return this.lastWrittenOauthAccount
     }
     // Why: persisted managed metadata is an account identity hint, not proof
-    // that Orca wrote .claude.json. Use it only after another surface proves
+    // that Korca wrote .claude.json. Use it only after another surface proves
     // the current runtime auth still belongs to the managed account.
     if (hasCredentialSurfaceOwnership && ownedOauthAccount !== undefined) {
       return ownedOauthAccount
@@ -1581,7 +1581,7 @@ export class ClaudeRuntimeAuthService {
     // Why: repeated Claude spawns sync auth, but credentials rarely change.
     // Skipping unchanged rewrites avoids Windows EPERM contention in #1507.
     // Still verify the file because another Claude process may have rewritten
-    // runtime credentials since Orca last materialized them.
+    // runtime credentials since Korca last materialized them.
     if (
       this.lastWrittenCredentialsJson === contents &&
       this.fileContentsEqual(credentialsPath, contents)

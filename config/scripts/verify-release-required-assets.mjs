@@ -10,19 +10,19 @@ export function getRequiredReleaseAssetNames(tag) {
     'latest-linux.yml',
     'latest-mac.yml',
     'latest.yml',
-    'orca-linux.AppImage',
-    `orca-ide_${version}_amd64.deb`,
-    `orca-ide-${version}.x86_64.rpm`,
-    'orca-windows-setup.exe',
-    'orca-windows-setup.exe.blockmap',
-    `Orca-${version}-mac.zip`,
-    `Orca-${version}-mac.zip.blockmap`,
-    `Orca-${version}-arm64-mac.zip`,
-    `Orca-${version}-arm64-mac.zip.blockmap`,
-    'orca-macos-x64.dmg',
-    'orca-macos-x64.dmg.blockmap',
-    'orca-macos-arm64.dmg',
-    'orca-macos-arm64.dmg.blockmap'
+    'korca-linux.AppImage',
+    `korca-ide_${version}_amd64.deb`,
+    `korca-ide-${version}.x86_64.rpm`,
+    'korca-windows-setup.exe',
+    'korca-windows-setup.exe.blockmap',
+    `Korca-${version}-mac.zip`,
+    `Korca-${version}-mac.zip.blockmap`,
+    `Korca-${version}-arm64-mac.zip`,
+    `Korca-${version}-arm64-mac.zip.blockmap`,
+    'korca-macos-x64.dmg',
+    'korca-macos-x64.dmg.blockmap',
+    'korca-macos-arm64.dmg',
+    'korca-macos-arm64.dmg.blockmap'
   ]
 }
 
@@ -141,7 +141,7 @@ async function main() {
   if (!token) {
     throw new Error('GH_TOKEN or GITHUB_TOKEN must be set')
   }
-  const repo = process.env.GITHUB_REPOSITORY || 'stablyai/orca'
+  const repo = process.env.GITHUB_REPOSITORY || 'stablyai/korca'
   const result = await verifyRequiredReleaseAssets({ repo, tag, token })
   console.log(`Verified ${result.checked.length} required release assets for ${repo}@${tag}`)
 }

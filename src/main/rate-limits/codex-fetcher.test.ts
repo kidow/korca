@@ -228,7 +228,7 @@ describe('fetchCodexRateLimits', () => {
 
     try {
       const resultPromise = fetchCodexRateLimits({
-        codexHomePath: '\\\\wsl.localhost\\Ubuntu\\home\\alice\\.local\\share\\orca\\account\\home'
+        codexHomePath: '\\\\wsl.localhost\\Ubuntu\\home\\alice\\.local\\share\\korca\\account\\home'
       })
       await vi.advanceTimersByTimeAsync(1)
       await vi.advanceTimersByTimeAsync(1)
@@ -242,7 +242,7 @@ describe('fetchCodexRateLimits', () => {
           '--',
           'bash',
           '-lc',
-          "export CODEX_HOME='/home/alice/.local/share/orca/account/home'; exec codex '-s' 'read-only' '-a' 'untrusted' 'app-server'"
+          "export CODEX_HOME='/home/alice/.local/share/korca/account/home'; exec codex '-s' 'read-only' '-a' 'untrusted' 'app-server'"
         ],
         expect.objectContaining({
           env: expect.not.objectContaining({ CODEX_HOME: expect.anything() })
@@ -280,7 +280,7 @@ describe('fetchCodexRateLimits', () => {
 
     try {
       const resultPromise = fetchCodexRateLimits({
-        codexHomePath: '\\\\wsl.localhost\\Ubuntu\\home\\alice\\.local\\share\\orca\\account\\home'
+        codexHomePath: '\\\\wsl.localhost\\Ubuntu\\home\\alice\\.local\\share\\korca\\account\\home'
       })
       rpcChild.emit('close')
       await vi.advanceTimersByTimeAsync(0)
@@ -293,7 +293,7 @@ describe('fetchCodexRateLimits', () => {
           '--',
           'bash',
           '-lc',
-          "export CODEX_HOME='/home/alice/.local/share/orca/account/home'; exec codex "
+          "export CODEX_HOME='/home/alice/.local/share/korca/account/home'; exec codex "
         ],
         expect.objectContaining({
           env: expect.not.objectContaining({ CODEX_HOME: expect.anything() })

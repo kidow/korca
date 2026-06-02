@@ -109,9 +109,9 @@ export async function launchAgentBackgroundSession(
   store.setTabLayout(tab.id, singlePaneLayoutSnapshot(leafId))
   const paneEnv = {
     ...startupPlan.env,
-    ORCA_PANE_KEY: paneKey,
-    ORCA_TAB_ID: tab.id,
-    ORCA_WORKTREE_ID: worktreeId
+    KORCA_PANE_KEY: paneKey,
+    KORCA_TAB_ID: tab.id,
+    KORCA_WORKTREE_ID: worktreeId
   }
   const sshConnectionId = repo?.connectionId ?? null
   let pendingSshStartupCommand = sshConnectionId ? startupPlan.launchCommand : null

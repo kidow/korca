@@ -32,7 +32,7 @@ describe('CursorHookService', () => {
   let homeDir: string
 
   beforeEach(() => {
-    homeDir = mkdtempSync(join(tmpdir(), 'orca-cursor-home-'))
+    homeDir = mkdtempSync(join(tmpdir(), 'korca-cursor-home-'))
     homedirMock.mockReturnValue(homeDir)
   })
 
@@ -57,11 +57,11 @@ describe('CursorHookService', () => {
     for (const eventName of CURSOR_EVENTS) {
       const definition = config.hooks[eventName]?.[0]
       expect(definition?.command).toContain('cursor-hook')
-      expect(definition?.command).toContain(join(homeDir, '.orca'))
+      expect(definition?.command).toContain(join(homeDir, '.korca'))
       expect(definition?.hooks).toBeUndefined()
     }
 
-    const script = readFileSync(join(homeDir, '.orca', 'agent-hooks', 'cursor-hook.sh'), 'utf8')
+    const script = readFileSync(join(homeDir, '.korca', 'agent-hooks', 'cursor-hook.sh'), 'utf8')
     expect(script).toContain('/hook/cursor')
     expect(script).toContain('payload=$(cat)')
   })
@@ -77,10 +77,10 @@ describe('CursorHookService', () => {
           hooks: {
             beforeSubmitPrompt: [
               { command: '/usr/local/bin/user-hook' },
-              { command: '/old/path/.orca/agent-hooks/cursor-hook.sh' }
+              { command: '/old/path/.korca/agent-hooks/cursor-hook.sh' }
             ],
             retiredEvent: [
-              { command: '/old/path/.orca/agent-hooks/cursor-hook.sh' },
+              { command: '/old/path/.korca/agent-hooks/cursor-hook.sh' },
               { command: '/usr/local/bin/retired-user-hook' }
             ]
           }

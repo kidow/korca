@@ -34,7 +34,7 @@ import { classifyConnection } from '../src/transport/connection-health'
 import { subscribeToDesktopNotifications } from '../src/notifications/mobile-notifications'
 import type { ConnectionState, HostProfile } from '../src/transport/types'
 import { triggerMediumImpact } from '../src/platform/haptics'
-import { OrcaLogo } from '../src/components/OrcaLogo'
+import { KorcaLogo } from '../src/components/KorcaLogo'
 import { StatusDot } from '../src/components/StatusDot'
 import { TaskProviderLogo } from '../src/components/TaskProviderLogo'
 import { TextInputModal } from '../src/components/TextInputModal'
@@ -385,7 +385,7 @@ export default function HomeScreen() {
           setHosts(h)
         }
       })
-      void AsyncStorage.getItem('orca:last-visited-worktree').then((raw) => {
+      void AsyncStorage.getItem('korca:last-visited-worktree').then((raw) => {
         if (stale || !raw) {
           return
         }
@@ -716,9 +716,9 @@ export default function HomeScreen() {
       <View style={styles.topBar}>
         <View style={styles.brandLockup}>
           <View style={styles.logoMark}>
-            <OrcaLogo size={18} />
+            <KorcaLogo size={18} />
           </View>
-          <Text style={styles.brandName}>Orca</Text>
+          <Text style={styles.brandName}>Korca</Text>
         </View>
         <Pressable
           style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
@@ -740,7 +740,7 @@ export default function HomeScreen() {
           <View style={styles.emptyHero}>
             <Text style={styles.emptyTitle}>데스크톱을 연결하세요</Text>
             <Text style={styles.emptyBody}>
-              컴퓨터의 Orca와 페어링해 에이전트를 확인하고, 어떤 터미널이든 열고, 휴대폰으로 작업을 진행하세요.
+              컴퓨터의 Korca와 페어링해 에이전트를 확인하고, 어떤 터미널이든 열고, 휴대폰으로 작업을 진행하세요.
             </Text>
             <Pressable style={styles.primaryButton} onPress={() => router.push('/pair-scan')}>
               <QrCode size={17} color={colors.bgBase} />
@@ -1112,7 +1112,7 @@ function CardGap() {
 
 const ONBOARDING_STEPS = [
   {
-    title: 'Orca 데스크톱 열기',
+    title: 'Korca 데스크톱 열기',
     desc: '설정 → 모바일로 가서 페어링 QR 코드를 생성하세요.'
   },
   {

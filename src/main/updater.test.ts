@@ -138,7 +138,7 @@ vi.mock('./updater-prerelease-feed', () => ({
       : result
   },
   getReleaseDownloadUrl: (tag: string) =>
-    `https://github.com/stablyai/orca/releases/download/${tag}`
+    `https://github.com/stablyai/korca/releases/download/${tag}`
 }))
 
 describe('updater', () => {
@@ -404,7 +404,7 @@ describe('updater', () => {
     })
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.4.36-rc.5'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.4.36-rc.5'
     })
     expect(
       sendMock.mock.calls
@@ -516,7 +516,7 @@ describe('updater', () => {
       })
       expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
         provider: 'generic',
-        url: 'https://github.com/stablyai/orca/releases/download/v1.3.18-rc.1'
+        url: 'https://github.com/stablyai/korca/releases/download/v1.3.18-rc.1'
       })
       expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(1)
     })
@@ -1111,7 +1111,7 @@ describe('updater', () => {
     // Setup pins the default generic feed; resolver only runs per check.
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/latest/download'
+      url: 'https://github.com/stablyai/korca/releases/latest/download'
     })
     expect(autoUpdaterMock.allowPrerelease).not.toBe(true)
 
@@ -1123,7 +1123,7 @@ describe('updater', () => {
       })
       expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
         provider: 'generic',
-        url: 'https://github.com/stablyai/orca/releases/download/v1.3.17-rc.2'
+        url: 'https://github.com/stablyai/korca/releases/download/v1.3.17-rc.2'
       })
       expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(1)
     })
@@ -1147,7 +1147,7 @@ describe('updater', () => {
     await vi.waitFor(() => {
       expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
         provider: 'generic',
-        url: 'https://github.com/stablyai/orca/releases/download/v1.3.19'
+        url: 'https://github.com/stablyai/korca/releases/download/v1.3.19'
       })
     })
     expect(autoUpdaterMock.allowPrerelease).not.toBe(true)
@@ -1173,7 +1173,7 @@ describe('updater', () => {
     })
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/latest/download'
+      url: 'https://github.com/stablyai/korca/releases/latest/download'
     })
   })
 
@@ -1212,16 +1212,16 @@ describe('updater', () => {
     expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(1)
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.4.26'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.4.26'
     })
     expect(autoUpdaterMock.setFeedURL).not.toHaveBeenCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.4.27'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.4.27'
     })
     expect(autoUpdaterMock.setFeedURL.mock.calls.slice(feedCallsBeforeCheck)).not.toContainEqual([
       {
         provider: 'generic',
-        url: 'https://github.com/stablyai/orca/releases/latest/download'
+        url: 'https://github.com/stablyai/korca/releases/latest/download'
       }
     ])
     expect(sendMock).not.toHaveBeenCalledWith(
@@ -1264,7 +1264,7 @@ describe('updater', () => {
     })
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.4.26'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.4.26'
     })
   })
 
@@ -1299,7 +1299,7 @@ describe('updater', () => {
     })
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.4.26'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.4.26'
     })
     expect(setLastUpdateCheckAt).not.toHaveBeenCalled()
 
@@ -1319,7 +1319,7 @@ describe('updater', () => {
     })
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.4.27'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.4.27'
     })
   })
 
@@ -1355,7 +1355,7 @@ describe('updater', () => {
     })
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.4.27'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.4.27'
     })
   })
 
@@ -1593,11 +1593,11 @@ describe('updater', () => {
       expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(2)
       expect(autoUpdaterMock.setFeedURL).toHaveBeenCalledWith({
         provider: 'generic',
-        url: 'https://github.com/stablyai/orca/releases/download/v1.3.51-rc.7'
+        url: 'https://github.com/stablyai/korca/releases/download/v1.3.51-rc.7'
       })
       expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
         provider: 'generic',
-        url: 'https://github.com/stablyai/orca/releases/download/v1.3.51-rc.6'
+        url: 'https://github.com/stablyai/korca/releases/download/v1.3.51-rc.6'
       })
     })
 
@@ -2225,7 +2225,7 @@ describe('updater', () => {
     })
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.3.18'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.3.18'
     })
   })
 
@@ -2253,7 +2253,7 @@ describe('updater', () => {
     expect(autoUpdaterMock.allowPrerelease).toBe(true)
     expect(autoUpdaterMock.setFeedURL).toHaveBeenLastCalledWith({
       provider: 'generic',
-      url: 'https://github.com/stablyai/orca/releases/download/v1.3.18-rc.1'
+      url: 'https://github.com/stablyai/korca/releases/download/v1.3.18-rc.1'
     })
   })
 })

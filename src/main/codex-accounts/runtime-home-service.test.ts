@@ -61,10 +61,10 @@ function createSettings(overrides: Partial<GlobalSettings> = {}): GlobalSettings
     terminalLigatures: 'auto',
     terminalCursorStyle: 'block',
     terminalCursorBlink: false,
-    terminalThemeDark: 'orca-dark',
+    terminalThemeDark: 'korca-dark',
     terminalDividerColorDark: '#000000',
     terminalUseSeparateLightTheme: false,
-    terminalThemeLight: 'orca-light',
+    terminalThemeLight: 'korca-light',
     terminalDividerColorLight: '#ffffff',
     terminalInactivePaneOpacity: 0.5,
     terminalActivePaneOpacity: 1,
@@ -160,7 +160,7 @@ function getSystemLaunchCodexHomePath(): string {
 }
 
 function getWslRuntimeCodexHomePath(wslHome: string): string {
-  return join(wslHome, '.local', 'share', 'orca', 'codex-runtime-home', 'home')
+  return join(wslHome, '.local', 'share', 'korca', 'codex-runtime-home', 'home')
 }
 
 function getWslLaunchCodexHomePath(wslHome: string, accountId: string | null): string {
@@ -172,7 +172,7 @@ function getWslLaunchCodexHomePath(wslHome: string, accountId: string | null): s
     wslHome,
     '.local',
     'share',
-    'orca',
+    'korca',
     'codex-runtime-home',
     'launch',
     'wsl',
@@ -220,7 +220,7 @@ function createStore(settings: GlobalSettings) {
 function createManagedAuth(rootDir: string, accountId: string, auth: string): string {
   const managedHomePath = join(rootDir, 'codex-accounts', accountId, 'home')
   mkdirSync(managedHomePath, { recursive: true })
-  writeFileSync(join(managedHomePath, '.orca-managed-home'), `${accountId}\n`, 'utf-8')
+  writeFileSync(join(managedHomePath, '.korca-managed-home'), `${accountId}\n`, 'utf-8')
   writeFileSync(join(managedHomePath, 'auth.json'), auth, 'utf-8')
   return managedHomePath
 }
@@ -262,10 +262,10 @@ describe('CodexRuntimeHomeService', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.clearAllMocks()
-    testState.userDataDir = mkdtempSync(join(tmpdir(), 'orca-runtime-home-'))
-    testState.fakeHomeDir = mkdtempSync(join(tmpdir(), 'orca-codex-home-'))
-    testState.previousUserDataPath = process.env.ORCA_USER_DATA_PATH
-    process.env.ORCA_USER_DATA_PATH = testState.userDataDir
+    testState.userDataDir = mkdtempSync(join(tmpdir(), 'korca-runtime-home-'))
+    testState.fakeHomeDir = mkdtempSync(join(tmpdir(), 'korca-codex-home-'))
+    testState.previousUserDataPath = process.env.KORCA_USER_DATA_PATH
+    process.env.KORCA_USER_DATA_PATH = testState.userDataDir
     mkdirSync(getSystemCodexHomePath(), { recursive: true })
     mkdirSync(getRuntimeCodexHomePath(), { recursive: true })
   })
@@ -274,9 +274,9 @@ describe('CodexRuntimeHomeService', () => {
     rmSync(testState.userDataDir, { recursive: true, force: true })
     rmSync(testState.fakeHomeDir, { recursive: true, force: true })
     if (testState.previousUserDataPath === undefined) {
-      delete process.env.ORCA_USER_DATA_PATH
+      delete process.env.KORCA_USER_DATA_PATH
     } else {
-      process.env.ORCA_USER_DATA_PATH = testState.previousUserDataPath
+      process.env.KORCA_USER_DATA_PATH = testState.previousUserDataPath
     }
   })
 
@@ -1149,7 +1149,7 @@ describe('CodexRuntimeHomeService', () => {
           managedHomePath: wslManagedHomePath,
           managedHomeRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+          wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
           providerAccountId: null,
           workspaceLabel: null,
           workspaceAccountId: null,
@@ -1218,7 +1218,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
             providerAccountId: 'acct-wsl',
             workspaceLabel: null,
             workspaceAccountId: 'acct-wsl',
@@ -1273,7 +1273,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath: firstManagedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
             providerAccountId: 'acct-first',
             workspaceLabel: null,
             workspaceAccountId: 'acct-first',
@@ -1287,7 +1287,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath: secondManagedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-2/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-2/home',
             providerAccountId: 'acct-second',
             workspaceLabel: null,
             workspaceAccountId: 'acct-second',
@@ -1352,7 +1352,7 @@ describe('CodexRuntimeHomeService', () => {
           managedHomePath: firstManagedHomePath,
           managedHomeRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+          wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
           providerAccountId: 'acct-first',
           workspaceLabel: null,
           workspaceAccountId: 'acct-first',
@@ -1366,7 +1366,7 @@ describe('CodexRuntimeHomeService', () => {
           managedHomePath: secondManagedHomePath,
           managedHomeRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-2/home',
+          wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-2/home',
           providerAccountId: 'acct-second',
           workspaceLabel: null,
           workspaceAccountId: 'acct-second',
@@ -1445,7 +1445,7 @@ describe('CodexRuntimeHomeService', () => {
           managedHomePath: firstManagedHomePath,
           managedHomeRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+          wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
           providerAccountId: 'acct-first',
           workspaceLabel: null,
           workspaceAccountId: 'acct-first',
@@ -1459,7 +1459,7 @@ describe('CodexRuntimeHomeService', () => {
           managedHomePath: secondManagedHomePath,
           managedHomeRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-2/home',
+          wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-2/home',
           providerAccountId: 'acct-second',
           workspaceLabel: null,
           workspaceAccountId: 'acct-second',
@@ -1549,7 +1549,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath: wslManagedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/wsl-account/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/wsl-account/home',
             providerAccountId: 'acct-wsl',
             workspaceLabel: null,
             workspaceAccountId: 'acct-wsl',
@@ -1608,7 +1608,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
             providerAccountId: 'acct-wsl',
             workspaceLabel: null,
             workspaceAccountId: 'acct-wsl',
@@ -1672,7 +1672,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
             providerAccountId: 'acct-wsl',
             workspaceLabel: null,
             workspaceAccountId: 'acct-wsl',
@@ -1757,7 +1757,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath: ubuntuHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/ubuntu/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/ubuntu/home',
             providerAccountId: 'acct-ubuntu',
             workspaceLabel: null,
             workspaceAccountId: 'acct-ubuntu',
@@ -1771,7 +1771,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath: debianHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Debian',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/debian/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/debian/home',
             providerAccountId: 'acct-debian',
             workspaceLabel: null,
             workspaceAccountId: 'acct-debian',
@@ -1831,7 +1831,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/account-1/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/account-1/home',
             providerAccountId: 'acct-managed',
             workspaceLabel: null,
             workspaceAccountId: 'acct-managed',
@@ -1900,7 +1900,7 @@ describe('CodexRuntimeHomeService', () => {
             managedHomePath,
             managedHomeRuntime: 'wsl',
             wslDistro: 'Ubuntu',
-            wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/wsl-account/home',
+            wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/wsl-account/home',
             providerAccountId: 'acct-wsl',
             workspaceLabel: null,
             workspaceAccountId: 'acct-wsl',
@@ -2293,7 +2293,7 @@ describe('CodexRuntimeHomeService', () => {
     service.syncForCurrentSelection()
     expect(readFileSync(runtimeAuthPath, 'utf-8')).toBe(systemAuth)
 
-    // Codex used to refresh tokens directly in ~/.codex. With an Orca-owned
+    // Codex used to refresh tokens directly in ~/.codex. With an Korca-owned
     // runtime home, the same refresh must be read back to the system default.
     writeFileSync(runtimeAuthPath, refreshedAuth, 'utf-8')
     service.syncForCurrentSelection()
@@ -2619,7 +2619,7 @@ describe('CodexRuntimeHomeService', () => {
     const service = new CodexRuntimeHomeService(store as never)
 
     // Simulate an old live Codex PTY from another account refreshing the
-    // shared runtime auth after Orca has already selected account-1.
+    // shared runtime auth after Korca has already selected account-1.
     writeFileSync(runtimeAuthPath, staleLivePtyAuth, 'utf-8')
     service.syncForCurrentSelection()
 
@@ -2674,7 +2674,7 @@ describe('CodexRuntimeHomeService', () => {
     const service = new CodexRuntimeHomeService(store as never)
 
     // An older account-1 Codex process refreshed the legacy shared runtime
-    // file after Orca selected account-2. Fresh launch homes must not route
+    // file after Korca selected account-2. Fresh launch homes must not route
     // that stale shared file into any managed account.
     writeFileSync(runtimeAuthPath, account1RefreshedAuth, 'utf-8')
     service.syncForCurrentSelection()
@@ -3190,7 +3190,7 @@ describe('CodexRuntimeHomeService', () => {
     settings.activeCodexManagedAccountId = 'account-1'
     service.syncForCurrentSelection()
 
-    // A stale or external process overwrites runtime with auth Orca cannot
+    // A stale or external process overwrites runtime with auth Korca cannot
     // verify against the outgoing managed account.
     writeFileSync(runtimeAuthPath, '{"account":"external-login"}\n', 'utf-8')
 
@@ -3506,11 +3506,11 @@ describe('CodexRuntimeHomeService', () => {
 
     expect(readFileSync(join(runtimeSessionsDir, 'session.json'), 'utf-8')).toBe('{"turns":[1]}')
     expect(
-      readFileSync(join(runtimeSessionsDir, 'session.orca-legacy-account-1.json'), 'utf-8')
+      readFileSync(join(runtimeSessionsDir, 'session.korca-legacy-account-1.json'), 'utf-8')
     ).toBe('{"turns":[1,2]}')
     expect(
       readFileSync(
-        join(runtimeSessionsDir, 'nested', 'session.orca-legacy-account-1.json'),
+        join(runtimeSessionsDir, 'nested', 'session.korca-legacy-account-1.json'),
         'utf-8'
       )
     ).toBe('{"turns":[2,3]}')

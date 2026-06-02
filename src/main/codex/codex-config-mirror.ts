@@ -5,7 +5,7 @@ import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { normalizeRuntimePathForComparison } from '../../shared/cross-platform-path'
 import { writeFileAtomically } from '../codex-accounts/fs-utils'
-import { getOrcaManagedCodexHomePath, getSystemCodexHomePath } from './codex-home-paths'
+import { getKorcaManagedCodexHomePath, getSystemCodexHomePath } from './codex-home-paths'
 import {
   getSystemCodexConfigDigest,
   readLastSyncedSystemCodexConfigState,
@@ -15,7 +15,7 @@ import {
 } from './codex-config-sync-state'
 
 function getRuntimeCodexConfigTomlPath(): string {
-  return join(getOrcaManagedCodexHomePath(), 'config.toml')
+  return join(getKorcaManagedCodexHomePath(), 'config.toml')
 }
 
 function getSystemCodexConfigTomlPath(): string {
@@ -65,7 +65,7 @@ function syncSystemConfigIntoManagedCodexHomeUnsafe(): void {
       : lastSyncedSystemConfig
   if (!runtimeConfigExists) {
     // Why: trust blocks reference a hooks.json path, so system-home hook trust
-    // entries are not valid in Orca's runtime CODEX_HOME until install remaps them.
+    // entries are not valid in Korca's runtime CODEX_HOME until install remaps them.
     writeFileAtomically(runtimeConfigPath, stripRuntimeOwnedTomlSections(systemConfig))
     writeLastSyncedMirrorableSystemCodexConfigDigest(
       mirrorableSystemConfig,
@@ -117,7 +117,7 @@ function syncSystemConfigIntoManagedCodexHomeUnsafe(): void {
 
   if (lastSyncedMirrorableSystemConfig.status === 'missing') {
     // Why: pre-state runtime configs may already contain Codex TUI preference
-    // changes written inside Orca's managed CODEX_HOME. Without a content
+    // changes written inside Korca's managed CODEX_HOME. Without a content
     // baseline, preserve those ordinary prefs and only sync trust state.
     const runtimeConfig = readFileSync(runtimeConfigPath, 'utf-8')
     const mergedConfig = mergeSystemProjectTrustIntoRuntimeBaseline(runtimeConfig, systemConfig)
@@ -251,7 +251,7 @@ function normalizeFeatureSectionLines(lines: string[], start: number, end: numbe
   if (!hasHooksKey) {
     const firstDeprecatedIndex = deprecatedIndexes.shift()
     if (firstDeprecatedIndex !== undefined) {
-      // Why: Codex 0.133 warns on the old key. Mirror into Orca's runtime
+      // Why: Codex 0.133 warns on the old key. Mirror into Korca's runtime
       // config using the new key without rewriting the user's real config.
       lines[firstDeprecatedIndex] = lines[firstDeprecatedIndex]!.replace(
         /^([ \t]*)codex_hooks([ \t]*=)/,
@@ -630,7 +630,7 @@ function mergeSystemProjectTrustIntoRuntimeBaseline(
   const firstSectionIndex = runtimeSections[0]?.start ?? -1
   const preamble =
     firstSectionIndex === -1 ? runtimeConfig : lines.slice(0, firstSectionIndex).join('\n')
-  // Why: when the baseline is missing, Orca cannot safely decide whether
+  // Why: when the baseline is missing, Korca cannot safely decide whether
   // ordinary settings changed in system or runtime config. Project trust is
   // safety-sensitive, so still honor explicit system revocations.
   return joinTomlBlocks([

@@ -458,7 +458,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                 <div className="min-w-0">
                   <DialogTitle className="text-base">비활성 작업 공간 삭제</DialogTitle>
                   <DialogDescription className="mt-1 text-xs">
-                    로컬 파일과 Orca 상태를 삭제하기 전에 비활성 작업 공간을 검토하세요.
+                    로컬 파일과 Korca 상태를 삭제하기 전에 비활성 작업 공간을 검토하세요.
                   </DialogDescription>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">

@@ -22,9 +22,9 @@ vi.mock('fs', () => ({
 
 vi.mock('./relay-protocol', () => ({
   RELAY_VERSION: '0.1.0',
-  RELAY_REMOTE_DIR: '.orca-remote',
+  RELAY_REMOTE_DIR: '.korca-remote',
   parseUnameToRelayPlatform: vi.fn().mockReturnValue('linux-x64'),
-  RELAY_SENTINEL: 'ORCA-RELAY v0.1.0 READY\n',
+  RELAY_SENTINEL: 'KORCA-RELAY v0.1.0 READY\n',
   RELAY_SENTINEL_TIMEOUT_MS: 10_000
 }))
 
@@ -41,7 +41,7 @@ vi.mock('./ssh-relay-deploy-helpers', () => ({
 
 vi.mock('./ssh-relay-versioned-install', () => ({
   readLocalFullVersion: vi.fn().mockReturnValue('0.1.0+testhash'),
-  computeRemoteRelayDir: (home: string, v: string) => `${home}/.orca-remote/relay-${v}`,
+  computeRemoteRelayDir: (home: string, v: string) => `${home}/.korca-remote/relay-${v}`,
   isRelayAlreadyInstalled: vi.fn().mockResolvedValue(false),
   acquireInstallLock: vi.fn().mockResolvedValue(undefined),
   finalizeInstall: vi.fn().mockResolvedValue(undefined),
@@ -143,7 +143,7 @@ function makeExecResponses(opts: {
     opts.probeStdoutOverride !== undefined
       ? opts.probeStdoutOverride
       : opts.probe === 'ok'
-        ? 'ORCA-NPTY-PROBE-OK\n'
+        ? 'KORCA-NPTY-PROBE-OK\n'
         : opts.probe === 'missing'
           ? 'MISSING\n' // shell-level `|| echo MISSING` after require throw
           : opts.probe === 'dir-gone'
@@ -161,7 +161,7 @@ function makeExecResponses(opts: {
   // Cleanup execs only run when the probe resolved (not when it rejected).
   const probeResolved = typeof probeSlot === 'string'
   if (probeResolved) {
-    const probeOk = probeSlot.includes('ORCA-NPTY-PROBE-OK')
+    const probeOk = probeSlot.includes('KORCA-NPTY-PROBE-OK')
     if (!probeOk) {
       slots.push('') // cat stderr (graceful failure path captures detail)
     }
@@ -228,7 +228,7 @@ describe('installNativeDeps (via deployAndLaunchRelay)', () => {
     const written = sftpCapture.contents[pkgPath as string]
     expect(written).toBeTruthy()
     const parsed = JSON.parse(written) as Record<string, unknown>
-    expect(parsed.name).toBe('orca-relay')
+    expect(parsed.name).toBe('korca-relay')
     expect(parsed.version).toBe('1.0.0')
     expect(parsed.private).toBe(true)
     // Why: pin commonjs so a future Node default flip doesn't silently
@@ -401,7 +401,7 @@ describe('installNativeDeps (via deployAndLaunchRelay)', () => {
       makeExecResponses({
         npmInstall: 'ok',
         probe: 'ok',
-        probeStdoutOverride: 'Welcome to Acme Corp\nLast login: ...\nORCA-NPTY-PROBE-OK\n'
+        probeStdoutOverride: 'Welcome to Acme Corp\nLast login: ...\nKORCA-NPTY-PROBE-OK\n'
       })
     )
 
@@ -482,7 +482,7 @@ describe('installNativeDeps (via deployAndLaunchRelay)', () => {
       'MISSING', // re-probe after lock
       '', // npm install native deps
       '', // chmod prebuilds
-      'ORCA-NPTY-PROBE-OK\n',
+      'KORCA-NPTY-PROBE-OK\n',
       '', // rm probe stderr
       'DEAD',
       'READY'
@@ -503,7 +503,7 @@ describe('installNativeDeps (via deployAndLaunchRelay)', () => {
   it('does not mutate an existing relay dir when required native deps are present', async () => {
     vi.mocked(isRelayAlreadyInstalled).mockResolvedValue(true)
     const conn = makeMockConnection(sftpCapture)
-    feed(['Linux x86_64', '/home/u', 'ORCA-NATIVE-DEPS-OK', 'DEAD', 'READY'])
+    feed(['Linux x86_64', '/home/u', 'KORCA-NATIVE-DEPS-OK', 'DEAD', 'READY'])
 
     await deployAndLaunchRelay(conn)
 

@@ -41,9 +41,9 @@ const GROK_EVENTS = [
 
 function getConfigPath(): string {
   // Why: Grok loads trusted global hook files from ~/.grok/hooks/*.json. Keep
-  // Orca's managed entries in a dedicated file so user-authored hook files stay
+  // Korca's managed entries in a dedicated file so user-authored hook files stay
   // untouched and project-level trust is not required for status reporting.
-  return join(homedir(), '.grok', 'hooks', 'orca-status.json')
+  return join(homedir(), '.grok', 'hooks', 'korca-status.json')
 }
 
 function getManagedScriptFileName(): string {
@@ -63,10 +63,10 @@ function getManagedScript(target: 'local' | 'posix' = 'local'): string {
     return [
       '@echo off',
       'setlocal',
-      'if defined ORCA_AGENT_HOOK_ENDPOINT if exist "%ORCA_AGENT_HOOK_ENDPOINT%" call "%ORCA_AGENT_HOOK_ENDPOINT%" 2>nul',
-      'if "%ORCA_AGENT_HOOK_PORT%"=="" exit /b 0',
-      'if "%ORCA_AGENT_HOOK_TOKEN%"=="" exit /b 0',
-      'if "%ORCA_PANE_KEY%"=="" exit /b 0',
+      'if defined KORCA_AGENT_HOOK_ENDPOINT if exist "%KORCA_AGENT_HOOK_ENDPOINT%" call "%KORCA_AGENT_HOOK_ENDPOINT%" 2>nul',
+      'if "%KORCA_AGENT_HOOK_PORT%"=="" exit /b 0',
+      'if "%KORCA_AGENT_HOOK_TOKEN%"=="" exit /b 0',
+      'if "%KORCA_PANE_KEY%"=="" exit /b 0',
       buildWindowsAgentHookPostCommand('grok'),
       'exit /b 0',
       ''
@@ -75,10 +75,10 @@ function getManagedScript(target: 'local' | 'posix' = 'local'): string {
 
   return [
     '#!/bin/sh',
-    'if [ -n "$ORCA_AGENT_HOOK_ENDPOINT" ] && [ -r "$ORCA_AGENT_HOOK_ENDPOINT" ]; then',
-    '  . "$ORCA_AGENT_HOOK_ENDPOINT" 2>/dev/null || :',
+    'if [ -n "$KORCA_AGENT_HOOK_ENDPOINT" ] && [ -r "$KORCA_AGENT_HOOK_ENDPOINT" ]; then',
+    '  . "$KORCA_AGENT_HOOK_ENDPOINT" 2>/dev/null || :',
     'fi',
-    'if [ -z "$ORCA_AGENT_HOOK_PORT" ] || [ -z "$ORCA_AGENT_HOOK_TOKEN" ] || [ -z "$ORCA_PANE_KEY" ]; then',
+    'if [ -z "$KORCA_AGENT_HOOK_PORT" ] || [ -z "$KORCA_AGENT_HOOK_TOKEN" ] || [ -z "$KORCA_PANE_KEY" ]; then',
     '  exit 0',
     'fi',
     'payload=$(cat)',
@@ -86,15 +86,15 @@ function getManagedScript(target: 'local' | 'posix' = 'local'): string {
     '  exit 0',
     'fi',
     // Timeout caps best-effort hook posts if the local listener stalls.
-    'curl -sS -X POST "http://127.0.0.1:${ORCA_AGENT_HOOK_PORT}/hook/grok" \\',
+    'curl -sS -X POST "http://127.0.0.1:${KORCA_AGENT_HOOK_PORT}/hook/grok" \\',
     '  --connect-timeout 0.5 --max-time 1.5 \\',
     '  -H "Content-Type: application/x-www-form-urlencoded" \\',
-    '  -H "X-Orca-Agent-Hook-Token: ${ORCA_AGENT_HOOK_TOKEN}" \\',
-    '  --data-urlencode "paneKey=${ORCA_PANE_KEY}" \\',
-    '  --data-urlencode "tabId=${ORCA_TAB_ID}" \\',
-    '  --data-urlencode "worktreeId=${ORCA_WORKTREE_ID}" \\',
-    '  --data-urlencode "env=${ORCA_AGENT_HOOK_ENV}" \\',
-    '  --data-urlencode "version=${ORCA_AGENT_HOOK_VERSION}" \\',
+    '  -H "X-Korca-Agent-Hook-Token: ${KORCA_AGENT_HOOK_TOKEN}" \\',
+    '  --data-urlencode "paneKey=${KORCA_PANE_KEY}" \\',
+    '  --data-urlencode "tabId=${KORCA_TAB_ID}" \\',
+    '  --data-urlencode "worktreeId=${KORCA_WORKTREE_ID}" \\',
+    '  --data-urlencode "env=${KORCA_AGENT_HOOK_ENV}" \\',
+    '  --data-urlencode "version=${KORCA_AGENT_HOOK_VERSION}" \\',
     '  --data-urlencode "payload=${payload}" >/dev/null 2>&1 || true',
     'exit 0',
     ''
@@ -110,7 +110,7 @@ function buildInstalledConfig(
   const isManagedCommand = createManagedCommandMatcher(scriptFileName)
   const managedEvents = new Set<string>(GROK_EVENTS.map((event) => event.eventName))
 
-  // Why: Orca owns only grok-hook.* entries. Sweep stale managed commands out
+  // Why: Korca owns only grok-hook.* entries. Sweep stale managed commands out
   // of retired events while preserving any user-authored hooks in this file.
   for (const [eventName, definitions] of Object.entries(nextHooks)) {
     if (managedEvents.has(eventName) || !Array.isArray(definitions)) {
@@ -207,8 +207,8 @@ export class GrokHookService {
 
   async installRemote(sftp: SFTPWrapper, remoteHome: string): Promise<AgentHookInstallStatus> {
     const home = remoteHome.replace(/\/$/, '')
-    const remoteConfigPath = `${home}/.grok/hooks/orca-status.json`
-    const remoteScriptPath = `${home}/.orca/agent-hooks/grok-hook.sh`
+    const remoteConfigPath = `${home}/.grok/hooks/korca-status.json`
+    const remoteScriptPath = `${home}/.korca/agent-hooks/grok-hook.sh`
     try {
       const config = await readHooksJsonRemote(sftp, remoteConfigPath)
       if (!config) {

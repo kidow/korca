@@ -40,7 +40,7 @@ import type {
   WorktreeMeta,
   WorktreeLineage,
   GlobalSettings,
-  OrcaWorkspaceLayout,
+  KorcaWorkspaceLayout,
   NotificationSettings,
   OnboardingChecklistState,
   OnboardingOutcome,
@@ -164,9 +164,9 @@ function decryptOptionalSecret(value: string | null | undefined): string | null 
 // path, causing dev and production instances to share the same file and silently
 // overwrite each other.
 //
-// It also must not be resolved lazily on every call, because app.setName('Orca')
+// It also must not be resolved lazily on every call, because app.setName('Korca')
 // runs before the Store constructor and would change the resolved path from
-// lowercase 'orca' to uppercase 'Orca'. On case-sensitive filesystems (Linux)
+// lowercase 'korca' to uppercase 'Korca'. On case-sensitive filesystems (Linux)
 // this would look in the wrong directory and lose existing user data.
 //
 // Solution: index.ts calls initDataPath() right after configureDevUserDataPath()
@@ -174,18 +174,18 @@ function decryptOptionalSecret(value: string | null | undefined): string | null 
 let _dataFile: string | null = null
 
 export function initDataPath(): void {
-  _dataFile = join(app.getPath('userData'), 'orca-data.json')
+  _dataFile = join(app.getPath('userData'), 'korca-data.json')
 }
 
 function getDataFile(): string {
   if (!_dataFile) {
     // Safety fallback — should not be hit in normal startup.
-    _dataFile = join(app.getPath('userData'), 'orca-data.json')
+    _dataFile = join(app.getPath('userData'), 'korca-data.json')
   }
   return _dataFile
 }
 
-// Why (issue #1158): keep 5 rolling backups of orca-data.json so a corrupt or
+// Why (issue #1158): keep 5 rolling backups of korca-data.json so a corrupt or
 // empty write leaves at least one earlier copy recoverable. Five snapshots at
 // >=1-hour spacing cover recent work without churning disk on every debounce.
 const BACKUP_COUNT = 5
@@ -208,7 +208,7 @@ function backupPath(dataFile: string, index: number): string {
 function buildWorkspaceDirHistoryForUpdate(
   current: GlobalSettings,
   updates: Partial<GlobalSettings>
-): OrcaWorkspaceLayout[] | null {
+): KorcaWorkspaceLayout[] | null {
   if (!('workspaceDir' in updates) && !('nestWorkspaces' in updates)) {
     return null
   }
@@ -235,7 +235,7 @@ function buildWorkspaceDirHistoryForUpdate(
   return next
 }
 
-function getWorkspaceLayoutHistoryKey(layout: OrcaWorkspaceLayout): string {
+function getWorkspaceLayoutHistoryKey(layout: KorcaWorkspaceLayout): string {
   return `${normalizeRuntimePathForComparison(layout.path)}:${layout.nestWorkspaces}`
 }
 
@@ -343,7 +343,7 @@ function normalizeNotificationSettings(value: unknown): NotificationSettings {
     rawSoundId === 'beep' ||
     rawSoundId === 'custom'
       ? rawSoundId
-      : rawSoundId === 'orca' || rawSoundId === 'chime'
+      : rawSoundId === 'korca' || rawSoundId === 'chime'
         ? 'two-tone'
         : rawSoundId === 'pop'
           ? 'blop'
@@ -1518,7 +1518,7 @@ export class Store {
 
   private load(allowBackupRecovery = true): PersistedState {
     // Capture once, at the top: this is the unambiguous "has the user run
-    // Orca before?" signal used by the telemetry cohort migration below.
+    // Korca before?" signal used by the telemetry cohort migration below.
     // Field-based inference (e.g., `settings.telemetry` presence) does not
     // work on the telemetry release itself — `telemetry` is new here, so it
     // would be absent on every pre-telemetry install and misclassify existing
@@ -1902,7 +1902,7 @@ export class Store {
           automations: Array.isArray(parsed.automations) ? parsed.automations : [],
           automationRuns: Array.isArray(parsed.automationRuns) ? parsed.automationRuns : [],
           onboarding: (() => {
-            // Why: if we successfully parsed an existing orca-data.json that
+            // Why: if we successfully parsed an existing korca-data.json that
             // lacks an onboarding block, this is an upgrade-cohort user —
             // backfill as completed (not dismissed) so they don't get dropped
             // into the wizard regardless of whether they currently have repos,
@@ -1939,7 +1939,7 @@ export class Store {
 
     // Corrupt-file catch path and "no file on disk" path converge here. The
     // telemetry migration below runs on whichever branch produced `result`,
-    // because a user whose `orca-data.json` got corrupted is not a fresh
+    // because a user whose `korca-data.json` got corrupted is not a fresh
     // install of the telemetry release — they still count as existing and
     // must see the opt-in banner, not the default-on toast.
     if (result === null && allowBackupRecovery) {

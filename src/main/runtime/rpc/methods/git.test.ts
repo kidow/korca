@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { RpcDispatcher } from '../dispatcher'
 import type { RpcRequest } from '../core'
-import type { OrcaRuntimeService } from '../../orca-runtime'
+import type { KorcaRuntimeService } from '../../korca-runtime'
 import { GIT_METHODS } from './git'
 
 function makeRequest(method: string, params?: unknown): RpcRequest {
@@ -19,7 +19,7 @@ describe('git RPC methods', () => {
         branch: 'main',
         head: 'abc'
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(makeRequest('git.status', { worktree: 'id:wt-1' }))
@@ -39,7 +39,7 @@ describe('git RPC methods', () => {
         conflictOperation: 'unknown',
         ignoredPaths: ['dist/']
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -59,7 +59,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       checkRuntimeGitIgnoredPaths: vi.fn().mockResolvedValue(['dist/bundle.js'])
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -89,7 +89,7 @@ describe('git RPC methods', () => {
         originalIsBinary: false,
         modifiedIsBinary: false
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -119,7 +119,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       getRuntimeGitHistory: vi.fn().mockResolvedValue(history)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -144,7 +144,7 @@ describe('git RPC methods', () => {
       bulkUnstageRuntimeGitPaths: vi.fn().mockResolvedValue({ ok: true }),
       discardRuntimeGitPath: vi.fn().mockResolvedValue({ ok: true }),
       bulkDiscardRuntimeGitPaths: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     await dispatcher.dispatch(
@@ -170,7 +170,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       bulkDiscardRuntimeGitPaths: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -201,7 +201,7 @@ describe('git RPC methods', () => {
       abortRuntimeGitRebase: vi.fn().mockResolvedValue({ ok: true }),
       pushRuntimeGit: vi.fn().mockResolvedValue({ ok: true }),
       getRuntimeGitRemoteFileUrl: vi.fn().mockResolvedValue('https://example.com/file#L3')
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     await dispatcher.dispatch(
@@ -256,7 +256,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       pushRuntimeGit: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     await dispatcher.dispatch(
@@ -273,7 +273,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       rebaseRuntimeGitFromBase: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     await dispatcher.dispatch(
@@ -290,7 +290,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       fetchRuntimeGit: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
     const pushTarget = { remoteName: 'fork', branchName: 'feature' }
 
@@ -308,7 +308,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       fastForwardRuntimeGit: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
     const pushTarget = { remoteName: 'fork', branchName: 'feature' }
 
@@ -344,7 +344,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       generateRuntimeCommitMessage: vi.fn().mockResolvedValue({ success: true, message: 'test' })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     await dispatcher.dispatch(
@@ -369,7 +369,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       generateRuntimeCommitMessage: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -393,7 +393,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       getRuntimeGitBranchDiff: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -401,7 +401,7 @@ describe('git RPC methods', () => {
         worktree: 'id:wt-1',
         filePath: 'src/a.ts',
         compare: {
-          headOid: '--output=/tmp/orca-test',
+          headOid: '--output=/tmp/korca-test',
           mergeBase: 'a'.repeat(40)
         }
       })
@@ -415,13 +415,13 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       getRuntimeGitBranchCompare: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(
       makeRequest('git.branchCompare', {
         worktree: 'id:wt-1',
-        baseRef: '--output=/tmp/orca-test'
+        baseRef: '--output=/tmp/korca-test'
       })
     )
 
@@ -433,7 +433,7 @@ describe('git RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       getRuntimeGitHistory: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: GIT_METHODS })
 
     const response = await dispatcher.dispatch(

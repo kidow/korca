@@ -33,7 +33,7 @@ export type WindowsShellWslContext = {
 
 function buildWslShellArgs(linuxCwd: string, distro?: string): string[] {
   const escapedLinuxCwd = linuxCwd.replace(/'/g, "'\\''")
-  // Why: Orca's WSL bridge is installed under ~/.local/bin, but distro login
+  // Why: Korca's WSL bridge is installed under ~/.local/bin, but distro login
   // files do not consistently include that directory before agent commands run.
   const shellArgs = [
     '--',

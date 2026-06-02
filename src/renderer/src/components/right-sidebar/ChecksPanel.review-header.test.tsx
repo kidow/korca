@@ -27,7 +27,7 @@ function renderHeader(canUnlinkPullRequest = true): string {
         number: 2964,
         title: 'fix: pr-bug-scan validated finding',
         state: 'open',
-        url: 'https://github.com/stablyai/orca/pull/2964',
+        url: 'https://github.com/stablyai/korca/pull/2964',
         status: 'pending',
         updatedAt: '2026-05-31T22:58:01Z',
         mergeable: 'UNKNOWN'

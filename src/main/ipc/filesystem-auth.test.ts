@@ -96,7 +96,7 @@ describe('filesystem auth worktree roots', () => {
 
 describe('filesystem-auth path containment', () => {
   it('authorizes missing nested descendants under an allowed repo', async () => {
-    const tempRoot = await mkdtemp(join(tmpdir(), 'orca-auth-missing-'))
+    const tempRoot = await mkdtemp(join(tmpdir(), 'korca-auth-missing-'))
     try {
       const repoPath = join(tempRoot, 'repo')
       await mkdir(repoPath)
@@ -114,7 +114,7 @@ describe('filesystem-auth path containment', () => {
   it.skipIf(process.platform === 'win32')(
     'rejects missing descendants under a symlinked ancestor outside the repo',
     async () => {
-      const tempRoot = await mkdtemp(join(tmpdir(), 'orca-auth-symlink-'))
+      const tempRoot = await mkdtemp(join(tmpdir(), 'korca-auth-symlink-'))
       try {
         const repoPath = join(tempRoot, 'repo')
         const outsidePath = join(tempRoot, 'outside')

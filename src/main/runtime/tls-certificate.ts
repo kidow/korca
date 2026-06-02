@@ -7,8 +7,8 @@ import { execSync } from 'child_process'
 import { existsSync, readFileSync, chmodSync } from 'fs'
 import { join } from 'path'
 
-const TLS_CERT_FILENAME = 'orca-tls-cert.pem'
-const TLS_KEY_FILENAME = 'orca-tls-key.pem'
+const TLS_CERT_FILENAME = 'korca-tls-cert.pem'
+const TLS_KEY_FILENAME = 'korca-tls-key.pem'
 
 export type TlsCertificate = {
   cert: string
@@ -38,7 +38,7 @@ export function loadOrCreateTlsCertificate(userDataPath: string): TlsCertificate
   // Using it avoids hand-rolling ASN.1 DER encoding which is error-prone.
   execSync(
     `openssl req -new -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 ` +
-      `-nodes -days 3650 -subj "/CN=Orca Runtime" ` +
+      `-nodes -days 3650 -subj "/CN=Korca Runtime" ` +
       `-keyout "${keyPath_}" -out "${certPath_}" 2>/dev/null`
   )
 

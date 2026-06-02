@@ -6,7 +6,7 @@ export {
   RuntimeClient,
   RuntimeClientError,
   RuntimeRpcFailureError,
-  serveOrcaApp,
+  serveKorcaApp,
   getDefaultUserDataPath,
   type RuntimeRpcFailure,
   type RuntimeRpcResponse,

@@ -30,7 +30,7 @@ function stashWebBuild(): () => void {
     }
   }
 
-  const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-web-stash-'))
+  const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-web-stash-'))
   const stashedPath = join(tempDir, 'web')
   renameSync(outWebPath, stashedPath)
   return () => {
@@ -58,7 +58,7 @@ describe('run-electron-vite-dev web client prepare', () => {
 
   it('skips the initial web client build when no bundle exists', async () => {
     const restoreWebBuild = stashWebBuild()
-    const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-wrapper-'))
+    const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-wrapper-'))
     const pidFile = join(tempDir, 'grandchild.pid')
     const envFile = join(tempDir, 'env.json')
     const viteFile = join(tempDir, 'vite.txt')
@@ -72,13 +72,13 @@ describe('run-electron-vite-dev web client prepare', () => {
         cwd: resolve('.'),
         env: {
           ...process.env,
-          ORCA_ELECTRON_VITE_CLI: fakeCliPath,
-          ORCA_VITE_CLI: fakeVitePath,
-          ORCA_SKIP_DEV_CLI_PREPARE: '1',
-          ORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
-          ORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
-          ORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
-          ORCA_DEV_WRAPPER_TEST_VITE_FILE: viteFile
+          KORCA_ELECTRON_VITE_CLI: fakeCliPath,
+          KORCA_VITE_CLI: fakeVitePath,
+          KORCA_SKIP_DEV_CLI_PREPARE: '1',
+          KORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
+          KORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
+          KORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
+          KORCA_DEV_WRAPPER_TEST_VITE_FILE: viteFile
         },
         stdio: ['ignore', 'ignore', 'pipe']
       })
@@ -113,7 +113,7 @@ describe('run-electron-vite-dev web client prepare', () => {
 
   it('builds the missing web client bundle when explicitly requested', async () => {
     const restoreWebBuild = stashWebBuild()
-    const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-wrapper-'))
+    const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-wrapper-'))
     const pidFile = join(tempDir, 'grandchild.pid')
     const envFile = join(tempDir, 'env.json')
     const viteFile = join(tempDir, 'vite.txt')
@@ -126,14 +126,14 @@ describe('run-electron-vite-dev web client prepare', () => {
         cwd: resolve('.'),
         env: {
           ...process.env,
-          ORCA_ELECTRON_VITE_CLI: fakeCliPath,
-          ORCA_VITE_CLI: fakeVitePath,
-          ORCA_SKIP_DEV_CLI_PREPARE: '1',
-          ORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
-          ORCA_DEV_WEB_PREPARE: '1',
-          ORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
-          ORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
-          ORCA_DEV_WRAPPER_TEST_VITE_FILE: viteFile
+          KORCA_ELECTRON_VITE_CLI: fakeCliPath,
+          KORCA_VITE_CLI: fakeVitePath,
+          KORCA_SKIP_DEV_CLI_PREPARE: '1',
+          KORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
+          KORCA_DEV_WEB_PREPARE: '1',
+          KORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
+          KORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
+          KORCA_DEV_WRAPPER_TEST_VITE_FILE: viteFile
         },
         stdio: 'ignore'
       })

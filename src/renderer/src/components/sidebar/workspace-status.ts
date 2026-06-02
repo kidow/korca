@@ -43,8 +43,8 @@ export {
   isWorkspaceStatusId
 }
 
-export const WORKSPACE_STATUS_DRAG_TYPE = 'application/x-orca-worktree-id'
-export const WORKSPACE_STATUS_DRAG_IDS_TYPE = 'application/x-orca-worktree-ids'
+export const WORKSPACE_STATUS_DRAG_TYPE = 'application/x-korca-worktree-id'
+export const WORKSPACE_STATUS_DRAG_IDS_TYPE = 'application/x-korca-worktree-ids'
 
 type WorkspaceStatusColorOption = {
   id: string

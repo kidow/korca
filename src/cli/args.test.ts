@@ -44,7 +44,7 @@ describe('validateCommandAndFlags', () => {
     {
       path: ['demo'],
       summary: 'Demo command',
-      usage: 'orca demo',
+      usage: 'korca demo',
       allowedFlags: []
     }
   ]

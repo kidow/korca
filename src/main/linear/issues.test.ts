@@ -70,7 +70,7 @@ describe('Linear issue queries', () => {
     ])
 
     expect(rawRequest).toHaveBeenCalledTimes(1)
-    expect(rawRequest.mock.calls[0][0]).toContain('query OrcaLinearIssues')
+    expect(rawRequest.mock.calls[0][0]).toContain('query KorcaLinearIssues')
     expect(rawRequest.mock.calls[0][0]).toContain('estimate')
   })
 
@@ -93,7 +93,7 @@ describe('Linear issue queries', () => {
     ])
 
     expect(rawRequest).toHaveBeenCalledTimes(1)
-    expect(rawRequest.mock.calls[0][0]).toContain('query OrcaLinearIssueSearch')
+    expect(rawRequest.mock.calls[0][0]).toContain('query KorcaLinearIssueSearch')
     expect(rawRequest.mock.calls[0][0]).toContain('searchIssues(term: $term')
     expect(rawRequest.mock.calls[0][1]).toEqual({ term: 'bug', first: 36 })
   })

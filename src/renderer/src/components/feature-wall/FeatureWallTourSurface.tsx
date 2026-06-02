@@ -15,7 +15,7 @@ import type { FeatureWallOpenSourceTelemetry } from '../../../../shared/telemetr
 import type { FeatureWallTourDepthSummary } from '../../../../shared/feature-wall-tour-depth'
 import { track } from '@/lib/telemetry'
 import { useAppStore } from '@/store'
-import { ORCA_CLI_SKILL_NAME, ORCHESTRATION_SKILL_NAME } from '@/lib/agent-feature-install-commands'
+import { KORCA_CLI_SKILL_NAME, ORCHESTRATION_SKILL_NAME } from '@/lib/agent-feature-install-commands'
 import {
   GLOBAL_AGENT_SKILL_SOURCE_KINDS,
   useInstalledAgentSkill
@@ -58,7 +58,7 @@ export function FeatureWallTourSurface({
   className,
   panelClassName,
   doneLabel = '완료',
-  footerText = '도움말 > Orca 둘러보기에서 언제든 다시 열 수 있습니다.',
+  footerText = '도움말 > Korca 둘러보기에서 언제든 다시 열 수 있습니다.',
   enableKeyboardShortcut = true,
   compactRail = false,
   detachedFooter = false,
@@ -116,7 +116,7 @@ export function FeatureWallTourSurface({
     enabled: isOpen,
     sourceKinds: GLOBAL_AGENT_SKILL_SOURCE_KINDS
   })
-  const browserUseSkill = useInstalledAgentSkill(ORCA_CLI_SKILL_NAME, {
+  const browserUseSkill = useInstalledAgentSkill(KORCA_CLI_SKILL_NAME, {
     enabled: isOpen,
     sourceKinds: GLOBAL_AGENT_SKILL_SOURCE_KINDS
   })

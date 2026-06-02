@@ -1,5 +1,5 @@
 /* eslint-disable no-control-regex, max-lines -- Why: ANSI/OSC stripping must match raw
- * control sequences in PTY output, same as src/main/runtime/orca-runtime.ts;
+ * control sequences in PTY output, same as src/main/runtime/korca-runtime.ts;
  * URL parsing, host classification, cache lifecycle, and cross-worktree lookup
  * are tightly coupled and kept in one file to keep the rules in lockstep. */
 // Watches PTY output for HTTP(S) URLs that dev servers (Vite, Next, etc.)
@@ -22,7 +22,7 @@ const MAX_CACHE_ENTRIES = 256
 const URL_CANDIDATE_LIMIT = 2048
 
 // ANSI/OSC strippers mirror normalizeTerminalChunk in
-// src/main/runtime/orca-runtime.ts so the two stay in lockstep.
+// src/main/runtime/korca-runtime.ts so the two stay in lockstep.
 const OSC_PATTERN = /\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)/g
 const CSI_PATTERN = /\x1b\[[0-?]*[ -/]*[@-~]/g
 const SINGLE_ESC_PATTERN = /\x1b[@-_]/g

@@ -38,8 +38,8 @@ describe('electron-builder config', () => {
     expect(electronBuilderConfig.mac.extraResources).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          from: 'native/computer-use-macos/.build/release/Orca Computer Use.app',
-          to: 'Orca Computer Use.app'
+          from: 'native/computer-use-macos/.build/release/Korca Computer Use.app',
+          to: 'Korca Computer Use.app'
         })
       ])
     )
@@ -67,21 +67,21 @@ describe('electron-builder config', () => {
 
   it('builds RPMs without changing existing Linux artifact names', () => {
     expect(electronBuilderConfig.linux.target).toEqual(['AppImage', 'deb', 'rpm'])
-    expect(electronBuilderConfig.appImage.artifactName).toBe('orca-linux.${ext}')
-    expect(electronBuilderConfig.deb.artifactName).toBe('orca-ide_${version}_${arch}.${ext}')
+    expect(electronBuilderConfig.appImage.artifactName).toBe('korca-linux.${ext}')
+    expect(electronBuilderConfig.deb.artifactName).toBe('korca-ide_${version}_${arch}.${ext}')
     expect(electronBuilderConfig.rpm).toMatchObject({
-      packageName: 'orca-ide',
-      artifactName: 'orca-ide-${version}.${arch}.${ext}'
+      packageName: 'korca-ide',
+      artifactName: 'korca-ide-${version}.${arch}.${ext}'
     })
   })
 
-  it('uses Orca native rebuild hook instead of electron-builder default rebuild', () => {
+  it('uses Korca native rebuild hook instead of electron-builder default rebuild', () => {
     expect(electronBuilderConfig.beforeBuild).toBe(electronBuilderNativeRebuild)
     expect(electronBuilderConfig.npmRebuild).toBe(true)
   })
 
   it('verifies packaged main runtime deps from Windows-style asar entries', async () => {
-    const resourcesDir = await mkdtemp(join(tmpdir(), 'orca-runtime-deps-'))
+    const resourcesDir = await mkdtemp(join(tmpdir(), 'korca-runtime-deps-'))
     try {
       await writeFile(join(resourcesDir, 'app.asar'), '', 'utf8')
       await mkdir(join(resourcesDir, 'node_modules', 'yaml'), { recursive: true })
@@ -110,7 +110,7 @@ describe('electron-builder config', () => {
   })
 
   it('prunes non-target node-pty prebuilds from packaged runtime resources', async () => {
-    const resourcesDir = await mkdtemp(join(tmpdir(), 'orca-node-pty-prune-'))
+    const resourcesDir = await mkdtemp(join(tmpdir(), 'korca-node-pty-prune-'))
     try {
       const prebuildsDir = join(resourcesDir, 'node_modules', 'node-pty', 'prebuilds')
       await mkdir(join(prebuildsDir, 'darwin-arm64'), { recursive: true })
@@ -142,7 +142,7 @@ describe('electron-builder config', () => {
   })
 
   it('prunes type declaration artifacts from packaged runtime node_modules', async () => {
-    const resourcesDir = await mkdtemp(join(tmpdir(), 'orca-runtime-type-prune-'))
+    const resourcesDir = await mkdtemp(join(tmpdir(), 'korca-runtime-type-prune-'))
     try {
       const packageDir = join(resourcesDir, 'node_modules', 'example-package')
       await mkdir(join(packageDir, 'dist'), { recursive: true })
@@ -160,7 +160,7 @@ describe('electron-builder config', () => {
   })
 
   it('prunes duplicate darwin sherpa-onnx runtime dylib aliases', async () => {
-    const resourcesDir = await mkdtemp(join(tmpdir(), 'orca-sherpa-prune-'))
+    const resourcesDir = await mkdtemp(join(tmpdir(), 'korca-sherpa-prune-'))
     try {
       const packageDir = join(resourcesDir, 'node_modules', 'sherpa-onnx-darwin-arm64')
       await mkdir(packageDir, { recursive: true })
@@ -180,7 +180,7 @@ describe('electron-builder config', () => {
   })
 
   it('prunes zod TypeScript sources from packaged runtime resources', async () => {
-    const resourcesDir = await mkdtemp(join(tmpdir(), 'orca-zod-prune-'))
+    const resourcesDir = await mkdtemp(join(tmpdir(), 'korca-zod-prune-'))
     try {
       const packageDir = join(resourcesDir, 'node_modules', 'zod')
       await mkdir(join(packageDir, 'src'), { recursive: true })
@@ -198,10 +198,10 @@ describe('electron-builder config', () => {
   it.skipIf(process.platform === 'win32')(
     'marks packaged Unix CLI launchers executable',
     async () => {
-      const root = await mkdtemp(join(tmpdir(), 'orca-electron-builder-config-'))
+      const root = await mkdtemp(join(tmpdir(), 'korca-electron-builder-config-'))
       try {
         const resourcesDir = join(root, 'linux-unpacked', 'resources')
-        const launcherPath = join(resourcesDir, 'bin', 'orca-ide')
+        const launcherPath = join(resourcesDir, 'bin', 'korca-ide')
         await mkdir(join(resourcesDir, 'bin'), { recursive: true })
         await mkdir(join(resourcesDir, 'node_modules', 'zod', 'src'), { recursive: true })
         await writeFile(launcherPath, '#!/usr/bin/env bash\n', { encoding: 'utf8', mode: 0o644 })

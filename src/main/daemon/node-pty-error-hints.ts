@@ -27,7 +27,7 @@ const RESOURCE_EXHAUSTION_ERRNOS = new Set([
 const PTY_ALLOCATION_HINT = [
   'Your system cannot allocate any more pty devices.',
   '',
-  'Orca requires a pty device to launch a new terminal. This error is usually due to having too many terminal windows or terminal sessions open, either in Orca or another program.',
+  'Korca requires a pty device to launch a new terminal. This error is usually due to having too many terminal windows or terminal sessions open, either in Korca or another program.',
   '',
   'Free up some pty devices and try again.'
 ].join('\n')
@@ -55,7 +55,7 @@ export function parseNodePtyDiagnostic(message: string): NodePtyDiagnostic | nul
 
 export function getNodePtyRecoveryHint(diagnostic: NodePtyDiagnostic): string | null {
   if (diagnostic.step === 'posix_spawn' && diagnostic.errno === 2) {
-    return "Daemon's node-pty install is gone (worktree deleted?). Restart Orca."
+    return "Daemon's node-pty install is gone (worktree deleted?). Restart Korca."
   }
   if (
     PTY_ALLOCATION_STEPS.has(diagnostic.step) &&

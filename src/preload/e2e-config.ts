@@ -10,7 +10,7 @@ const preloadEnv = (
 // Renderer code should consume a typed config object from this bridge instead
 // of reading test-only env vars directly.
 export const preloadE2EConfig = createE2EConfig({
-  headless: process.env.ORCA_E2E_HEADLESS === '1',
+  headless: process.env.KORCA_E2E_HEADLESS === '1',
   exposeStore: preloadEnv?.VITE_EXPOSE_STORE,
-  userDataDir: process.env.ORCA_E2E_USER_DATA_DIR ?? null
+  userDataDir: process.env.KORCA_E2E_USER_DATA_DIR ?? null
 })

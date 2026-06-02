@@ -3,7 +3,7 @@
  * Tests the full lifecycle: mobile-fit → restore → verify PTY resized.
  */
 import { describe, expect, it, vi } from 'vitest'
-import { OrcaRuntimeService } from './orca-runtime'
+import { KorcaRuntimeService } from './korca-runtime'
 
 vi.mock('../git/worktree', () => ({
   listWorktrees: vi.fn().mockResolvedValue([
@@ -69,7 +69,7 @@ const store = {
 
 describe('fit override integration', () => {
   it('full lifecycle: fit → getSize → restore → verify PTY dims', async () => {
-    const runtime = new OrcaRuntimeService(store)
+    const runtime = new KorcaRuntimeService(store)
     const currentSize = { cols: 150, rows: 40 }
     const resizes: { ptyId: string; cols: number; rows: number }[] = []
     const notifications: { ptyId: string; mode: string; cols: number; rows: number }[] = []
@@ -176,7 +176,7 @@ describe('fit override integration', () => {
   })
 
   it('restore resizes PTY even with mounted leaf (the bug fix)', async () => {
-    const runtime = new OrcaRuntimeService(store)
+    const runtime = new KorcaRuntimeService(store)
     let ptySize = { cols: 120, rows: 35 }
     const resizes: string[] = []
 
@@ -249,7 +249,7 @@ describe('fit override integration', () => {
       ...store,
       getSettings: () => ({ ...store.getSettings(), mobileAutoRestoreFitMs: 5_000 })
     }
-    const runtime = new OrcaRuntimeService(finiteRestoreStore)
+    const runtime = new KorcaRuntimeService(finiteRestoreStore)
     let ptySize = { cols: 100, rows: 30 }
 
     runtime.setPtyController({
@@ -288,7 +288,7 @@ describe('fit override integration', () => {
   })
 
   it('disconnect with indefinite hold (default) keeps PTY at phone dims', async () => {
-    const runtime = new OrcaRuntimeService(store)
+    const runtime = new KorcaRuntimeService(store)
     let ptySize = { cols: 100, rows: 30 }
 
     runtime.setPtyController({

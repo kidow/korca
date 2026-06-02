@@ -8,7 +8,7 @@ import { randomBytes } from 'crypto'
 import { readdirSync, rmSync } from 'fs'
 import { join } from 'path'
 import type { RuntimeMetadata, RuntimeTransportMetadata } from '../../shared/runtime-bootstrap'
-import type { OrcaRuntimeService } from './orca-runtime'
+import type { KorcaRuntimeService } from './korca-runtime'
 import { writeRuntimeMetadata } from './runtime-metadata'
 import { RpcDispatcher } from './rpc/dispatcher'
 import type { RpcRequest, RpcResponse } from './rpc/core'
@@ -28,8 +28,8 @@ import {
 
 const DEFAULT_WS_PORT = 6768
 
-type OrcaRuntimeRpcServerOptions = {
-  runtime: OrcaRuntimeService
+type KorcaRuntimeRpcServerOptions = {
+  runtime: KorcaRuntimeService
   userDataPath: string
   pid?: number
   platform?: NodeJS.Platform
@@ -321,8 +321,8 @@ function isLongPollRequest(request: RpcRequest): boolean {
   return false
 }
 
-export class OrcaRuntimeRpcServer {
-  private readonly runtime: OrcaRuntimeService
+export class KorcaRuntimeRpcServer {
+  private readonly runtime: KorcaRuntimeService
   private readonly dispatcher: RpcDispatcher
   private readonly userDataPath: string
   private readonly pid: number
@@ -369,7 +369,7 @@ export class OrcaRuntimeRpcServer {
     webClientRoot,
     keepaliveIntervalMs = KEEPALIVE_INTERVAL_MS,
     longPollCap = LONG_POLL_CAP
-  }: OrcaRuntimeRpcServerOptions) {
+  }: KorcaRuntimeRpcServerOptions) {
     this.runtime = runtime
     this.dispatcher = new RpcDispatcher({ runtime })
     this.userDataPath = userDataPath
@@ -741,7 +741,7 @@ export class OrcaRuntimeRpcServer {
       this.writeMetadata()
     } catch (error) {
       // Why: a runtime that cannot publish bootstrap metadata is invisible to
-      // the `orca` CLI. Close all transports immediately instead of leaving
+      // the `korca` CLI. Close all transports immediately instead of leaving
       // behind a live but undiscoverable control plane.
       this.activeTransports = []
       this.transports = []
@@ -761,7 +761,7 @@ export class OrcaRuntimeRpcServer {
     await Promise.all(transports.map((t) => t.stop()))
     // Why: we intentionally leave the last metadata file behind instead of
     // deleting it on shutdown. Shared userData paths can briefly host multiple
-    // Orca processes during restarts, updates, or development, and stale
+    // Korca processes during restarts, updates, or development, and stale
     // metadata is safer than letting one process erase another live runtime's
     // bootstrap file.
   }
@@ -1027,7 +1027,7 @@ export function createRuntimeTransportMetadata(
       // Why: Windows named pipes do not get the same chmod hardening path as
       // Unix sockets, so include a per-runtime suffix to avoid exposing a
       // stable, guessable control endpoint name across launches.
-      endpoint: `\\\\.\\pipe\\orca-${pid}-${endpointSuffix}`
+      endpoint: `\\\\.\\pipe\\korca-${pid}-${endpointSuffix}`
     }
   }
   return {

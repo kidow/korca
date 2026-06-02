@@ -53,7 +53,7 @@ export const COMMIT_MESSAGE_AI_PANE_SEARCH_ENTRIES: SettingsSearchEntry[] = [
   },
   {
     title: '사용자 지정 명령',
-    description: '커밋 메시지 생성을 위해 Orca가 실행하는 명령행입니다.',
+    description: '커밋 메시지 생성을 위해 Korca가 실행하는 명령행입니다.',
     keywords: ['custom', 'command', 'cli', 'binary', 'prompt', 'placeholder', 'ollama']
   }
 ]

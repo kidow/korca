@@ -17,10 +17,10 @@ let fixtures = new Map<string, ViewerFixture>()
 let linearClientMock: ReturnType<typeof vi.fn>
 
 function writeLegacyLinearFiles(token: string, viewer: Record<string, unknown>): void {
-  const orcaDir = join(tempHome, '.orca')
-  mkdirSync(orcaDir, { recursive: true })
-  writeFileSync(join(orcaDir, 'linear-token.enc'), token, { encoding: 'utf-8' })
-  writeFileSync(join(orcaDir, 'linear-viewer.json'), JSON.stringify(viewer), {
+  const korcaDir = join(tempHome, '.korca')
+  mkdirSync(korcaDir, { recursive: true })
+  writeFileSync(join(korcaDir, 'linear-token.enc'), token, { encoding: 'utf-8' })
+  writeFileSync(join(korcaDir, 'linear-viewer.json'), JSON.stringify(viewer), {
     encoding: 'utf-8'
   })
 }
@@ -65,7 +65,7 @@ async function loadClientModule() {
 }
 
 beforeEach(() => {
-  tempHome = mkdtempLike('orca-linear-client-')
+  tempHome = mkdtempLike('korca-linear-client-')
   fixtures = new Map([
     [
       'token-alpha',
@@ -162,8 +162,8 @@ describe('Linear client workspace storage', () => {
       workspaces: [{ id: 'org-alpha', organizationName: 'Alpha' }]
     })
     expect(status.workspaces?.some((workspace) => workspace.id === 'legacy')).toBe(false)
-    expect(existsSync(join(tempHome, '.orca', 'linear-token.enc'))).toBe(false)
-    expect(readFileSync(join(tempHome, '.orca', 'linear-workspaces.json'), 'utf-8')).toContain(
+    expect(existsSync(join(tempHome, '.korca', 'linear-token.enc'))).toBe(false)
+    expect(readFileSync(join(tempHome, '.korca', 'linear-workspaces.json'), 'utf-8')).toContain(
       'org-alpha'
     )
   })

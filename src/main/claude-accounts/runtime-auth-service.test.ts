@@ -172,7 +172,7 @@ function createManagedClaudeAuth(
 ): string {
   const managedAuthPath = join(rootDir, 'claude-accounts', accountId, 'auth')
   mkdirSync(managedAuthPath, { recursive: true })
-  writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), `${accountId}\n`, 'utf-8')
+  writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), `${accountId}\n`, 'utf-8')
   writeFileSync(join(managedAuthPath, '.credentials.json'), credentialsJson, 'utf-8')
   writeFileSync(join(managedAuthPath, 'oauth-account.json'), oauthAccountJson, 'utf-8')
   testState.managedKeychainCredentials.set(accountId, credentialsJson)
@@ -262,8 +262,8 @@ describe('ClaudeRuntimeAuthService', () => {
     testState.throwScopedKeychainWrite = false
     testState.runtimeWriteConfigDir = null
     testState.managedKeychainCredentials.clear()
-    testState.userDataDir = mkdtempSync(join(tmpdir(), 'orca-claude-runtime-'))
-    testState.fakeHomeDir = mkdtempSync(join(tmpdir(), 'orca-claude-home-'))
+    testState.userDataDir = mkdtempSync(join(tmpdir(), 'korca-claude-runtime-'))
+    testState.fakeHomeDir = mkdtempSync(join(tmpdir(), 'korca-claude-home-'))
     mkdirSync(join(testState.fakeHomeDir, '.claude'), { recursive: true })
   })
 
@@ -397,7 +397,7 @@ describe('ClaudeRuntimeAuthService', () => {
     const service = new ClaudeRuntimeAuthService(store as never)
     await service.syncForCurrentSelection()
 
-    const markerPath = join(managedAuthPath, '.orca-managed-claude-auth')
+    const markerPath = join(managedAuthPath, '.korca-managed-claude-auth')
     expect(readFileSync(runtimeCredentialsPath, 'utf-8')).toBe(managedCredentials)
     expect(lstatSync(markerPath).isFile()).toBe(true)
     expect(readFileSync(markerPath, 'utf-8')).toBe('account-1\n')
@@ -411,7 +411,7 @@ describe('ClaudeRuntimeAuthService', () => {
     const managedAuthPath = join(testState.userDataDir, 'claude-accounts', 'account-1', 'auth')
     const escapedCredentialsPath = join(testState.fakeHomeDir, 'escaped-credentials.json')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(
       join(managedAuthPath, 'oauth-account.json'),
       '{"accountUuid":"account-1"}\n',
@@ -572,7 +572,7 @@ describe('ClaudeRuntimeAuthService', () => {
     )
     const managedAuthPath2 = join(testState.userDataDir, 'claude-accounts', 'account-2', 'auth')
     mkdirSync(managedAuthPath2, { recursive: true })
-    writeFileSync(join(managedAuthPath2, '.orca-managed-claude-auth'), 'account-2\n', 'utf-8')
+    writeFileSync(join(managedAuthPath2, '.korca-managed-claude-auth'), 'account-2\n', 'utf-8')
     writeFileSync(
       join(managedAuthPath2, 'oauth-account.json'),
       '{"accountUuid":"account-2"}\n',
@@ -2324,7 +2324,7 @@ describe('ClaudeRuntimeAuthService', () => {
     const staleManagedCredentials = createClaudeCredentialsJson('managed@example.com', 'managed')
     const managedAuthPath = join(testState.userDataDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     mkdirSync(join(testState.userDataDir, 'claude-runtime-auth'), { recursive: true })
     writeFileSync(
       snapshotPath,
@@ -2369,7 +2369,7 @@ describe('ClaudeRuntimeAuthService', () => {
     const staleManagedCredentials = createClaudeCredentialsJson('managed@example.com', 'managed')
     const managedAuthPath = join(testState.userDataDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(
       runtimeConfigPath,
       `${JSON.stringify({ oauthAccount: { accountUuid: 'account-1' } })}\n`,
@@ -2859,7 +2859,7 @@ describe('ClaudeRuntimeAuthService', () => {
     await service.syncForCurrentSelection()
 
     // A stale account-1 Claude process refreshed the shared runtime file after
-    // Orca selected account-2. Persist that refresh to account-1, then restore
+    // Korca selected account-2. Persist that refresh to account-1, then restore
     // the selected account in the shared Claude runtime credentials.
     writeFileSync(runtimeCredentialsPath, account1Refreshed, 'utf-8')
     testState.scopedKeychainCredentials = account1Refreshed
@@ -3159,7 +3159,7 @@ describe('ClaudeRuntimeAuthService', () => {
     const managedAuthPath = join(testState.userDataDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(join(testState.userDataDir, 'claude-runtime-auth'), { recursive: true })
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(
       snapshotPath,
       `${JSON.stringify({
@@ -3213,7 +3213,7 @@ describe('ClaudeRuntimeAuthService', () => {
     const managedAuthPath = join(testState.userDataDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(join(testState.userDataDir, 'claude-runtime-auth'), { recursive: true })
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(
       snapshotPath,
       `${JSON.stringify({
@@ -3275,7 +3275,7 @@ describe('ClaudeRuntimeAuthService', () => {
     const managedAuthPath = join(testState.userDataDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(join(testState.userDataDir, 'claude-runtime-auth'), { recursive: true })
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(
       snapshotPath,
       `${JSON.stringify({
@@ -3343,13 +3343,13 @@ describe('ClaudeRuntimeAuthService', () => {
   it('clears a selected WSL managed account when its credentials are missing', async () => {
     const managedAuthPath = join(testState.userDataDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     const settings = createSettings({
       claudeManagedAccounts: [
         createClaudeAccount('account-1', managedAuthPath, {
           managedAuthRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxAuthPath: '/home/alice/.local/share/orca/claude-accounts/account-1/auth'
+          wslLinuxAuthPath: '/home/alice/.local/share/korca/claude-accounts/account-1/auth'
         })
       ],
       activeClaudeManagedAccountId: null,
@@ -3395,12 +3395,12 @@ describe('ClaudeRuntimeAuthService', () => {
         createClaudeAccount('ubuntu-account', ubuntuAuthPath, {
           managedAuthRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxAuthPath: '/home/alice/.local/share/orca/claude-accounts/ubuntu/auth'
+          wslLinuxAuthPath: '/home/alice/.local/share/korca/claude-accounts/ubuntu/auth'
         }),
         createClaudeAccount('debian-account', debianAuthPath, {
           managedAuthRuntime: 'wsl',
           wslDistro: 'Debian',
-          wslLinuxAuthPath: '/home/alice/.local/share/orca/claude-accounts/debian/auth'
+          wslLinuxAuthPath: '/home/alice/.local/share/korca/claude-accounts/debian/auth'
         })
       ],
       activeClaudeManagedAccountId: null,
@@ -3422,7 +3422,7 @@ describe('ClaudeRuntimeAuthService', () => {
       expect(preparation).toMatchObject({
         runtime: 'wsl',
         wslDistro: 'Ubuntu',
-        wslLinuxConfigDir: '/home/alice/.local/share/orca/claude-accounts/ubuntu/auth',
+        wslLinuxConfigDir: '/home/alice/.local/share/korca/claude-accounts/ubuntu/auth',
         provenance: 'managed:ubuntu-account:wsl:Ubuntu',
         stripAuthEnv: true
       })

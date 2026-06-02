@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { GlobalSettings, Repo, Worktree, WorktreeMeta } from './types'
 import {
-  buildKnownOrcaWorkspaceLayouts,
+  buildKnownKorcaWorkspaceLayouts,
   classifyWorktreeOwnership,
   effectiveExternalWorktreeVisibility,
   isLegacyRepoForExternalWorktreeVisibility,
@@ -71,7 +71,7 @@ function makeMeta(overrides: Partial<WorktreeMeta> = {}): WorktreeMeta {
 
 function makeSettings(overrides: Partial<GlobalSettings> = {}): GlobalSettings {
   return {
-    workspaceDir: '/orca/workspaces',
+    workspaceDir: '/korca/workspaces',
     nestWorkspaces: true,
     workspaceDirHistory: [],
     refreshLocalBaseRefOnWorktreeCreate: false,
@@ -93,7 +93,7 @@ function makeSettings(overrides: Partial<GlobalSettings> = {}): GlobalSettings {
 }
 
 describe('worktree ownership classification', () => {
-  it('treats explicit Orca metadata as managed even outside the workspace root', () => {
+  it('treats explicit Korca metadata as managed even outside the workspace root', () => {
     const repo = makeRepo()
     const settings = makeSettings()
     expect(
@@ -101,30 +101,30 @@ describe('worktree ownership classification', () => {
         repo,
         settings,
         worktree: makeWorktree({ path: '/tmp/outside' }),
-        meta: makeMeta({ orcaCreatedAt: 1 }),
-        knownOrcaLayouts: buildKnownOrcaWorkspaceLayouts(settings, repo)
+        meta: makeMeta({ korcaCreatedAt: 1 }),
+        knownKorcaLayouts: buildKnownKorcaWorkspaceLayouts(settings, repo)
       })
-    ).toBe('orca-managed')
+    ).toBe('korca-managed')
   })
 
   it('requires the nested repo-specific path shape for path-only ownership', () => {
     const repo = makeRepo()
     const settings = makeSettings()
-    const layouts = buildKnownOrcaWorkspaceLayouts(settings, repo)
+    const layouts = buildKnownKorcaWorkspaceLayouts(settings, repo)
     expect(
       classifyWorktreeOwnership({
         repo,
         settings,
-        worktree: makeWorktree({ path: '/orca/workspaces/app/feature' }),
-        knownOrcaLayouts: layouts
+        worktree: makeWorktree({ path: '/korca/workspaces/app/feature' }),
+        knownKorcaLayouts: layouts
       })
-    ).toBe('orca-managed')
+    ).toBe('korca-managed')
     expect(
       classifyWorktreeOwnership({
         repo,
         settings,
-        worktree: makeWorktree({ path: '/orca/workspaces/other/feature' }),
-        knownOrcaLayouts: layouts
+        worktree: makeWorktree({ path: '/korca/workspaces/other/feature' }),
+        knownKorcaLayouts: layouts
       })
     ).toBe('external')
   })
@@ -136,8 +136,8 @@ describe('worktree ownership classification', () => {
       classifyWorktreeOwnership({
         repo,
         settings,
-        worktree: makeWorktree({ path: '/orca/workspaces/feature' }),
-        knownOrcaLayouts: buildKnownOrcaWorkspaceLayouts(settings, repo)
+        worktree: makeWorktree({ path: '/korca/workspaces/feature' }),
+        knownKorcaLayouts: buildKnownKorcaWorkspaceLayouts(settings, repo)
       })
     ).toBe('unknown-legacy')
   })
@@ -146,14 +146,14 @@ describe('worktree ownership classification', () => {
     const repo = makeRepo()
     const settings = makeSettings({
       nestWorkspaces: true,
-      workspaceDirHistory: [{ path: '/orca/workspaces', nestWorkspaces: false }]
+      workspaceDirHistory: [{ path: '/korca/workspaces', nestWorkspaces: false }]
     })
     expect(
       classifyWorktreeOwnership({
         repo,
         settings,
-        worktree: makeWorktree({ path: '/orca/workspaces/feature' }),
-        knownOrcaLayouts: buildKnownOrcaWorkspaceLayouts(settings, repo)
+        worktree: makeWorktree({ path: '/korca/workspaces/feature' }),
+        knownKorcaLayouts: buildKnownKorcaWorkspaceLayouts(settings, repo)
       })
     ).toBe('unknown-legacy')
   })
@@ -169,9 +169,9 @@ describe('worktree ownership classification', () => {
         repo,
         settings,
         worktree: makeWorktree({ path: '/old/workspaces/app/feature' }),
-        knownOrcaLayouts: buildKnownOrcaWorkspaceLayouts(settings, repo)
+        knownKorcaLayouts: buildKnownKorcaWorkspaceLayouts(settings, repo)
       })
-    ).toBe('orca-managed')
+    ).toBe('korca-managed')
   })
 
   it('builds known layouts from large workspace history lists', () => {
@@ -188,7 +188,7 @@ describe('worktree ownership classification', () => {
       workspaceDirHistory
     })
 
-    const layouts = buildKnownOrcaWorkspaceLayouts(settings, repo)
+    const layouts = buildKnownKorcaWorkspaceLayouts(settings, repo)
 
     expect(layouts).toHaveLength(LARGE_WORKSPACE_HISTORY_COUNT + 1)
     expect(layouts[0]).toEqual({ path: '/new/workspaces', nestWorkspaces: true })
@@ -201,19 +201,19 @@ describe('worktree ownership classification', () => {
 
   it('handles Windows drive casing and separators', () => {
     const repo = makeRepo({ path: 'C:\\repos\\App' })
-    const settings = makeSettings({ workspaceDir: 'C:\\Orca\\Workspaces' })
+    const settings = makeSettings({ workspaceDir: 'C:\\Korca\\Workspaces' })
     expect(
       classifyWorktreeOwnership({
         repo,
         settings,
         worktree: makeWorktree({
-          id: 'repo-1::C:\\ORCA\\WORKSPACES\\App\\Feature',
-          path: 'C:\\ORCA\\WORKSPACES\\App\\Feature',
+          id: 'repo-1::C:\\KORCA\\WORKSPACES\\App\\Feature',
+          path: 'C:\\KORCA\\WORKSPACES\\App\\Feature',
           isMainWorktree: false
         }),
-        knownOrcaLayouts: buildKnownOrcaWorkspaceLayouts(settings, repo)
+        knownKorcaLayouts: buildKnownKorcaWorkspaceLayouts(settings, repo)
       })
-    ).toBe('orca-managed')
+    ).toBe('korca-managed')
   })
 
   it('keeps selected linked checkouts visible without trusting Git main-worktree', () => {
@@ -226,7 +226,7 @@ describe('worktree ownership classification', () => {
         path: '/repos/app-linked',
         isMainWorktree: false
       }),
-      knownOrcaLayouts: buildKnownOrcaWorkspaceLayouts(settings, repo)
+      knownKorcaLayouts: buildKnownKorcaWorkspaceLayouts(settings, repo)
     })
     const gitMain = toDetectedWorktree({
       repo,
@@ -235,7 +235,7 @@ describe('worktree ownership classification', () => {
         path: '/repos/app-main',
         isMainWorktree: true
       }),
-      knownOrcaLayouts: buildKnownOrcaWorkspaceLayouts(settings, repo)
+      knownKorcaLayouts: buildKnownKorcaWorkspaceLayouts(settings, repo)
     })
 
     expect(selected.visible).toBe(true)
@@ -299,7 +299,7 @@ describe('external worktree visibility policy', () => {
     expect(
       shouldShowWorktree({
         repo,
-        worktree: makeWorktree({ path: '/orca/workspaces/feature' }),
+        worktree: makeWorktree({ path: '/korca/workspaces/feature' }),
         ownership: 'unknown-legacy',
         isLegacyRepoForVisibility: true,
         isSelectedCheckout: false

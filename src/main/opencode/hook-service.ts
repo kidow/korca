@@ -17,7 +17,7 @@ import {
 import { createHash } from 'crypto'
 import { mirrorEntry, safeRemoveOverlay } from '../pty/overlay-mirror'
 
-const ORCA_OPENCODE_PLUGIN_FILE = 'orca-opencode-status.js'
+const KORCA_OPENCODE_PLUGIN_FILE = 'korca-opencode-status.js'
 const OPENCODE_LEGACY_HOOKS_DIR = 'opencode-hooks'
 const OPENCODE_OVERLAY_DIR = 'opencode-config-overlays'
 
@@ -54,8 +54,8 @@ function toSafeDirName(id: string): string {
 function getOpenCodePluginSource(): string {
   // Why: the plugin runs inside the OpenCode Node process and POSTs to the
   // unified agent-hooks server shared with Claude/Codex/Gemini. It reads the
-  // same ORCA_PANE_KEY / ORCA_TAB_ID / ORCA_WORKTREE_ID / ORCA_AGENT_HOOK_*
-  // env vars that Orca injects into every PTY, so OpenCode panes flow into
+  // same KORCA_PANE_KEY / KORCA_TAB_ID / KORCA_WORKTREE_ID / KORCA_AGENT_HOOK_*
+  // env vars that Korca injects into every PTY, so OpenCode panes flow into
   // agentStatusByPaneKey via the same IPC path as every other agent. Event
   // mapping is done plugin-side (SessionBusy / SessionIdle / PermissionRequest)
   // so the server-side normalizer can keep its one-event-per-case switch shape.
@@ -63,13 +63,13 @@ function getOpenCodePluginSource(): string {
     '// Why: process-lifetime guard so a recurring parse error on a malformed',
     "// endpoint file does not spam OpenCode's stderr once per hook post.",
     '// This guard lives inside the plugin source because the plugin runs in',
-    "// OpenCode's Node process (not Orca's) and has no access to server.ts's",
+    "// OpenCode's Node process (not Korca's) and has no access to server.ts's",
     '// equivalent warnedVersions / warnedEnvs Sets.',
     'let warnedBadEndpoint = false;',
     '',
     '// Why: message.part.updated can fire many times per second during a',
     '// streaming assistant reply, and each post() calls resolveHookCoords()',
-    '// which reads the endpoint file. The file only changes on Orca restart',
+    '// which reads the endpoint file. The file only changes on Korca restart',
     '// (rare), so a stat+mtime check is substantially cheaper than a full',
     '// readFileSync+parse on every streamed part. On stat error we fall',
     '// through to parse so the fail-open behavior is preserved.',
@@ -77,14 +77,14 @@ function getOpenCodePluginSource(): string {
     'let cachedEndpointValues = null;',
     '',
     'function readEndpointFile() {',
-    '  const path = process.env.ORCA_AGENT_HOOK_ENDPOINT;',
+    '  const path = process.env.KORCA_AGENT_HOOK_ENDPOINT;',
     '  if (!path) return null;',
     '  try {',
     '    const fs = require("fs");',
     '    try {',
     '      const stat = fs.statSync(path);',
     '      // Why: cache key combines mtime + size + inode. renameSync (used by',
-    '      // writeEndpointFile on the Orca side) allocates a fresh inode on',
+    '      // writeEndpointFile on the Korca side) allocates a fresh inode on',
     '      // POSIX and a new Windows file ID on NTFS, so ino changes on every',
     '      // legitimate rewrite even when mtimeMs resolution is coarse and size',
     '      // happens to match.',
@@ -98,7 +98,7 @@ function getOpenCodePluginSource(): string {
     '        // Why: Windows endpoint.cmd uses `set KEY=VALUE`; Unix endpoint.env',
     '        // uses `KEY=VALUE`. Making `set ` optional lets the same parser',
     '        // handle both without platform detection in the plugin. Allow',
-    '        // digits in the key for forward-compat with future ORCA_AGENT_HOOK_*',
+    '        // digits in the key for forward-compat with future KORCA_AGENT_HOOK_*',
     '        // names that may contain numerics, and strip a trailing CR so',
     '        // mixed-EOL files with lone `\\r` do not leak CR into the value.',
     '        const m = line.match(/^(?:set\\s+)?([A-Z0-9_]+)=(.*)$/);',
@@ -124,7 +124,7 @@ function getOpenCodePluginSource(): string {
     '    // pre-install case; stay silent for it.',
     '    if (err && err.code !== "ENOENT" && !warnedBadEndpoint) {',
     '      warnedBadEndpoint = true;',
-    '      console.warn("[orca-hook] failed to parse endpoint file:", err.message);',
+    '      console.warn("[korca-hook] failed to parse endpoint file:", err.message);',
     '    }',
     '    return null;',
     '  }',
@@ -132,17 +132,17 @@ function getOpenCodePluginSource(): string {
     '',
     'function resolveHookCoords() {',
     '  // Why: prefer the on-disk endpoint file over process.env because env was',
-    '  // frozen when OpenCode was fork()ed — stale after an Orca restart. The',
-    '  // file is rewritten on every Orca start(), so sourcing it per post lets',
+    '  // frozen when OpenCode was fork()ed — stale after an Korca restart. The',
+    '  // file is rewritten on every Korca start(), so sourcing it per post lets',
     '  // a long-running OpenCode session reach the current server. Falls back',
-    '  // to process.env when the file is absent (first-run / pre-endpoint-file / Orca',
+    '  // to process.env when the file is absent (first-run / pre-endpoint-file / Korca',
     '  // never started writing the file).',
     '  const fileEnv = readEndpointFile() || {};',
     '  return {',
-    '    port: fileEnv.ORCA_AGENT_HOOK_PORT || process.env.ORCA_AGENT_HOOK_PORT,',
-    '    token: fileEnv.ORCA_AGENT_HOOK_TOKEN || process.env.ORCA_AGENT_HOOK_TOKEN,',
-    '    env: fileEnv.ORCA_AGENT_HOOK_ENV || process.env.ORCA_AGENT_HOOK_ENV || "",',
-    '    version: fileEnv.ORCA_AGENT_HOOK_VERSION || process.env.ORCA_AGENT_HOOK_VERSION || "",',
+    '    port: fileEnv.KORCA_AGENT_HOOK_PORT || process.env.KORCA_AGENT_HOOK_PORT,',
+    '    token: fileEnv.KORCA_AGENT_HOOK_TOKEN || process.env.KORCA_AGENT_HOOK_TOKEN,',
+    '    env: fileEnv.KORCA_AGENT_HOOK_ENV || process.env.KORCA_AGENT_HOOK_ENV || "",',
+    '    version: fileEnv.KORCA_AGENT_HOOK_VERSION || process.env.KORCA_AGENT_HOOK_VERSION || "",',
     '  };',
     '}',
     '',
@@ -170,7 +170,7 @@ function getOpenCodePluginSource(): string {
     '',
     '// Why: oh-my-opencode style tools spawn child sessions that emit their',
     '// own session.idle / message events. Those child completions must not',
-    '// flip the root Orca pane to done or overwrite the parent turn preview.',
+    '// flip the root Korca pane to done or overwrite the parent turn preview.',
     '// Match Superset by checking `parentID` via client.session.list(), cache',
     '// the result per session, and fail closed (assume child) on lookup errors',
     '// so a transient SDK failure cannot create false "done" transitions.',
@@ -196,17 +196,17 @@ function getOpenCodePluginSource(): string {
     '',
     'async function post(hookEventName, extraProperties) {',
     '  // Why: resolve coords per post — the endpoint file may have been',
-    '  // rewritten by a newer Orca since the last call. Pane/tab/worktree IDs',
+    '  // rewritten by a newer Korca since the last call. Pane/tab/worktree IDs',
     '  // stay on process.env because they are per-PTY (stable for the life of',
-    '  // the OpenCode process), not per-Orca-instance.',
+    '  // the OpenCode process), not per-Korca-instance.',
     '  const coords = resolveHookCoords();',
-    '  const paneKey = process.env.ORCA_PANE_KEY;',
+    '  const paneKey = process.env.KORCA_PANE_KEY;',
     '  if (!coords.port || !coords.token || !paneKey) return;',
     '  const url = `http://127.0.0.1:${coords.port}/hook/opencode`;',
     '  const body = JSON.stringify({',
     '    paneKey,',
-    '    tabId: process.env.ORCA_TAB_ID || "",',
-    '    worktreeId: process.env.ORCA_WORKTREE_ID || "",',
+    '    tabId: process.env.KORCA_TAB_ID || "",',
+    '    worktreeId: process.env.KORCA_WORKTREE_ID || "",',
     '    env: coords.env,',
     '    version: coords.version,',
     '    payload: { hook_event_name: hookEventName, ...(extraProperties || {}) },',
@@ -216,13 +216,13 @@ function getOpenCodePluginSource(): string {
     '      method: "POST",',
     '      headers: {',
     '        "Content-Type": "application/json",',
-    '        "X-Orca-Agent-Hook-Token": coords.token,',
+    '        "X-Korca-Agent-Hook-Token": coords.token,',
     '      },',
     '      body,',
     '    });',
     '  } catch {',
     '    // Why: OpenCode session events must never fail the agent run just',
-    '    // because Orca is unavailable or the local loopback request failed.',
+    '    // because Korca is unavailable or the local loopback request failed.',
     '  }',
     '}',
     '',
@@ -240,7 +240,7 @@ function getOpenCodePluginSource(): string {
     '// plugin factory with undefined during startup, which makes the',
     '// destructuring form throw synchronously and crash OpenCode with an opaque',
     '// UnknownError before any event is ever dispatched.',
-    'export const OrcaOpenCodeStatusPlugin = async (_ctx) => {',
+    'export const KorcaOpenCodeStatusPlugin = async (_ctx) => {',
     '  const client = _ctx?.client;',
     '  return {',
     '  event: async ({ event }) => {',
@@ -354,7 +354,7 @@ export class OpenCodeHookService {
       rmSync(this.getLegacyConfigDir(ptyId), { recursive: true, force: true })
     } catch {
       // Why: best-effort cleanup of the no-OPENCODE_CONFIG_DIR-set regime;
-      // there are no symlinks/junctions in this tree (Orca-only files), so
+      // there are no symlinks/junctions in this tree (Korca-only files), so
       // rmSync recursive is safe here.
     }
   }
@@ -363,13 +363,13 @@ export class OpenCodeHookService {
     if (!isUsableId(ptyId)) {
       // Why: defense-in-depth. If the id fails the bounds guard, a user-set
       // OPENCODE_CONFIG_DIR should still be preserved so OpenCode loads the
-      // user's own config — only the Orca status plugin is forfeited.
+      // user's own config — only the Korca status plugin is forfeited.
       return existingConfigDir ? { OPENCODE_CONFIG_DIR: existingConfigDir } : {}
     }
 
     if (!existingConfigDir) {
       // Why: no user value to mirror — keep the original per-PTY behavior so
-      // a manually launched `opencode` outside Orca's command templates picks
+      // a manually launched `opencode` outside Korca's command templates picks
       // up the status plugin via OPENCODE_CONFIG_DIR injection alone.
       const configDir = this.writeLegacyPluginConfig(ptyId)
       if (!configDir) {
@@ -379,7 +379,7 @@ export class OpenCodeHookService {
     }
 
     // Why: do NOT `mkdir -p` the user's typoed path — overriding it with an
-    // Orca-owned dir is the exact failure mode we reject Superset's wrapper
+    // Korca-owned dir is the exact failure mode we reject Superset's wrapper
     // for in docs/opencode-config-dir-collision.md. Let OpenCode surface the
     // typo on its own; we only forfeit our status plugin for this pane.
     if (!existsSync(existingConfigDir)) {
@@ -422,7 +422,7 @@ export class OpenCodeHookService {
 
   // Why: walks the user's OPENCODE_CONFIG_DIR top-level entries. The
   // `plugins/` subdirectory gets created as a real directory in the overlay
-  // so Orca can drop a sibling file alongside the user's plugins; everything
+  // so Korca can drop a sibling file alongside the user's plugins; everything
   // else (opencode.json, auth.json, themes/, etc.) is mirrored as a single
   // top-level entry via symlink/junction so user edits propagate live on
   // POSIX (and on Windows-with-developer-mode) without copying files.
@@ -459,16 +459,16 @@ export class OpenCodeHookService {
           const overlayPluginsDir = join(overlayDir, 'plugins')
           mkdirSync(overlayPluginsDir, { recursive: true })
           for (const pluginEntry of readdirSync(resolvedSource, { withFileTypes: true })) {
-            // Why: skip a user file with the same filename as Orca's plugin —
+            // Why: skip a user file with the same filename as Korca's plugin —
             // mirroring it here would either resolve a same-named target via
             // symlink (writePluginIntoOverlay then clobbers the user's file
             // through the link) or collide on Windows with the directory entry
             // about to be created by writePluginIntoOverlay. Either way the
             // user's plugin would be lost. Skipping yields the desired
-            // semantics: Orca's status plugin runs and the user's same-named
+            // semantics: Korca's status plugin runs and the user's same-named
             // plugin is shadowed for this PTY only — their source file on disk
             // is untouched.
-            if (pluginEntry.name === ORCA_OPENCODE_PLUGIN_FILE) {
+            if (pluginEntry.name === KORCA_OPENCODE_PLUGIN_FILE) {
               continue
             }
             mirrorEntry(
@@ -484,7 +484,7 @@ export class OpenCodeHookService {
     }
   }
 
-  // Why: write Orca's status plugin into the overlay's plugins/ dir. The
+  // Why: write Korca's status plugin into the overlay's plugins/ dir. The
   // pre-write unlink is the load-bearing part — POSIX writeFileSync over a
   // symlink writes through to the link target, so without it a user-owned
   // plugin with this filename would be clobbered through a mirrored link.
@@ -494,7 +494,7 @@ export class OpenCodeHookService {
   private writePluginIntoOverlay(overlayDir: string): void {
     const pluginsDir = join(overlayDir, 'plugins')
     mkdirSync(pluginsDir, { recursive: true })
-    const pluginPath = join(pluginsDir, ORCA_OPENCODE_PLUGIN_FILE)
+    const pluginPath = join(pluginsDir, KORCA_OPENCODE_PLUGIN_FILE)
     try {
       unlinkSync(pluginPath)
     } catch {
@@ -509,7 +509,7 @@ export class OpenCodeHookService {
     const pluginsDir = join(configDir, 'plugins')
     try {
       mkdirSync(pluginsDir, { recursive: true })
-      writeFileSync(join(pluginsDir, ORCA_OPENCODE_PLUGIN_FILE), getOpenCodePluginSource())
+      writeFileSync(join(pluginsDir, KORCA_OPENCODE_PLUGIN_FILE), getOpenCodePluginSource())
     } catch {
       // Why: on Windows, userData directories can be locked by antivirus or
       // indexers (EPERM/EBUSY). Plugin config is non-critical — the PTY should

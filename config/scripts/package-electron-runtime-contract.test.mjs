@@ -69,7 +69,7 @@ describe('Electron runtime package contract', () => {
         command.indexOf('electron-builder')
       )
     }
-    expect(releaseCommands.get('mac')).toContain(' && ORCA_MAC_RELEASE=1 ')
+    expect(releaseCommands.get('mac')).toContain(' && KORCA_MAC_RELEASE=1 ')
     expect(releaseCommands.get('linux')).toContain(' && pnpm exec electron-builder ')
     expect(releaseCommands.get('win')).toContain(
       '; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; pnpm exec electron-builder '
@@ -132,8 +132,8 @@ describe('Electron runtime package contract', () => {
       (step) => step.name === 'Copy cask into tap and open PR'
     )
 
-    expect(resolveCaskStep.run).toContain('token="orca@rc"')
-    expect(resolveCaskStep.run).toContain('token="orca"')
+    expect(resolveCaskStep.run).toContain('token="korca@rc"')
+    expect(resolveCaskStep.run).toContain('token="korca"')
     expect(renderStep.env.CASK_PATH).toBe('${{ steps.cask.outputs.path }}')
     expect(copyStep.run).toContain('cp "$CASK_PATH" "tap/$CASK_PATH"')
     expect(copyStep.run).toContain('git add "$CASK_PATH"')

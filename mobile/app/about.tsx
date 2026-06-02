@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router'
 import { ChevronLeft, Globe } from 'lucide-react-native'
 import Svg, { Path } from 'react-native-svg'
 import Constants from 'expo-constants'
-import { OrcaLogo } from '../src/components/OrcaLogo'
+import { KorcaLogo } from '../src/components/KorcaLogo'
 import { colors, spacing, typography } from '../src/theme/mobile-theme'
 
 // Why: read version + native build identifier from expo-constants at
@@ -50,34 +50,34 @@ export default function AboutScreen() {
       </View>
 
       <View style={styles.brand}>
-        <OrcaLogo size={28} />
-        <Text style={styles.brandName}>Orca</Text>
+        <KorcaLogo size={28} />
+        <Text style={styles.brandName}>Korca</Text>
         <Text style={styles.brandSub}>오픈소스 에이전트 IDE</Text>
       </View>
 
       <View style={styles.section}>
         <Pressable
           style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-          onPress={() => void Linking.openURL('https://onOrca.dev')}
+          onPress={() => void Linking.openURL('https://onKorca.dev')}
         >
           <Globe size={16} color={colors.textSecondary} />
-          <Text style={styles.rowValue}>onOrca.dev</Text>
+          <Text style={styles.rowValue}>onKorca.dev</Text>
         </Pressable>
         <View style={styles.separator} />
         <Pressable
           style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-          onPress={() => void Linking.openURL('https://github.com/stablyai/orca')}
+          onPress={() => void Linking.openURL('https://github.com/stablyai/korca')}
         >
           <GithubIcon />
-          <Text style={styles.rowValue}>stablyai/orca</Text>
+          <Text style={styles.rowValue}>stablyai/korca</Text>
         </Pressable>
         <View style={styles.separator} />
         <Pressable
           style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-          onPress={() => void Linking.openURL('https://x.com/orca_build')}
+          onPress={() => void Linking.openURL('https://x.com/korca_build')}
         >
           <XIcon />
-          <Text style={styles.rowValue}>@orca_build</Text>
+          <Text style={styles.rowValue}>@korca_build</Text>
         </Pressable>
       </View>
 

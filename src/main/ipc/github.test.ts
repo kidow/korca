@@ -11,8 +11,8 @@ const {
   getAuthenticatedViewerMock,
   mergePRMock,
   setPRAutoMergeMock,
-  checkOrcaStarredMock,
-  starOrcaMock,
+  checkKorcaStarredMock,
+  starKorcaMock,
   trackMock,
   getCohortAtEmitMock,
   getAllWebContentsMock
@@ -25,8 +25,8 @@ const {
   getAuthenticatedViewerMock: vi.fn(),
   mergePRMock: vi.fn(),
   setPRAutoMergeMock: vi.fn(),
-  checkOrcaStarredMock: vi.fn(),
-  starOrcaMock: vi.fn(),
+  checkKorcaStarredMock: vi.fn(),
+  starKorcaMock: vi.fn(),
   trackMock: vi.fn(),
   getCohortAtEmitMock: vi.fn(),
   getAllWebContentsMock: vi.fn()
@@ -49,8 +49,8 @@ vi.mock('../github/client', () => ({
   getAuthenticatedViewer: getAuthenticatedViewerMock,
   mergePR: mergePRMock,
   setPRAutoMerge: setPRAutoMergeMock,
-  checkOrcaStarred: checkOrcaStarredMock,
-  starOrca: starOrcaMock
+  checkKorcaStarred: checkKorcaStarredMock,
+  starKorca: starKorcaMock
 }))
 
 vi.mock('../telemetry/client', () => ({
@@ -94,8 +94,8 @@ describe('registerGitHubHandlers', () => {
     getAuthenticatedViewerMock.mockReset()
     mergePRMock.mockReset()
     setPRAutoMergeMock.mockReset()
-    checkOrcaStarredMock.mockReset()
-    starOrcaMock.mockReset()
+    checkKorcaStarredMock.mockReset()
+    starKorcaMock.mockReset()
     trackMock.mockReset()
     getCohortAtEmitMock.mockReset()
     getCohortAtEmitMock.mockReturnValue({ nth_repo_added: undefined })
@@ -278,13 +278,13 @@ describe('registerGitHubHandlers', () => {
         repoPath: '/workspace/repo',
         prNumber: 42,
         method: 'squash',
-        prRepo: { owner: 'acme', repo: 'orca' }
+        prRepo: { owner: 'acme', repo: 'korca' }
       }
     )
 
     expect(mergePRMock).toHaveBeenCalledWith('/workspace/repo', 42, 'squash', 'openclaw-2', {
       owner: 'acme',
-      repo: 'orca'
+      repo: 'korca'
     })
   })
 
@@ -300,13 +300,13 @@ describe('registerGitHubHandlers', () => {
         repoPath: '/workspace/repo',
         prNumber: 42,
         enabled: true,
-        prRepo: { owner: 'acme', repo: 'orca' }
+        prRepo: { owner: 'acme', repo: 'korca' }
       }
     )
 
     expect(setPRAutoMergeMock).toHaveBeenCalledWith('/workspace/repo', 42, true, 'openclaw-2', {
       owner: 'acme',
-      repo: 'orca'
+      repo: 'korca'
     })
   })
 
@@ -322,30 +322,30 @@ describe('registerGitHubHandlers', () => {
     expect(getAuthenticatedViewerMock).toHaveBeenCalled()
   })
 
-  it('emits app_starred_orca once after a successful star with cohort context', async () => {
-    starOrcaMock.mockResolvedValue(true)
+  it('emits app_starred_korca once after a successful star with cohort context', async () => {
+    starKorcaMock.mockResolvedValue(true)
     getCohortAtEmitMock.mockReturnValue({ nth_repo_added: 3 })
 
     registerGitHubHandlers(store as never, stats as never)
 
-    await expect(handlers['gh:starOrca'](null, 'settings')).resolves.toBe(true)
+    await expect(handlers['gh:starKorca'](null, 'settings')).resolves.toBe(true)
 
-    expect(starOrcaMock).toHaveBeenCalledTimes(1)
+    expect(starKorcaMock).toHaveBeenCalledTimes(1)
     expect(getCohortAtEmitMock).toHaveBeenCalledTimes(1)
     expect(trackMock).toHaveBeenCalledTimes(1)
-    expect(trackMock).toHaveBeenCalledWith('app_starred_orca', {
+    expect(trackMock).toHaveBeenCalledWith('app_starred_korca', {
       source: 'settings',
       nth_repo_added: 3
     })
   })
 
   it('accepts every app star source for success telemetry', async () => {
-    starOrcaMock.mockResolvedValue(true)
+    starKorcaMock.mockResolvedValue(true)
 
     registerGitHubHandlers(store as never, stats as never)
 
     for (const source of ['star_nag', 'settings', 'landing'] as const) {
-      await expect(handlers['gh:starOrca'](null, source)).resolves.toBe(true)
+      await expect(handlers['gh:starKorca'](null, source)).resolves.toBe(true)
     }
 
     expect(trackMock).toHaveBeenCalledTimes(3)
@@ -356,37 +356,37 @@ describe('registerGitHubHandlers', () => {
     ])
   })
 
-  it('does not emit app_starred_orca when the star action returns false', async () => {
-    starOrcaMock.mockResolvedValue(false)
+  it('does not emit app_starred_korca when the star action returns false', async () => {
+    starKorcaMock.mockResolvedValue(false)
 
     registerGitHubHandlers(store as never, stats as never)
 
-    await expect(handlers['gh:starOrca'](null, 'landing')).resolves.toBe(false)
+    await expect(handlers['gh:starKorca'](null, 'landing')).resolves.toBe(false)
 
-    expect(starOrcaMock).toHaveBeenCalledTimes(1)
+    expect(starKorcaMock).toHaveBeenCalledTimes(1)
     expect(trackMock).not.toHaveBeenCalled()
     expect(getCohortAtEmitMock).not.toHaveBeenCalled()
   })
 
-  it('does not emit app_starred_orca when the star action throws', async () => {
-    starOrcaMock.mockRejectedValue(new Error('gh failed'))
+  it('does not emit app_starred_korca when the star action throws', async () => {
+    starKorcaMock.mockRejectedValue(new Error('gh failed'))
 
     registerGitHubHandlers(store as never, stats as never)
 
-    await expect(handlers['gh:starOrca'](null, 'star_nag')).rejects.toThrow('gh failed')
+    await expect(handlers['gh:starKorca'](null, 'star_nag')).rejects.toThrow('gh failed')
 
     expect(trackMock).not.toHaveBeenCalled()
     expect(getCohortAtEmitMock).not.toHaveBeenCalled()
   })
 
   it('preserves star result but skips telemetry for an invalid IPC source', async () => {
-    starOrcaMock.mockResolvedValue(true)
+    starKorcaMock.mockResolvedValue(true)
 
     registerGitHubHandlers(store as never, stats as never)
 
-    await expect(handlers['gh:starOrca'](null, 'github_website')).resolves.toBe(true)
+    await expect(handlers['gh:starKorca'](null, 'github_website')).resolves.toBe(true)
 
-    expect(starOrcaMock).toHaveBeenCalledTimes(1)
+    expect(starKorcaMock).toHaveBeenCalledTimes(1)
     expect(trackMock).not.toHaveBeenCalled()
     expect(getCohortAtEmitMock).not.toHaveBeenCalled()
   })

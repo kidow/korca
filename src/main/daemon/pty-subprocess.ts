@@ -24,11 +24,11 @@ import { removeInheritedNoColor } from '../pty/terminal-color-env'
 import { parseWslPath } from '../wsl'
 import { addWslEnvKeys } from '../wsl-env'
 import { getWslContextFromSessionId } from './wsl-session-context'
-import { addOrcaWslInteropEnv } from '../pty/wsl-orca-env'
+import { addKorcaWslInteropEnv } from '../pty/wsl-korca-env'
 import { isWindowsGitBashShellPath, resolveWindowsGitBashShellPath } from '../git-bash'
 import { WINDOWS_GIT_BASH_SHELL } from '../../shared/windows-terminal-shell'
 
-const PANE_IDENTITY_ENV_KEYS = ['ORCA_PANE_KEY', 'ORCA_TAB_ID', 'ORCA_WORKTREE_ID'] as const
+const PANE_IDENTITY_ENV_KEYS = ['KORCA_PANE_KEY', 'KORCA_TAB_ID', 'KORCA_WORKTREE_ID'] as const
 
 export type PtySubprocessOptions = {
   sessionId: string
@@ -78,11 +78,11 @@ function removeInheritedDevAgentHookEndpoint(
   env: Record<string, string>,
   explicitEnv: Record<string, string> | undefined
 ): void {
-  if (explicitEnv?.ORCA_AGENT_HOOK_ENV === 'development' && !explicitEnv.ORCA_AGENT_HOOK_ENDPOINT) {
+  if (explicitEnv?.KORCA_AGENT_HOOK_ENV === 'development' && !explicitEnv.KORCA_AGENT_HOOK_ENDPOINT) {
     // Why: the daemon inherits the app process env before per-PTY env is
     // merged. Strip only stale parent endpoints; a fresh explicit endpoint is
     // needed by hooks whose runners scrub token-like env vars before exec.
-    delete env.ORCA_AGENT_HOOK_ENDPOINT
+    delete env.KORCA_AGENT_HOOK_ENDPOINT
   }
 }
 
@@ -104,7 +104,7 @@ function formatMissingDaemonPathError(kind: 'helper' | 'cwd', path: string): Dae
   const step = kind === 'helper' ? 'posix_spawn' : 'daemon_cwd'
   return new DaemonProtocolError(
     `Daemon's ${kind === 'helper' ? 'node-pty install' : 'working directory'} is gone ` +
-      `(worktree deleted?). Restart Orca. node-pty: ${step} failed: ENOENT ` +
+      `(worktree deleted?). Restart Korca. node-pty: ${step} failed: ENOENT ` +
       `(errno 2, No such file or directory) - ${detailName}='${path}'`
   )
 }
@@ -192,16 +192,16 @@ export function createPtySubprocess(opts: PtySubprocessOptions): SubprocessHandl
     ...opts.env,
     TERM: 'xterm-256color',
     COLORTERM: 'truecolor',
-    TERM_PROGRAM: 'Orca',
+    TERM_PROGRAM: 'Korca',
     // Why: TUIs feature-gate on TERM_PROGRAM_VERSION. The daemon is forked
-    // by main (daemon-init.ts:93) with the parent's env, so ORCA_APP_VERSION
+    // by main (daemon-init.ts:93) with the parent's env, so KORCA_APP_VERSION
     // — set in src/main/index.ts from app.getVersion() — is inherited here.
-    TERM_PROGRAM_VERSION: process.env.ORCA_APP_VERSION ?? '0.0.0-dev',
+    TERM_PROGRAM_VERSION: process.env.KORCA_APP_VERSION ?? '0.0.0-dev',
     // Why: opt tools (Claude Code, ls --hyperlink, etc.) into emitting OSC 8
     // hyperlinks. The `supports-hyperlinks` npm package gates on a hard-coded
     // TERM_PROGRAM allowlist (iTerm.app / WezTerm / vscode) and returns false
-    // for TERM_PROGRAM=Orca, so callers drop OSC 8 output entirely and emit
-    // bare text instead. xterm.js in Orca parses OSC 8 and the pane's
+    // for TERM_PROGRAM=Korca, so callers drop OSC 8 output entirely and emit
+    // bare text instead. xterm.js in Korca parses OSC 8 and the pane's
     // linkHandler routes clicks, so forcing the advertisement is safe and
     // restores clickable refs like `owner/repo#123` / `PR#123`.
     FORCE_HYPERLINK: '1'
@@ -294,12 +294,12 @@ export function createPtySubprocess(opts: PtySubprocessOptions): SubprocessHandl
           cwdWslInfo?.distro ?? sessionWslContext?.distro ?? preferredWslContext?.distro
         if (launchWslDistro && launchWslDistro !== codexHomeWslInfo.distro) {
           delete env.CODEX_HOME
-          delete env.ORCA_CODEX_HOME
+          delete env.KORCA_CODEX_HOME
         } else {
           env.CODEX_HOME = codexHomeWslInfo.linuxPath
-          env.ORCA_CODEX_HOME = codexHomeWslInfo.linuxPath
+          env.KORCA_CODEX_HOME = codexHomeWslInfo.linuxPath
           // Why: wsl.exe only imports non-default env vars named in WSLENV.
-          addWslEnvKeys(env, ['CODEX_HOME', 'ORCA_CODEX_HOME'])
+          addWslEnvKeys(env, ['CODEX_HOME', 'KORCA_CODEX_HOME'])
           if (!launchWslDistro) {
             const resolved = resolveWindowsShellLaunchArgs(
               shellPath,
@@ -315,12 +315,12 @@ export function createPtySubprocess(opts: PtySubprocessOptions): SubprocessHandl
           }
         }
       } else if (isHostCodexHomeForWsl(env.CODEX_HOME)) {
-        // Why: Orca's selected Codex runtime home is host-local. WSL Codex
+        // Why: Korca's selected Codex runtime home is host-local. WSL Codex
         // must use its Linux-side ~/.codex instead of a Windows path.
         delete env.CODEX_HOME
-        delete env.ORCA_CODEX_HOME
+        delete env.KORCA_CODEX_HOME
       } else if (env.CODEX_HOME) {
-        addWslEnvKeys(env, ['CODEX_HOME', 'ORCA_CODEX_HOME'])
+        addWslEnvKeys(env, ['CODEX_HOME', 'KORCA_CODEX_HOME'])
       }
       if (env.CLAUDE_CONFIG_DIR) {
         // Why: managed WSL Claude accounts pass a Linux CLAUDE_CONFIG_DIR
@@ -329,24 +329,24 @@ export function createPtySubprocess(opts: PtySubprocessOptions): SubprocessHandl
       }
     } else if (codexHomeWslInfo || isWslCodexHomeForHost(env.CODEX_HOME)) {
       // Why: WSL-managed Codex homes are Linux paths. Windows Codex cannot use
-      // them. ORCA_CODEX_HOME must go too because shell-ready scripts restore
+      // them. KORCA_CODEX_HOME must go too because shell-ready scripts restore
       // CODEX_HOME from it after user profiles run.
       delete env.CODEX_HOME
-      delete env.ORCA_CODEX_HOME
+      delete env.KORCA_CODEX_HOME
     }
     if (pathWin32.basename(shellPath).toLowerCase() === 'wsl.exe') {
-      addOrcaWslInteropEnv(env)
+      addKorcaWslInteropEnv(env)
     }
   } else {
-    // Why: any Orca-injected overlay env that user rc files can clobber
+    // Why: any Korca-injected overlay env that user rc files can clobber
     // needs the wrapper so the post-rc restore line runs.
     const shellLaunch = opts.command
       ? getShellReadyLaunchConfig(shellPath)
-      : env.ORCA_ATTRIBUTION_SHIM_DIR ||
-          env.ORCA_OPENCODE_CONFIG_DIR ||
-          env.ORCA_PI_CODING_AGENT_DIR ||
-          env.ORCA_OMP_CODING_AGENT_DIR ||
-          env.ORCA_CODEX_HOME
+      : env.KORCA_ATTRIBUTION_SHIM_DIR ||
+          env.KORCA_OPENCODE_CONFIG_DIR ||
+          env.KORCA_PI_CODING_AGENT_DIR ||
+          env.KORCA_OMP_CODING_AGENT_DIR ||
+          env.KORCA_CODEX_HOME
         ? getAttributionShellLaunchConfig(shellPath)
         : null
     if (shellLaunch) {

@@ -18,15 +18,15 @@ import type { FeatureInteractionId } from '../../../shared/feature-interactions'
 import { isBrowserPaneUiRuntimeRpcParams } from '../../../shared/runtime-rpc-feature-interaction-source'
 import { errorResponse, mapBrowserError, mapRuntimeError, successResponse } from './errors'
 import { ALL_RPC_METHODS } from './methods'
-import type { OrcaRuntimeService } from '../orca-runtime'
+import type { KorcaRuntimeService } from '../korca-runtime'
 
 export type DispatcherOptions = {
-  runtime: OrcaRuntimeService
+  runtime: KorcaRuntimeService
   methods?: readonly RpcAnyMethod[]
 }
 
 export class RpcDispatcher {
-  private readonly runtime: OrcaRuntimeService
+  private readonly runtime: KorcaRuntimeService
   private readonly registry: RpcRegistry
 
   constructor({ runtime, methods = ALL_RPC_METHODS }: DispatcherOptions) {

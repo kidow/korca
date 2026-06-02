@@ -31,8 +31,8 @@ describe('OnboardingFlow', () => {
       />
     )
 
-    expect(html).toContain('Orca 둘러보기')
-    expect(html).toContain('Orca의 고급 기능을 60초 만에 살펴보세요.')
+    expect(html).toContain('Korca 둘러보기')
+    expect(html).toContain('Korca의 고급 기능을 60초 만에 살펴보세요.')
     expect(html).toContain('둘러보기 시작')
     // Why: the prior intro carried a redundant lead, a four-item checklist, and
     // a help-menu footnote. The tour animation already conveys all of that, so
@@ -56,8 +56,8 @@ describe('OnboardingFlow', () => {
       />
     )
 
-    expect(html).toContain('에이전트용 Orca를 설정하세요')
-    expect(html).toContain('에이전트가 쓸 고급 Orca 기능을 켜세요.')
+    expect(html).toContain('에이전트용 Korca를 설정하세요')
+    expect(html).toContain('에이전트가 쓸 고급 Korca 기능을 켜세요.')
     expect(html).toContain('기능 켜기')
     expect(html).toContain('계속')
     expect(html).toContain('프로젝트 설정으로 건너뛰기')
@@ -83,7 +83,7 @@ describe('OnboardingFlow', () => {
       />
     )
 
-    expect(html).toContain('Orca 둘러보기')
+    expect(html).toContain('Korca 둘러보기')
     expect(html).not.toContain('GitHub 작업을 설정하세요')
     expect(html).not.toContain('작업 소스를 연결하세요')
   })

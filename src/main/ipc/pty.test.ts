@@ -176,7 +176,7 @@ function makeDisposable() {
 
 describe('registerPtyHandlers', () => {
   const testCodexHomePath =
-    process.platform === 'win32' ? 'C:\\tmp\\orca-codex-home' : '/tmp/orca-codex-home'
+    process.platform === 'win32' ? 'C:\\tmp\\korca-codex-home' : '/tmp/korca-codex-home'
   const handlers = new Map<string, (_event: unknown, args: unknown) => unknown>()
   const mainWindow = {
     isDestroyed: () => false,
@@ -188,30 +188,30 @@ describe('registerPtyHandlers', () => {
   }
 
   const savedOpenCodeConfigDir = process.env.OPENCODE_CONFIG_DIR
-  const savedOrcaOpenCodeConfigDir = process.env.ORCA_OPENCODE_CONFIG_DIR
-  const savedOrcaOpenCodeSourceConfigDir = process.env.ORCA_OPENCODE_SOURCE_CONFIG_DIR
+  const savedKorcaOpenCodeConfigDir = process.env.KORCA_OPENCODE_CONFIG_DIR
+  const savedKorcaOpenCodeSourceConfigDir = process.env.KORCA_OPENCODE_SOURCE_CONFIG_DIR
   const savedPiAgentDir = process.env.PI_CODING_AGENT_DIR
-  const savedOrcaPiAgentDir = process.env.ORCA_PI_CODING_AGENT_DIR
-  const savedOrcaPiSourceAgentDir = process.env.ORCA_PI_SOURCE_AGENT_DIR
-  const savedOrcaCodexHome = process.env.ORCA_CODEX_HOME
-  const savedOrcaOmpAgentDir = process.env.ORCA_OMP_CODING_AGENT_DIR
-  const savedOrcaOmpSourceAgentDir = process.env.ORCA_OMP_SOURCE_AGENT_DIR
-  const savedOrcaOmpStatusExtension = process.env.ORCA_OMP_STATUS_EXTENSION
-  const savedOrcaClaudeAgentStatusSettings = process.env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS
+  const savedKorcaPiAgentDir = process.env.KORCA_PI_CODING_AGENT_DIR
+  const savedKorcaPiSourceAgentDir = process.env.KORCA_PI_SOURCE_AGENT_DIR
+  const savedKorcaCodexHome = process.env.KORCA_CODEX_HOME
+  const savedKorcaOmpAgentDir = process.env.KORCA_OMP_CODING_AGENT_DIR
+  const savedKorcaOmpSourceAgentDir = process.env.KORCA_OMP_SOURCE_AGENT_DIR
+  const savedKorcaOmpStatusExtension = process.env.KORCA_OMP_STATUS_EXTENSION
+  const savedKorcaClaudeAgentStatusSettings = process.env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS
 
   beforeEach(() => {
     delete process.env.OPENCODE_CONFIG_DIR
-    delete process.env.ORCA_OPENCODE_SOURCE_CONFIG_DIR
-    delete process.env.ORCA_OPENCODE_CONFIG_DIR
-    delete process.env.ORCA_AGENT_HOOK_ENDPOINT
-    delete process.env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS
+    delete process.env.KORCA_OPENCODE_SOURCE_CONFIG_DIR
+    delete process.env.KORCA_OPENCODE_CONFIG_DIR
+    delete process.env.KORCA_AGENT_HOOK_ENDPOINT
+    delete process.env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS
     delete process.env.PI_CODING_AGENT_DIR
-    delete process.env.ORCA_PI_SOURCE_AGENT_DIR
-    delete process.env.ORCA_PI_CODING_AGENT_DIR
-    delete process.env.ORCA_CODEX_HOME
-    delete process.env.ORCA_OMP_SOURCE_AGENT_DIR
-    delete process.env.ORCA_OMP_CODING_AGENT_DIR
-    delete process.env.ORCA_OMP_STATUS_EXTENSION
+    delete process.env.KORCA_PI_SOURCE_AGENT_DIR
+    delete process.env.KORCA_PI_CODING_AGENT_DIR
+    delete process.env.KORCA_CODEX_HOME
+    delete process.env.KORCA_OMP_SOURCE_AGENT_DIR
+    delete process.env.KORCA_OMP_CODING_AGENT_DIR
+    delete process.env.KORCA_OMP_STATUS_EXTENSION
     handlers.clear()
     handleMock.mockReset()
     onMock.mockReset()
@@ -248,27 +248,27 @@ describe('registerPtyHandlers', () => {
     handleMock.mockImplementation((channel: string, handler: (...a: unknown[]) => unknown) => {
       handlers.set(channel, handler)
     })
-    getPathMock.mockReturnValue('/tmp/orca-user-data')
+    getPathMock.mockReturnValue('/tmp/korca-user-data')
     existsSyncMock.mockReturnValue(true)
     statSyncMock.mockReturnValue({ isDirectory: () => true, mode: 0o755 })
     readFileSyncMock.mockReturnValue('')
     openCodeBuildPtyEnvMock.mockImplementation((_ptyId: string, existingConfigDir?: string) => ({
-      ORCA_OPENCODE_HOOK_PORT: '4567',
-      ORCA_OPENCODE_HOOK_TOKEN: 'opencode-token',
-      ORCA_OPENCODE_PTY_ID: 'test-pty',
+      KORCA_OPENCODE_HOOK_PORT: '4567',
+      KORCA_OPENCODE_HOOK_TOKEN: 'opencode-token',
+      KORCA_OPENCODE_PTY_ID: 'test-pty',
       OPENCODE_CONFIG_DIR: existingConfigDir
-        ? '/tmp/orca-opencode-overlay'
-        : '/tmp/orca-opencode-config'
+        ? '/tmp/korca-opencode-overlay'
+        : '/tmp/korca-opencode-config'
     }))
     buildAgentHookEnvMock.mockReturnValue({
-      ORCA_AGENT_HOOK_PORT: '5678',
-      ORCA_AGENT_HOOK_TOKEN: 'agent-token'
+      KORCA_AGENT_HOOK_PORT: '5678',
+      KORCA_AGENT_HOOK_TOKEN: 'agent-token'
     })
     piBuildPtyEnvMock.mockImplementation(
       (_ptyId: string, existingAgentDir?: string, _kind?: string) => ({
         PI_CODING_AGENT_DIR: existingAgentDir
-          ? '/tmp/orca-pi-agent-overlay'
-          : '/tmp/orca-pi-agent-overlay'
+          ? '/tmp/korca-pi-agent-overlay'
+          : '/tmp/korca-pi-agent-overlay'
       })
     )
     isPwshAvailableMock.mockReturnValue(false)
@@ -291,55 +291,55 @@ describe('registerPtyHandlers', () => {
     } else {
       delete process.env.OPENCODE_CONFIG_DIR
     }
-    if (savedOrcaOpenCodeConfigDir !== undefined) {
-      process.env.ORCA_OPENCODE_CONFIG_DIR = savedOrcaOpenCodeConfigDir
+    if (savedKorcaOpenCodeConfigDir !== undefined) {
+      process.env.KORCA_OPENCODE_CONFIG_DIR = savedKorcaOpenCodeConfigDir
     } else {
-      delete process.env.ORCA_OPENCODE_CONFIG_DIR
+      delete process.env.KORCA_OPENCODE_CONFIG_DIR
     }
-    if (savedOrcaOpenCodeSourceConfigDir !== undefined) {
-      process.env.ORCA_OPENCODE_SOURCE_CONFIG_DIR = savedOrcaOpenCodeSourceConfigDir
+    if (savedKorcaOpenCodeSourceConfigDir !== undefined) {
+      process.env.KORCA_OPENCODE_SOURCE_CONFIG_DIR = savedKorcaOpenCodeSourceConfigDir
     } else {
-      delete process.env.ORCA_OPENCODE_SOURCE_CONFIG_DIR
+      delete process.env.KORCA_OPENCODE_SOURCE_CONFIG_DIR
     }
     if (savedPiAgentDir !== undefined) {
       process.env.PI_CODING_AGENT_DIR = savedPiAgentDir
     } else {
       delete process.env.PI_CODING_AGENT_DIR
     }
-    if (savedOrcaPiAgentDir !== undefined) {
-      process.env.ORCA_PI_CODING_AGENT_DIR = savedOrcaPiAgentDir
+    if (savedKorcaPiAgentDir !== undefined) {
+      process.env.KORCA_PI_CODING_AGENT_DIR = savedKorcaPiAgentDir
     } else {
-      delete process.env.ORCA_PI_CODING_AGENT_DIR
+      delete process.env.KORCA_PI_CODING_AGENT_DIR
     }
-    if (savedOrcaPiSourceAgentDir === undefined) {
-      delete process.env.ORCA_PI_SOURCE_AGENT_DIR
+    if (savedKorcaPiSourceAgentDir === undefined) {
+      delete process.env.KORCA_PI_SOURCE_AGENT_DIR
     } else {
-      process.env.ORCA_PI_SOURCE_AGENT_DIR = savedOrcaPiSourceAgentDir
+      process.env.KORCA_PI_SOURCE_AGENT_DIR = savedKorcaPiSourceAgentDir
     }
-    if (savedOrcaCodexHome === undefined) {
-      delete process.env.ORCA_CODEX_HOME
+    if (savedKorcaCodexHome === undefined) {
+      delete process.env.KORCA_CODEX_HOME
     } else {
-      process.env.ORCA_CODEX_HOME = savedOrcaCodexHome
+      process.env.KORCA_CODEX_HOME = savedKorcaCodexHome
     }
-    if (savedOrcaOmpAgentDir !== undefined) {
-      process.env.ORCA_OMP_CODING_AGENT_DIR = savedOrcaOmpAgentDir
+    if (savedKorcaOmpAgentDir !== undefined) {
+      process.env.KORCA_OMP_CODING_AGENT_DIR = savedKorcaOmpAgentDir
     } else {
-      delete process.env.ORCA_OMP_CODING_AGENT_DIR
+      delete process.env.KORCA_OMP_CODING_AGENT_DIR
     }
-    if (savedOrcaOmpSourceAgentDir !== undefined) {
-      process.env.ORCA_OMP_SOURCE_AGENT_DIR = savedOrcaOmpSourceAgentDir
+    if (savedKorcaOmpSourceAgentDir !== undefined) {
+      process.env.KORCA_OMP_SOURCE_AGENT_DIR = savedKorcaOmpSourceAgentDir
     } else {
-      delete process.env.ORCA_OMP_SOURCE_AGENT_DIR
+      delete process.env.KORCA_OMP_SOURCE_AGENT_DIR
     }
-    if (savedOrcaOmpStatusExtension !== undefined) {
-      process.env.ORCA_OMP_STATUS_EXTENSION = savedOrcaOmpStatusExtension
+    if (savedKorcaOmpStatusExtension !== undefined) {
+      process.env.KORCA_OMP_STATUS_EXTENSION = savedKorcaOmpStatusExtension
     } else {
-      delete process.env.ORCA_OMP_STATUS_EXTENSION
+      delete process.env.KORCA_OMP_STATUS_EXTENSION
     }
-    if (savedOrcaClaudeAgentStatusSettings === undefined) {
-      delete process.env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS
+    if (savedKorcaClaudeAgentStatusSettings === undefined) {
+      delete process.env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS
     } else {
-      process.env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS = savedOrcaClaudeAgentStatusSettings
+      process.env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS = savedKorcaClaudeAgentStatusSettings
     }
   })
 
@@ -507,67 +507,67 @@ describe('registerPtyHandlers', () => {
       const env = await spawnAndGetEnv()
       expect(env.TERM).toBe('xterm-256color')
       expect(env.COLORTERM).toBe('truecolor')
-      expect(env.TERM_PROGRAM).toBe('Orca')
+      expect(env.TERM_PROGRAM).toBe('Korca')
     })
 
     it('advertises OSC 8 hyperlink support via FORCE_HYPERLINK', async () => {
       // Why: the supports-hyperlinks npm package hard-codes a TERM_PROGRAM
       // allowlist (iTerm.app / WezTerm / vscode) and reports false for
-      // TERM_PROGRAM=Orca, so tools like Claude Code emit plain text instead
+      // TERM_PROGRAM=Korca, so tools like Claude Code emit plain text instead
       // of ESC]8;; wrappers. Setting FORCE_HYPERLINK=1 forces the detector to
       // return true; xterm.js + our linkHandler handle the sequences natively.
       const env = await spawnAndGetEnv()
       expect(env.FORCE_HYPERLINK).toBe('1')
     })
 
-    it('surfaces ORCA_APP_VERSION as TERM_PROGRAM_VERSION for TUI feature gating', async () => {
-      const env = await spawnAndGetEnv(undefined, { ORCA_APP_VERSION: '1.2.3-test' })
+    it('surfaces KORCA_APP_VERSION as TERM_PROGRAM_VERSION for TUI feature gating', async () => {
+      const env = await spawnAndGetEnv(undefined, { KORCA_APP_VERSION: '1.2.3-test' })
       expect(env.TERM_PROGRAM_VERSION).toBe('1.2.3-test')
     })
 
-    it('falls back to a placeholder version when ORCA_APP_VERSION is unset', async () => {
-      const env = await spawnAndGetEnv(undefined, { ORCA_APP_VERSION: undefined })
+    it('falls back to a placeholder version when KORCA_APP_VERSION is unset', async () => {
+      const env = await spawnAndGetEnv(undefined, { KORCA_APP_VERSION: undefined })
       expect(env.TERM_PROGRAM_VERSION).toBe('0.0.0-dev')
     })
 
-    it('injects the selected Codex home into Orca terminal PTYs', async () => {
+    it('injects the selected Codex home into Korca terminal PTYs', async () => {
       const env = await spawnAndGetEnv(undefined, undefined, () => testCodexHomePath)
       expect(env.CODEX_HOME).toBe(testCodexHomePath)
-      expect(env.ORCA_CODEX_HOME).toBe(testCodexHomePath)
+      expect(env.KORCA_CODEX_HOME).toBe(testCodexHomePath)
     })
 
-    it('injects the OpenCode hook env into Orca terminal PTYs', async () => {
+    it('injects the OpenCode hook env into Korca terminal PTYs', async () => {
       // Why: clear any ambient OPENCODE_CONFIG_DIR so the mock's value is used
       const env = await spawnAndGetEnv(undefined, { OPENCODE_CONFIG_DIR: undefined })
       expect(openCodeBuildPtyEnvMock).toHaveBeenCalledTimes(1)
       expect(openCodeBuildPtyEnvMock.mock.calls[0]?.[0]).toEqual(expect.any(String))
-      expect(env.ORCA_OPENCODE_HOOK_PORT).toBe('4567')
-      expect(env.ORCA_OPENCODE_HOOK_TOKEN).toBe('opencode-token')
-      expect(env.ORCA_OPENCODE_PTY_ID).toBe('test-pty')
+      expect(env.KORCA_OPENCODE_HOOK_PORT).toBe('4567')
+      expect(env.KORCA_OPENCODE_HOOK_TOKEN).toBe('opencode-token')
+      expect(env.KORCA_OPENCODE_PTY_ID).toBe('test-pty')
       expect(env.OPENCODE_CONFIG_DIR).toEqual(expect.any(String))
-      expect(env.ORCA_OPENCODE_CONFIG_DIR).toBe(env.OPENCODE_CONFIG_DIR)
+      expect(env.KORCA_OPENCODE_CONFIG_DIR).toBe(env.OPENCODE_CONFIG_DIR)
     })
 
-    it('mirrors the original OpenCode source dir when launched from an Orca overlay shell', async () => {
+    it('mirrors the original OpenCode source dir when launched from an Korca overlay shell', async () => {
       const env = await spawnAndGetEnv({
-        OPENCODE_CONFIG_DIR: '/tmp/parent-orca-opencode-overlay',
-        ORCA_OPENCODE_SOURCE_CONFIG_DIR: '/tmp/user-opencode-config'
+        OPENCODE_CONFIG_DIR: '/tmp/parent-korca-opencode-overlay',
+        KORCA_OPENCODE_SOURCE_CONFIG_DIR: '/tmp/user-opencode-config'
       })
       expect(openCodeBuildPtyEnvMock).toHaveBeenCalledWith(
         expect.any(String),
         '/tmp/user-opencode-config'
       )
-      expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-      expect(env.ORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-      expect(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/tmp/user-opencode-config')
+      expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+      expect(env.KORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+      expect(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/tmp/user-opencode-config')
     })
 
-    it('restores user OpenCode config when agent status hooks are disabled in a nested Orca shell', async () => {
+    it('restores user OpenCode config when agent status hooks are disabled in a nested Korca shell', async () => {
       const env = await spawnAndGetEnv(
         {
-          OPENCODE_CONFIG_DIR: '/tmp/parent-orca-opencode-overlay',
-          ORCA_OPENCODE_CONFIG_DIR: '/tmp/parent-orca-opencode-overlay',
-          ORCA_OPENCODE_SOURCE_CONFIG_DIR: '/tmp/user-opencode-config'
+          OPENCODE_CONFIG_DIR: '/tmp/parent-korca-opencode-overlay',
+          KORCA_OPENCODE_CONFIG_DIR: '/tmp/parent-korca-opencode-overlay',
+          KORCA_OPENCODE_SOURCE_CONFIG_DIR: '/tmp/user-opencode-config'
         },
         undefined,
         undefined,
@@ -576,15 +576,15 @@ describe('registerPtyHandlers', () => {
 
       expect(openCodeBuildPtyEnvMock).not.toHaveBeenCalled()
       expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/user-opencode-config')
-      expect(env.ORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
-      expect(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR).toBeUndefined()
+      expect(env.KORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
+      expect(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR).toBeUndefined()
     })
 
     it('strips inherited OpenCode overlay env when agent status hooks are disabled without a source dir', async () => {
       const env = await spawnAndGetEnv(
         {
-          OPENCODE_CONFIG_DIR: '/tmp/parent-orca-opencode-overlay',
-          ORCA_OPENCODE_CONFIG_DIR: '/tmp/parent-orca-opencode-overlay'
+          OPENCODE_CONFIG_DIR: '/tmp/parent-korca-opencode-overlay',
+          KORCA_OPENCODE_CONFIG_DIR: '/tmp/parent-korca-opencode-overlay'
         },
         undefined,
         undefined,
@@ -593,11 +593,11 @@ describe('registerPtyHandlers', () => {
 
       expect(openCodeBuildPtyEnvMock).not.toHaveBeenCalled()
       expect(env.OPENCODE_CONFIG_DIR).toBeUndefined()
-      expect(env.ORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
-      expect(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR).toBeUndefined()
+      expect(env.KORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
+      expect(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR).toBeUndefined()
     })
 
-    it('reproduces issue #1534: GUI-launched Orca mirrors zshrc-only OpenCode config', async () => {
+    it('reproduces issue #1534: GUI-launched Korca mirrors zshrc-only OpenCode config', async () => {
       // Why: the reporter's app process did not inherit OPENCODE_CONFIG_DIR;
       // their interactive zsh startup later exported a company config repo.
       readFileSyncMock.mockImplementation((path: string) => {
@@ -615,37 +615,37 @@ describe('registerPtyHandlers', () => {
         HOME: '/home/pim',
         SHELL: '/bin/zsh',
         OPENCODE_CONFIG_DIR: undefined,
-        ORCA_OPENCODE_SOURCE_CONFIG_DIR: undefined
+        KORCA_OPENCODE_SOURCE_CONFIG_DIR: undefined
       })
 
       expect(openCodeBuildPtyEnvMock).toHaveBeenCalledWith(
         expect.any(String),
         '/home/pim/company/opencode-config'
       )
-      expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-      expect(env.ORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-      expect(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/home/pim/company/opencode-config')
-      expect(env.OPENCODE_CONFIG_DIR).not.toBe(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR)
+      expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+      expect(env.KORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+      expect(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/home/pim/company/opencode-config')
+      expect(env.OPENCODE_CONFIG_DIR).not.toBe(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR)
     })
 
-    it('injects the Pi agent overlay env into Orca terminal PTYs', async () => {
+    it('injects the Pi agent overlay env into Korca terminal PTYs', async () => {
       const env = await spawnAndGetEnv(undefined, { PI_CODING_AGENT_DIR: '/tmp/user-pi-agent' })
       expect(piBuildPtyEnvMock).toHaveBeenCalledWith(expect.any(String), '/tmp/user-pi-agent', 'pi')
       expect(piBuildPtyEnvMock).toHaveBeenCalledWith(expect.any(String), undefined, 'omp')
-      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBe('/tmp/user-pi-agent')
-      expect(env.ORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_OMP_STATUS_EXTENSION).toBe(
-        '/tmp/orca-pi-agent-overlay/extensions/orca-agent-status.ts'
+      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBe('/tmp/user-pi-agent')
+      expect(env.KORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_OMP_STATUS_EXTENSION).toBe(
+        '/tmp/korca-pi-agent-overlay/extensions/korca-agent-status.ts'
       )
     })
 
-    it('threads command: "omp" through to piBuildPtyEnv and emits ORCA_OMP_* shadow vars', async () => {
-      // Why: OMP launches must emit OMP-named Orca shadow vars (ORCA_OMP_*),
+    it('threads command: "omp" through to piBuildPtyEnv and emits KORCA_OMP_* shadow vars', async () => {
+      // Why: OMP launches must emit OMP-named Korca shadow vars (KORCA_OMP_*),
       // not Pi-named ones. The PI_CODING_AGENT_DIR binary var is unavoidable
       // (OMP's own binary reads it — see C:\tmp\pr-workspace\oh-my-pi
-      // packages/utils/src/dirs.ts), but every other Orca-owned env name
+      // packages/utils/src/dirs.ts), but every other Korca-owned env name
       // stays kind-scoped so an OMP PTY never accumulates Pi shadow state.
       const env = await spawnAndGetEnv(
         undefined,
@@ -659,34 +659,34 @@ describe('registerPtyHandlers', () => {
         '/tmp/user-omp-agent',
         'omp'
       )
-      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_OMP_STATUS_EXTENSION).toBe(
-        '/tmp/orca-pi-agent-overlay/extensions/orca-agent-status.ts'
+      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_OMP_STATUS_EXTENSION).toBe(
+        '/tmp/korca-pi-agent-overlay/extensions/korca-agent-status.ts'
       )
-      expect(env.ORCA_OMP_SOURCE_AGENT_DIR).toBe('/tmp/user-omp-agent')
+      expect(env.KORCA_OMP_SOURCE_AGENT_DIR).toBe('/tmp/user-omp-agent')
       // CRITICAL: a Pi-named shadow MUST NOT leak into an OMP PTY env.
-      expect(env.ORCA_PI_CODING_AGENT_DIR).toBeUndefined()
-      expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_PI_CODING_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
     })
 
-    it('mirrors the original Pi source dir when launched from an Orca overlay shell', async () => {
+    it('mirrors the original Pi source dir when launched from an Korca overlay shell', async () => {
       const env = await spawnAndGetEnv({
-        PI_CODING_AGENT_DIR: '/tmp/parent-orca-pi-overlay',
-        ORCA_PI_SOURCE_AGENT_DIR: '/tmp/user-pi-agent'
+        PI_CODING_AGENT_DIR: '/tmp/parent-korca-pi-overlay',
+        KORCA_PI_SOURCE_AGENT_DIR: '/tmp/user-pi-agent'
       })
       expect(piBuildPtyEnvMock).toHaveBeenCalledWith(expect.any(String), '/tmp/user-pi-agent', 'pi')
-      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBe('/tmp/user-pi-agent')
+      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBe('/tmp/user-pi-agent')
     })
 
     it('does not use an inherited Pi overlay source for an OMP launch', async () => {
       const env = await spawnAndGetEnv(
         {
-          PI_CODING_AGENT_DIR: '/tmp/parent-orca-pi-overlay',
-          ORCA_PI_CODING_AGENT_DIR: '/tmp/parent-orca-pi-overlay',
-          ORCA_PI_SOURCE_AGENT_DIR: '/tmp/user-pi-agent'
+          PI_CODING_AGENT_DIR: '/tmp/parent-korca-pi-overlay',
+          KORCA_PI_CODING_AGENT_DIR: '/tmp/parent-korca-pi-overlay',
+          KORCA_PI_SOURCE_AGENT_DIR: '/tmp/user-pi-agent'
         },
         undefined,
         undefined,
@@ -695,18 +695,18 @@ describe('registerPtyHandlers', () => {
       )
 
       expect(piBuildPtyEnvMock).toHaveBeenCalledWith(expect.any(String), undefined, 'omp')
-      expect(env.ORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_OMP_SOURCE_AGENT_DIR).toBeUndefined()
-      expect(env.ORCA_PI_CODING_AGENT_DIR).toBeUndefined()
-      expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_OMP_SOURCE_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_PI_CODING_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
     })
 
     it('does not use an inherited OMP overlay source for an explicit Pi launch', async () => {
       const env = await spawnAndGetEnv(
         {
-          PI_CODING_AGENT_DIR: '/tmp/parent-orca-omp-overlay',
-          ORCA_OMP_CODING_AGENT_DIR: '/tmp/parent-orca-omp-overlay',
-          ORCA_OMP_SOURCE_AGENT_DIR: '/tmp/user-omp-agent'
+          PI_CODING_AGENT_DIR: '/tmp/parent-korca-omp-overlay',
+          KORCA_OMP_CODING_AGENT_DIR: '/tmp/parent-korca-omp-overlay',
+          KORCA_OMP_SOURCE_AGENT_DIR: '/tmp/user-omp-agent'
         },
         undefined,
         undefined,
@@ -715,19 +715,19 @@ describe('registerPtyHandlers', () => {
       )
 
       expect(piBuildPtyEnvMock).toHaveBeenCalledWith(expect.any(String), undefined, 'pi')
-      expect(env.ORCA_PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
-      expect(env.ORCA_OMP_CODING_AGENT_DIR).toBeUndefined()
-      expect(env.ORCA_OMP_SOURCE_AGENT_DIR).toBeUndefined()
-      expect(env.ORCA_OMP_STATUS_EXTENSION).toBeUndefined()
+      expect(env.KORCA_PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_OMP_CODING_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_OMP_SOURCE_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_OMP_STATUS_EXTENSION).toBeUndefined()
     })
 
-    it('restores user Pi config when agent status hooks are disabled in a nested Orca shell', async () => {
+    it('restores user Pi config when agent status hooks are disabled in a nested Korca shell', async () => {
       const env = await spawnAndGetEnv(
         {
-          PI_CODING_AGENT_DIR: '/tmp/parent-orca-pi-overlay',
-          ORCA_PI_CODING_AGENT_DIR: '/tmp/parent-orca-pi-overlay',
-          ORCA_PI_SOURCE_AGENT_DIR: '/tmp/user-pi-agent'
+          PI_CODING_AGENT_DIR: '/tmp/parent-korca-pi-overlay',
+          KORCA_PI_CODING_AGENT_DIR: '/tmp/parent-korca-pi-overlay',
+          KORCA_PI_SOURCE_AGENT_DIR: '/tmp/user-pi-agent'
         },
         undefined,
         undefined,
@@ -736,8 +736,8 @@ describe('registerPtyHandlers', () => {
 
       expect(piBuildPtyEnvMock).not.toHaveBeenCalled()
       expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/user-pi-agent')
-      expect(env.ORCA_PI_CODING_AGENT_DIR).toBeUndefined()
-      expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_PI_CODING_AGENT_DIR).toBeUndefined()
+      expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
     })
 
     it('mirrors Pi config exported only by shell startup files', async () => {
@@ -756,12 +756,12 @@ describe('registerPtyHandlers', () => {
         '/home/tester/.config/pi-agent',
         'pi'
       )
-      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBe('/home/tester/.config/pi-agent')
+      expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBe('/home/tester/.config/pi-agent')
     })
 
-    it('injects the agent hook receiver env into Orca terminal PTYs', async () => {
+    it('injects the agent hook receiver env into Korca terminal PTYs', async () => {
       const env = await spawnAndGetEnv()
       // Why: after the daemon-parity refactor, buildAgentHookEnv runs exactly
       // once for a local spawn — inside the shared buildPtyHostEnv helper,
@@ -769,46 +769,46 @@ describe('registerPtyHandlers', () => {
       // both route through. The handler's separate ad-hoc injection (which
       // used to cause a double-call for local spawns) is gone.
       expect(buildAgentHookEnvMock).toHaveBeenCalledTimes(1)
-      expect(env.ORCA_AGENT_HOOK_PORT).toBe('5678')
-      expect(env.ORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
+      expect(env.KORCA_AGENT_HOOK_PORT).toBe('5678')
+      expect(env.KORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
     })
 
     it('strips stale inherited hook receiver env before injecting this runtime', async () => {
       const env = await spawnAndGetEnv({
-        ORCA_AGENT_HOOK_PORT: '1111',
-        ORCA_AGENT_HOOK_TOKEN: 'stale-token',
-        ORCA_AGENT_HOOK_ENV: 'production',
-        ORCA_AGENT_HOOK_VERSION: 'stale-version',
-        ORCA_AGENT_HOOK_ENDPOINT: '/tmp/stale-endpoint.env',
-        ORCA_CLAUDE_AGENT_STATUS_SETTINGS: '/tmp/orca/agent-hooks/claude-agent-status-settings.json'
+        KORCA_AGENT_HOOK_PORT: '1111',
+        KORCA_AGENT_HOOK_TOKEN: 'stale-token',
+        KORCA_AGENT_HOOK_ENV: 'production',
+        KORCA_AGENT_HOOK_VERSION: 'stale-version',
+        KORCA_AGENT_HOOK_ENDPOINT: '/tmp/stale-endpoint.env',
+        KORCA_CLAUDE_AGENT_STATUS_SETTINGS: '/tmp/korca/agent-hooks/claude-agent-status-settings.json'
       })
 
-      expect(env.ORCA_AGENT_HOOK_PORT).toBe('5678')
-      expect(env.ORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
-      expect(env.ORCA_AGENT_HOOK_ENV).toBeUndefined()
-      expect(env.ORCA_AGENT_HOOK_VERSION).toBeUndefined()
-      expect(env.ORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
-      expect(env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_PORT).toBe('5678')
+      expect(env.KORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
+      expect(env.KORCA_AGENT_HOOK_ENV).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_VERSION).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
+      expect(env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
     })
 
     it('does not leak inherited hook receiver env if the hook server is unavailable', async () => {
       buildAgentHookEnvMock.mockReturnValueOnce({})
 
       const env = await spawnAndGetEnv({
-        ORCA_AGENT_HOOK_PORT: '1111',
-        ORCA_AGENT_HOOK_TOKEN: 'stale-token',
-        ORCA_AGENT_HOOK_ENV: 'production',
-        ORCA_AGENT_HOOK_VERSION: 'stale-version',
-        ORCA_AGENT_HOOK_ENDPOINT: '/tmp/stale-endpoint.env',
-        ORCA_CLAUDE_AGENT_STATUS_SETTINGS: '/tmp/orca/agent-hooks/claude-agent-status-settings.json'
+        KORCA_AGENT_HOOK_PORT: '1111',
+        KORCA_AGENT_HOOK_TOKEN: 'stale-token',
+        KORCA_AGENT_HOOK_ENV: 'production',
+        KORCA_AGENT_HOOK_VERSION: 'stale-version',
+        KORCA_AGENT_HOOK_ENDPOINT: '/tmp/stale-endpoint.env',
+        KORCA_CLAUDE_AGENT_STATUS_SETTINGS: '/tmp/korca/agent-hooks/claude-agent-status-settings.json'
       })
 
-      expect(env.ORCA_AGENT_HOOK_PORT).toBeUndefined()
-      expect(env.ORCA_AGENT_HOOK_TOKEN).toBeUndefined()
-      expect(env.ORCA_AGENT_HOOK_ENV).toBeUndefined()
-      expect(env.ORCA_AGENT_HOOK_VERSION).toBeUndefined()
-      expect(env.ORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
-      expect(env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_PORT).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_TOKEN).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_ENV).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_VERSION).toBeUndefined()
+      expect(env.KORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
+      expect(env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
     })
 
     it('prepends local git/gh attribution shims when attribution is enabled', async () => {
@@ -816,11 +816,11 @@ describe('registerPtyHandlers', () => {
         enableGitHubAttribution: true
       }))
 
-      expect(env.ORCA_ENABLE_GIT_ATTRIBUTION).toBe('1')
-      expect(env.ORCA_GIT_COMMIT_TRAILER).toBe('Co-authored-by: Orca <help@stably.ai>')
-      expect(env.ORCA_GH_PR_FOOTER).toBe('Made with [Orca](https://github.com/stablyai/orca) 🐋')
-      expect(env.ORCA_GH_ISSUE_FOOTER).toBe('Made with [Orca](https://github.com/stablyai/orca) 🐋')
-      expect(env.PATH).toContain('/tmp/orca-user-data/orca-terminal-attribution/posix')
+      expect(env.KORCA_ENABLE_GIT_ATTRIBUTION).toBe('1')
+      expect(env.KORCA_GIT_COMMIT_TRAILER).toBe('Co-authored-by: Korca <help@stably.ai>')
+      expect(env.KORCA_GH_PR_FOOTER).toBe('Made with [Korca](https://github.com/stablyai/korca) 🐋')
+      expect(env.KORCA_GH_ISSUE_FOOTER).toBe('Made with [Korca](https://github.com/stablyai/korca) 🐋')
+      expect(env.PATH).toContain('/tmp/korca-user-data/korca-terminal-attribution/posix')
     })
 
     it('skips git/gh attribution shims when attribution is disabled', async () => {
@@ -828,11 +828,11 @@ describe('registerPtyHandlers', () => {
         enableGitHubAttribution: false
       }))
 
-      expect(env.ORCA_ENABLE_GIT_ATTRIBUTION).toBeUndefined()
-      expect(env.ORCA_GIT_COMMIT_TRAILER).toBeUndefined()
-      expect(env.ORCA_GH_PR_FOOTER).toBeUndefined()
-      expect(env.ORCA_GH_ISSUE_FOOTER).toBeUndefined()
-      expect(env.PATH ?? '').not.toContain('/tmp/orca-user-data/orca-terminal-attribution/posix')
+      expect(env.KORCA_ENABLE_GIT_ATTRIBUTION).toBeUndefined()
+      expect(env.KORCA_GIT_COMMIT_TRAILER).toBeUndefined()
+      expect(env.KORCA_GH_PR_FOOTER).toBeUndefined()
+      expect(env.KORCA_GH_ISSUE_FOOTER).toBeUndefined()
+      expect(env.PATH ?? '').not.toContain('/tmp/korca-user-data/korca-terminal-attribution/posix')
     })
 
     it('prepends git/gh attribution shims for daemon-backed local PTYs', async () => {
@@ -860,18 +860,18 @@ describe('registerPtyHandlers', () => {
       })
 
       const env = daemonSpawn.mock.calls.at(-1)![0].env
-      expect(env.ORCA_ENABLE_GIT_ATTRIBUTION).toBe('1')
-      expect(env.PATH).toContain('/tmp/orca-user-data/orca-terminal-attribution/posix')
+      expect(env.KORCA_ENABLE_GIT_ATTRIBUTION).toBe('1')
+      expect(env.PATH).toContain('/tmp/korca-user-data/korca-terminal-attribution/posix')
     })
 
-    it('overrides ambient CODEX_HOME with the Orca-managed home for system default', async () => {
+    it('overrides ambient CODEX_HOME with the Korca-managed home for system default', async () => {
       const env = await spawnAndGetEnv(
         undefined,
         { CODEX_HOME: '/tmp/system-codex-home' },
         () => testCodexHomePath
       )
       expect(env.CODEX_HOME).toBe(testCodexHomePath)
-      expect(env.ORCA_CODEX_HOME).toBe(testCodexHomePath)
+      expect(env.KORCA_CODEX_HOME).toBe(testCodexHomePath)
     })
 
     it('injects explicit proxy settings into local PTY env', async () => {
@@ -1003,8 +1003,8 @@ describe('registerPtyHandlers', () => {
           OPENCODE_CONFIG_DIR: undefined
         })
         expect(openCodeBuildPtyEnvMock).toHaveBeenCalled()
-        expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-config')
-        expect(env.ORCA_OPENCODE_HOOK_PORT).toBe('4567')
+        expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-config')
+        expect(env.KORCA_OPENCODE_HOOK_PORT).toBe('4567')
       })
 
       it('mirrors a user-provided OPENCODE_CONFIG_DIR into a per-PTY overlay on the daemon path', async () => {
@@ -1015,23 +1015,23 @@ describe('registerPtyHandlers', () => {
           expect.any(String),
           '/user/custom/opencode'
         )
-        expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-        expect(env.ORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-        expect(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/user/custom/opencode')
+        expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+        expect(env.KORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+        expect(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/user/custom/opencode')
       })
 
       it('uses source OpenCode config env instead of remirroring a parent overlay', async () => {
         const env = await daemonSpawnAndGetEnv({
-          OPENCODE_CONFIG_DIR: '/tmp/parent-orca-opencode-overlay',
-          ORCA_OPENCODE_SOURCE_CONFIG_DIR: '/user/custom/opencode'
+          OPENCODE_CONFIG_DIR: '/tmp/parent-korca-opencode-overlay',
+          KORCA_OPENCODE_SOURCE_CONFIG_DIR: '/user/custom/opencode'
         })
         expect(openCodeBuildPtyEnvMock).toHaveBeenCalledWith(
           expect.any(String),
           '/user/custom/opencode'
         )
-        expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-        expect(env.ORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-overlay')
-        expect(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/user/custom/opencode')
+        expect(env.OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+        expect(env.KORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-overlay')
+        expect(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR).toBe('/user/custom/opencode')
       })
 
       it('injects Pi overlay env (PI_CODING_AGENT_DIR) on the daemon path', async () => {
@@ -1041,12 +1041,12 @@ describe('registerPtyHandlers', () => {
         // the fixed overlay path from the shared setup.
         expect(piBuildPtyEnvMock).toHaveBeenCalledWith(expect.any(String), '/user/.pi/agent', 'pi')
         expect(piBuildPtyEnvMock).toHaveBeenCalledWith(expect.any(String), undefined, 'omp')
-        expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-        expect(env.ORCA_PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-        expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBe('/user/.pi/agent')
-        expect(env.ORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-        expect(env.ORCA_OMP_STATUS_EXTENSION).toBe(
-          '/tmp/orca-pi-agent-overlay/extensions/orca-agent-status.ts'
+        expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+        expect(env.KORCA_PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+        expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBe('/user/.pi/agent')
+        expect(env.KORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+        expect(env.KORCA_OMP_STATUS_EXTENSION).toBe(
+          '/tmp/korca-pi-agent-overlay/extensions/korca-agent-status.ts'
         )
       })
 
@@ -1066,20 +1066,20 @@ describe('registerPtyHandlers', () => {
           '/user/.omp/agent',
           'omp'
         )
-        expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-        expect(env.ORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-        expect(env.ORCA_OMP_STATUS_EXTENSION).toBe(
-          '/tmp/orca-pi-agent-overlay/extensions/orca-agent-status.ts'
+        expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+        expect(env.KORCA_OMP_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+        expect(env.KORCA_OMP_STATUS_EXTENSION).toBe(
+          '/tmp/korca-pi-agent-overlay/extensions/korca-agent-status.ts'
         )
-        expect(env.ORCA_OMP_SOURCE_AGENT_DIR).toBe('/user/.omp/agent')
-        expect(env.ORCA_PI_CODING_AGENT_DIR).toBeUndefined()
-        expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
+        expect(env.KORCA_OMP_SOURCE_AGENT_DIR).toBe('/user/.omp/agent')
+        expect(env.KORCA_PI_CODING_AGENT_DIR).toBeUndefined()
+        expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
       })
 
       it('injects the selected Codex home on the daemon path', async () => {
         const env = await daemonSpawnAndGetEnv({}, () => testCodexHomePath)
         expect(env.CODEX_HOME).toBe(testCodexHomePath)
-        expect(env.ORCA_CODEX_HOME).toBe(testCodexHomePath)
+        expect(env.KORCA_CODEX_HOME).toBe(testCodexHomePath)
       })
 
       it('injects explicit proxy settings on the daemon path', async () => {
@@ -1102,19 +1102,19 @@ describe('registerPtyHandlers', () => {
         try {
           const spawnOptions = await daemonSpawnAndGetOptions(
             {},
-            () => 'C:\\Users\\test\\AppData\\Roaming\\Orca\\codex-runtime-home\\home',
+            () => 'C:\\Users\\test\\AppData\\Roaming\\Korca\\codex-runtime-home\\home',
             undefined,
             {
-              CODEX_HOME: 'C:\\Users\\test\\AppData\\Roaming\\Orca\\codex-runtime-home\\home',
-              ORCA_CODEX_HOME: 'C:\\Users\\test\\AppData\\Roaming\\Orca\\codex-runtime-home\\home'
+              CODEX_HOME: 'C:\\Users\\test\\AppData\\Roaming\\Korca\\codex-runtime-home\\home',
+              KORCA_CODEX_HOME: 'C:\\Users\\test\\AppData\\Roaming\\Korca\\codex-runtime-home\\home'
             },
             { cwd: '\\\\wsl.localhost\\Ubuntu\\home\\test\\repo' }
           )
           const { env } = spawnOptions
           expect(env.CODEX_HOME).toBeUndefined()
-          expect(env.ORCA_CODEX_HOME).toBeUndefined()
+          expect(env.KORCA_CODEX_HOME).toBeUndefined()
           expect(spawnOptions.envToDelete).toEqual(
-            expect.arrayContaining(['CODEX_HOME', 'ORCA_CODEX_HOME'])
+            expect.arrayContaining(['CODEX_HOME', 'KORCA_CODEX_HOME'])
           )
         } finally {
           Object.defineProperty(process, 'platform', {
@@ -1133,18 +1133,18 @@ describe('registerPtyHandlers', () => {
         try {
           const spawnOptions = await daemonSpawnAndGetOptions(
             {},
-            () => 'C:\\Users\\test\\AppData\\Roaming\\Orca\\codex-runtime-home\\home',
+            () => 'C:\\Users\\test\\AppData\\Roaming\\Korca\\codex-runtime-home\\home',
             undefined,
             {
               CODEX_HOME: 'C:\\Users\\test\\.codex',
-              ORCA_CODEX_HOME: 'C:\\Users\\test\\AppData\\Roaming\\Orca\\codex-runtime-home\\home'
+              KORCA_CODEX_HOME: 'C:\\Users\\test\\AppData\\Roaming\\Korca\\codex-runtime-home\\home'
             },
             { shellOverride: 'wsl.exe' }
           )
           expect(spawnOptions.env.CODEX_HOME).toBeUndefined()
-          expect(spawnOptions.env.ORCA_CODEX_HOME).toBeUndefined()
+          expect(spawnOptions.env.KORCA_CODEX_HOME).toBeUndefined()
           expect(spawnOptions.envToDelete).toEqual(
-            expect.arrayContaining(['CODEX_HOME', 'ORCA_CODEX_HOME'])
+            expect.arrayContaining(['CODEX_HOME', 'KORCA_CODEX_HOME'])
           )
         } finally {
           Object.defineProperty(process, 'platform', {
@@ -1156,21 +1156,21 @@ describe('registerPtyHandlers', () => {
 
       it('injects the agent-hook receiver env on the daemon path', async () => {
         const env = await daemonSpawnAndGetEnv({})
-        expect(env.ORCA_AGENT_HOOK_PORT).toBe('5678')
-        expect(env.ORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
+        expect(env.KORCA_AGENT_HOOK_PORT).toBe('5678')
+        expect(env.KORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
       })
 
       it('deletes stale Claude scoped settings env from daemon-hosted PTYs', async () => {
         const spawnOptions = await daemonSpawnAndGetOptions({}, undefined, undefined, {
-          ORCA_CLAUDE_AGENT_STATUS_SETTINGS:
-            '/tmp/orca/agent-hooks/claude-agent-status-settings.json'
+          KORCA_CLAUDE_AGENT_STATUS_SETTINGS:
+            '/tmp/korca/agent-hooks/claude-agent-status-settings.json'
         })
-        expect(spawnOptions.env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
+        expect(spawnOptions.env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
         expect(spawnOptions.envToDelete).toEqual(
-          expect.arrayContaining(['ORCA_CLAUDE_AGENT_STATUS_SETTINGS'])
+          expect.arrayContaining(['KORCA_CLAUDE_AGENT_STATUS_SETTINGS'])
         )
-        expect(spawnOptions.env.ORCA_AGENT_HOOK_PORT).toBe('5678')
-        expect(spawnOptions.env.ORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
+        expect(spawnOptions.env.KORCA_AGENT_HOOK_PORT).toBe('5678')
+        expect(spawnOptions.env.KORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
       })
 
       it('deletes stale Claude scoped settings env from runtime-created daemon PTYs', async () => {
@@ -1190,8 +1190,8 @@ describe('registerPtyHandlers', () => {
           onPtyExit: vi.fn(),
           onPtyData: vi.fn()
         }
-        process.env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS =
-          '/tmp/orca/agent-hooks/claude-agent-status-settings.json'
+        process.env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS =
+          '/tmp/korca/agent-hooks/claude-agent-status-settings.json'
         handlers.clear()
         registerPtyHandlers(mainWindow as never, runtime as never)
         const controller = runtime.setPtyController.mock.calls[0]?.[0] as RuntimeSpawnController
@@ -1199,12 +1199,12 @@ describe('registerPtyHandlers', () => {
         await controller.spawn({ cols: 80, rows: 24, worktreeId: 'wt-runtime', env: {} })
 
         const spawnOptions = daemonSpawn.mock.calls.at(-1)?.[0] as DaemonSpawnCall
-        expect(spawnOptions.env.ORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
+        expect(spawnOptions.env.KORCA_CLAUDE_AGENT_STATUS_SETTINGS).toBeUndefined()
         expect(spawnOptions.envToDelete).toEqual(
-          expect.arrayContaining(['ORCA_CLAUDE_AGENT_STATUS_SETTINGS'])
+          expect.arrayContaining(['KORCA_CLAUDE_AGENT_STATUS_SETTINGS'])
         )
-        expect(spawnOptions.env.ORCA_AGENT_HOOK_PORT).toBe('5678')
-        expect(spawnOptions.env.ORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
+        expect(spawnOptions.env.KORCA_AGENT_HOOK_PORT).toBe('5678')
+        expect(spawnOptions.env.KORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
       })
 
       it('strips inherited agent-hook endpoint env from development daemon PTYs', async () => {
@@ -1214,11 +1214,11 @@ describe('registerPtyHandlers', () => {
         mockedApp.isPackaged = false
         try {
           const env = await daemonSpawnAndGetEnv({}, undefined, undefined, {
-            ORCA_AGENT_HOOK_ENDPOINT: '/tmp/stale-endpoint.env'
+            KORCA_AGENT_HOOK_ENDPOINT: '/tmp/stale-endpoint.env'
           })
-          expect(env.ORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
-          expect(env.ORCA_AGENT_HOOK_PORT).toBe('5678')
-          expect(env.ORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
+          expect(env.KORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
+          expect(env.KORCA_AGENT_HOOK_PORT).toBe('5678')
+          expect(env.KORCA_AGENT_HOOK_TOKEN).toBe('agent-token')
         } finally {
           mockedApp.isPackaged = prev
         }
@@ -1228,11 +1228,11 @@ describe('registerPtyHandlers', () => {
         const env = await daemonSpawnAndGetEnv({}, undefined, () => ({
           enableGitHubAttribution: true
         }))
-        expect(env.ORCA_ENABLE_GIT_ATTRIBUTION).toBe('1')
-        expect(env.PATH).toContain('/tmp/orca-user-data/orca-terminal-attribution/posix')
+        expect(env.KORCA_ENABLE_GIT_ATTRIBUTION).toBe('1')
+        expect(env.PATH).toContain('/tmp/korca-user-data/korca-terminal-attribution/posix')
       })
 
-      it('injects dev-mode ORCA_USER_DATA_PATH + dev CLI PATH on the daemon path', async () => {
+      it('injects dev-mode KORCA_USER_DATA_PATH + dev CLI PATH on the daemon path', async () => {
         // Why: the mocked `app` (see vi.mock at the top of the file) is a
         // plain object, so we can flip isPackaged for the scope of the test.
         const { app } = await import('electron')
@@ -1241,8 +1241,8 @@ describe('registerPtyHandlers', () => {
         mockedApp.isPackaged = false
         try {
           const env = await daemonSpawnAndGetEnv({ PATH: '/usr/bin' })
-          expect(env.ORCA_USER_DATA_PATH).toBe('/tmp/orca-user-data')
-          expect(env.PATH).toContain(join('/tmp/orca-user-data', 'cli', 'bin'))
+          expect(env.KORCA_USER_DATA_PATH).toBe('/tmp/korca-user-data')
+          expect(env.PATH).toContain(join('/tmp/korca-user-data', 'cli', 'bin'))
         } finally {
           mockedApp.isPackaged = prev
         }
@@ -1257,9 +1257,9 @@ describe('registerPtyHandlers', () => {
           const env = await daemonSpawnAndGetEnv({}, undefined, undefined, {
             PATH: '/system/bin'
           })
-          expect(env.ORCA_USER_DATA_PATH).toBe('/tmp/orca-user-data')
+          expect(env.KORCA_USER_DATA_PATH).toBe('/tmp/korca-user-data')
           expect(env.PATH).toBe(
-            `${join('/tmp/orca-user-data', 'cli', 'bin')}${delimiter}/system/bin`
+            `${join('/tmp/korca-user-data', 'cli', 'bin')}${delimiter}/system/bin`
           )
         } finally {
           mockedApp.isPackaged = prev
@@ -1331,22 +1331,22 @@ describe('registerPtyHandlers', () => {
           '/ambient/pi/agent',
           'pi'
         )
-        expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-        expect(env.ORCA_PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
+        expect(env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+        expect(env.KORCA_PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
       })
 
       it('skips attribution shims on the daemon path when the setting is disabled', async () => {
         const env = await daemonSpawnAndGetEnv({ PATH: '/usr/bin' }, undefined, () => ({
           enableGitHubAttribution: false
         }))
-        expect(env.ORCA_ENABLE_GIT_ATTRIBUTION).toBeUndefined()
-        expect(env.PATH ?? '').not.toContain('/tmp/orca-user-data/orca-terminal-attribution/posix')
+        expect(env.KORCA_ENABLE_GIT_ATTRIBUTION).toBeUndefined()
+        expect(env.PATH ?? '').not.toContain('/tmp/korca-user-data/korca-terminal-attribution/posix')
       })
 
       it('does not mutate the caller-provided args.env on the daemon path', async () => {
         // Why: the handler clones baseEnv before calling buildPtyHostEnv so
         // IPC-provided env stays pristine. A regression would silently leak
-        // Orca host env (hook tokens, overlay paths) back into the renderer's
+        // Korca host env (hook tokens, overlay paths) back into the renderer's
         // copy of the object, which it may reuse for unrelated IPC calls.
         const daemonSpawn = setupDaemonAdapter()
         const argsEnv: Record<string, string> = { FOO: 'bar' }
@@ -1361,7 +1361,7 @@ describe('registerPtyHandlers', () => {
         // Sanity: the spawn did receive the injected env, proving the test
         // isn't passing because buildPtyHostEnv never ran.
         const spawnEnv = daemonSpawn.mock.calls.at(-1)![0].env
-        expect(spawnEnv.ORCA_AGENT_HOOK_PORT).toBe('5678')
+        expect(spawnEnv.KORCA_AGENT_HOOK_PORT).toBe('5678')
         expect(spawnEnv).not.toBe(argsEnv)
       })
 
@@ -1490,7 +1490,7 @@ describe('registerPtyHandlers', () => {
         await handlers.get('pty:spawn')!(null, {
           cols: 80,
           rows: 24,
-          env: { FOO: 'bar', ORCA_PANE_KEY: makePaneKey('tab-1', leafId) },
+          env: { FOO: 'bar', KORCA_PANE_KEY: makePaneKey('tab-1', leafId) },
           connectionId: 'ssh-1',
           worktreeId: 'wt-1',
           tabId: 'tab-1',
@@ -1498,19 +1498,19 @@ describe('registerPtyHandlers', () => {
         })
         const env = sshSpawn.mock.calls.at(-1)![0].env
         // Why: every host-local var must be absent over SSH — the hook
-        // server is on the Orca host's 127.0.0.1, dev CLI / attribution /
+        // server is on the Korca host's 127.0.0.1, dev CLI / attribution /
         // overlay / plugin-dir paths only exist on the local disk, so
         // shipping any of them to a remote shell is at best useless and at
         // worst a credential leak.
-        expect(env.ORCA_AGENT_HOOK_PORT).toBeUndefined()
-        expect(env.ORCA_AGENT_HOOK_TOKEN).toBeUndefined()
-        expect(env.ORCA_ENABLE_GIT_ATTRIBUTION).toBeUndefined()
+        expect(env.KORCA_AGENT_HOOK_PORT).toBeUndefined()
+        expect(env.KORCA_AGENT_HOOK_TOKEN).toBeUndefined()
+        expect(env.KORCA_ENABLE_GIT_ATTRIBUTION).toBeUndefined()
         expect(env.OPENCODE_CONFIG_DIR).toBeUndefined()
-        expect(env.ORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
-        expect(env.ORCA_OPENCODE_SOURCE_CONFIG_DIR).toBeUndefined()
+        expect(env.KORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
+        expect(env.KORCA_OPENCODE_SOURCE_CONFIG_DIR).toBeUndefined()
         expect(env.PI_CODING_AGENT_DIR).toBeUndefined()
-        expect(env.ORCA_PI_CODING_AGENT_DIR).toBeUndefined()
-        expect(env.ORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
+        expect(env.KORCA_PI_CODING_AGENT_DIR).toBeUndefined()
+        expect(env.KORCA_PI_SOURCE_AGENT_DIR).toBeUndefined()
         expect(env.CODEX_HOME).toBeUndefined()
         expect(env.HTTP_PROXY).toBeUndefined()
         expect(env.HTTPS_PROXY).toBeUndefined()
@@ -1540,14 +1540,14 @@ describe('registerPtyHandlers', () => {
         await handlers.get('pty:spawn')!(null, {
           cols: 80,
           rows: 24,
-          env: { ORCA_PANE_KEY: 'tab-1:pane:1' },
+          env: { KORCA_PANE_KEY: 'tab-1:pane:1' },
           connectionId: 'ssh-1',
           worktreeId: 'wt-1',
           tabId: 'tab-1',
           leafId: 'pane:1'
         })
         expect(store.upsertSshRemotePtyLease).toHaveBeenCalledTimes(1)
-        expect(sshSpawn.mock.calls.at(-1)?.[0].env.ORCA_PANE_KEY).toBeUndefined()
+        expect(sshSpawn.mock.calls.at(-1)?.[0].env.KORCA_PANE_KEY).toBeUndefined()
         expect(store.upsertSshRemotePtyLease.mock.calls[0]?.[0]).not.toHaveProperty('leafId')
         expect(store.persistPtyBinding).not.toHaveBeenCalled()
       })
@@ -1867,7 +1867,7 @@ describe('registerPtyHandlers', () => {
         expect(runtime.onPtyExit).toHaveBeenCalledWith('remote-pty', -1)
       })
 
-      it('strips ORCA_PANE_KEY/TAB_ID/WORKTREE_ID from SSH spawn env when remote agent hooks are disabled', async () => {
+      it('strips KORCA_PANE_KEY/TAB_ID/WORKTREE_ID from SSH spawn env when remote agent hooks are disabled', async () => {
         const sshSpawn = vi.fn(async (_opts: { env: Record<string, string> }) => ({
           id: 'ssh-pty'
         }))
@@ -1895,39 +1895,39 @@ describe('registerPtyHandlers', () => {
         } as never)
         handlers.clear()
         registerPtyHandlers(mainWindow as never)
-        const prevFlag = process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS
-        process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS = '0'
+        const prevFlag = process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS
+        process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS = '0'
         try {
           await handlers.get('pty:spawn')!(null, {
             cols: 80,
             rows: 24,
             env: {
               FOO: 'bar',
-              ORCA_PANE_KEY: 'tab-1:0',
-              ORCA_TAB_ID: 'tab-1',
-              ORCA_WORKTREE_ID: 'wt-1'
+              KORCA_PANE_KEY: 'tab-1:0',
+              KORCA_TAB_ID: 'tab-1',
+              KORCA_WORKTREE_ID: 'wt-1'
             },
             connectionId: 'ssh-1'
           })
           const env = sshSpawn.mock.calls.at(-1)![0].env
           expect(env.FOO).toBe('bar')
-          expect(env.ORCA_PANE_KEY).toBeUndefined()
-          expect(env.ORCA_TAB_ID).toBeUndefined()
-          expect(env.ORCA_WORKTREE_ID).toBeUndefined()
-          expect(env.ORCA_AGENT_HOOK_TOKEN).toBeUndefined()
+          expect(env.KORCA_PANE_KEY).toBeUndefined()
+          expect(env.KORCA_TAB_ID).toBeUndefined()
+          expect(env.KORCA_WORKTREE_ID).toBeUndefined()
+          expect(env.KORCA_AGENT_HOOK_TOKEN).toBeUndefined()
           // Why: the local hook server's userData-relative endpoint file path
           // is meaningless on the remote box; assert it does not leak.
-          expect(env.ORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
+          expect(env.KORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
         } finally {
           if (prevFlag === undefined) {
-            delete process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS
+            delete process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS
           } else {
-            process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS = prevFlag
+            process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS = prevFlag
           }
         }
       })
 
-      it('forwards ORCA_PANE_KEY/TAB_ID/WORKTREE_ID over SSH by default', async () => {
+      it('forwards KORCA_PANE_KEY/TAB_ID/WORKTREE_ID over SSH by default', async () => {
         const sshSpawn = vi.fn(async (_opts: { env: Record<string, string> }) => ({
           id: 'ssh-pty'
         }))
@@ -1955,8 +1955,8 @@ describe('registerPtyHandlers', () => {
         } as never)
         handlers.clear()
         registerPtyHandlers(mainWindow as never)
-        const prevFlag = process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS
-        delete process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS
+        const prevFlag = process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS
+        delete process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS
         try {
           const leafId = '22222222-2222-4222-8222-222222222222'
           const paneKey = makePaneKey('tab-2', leafId)
@@ -1965,28 +1965,28 @@ describe('registerPtyHandlers', () => {
             rows: 24,
             env: {
               FOO: 'bar',
-              ORCA_PANE_KEY: paneKey,
-              ORCA_TAB_ID: 'tab-2',
-              ORCA_WORKTREE_ID: 'wt-2'
+              KORCA_PANE_KEY: paneKey,
+              KORCA_TAB_ID: 'tab-2',
+              KORCA_WORKTREE_ID: 'wt-2'
             },
             connectionId: 'ssh-1',
             tabId: 'tab-2',
             leafId
           })
           const env = sshSpawn.mock.calls.at(-1)![0].env
-          expect(env.ORCA_PANE_KEY).toBe(paneKey)
-          expect(env.ORCA_TAB_ID).toBe('tab-2')
-          expect(env.ORCA_WORKTREE_ID).toBe('wt-2')
+          expect(env.KORCA_PANE_KEY).toBe(paneKey)
+          expect(env.KORCA_TAB_ID).toBe('tab-2')
+          expect(env.KORCA_WORKTREE_ID).toBe('wt-2')
           // Local hook server coords still must NOT cross the wire — the
           // relay is the source of truth for those.
-          expect(env.ORCA_AGENT_HOOK_TOKEN).toBeUndefined()
-          expect(env.ORCA_AGENT_HOOK_PORT).toBeUndefined()
-          expect(env.ORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
+          expect(env.KORCA_AGENT_HOOK_TOKEN).toBeUndefined()
+          expect(env.KORCA_AGENT_HOOK_PORT).toBeUndefined()
+          expect(env.KORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
         } finally {
           if (prevFlag === undefined) {
-            delete process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS
+            delete process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS
           } else {
-            process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS = prevFlag
+            process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS = prevFlag
           }
         }
       })
@@ -2214,7 +2214,7 @@ describe('registerPtyHandlers', () => {
     expect(store.markSshRemotePtyLease).toHaveBeenCalledWith('ssh-1', 'remote-pty', 'terminated')
   })
 
-  it('injects ORCA_TERMINAL_HANDLE for non-local PTY providers', async () => {
+  it('injects KORCA_TERMINAL_HANDLE for non-local PTY providers', async () => {
     const spawn = vi.fn(async () => ({ id: 'remote-pty' }))
     registerSshPtyProvider('ssh-1', {
       spawn,
@@ -2255,7 +2255,7 @@ describe('registerPtyHandlers', () => {
       expect.objectContaining({
         env: expect.objectContaining({
           EXISTING: '1',
-          ORCA_TERMINAL_HANDLE: 'term_remote'
+          KORCA_TERMINAL_HANDLE: 'term_remote'
         })
       })
     )
@@ -2299,7 +2299,7 @@ describe('registerPtyHandlers', () => {
 
     const spawnCall = spawnMock.mock.calls.at(-1)!
     const env = spawnCall[2].env as Record<string, string>
-    expect(env.ORCA_TERMINAL_HANDLE).toBe('term_expected')
+    expect(env.KORCA_TERMINAL_HANDLE).toBe('term_expected')
     expect(runtime.preAllocateHandleForPty).not.toHaveBeenCalled()
     expect(runtime.registerPreAllocatedHandleForPty).toHaveBeenCalledWith(
       expect.any(String),
@@ -2340,7 +2340,7 @@ describe('registerPtyHandlers', () => {
       cols: 80,
       rows: 24,
       worktreeId: 'wt-1',
-      env: { ORCA_PANE_KEY: ` ${paneKey} ` }
+      env: { KORCA_PANE_KEY: ` ${paneKey} ` }
     })
 
     expect(spawnController.hasRendererSerializer?.(result.id)).toBe(false)
@@ -2369,7 +2369,7 @@ describe('registerPtyHandlers', () => {
     expect(hasPendingRendererSerializerForPaneKey(paneKey)).toBe(false)
   })
 
-  it('ignores renderer-provided ORCA_TERMINAL_HANDLE for local PTY spawns', async () => {
+  it('ignores renderer-provided KORCA_TERMINAL_HANDLE for local PTY spawns', async () => {
     const runtime = {
       setPtyController: vi.fn(),
       preAllocateHandleForPty: vi.fn(() => 'term_trusted'),
@@ -2382,16 +2382,16 @@ describe('registerPtyHandlers', () => {
     await handlers.get('pty:spawn')!(null, {
       cols: 80,
       rows: 24,
-      env: { ORCA_TERMINAL_HANDLE: 'term_untrusted' }
+      env: { KORCA_TERMINAL_HANDLE: 'term_untrusted' }
     })
 
     const spawnCall = spawnMock.mock.calls.at(-1)!
     const env = spawnCall[2].env as Record<string, string>
-    expect(env.ORCA_TERMINAL_HANDLE).toBe('term_trusted')
+    expect(env.KORCA_TERMINAL_HANDLE).toBe('term_trusted')
     expect(runtime.preAllocateHandleForPty).toHaveBeenCalledWith(expect.any(String))
   })
 
-  it('forwards the trusted Orca terminal handle into managed WSL terminals', async () => {
+  it('forwards the trusted Korca terminal handle into managed WSL terminals', async () => {
     const platform = Object.getOwnPropertyDescriptor(process, 'platform')
     Object.defineProperty(process, 'platform', {
       configurable: true,
@@ -2421,8 +2421,8 @@ describe('registerPtyHandlers', () => {
     const spawnCall = spawnMock.mock.calls.at(-1)!
     const env = spawnCall[2].env as Record<string, string>
     expect(spawnCall[0]).toBe('wsl.exe')
-    expect(env.ORCA_TERMINAL_HANDLE).toBe('term_wsl')
-    expect(env.WSLENV).toBe('ORCA_TERMINAL_HANDLE/u')
+    expect(env.KORCA_TERMINAL_HANDLE).toBe('term_wsl')
+    expect(env.WSLENV).toBe('KORCA_TERMINAL_HANDLE/u')
   })
 
   describe('Windows UTF-8 code page', () => {
@@ -2669,7 +2669,7 @@ describe('registerPtyHandlers', () => {
       registerPtyHandlers(
         mainWindow as never,
         undefined,
-        () => 'C:\\Users\\test\\AppData\\Roaming\\Orca\\codex-runtime-home\\home',
+        () => 'C:\\Users\\test\\AppData\\Roaming\\Korca\\codex-runtime-home\\home',
         () =>
           ({
             terminalWindowsShell: 'wsl.exe',
@@ -2681,7 +2681,7 @@ describe('registerPtyHandlers', () => {
       const spawnOptions = spawnMock.mock.calls.at(-1)?.[2] as { env: Record<string, string> }
       expect(spawnMock).toHaveBeenCalledWith('wsl.exe', expect.any(Array), expect.any(Object))
       expect(spawnOptions.env.CODEX_HOME).toBeUndefined()
-      expect(spawnOptions.env.ORCA_CODEX_HOME).toBeUndefined()
+      expect(spawnOptions.env.KORCA_CODEX_HOME).toBeUndefined()
     })
 
     it('keeps shellOverride priority for one-off tabs', () => {
@@ -2691,7 +2691,7 @@ describe('registerPtyHandlers', () => {
       registerPtyHandlers(
         mainWindow as never,
         undefined,
-        () => 'C:\\Users\\test\\AppData\\Roaming\\Orca\\codex-runtime-home\\home',
+        () => 'C:\\Users\\test\\AppData\\Roaming\\Korca\\codex-runtime-home\\home',
         () =>
           ({
             terminalWindowsShell: 'powershell.exe',
@@ -2707,7 +2707,7 @@ describe('registerPtyHandlers', () => {
       const spawnOptions = spawnMock.mock.calls.at(-1)?.[2] as { env: Record<string, string> }
       expect(spawnMock).toHaveBeenCalledWith('wsl.exe', expect.any(Array), expect.any(Object))
       expect(spawnOptions.env.CODEX_HOME).toBeUndefined()
-      expect(spawnOptions.env.ORCA_CODEX_HOME).toBeUndefined()
+      expect(spawnOptions.env.KORCA_CODEX_HOME).toBeUndefined()
     })
 
     it('converts selected WSL Codex homes to Linux paths for wsl.exe shells', () => {
@@ -2724,7 +2724,7 @@ describe('registerPtyHandlers', () => {
           mainWindow as never,
           undefined,
           () =>
-            '\\\\wsl.localhost\\Ubuntu\\home\\test\\.local\\share\\orca\\codex-runtime-home\\launch\\wsl\\system\\home',
+            '\\\\wsl.localhost\\Ubuntu\\home\\test\\.local\\share\\korca\\codex-runtime-home\\launch\\wsl\\system\\home',
           () =>
             ({
               terminalWindowsShell: 'powershell.exe',
@@ -2739,13 +2739,13 @@ describe('registerPtyHandlers', () => {
 
         const spawnOptions = spawnMock.mock.calls.at(-1)?.[2] as { env: Record<string, string> }
         expect(spawnOptions.env.CODEX_HOME).toBe(
-          '/home/test/.local/share/orca/codex-runtime-home/launch/wsl/system/home'
+          '/home/test/.local/share/korca/codex-runtime-home/launch/wsl/system/home'
         )
-        expect(spawnOptions.env.ORCA_CODEX_HOME).toBe(
-          '/home/test/.local/share/orca/codex-runtime-home/launch/wsl/system/home'
+        expect(spawnOptions.env.KORCA_CODEX_HOME).toBe(
+          '/home/test/.local/share/korca/codex-runtime-home/launch/wsl/system/home'
         )
         expect(spawnOptions.env.WSLENV).toContain('CODEX_HOME')
-        expect(spawnOptions.env.WSLENV).toContain('ORCA_CODEX_HOME')
+        expect(spawnOptions.env.WSLENV).toContain('KORCA_CODEX_HOME')
       } finally {
         Object.defineProperty(process, 'platform', {
           configurable: true,
@@ -2814,8 +2814,8 @@ describe('registerPtyHandlers', () => {
       const [shell, args, options] = spawnAndGetCall({ cwd: '/tmp', command: 'printf "hello"' })
       expect(shell).toBe('/bin/zsh')
       expect(args).toEqual(['-l'])
-      expect(options.env.ZDOTDIR).toBe('/tmp/orca-user-data/shell-ready/zsh')
-      expect(options.env.ORCA_ORIG_ZDOTDIR).toBe(process.env.HOME)
+      expect(options.env.ZDOTDIR).toBe('/tmp/korca-user-data/shell-ready/zsh')
+      expect(options.env.KORCA_ORIG_ZDOTDIR).toBe(process.env.HOME)
     } finally {
       Object.defineProperty(process, 'platform', {
         configurable: true,
@@ -2848,10 +2848,10 @@ describe('registerPtyHandlers', () => {
       const [shell, args, options] = spawnAndGetCall({ cwd: '/tmp' })
       expect(shell).toBe('/bin/zsh')
       expect(args).toEqual(['-l'])
-      expect(options.env.OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-config')
-      expect(options.env.ORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/orca-opencode-config')
-      expect(options.env.ZDOTDIR).toBe('/tmp/orca-user-data/shell-ready/zsh')
-      expect(options.env.ORCA_SHELL_READY_MARKER).toBe('0')
+      expect(options.env.OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-config')
+      expect(options.env.KORCA_OPENCODE_CONFIG_DIR).toBe('/tmp/korca-opencode-config')
+      expect(options.env.ZDOTDIR).toBe('/tmp/korca-user-data/shell-ready/zsh')
+      expect(options.env.KORCA_SHELL_READY_MARKER).toBe('0')
     } finally {
       Object.defineProperty(process, 'platform', {
         configurable: true,
@@ -2875,9 +2875,9 @@ describe('registerPtyHandlers', () => {
     })
     process.env.SHELL = '/bin/zsh'
     openCodeBuildPtyEnvMock.mockImplementationOnce(() => ({
-      ORCA_OPENCODE_HOOK_PORT: '4567',
-      ORCA_OPENCODE_HOOK_TOKEN: 'opencode-token',
-      ORCA_OPENCODE_PTY_ID: 'test-pty'
+      KORCA_OPENCODE_HOOK_PORT: '4567',
+      KORCA_OPENCODE_HOOK_TOKEN: 'opencode-token',
+      KORCA_OPENCODE_PTY_ID: 'test-pty'
     }))
 
     try {
@@ -2888,12 +2888,12 @@ describe('registerPtyHandlers', () => {
       expect(shell).toBe('/bin/zsh')
       expect(args).toEqual(['-l'])
       expect(options.env.OPENCODE_CONFIG_DIR).toBeUndefined()
-      expect(options.env.ORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
-      expect(options.env.PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(options.env.ORCA_PI_CODING_AGENT_DIR).toBe('/tmp/orca-pi-agent-overlay')
-      expect(options.env.ORCA_PI_SOURCE_AGENT_DIR).toBe('/tmp/user-pi-agent')
-      expect(options.env.ZDOTDIR).toBe('/tmp/orca-user-data/shell-ready/zsh')
-      expect(options.env.ORCA_SHELL_READY_MARKER).toBe('0')
+      expect(options.env.KORCA_OPENCODE_CONFIG_DIR).toBeUndefined()
+      expect(options.env.PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(options.env.KORCA_PI_CODING_AGENT_DIR).toBe('/tmp/korca-pi-agent-overlay')
+      expect(options.env.KORCA_PI_SOURCE_AGENT_DIR).toBe('/tmp/user-pi-agent')
+      expect(options.env.ZDOTDIR).toBe('/tmp/korca-user-data/shell-ready/zsh')
+      expect(options.env.KORCA_SHELL_READY_MARKER).toBe('0')
     } finally {
       Object.defineProperty(process, 'platform', {
         configurable: true,
@@ -3517,9 +3517,9 @@ describe('registerPtyHandlers', () => {
         expect.objectContaining({
           cwd: '/tmp',
           env: expect.objectContaining({
-            ORCA_OPENCODE_CONFIG_DIR: '/tmp/orca-opencode-config',
-            ORCA_SHELL_READY_MARKER: '0',
-            ZDOTDIR: '/tmp/orca-user-data/shell-ready/zsh'
+            KORCA_OPENCODE_CONFIG_DIR: '/tmp/korca-opencode-config',
+            KORCA_SHELL_READY_MARKER: '0',
+            ZDOTDIR: '/tmp/korca-user-data/shell-ready/zsh'
           })
         })
       )
@@ -3566,7 +3566,7 @@ describe('registerPtyHandlers', () => {
       worktreeId: 'wt-1',
       tabId: 'tab-1',
       leafId,
-      env: { ORCA_PANE_KEY: 'tab-1:0' }
+      env: { KORCA_PANE_KEY: 'tab-1:0' }
     })
 
     expect(registerPtyMock).toHaveBeenLastCalledWith(
@@ -3588,7 +3588,7 @@ describe('registerPtyHandlers', () => {
       worktreeId: 'wt-1',
       tabId: 'tab-1',
       leafId,
-      env: { ORCA_PANE_KEY: stablePaneKey }
+      env: { KORCA_PANE_KEY: stablePaneKey }
     })
 
     expect(registerPtyMock).toHaveBeenLastCalledWith(
@@ -3604,7 +3604,7 @@ describe('registerPtyHandlers', () => {
       worktreeId: 'wt-1',
       tabId: 'tab-1',
       leafId,
-      env: { ORCA_PANE_KEY: makePaneKey('tab-2', leafId) }
+      env: { KORCA_PANE_KEY: makePaneKey('tab-2', leafId) }
     })
 
     expect(registerPtyMock).toHaveBeenLastCalledWith(
@@ -3625,7 +3625,7 @@ describe('registerPtyHandlers', () => {
       worktreeId: 'wt-1',
       tabId: 'tab-1',
       leafId,
-      env: { ORCA_PANE_KEY: stablePaneKey }
+      env: { KORCA_PANE_KEY: stablePaneKey }
     })) as { id: string }
     const second = (await handlers.get('pty:spawn')!(null, {
       cols: 80,
@@ -3633,7 +3633,7 @@ describe('registerPtyHandlers', () => {
       worktreeId: 'wt-1',
       tabId: 'tab-1',
       leafId,
-      env: { ORCA_PANE_KEY: stablePaneKey }
+      env: { KORCA_PANE_KEY: stablePaneKey }
     })) as { id: string }
 
     expect(getPtyIdForPaneKey(stablePaneKey)).toBe(second.id)
@@ -3659,7 +3659,7 @@ describe('registerPtyHandlers', () => {
       worktreeId: 'wt-1',
       tabId: 'tab-1',
       leafId,
-      env: { ORCA_PANE_KEY: stablePaneKey }
+      env: { KORCA_PANE_KEY: stablePaneKey }
     })) as { id: string }
 
     expect(getPtyIdForPaneKey(stablePaneKey)).toBe(current.id)
@@ -3700,9 +3700,9 @@ describe('registerPtyHandlers', () => {
           cwd: '/tmp',
           env: expect.objectContaining({
             SHELL: '/bin/zsh',
-            ORCA_OPENCODE_CONFIG_DIR: '/tmp/orca-opencode-config',
-            ORCA_SHELL_READY_MARKER: '0',
-            ZDOTDIR: '/tmp/orca-user-data/shell-ready/zsh'
+            KORCA_OPENCODE_CONFIG_DIR: '/tmp/korca-opencode-config',
+            KORCA_SHELL_READY_MARKER: '0',
+            ZDOTDIR: '/tmp/korca-user-data/shell-ready/zsh'
           })
         })
       )

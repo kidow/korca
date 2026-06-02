@@ -889,7 +889,7 @@ export function CommitMessageAiPane({
         <div className="space-y-0.5">
           <Label>에이전트</Label>
           <p className="text-xs text-muted-foreground">
-            Orca는 이 CLI를 백그라운드에서 실행해 커밋 메시지와 풀 리퀘스트 세부 정보를
+            Korca는 이 CLI를 백그라운드에서 실행해 커밋 메시지와 풀 리퀘스트 세부 정보를
             생성합니다. 워크트리가 있는 위치에 설치되어 있어야 합니다. 로컬 워크트리는
             내 컴퓨터, 원격 워크트리는 SSH 호스트여야 합니다.
           </p>
@@ -954,7 +954,7 @@ export function CommitMessageAiPane({
     isCustom &&
     matchesSettingsSearch(searchQuery, {
       title: '사용자 지정 명령',
-      description: '소스 컨트롤 텍스트 생성을 위해 Orca가 실행하는 명령행입니다.',
+      description: '소스 컨트롤 텍스트 생성을 위해 Korca가 실행하는 명령행입니다.',
       keywords: ['custom', 'command', 'cli', 'binary', 'prompt', 'placeholder']
     })
   ) {
@@ -962,7 +962,7 @@ export function CommitMessageAiPane({
       <SearchableSetting
         key="custom-command"
         title="사용자 지정 명령"
-        description="소스 컨트롤 텍스트 생성을 위해 Orca가 실행하는 명령행입니다."
+        description="소스 컨트롤 텍스트 생성을 위해 Korca가 실행하는 명령행입니다."
         keywords={['custom', 'command', 'cli', 'binary', 'prompt', 'placeholder']}
         className="space-y-2 py-2"
       >
@@ -1019,7 +1019,7 @@ export function CommitMessageAiPane({
           <p className="text-xs text-muted-foreground">
             {activeCapability.modelSource === 'dynamic'
               ? '선택한 CLI가 모델 탐색을 지원하면 그 목록을 새로고침합니다.'
-              : '이 에이전트는 모델 탐색을 제공하지 않으므로 Orca는 수동 카탈로그를 사용합니다.'}
+              : '이 에이전트는 모델 탐색을 제공하지 않으므로 Korca는 수동 카탈로그를 사용합니다.'}
           </p>
           {activeDiscovery?.status === 'error' && (
             <p className="text-xs text-destructive">{activeDiscovery.error}</p>
@@ -1422,7 +1422,7 @@ export function CommitMessageAiPane({
   }
   // Why: this pane lives nested inside the Git section, so we draw an explicit
   // sub-heading + top border to keep its toggles visually distinct from the
-  // Branch Prefix / Refresh Local Base Ref / Orca Attribution rows above.
+  // Branch Prefix / Refresh Local Base Ref / Korca Attribution rows above.
   return (
     <div
       ref={setPaneRootRef}

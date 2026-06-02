@@ -1,9 +1,9 @@
-export const TOGGLE_TERMINAL_PANE_EXPAND_EVENT = 'orca-toggle-terminal-pane-expand'
-export const FOCUS_TERMINAL_PANE_EVENT = 'orca-focus-terminal-pane'
-export const PASTE_TERMINAL_TEXT_EVENT = 'orca-paste-terminal-text'
-export const SPLIT_TERMINAL_PANE_EVENT = 'orca-split-terminal-pane'
-export const CLOSE_TERMINAL_PANE_EVENT = 'orca-close-terminal-pane'
-export const BACKGROUND_MOUNT_TERMINAL_WORKTREE_EVENT = 'orca-background-mount-terminal-worktree'
+export const TOGGLE_TERMINAL_PANE_EXPAND_EVENT = 'korca-toggle-terminal-pane-expand'
+export const FOCUS_TERMINAL_PANE_EVENT = 'korca-focus-terminal-pane'
+export const PASTE_TERMINAL_TEXT_EVENT = 'korca-paste-terminal-text'
+export const SPLIT_TERMINAL_PANE_EVENT = 'korca-split-terminal-pane'
+export const CLOSE_TERMINAL_PANE_EVENT = 'korca-close-terminal-pane'
+export const BACKGROUND_MOUNT_TERMINAL_WORKTREE_EVENT = 'korca-background-mount-terminal-worktree'
 
 // Why: sidebar open/close is an instantaneous width change. If we wait for
 // the ResizeObserver rAF (and the 150ms debounced global fit) to catch up,
@@ -14,7 +14,7 @@ export const BACKGROUND_MOUNT_TERMINAL_WORKTREE_EVENT = 'orca-background-mount-t
 //
 // Continuous drags (sidebar-width drag, tab-group split drag) use the
 // per-pane ResizeObserver path instead.
-export const SYNC_FIT_PANES_EVENT = 'orca-sync-fit-panes'
+export const SYNC_FIT_PANES_EVENT = 'korca-sync-fit-panes'
 
 export type ToggleTerminalPaneExpandDetail = {
   tabId: string

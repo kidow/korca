@@ -24,7 +24,7 @@ import {
   escapeInjectedJavaScriptString
 } from './mobile-rich-markdown-editor-html'
 
-const EDITOR_DOCUMENT_ORIGIN = 'https://orca-mobile-editor.invalid'
+const EDITOR_DOCUMENT_ORIGIN = 'https://korca-mobile-editor.invalid'
 const EDITOR_DOCUMENT_URL = `${EDITOR_DOCUMENT_ORIGIN}/rich-markdown-editor`
 
 function normalizeExternalEditorUrl(value: string): string | null {
@@ -120,7 +120,7 @@ function MobileRichMarkdownEditorInner({ content, editable, onChange }: Props) {
       documentGenerationRef.current += 1
       currentWebViewContentRef.current = nextContent
       inject(
-        `window.__orcaRichMarkdown && window.__orcaRichMarkdown.setMarkdown(${escapeInjectedJavaScriptString(nextContent)}, ${documentGenerationRef.current});`
+        `window.__korcaRichMarkdown && window.__korcaRichMarkdown.setMarkdown(${escapeInjectedJavaScriptString(nextContent)}, ${documentGenerationRef.current});`
       )
     },
     [inject]
@@ -129,7 +129,7 @@ function MobileRichMarkdownEditorInner({ content, editable, onChange }: Props) {
   const applyEditable = useCallback(
     (nextEditable: boolean) => {
       inject(
-        `window.__orcaRichMarkdown && window.__orcaRichMarkdown.setEditable(${nextEditable ? 'true' : 'false'});`
+        `window.__korcaRichMarkdown && window.__korcaRichMarkdown.setEditable(${nextEditable ? 'true' : 'false'});`
       )
     },
     [inject]
@@ -200,7 +200,7 @@ function MobileRichMarkdownEditorInner({ content, editable, onChange }: Props) {
   const runCommand = useCallback(
     (command: RichMarkdownCommand) => {
       inject(
-        `window.__orcaRichMarkdown && window.__orcaRichMarkdown.runCommand(${escapeInjectedJavaScriptString(command)});`
+        `window.__korcaRichMarkdown && window.__korcaRichMarkdown.runCommand(${escapeInjectedJavaScriptString(command)});`
       )
     },
     [inject]

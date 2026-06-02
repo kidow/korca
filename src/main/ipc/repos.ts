@@ -823,8 +823,8 @@ export function registerRepoHandlers(mainWindow: BrowserWindow, store: Store): v
     }
   )
 
-  // Creates a new repo or folder from scratch (orca#763). An empty initial
-  // commit is required for git repos so HEAD has a branch ref — Orca's
+  // Creates a new repo or folder from scratch (korca#763). An empty initial
+  // commit is required for git repos so HEAD has a branch ref — Korca's
   // worktree features all need one.
   ipcMain.handle(
     'repos:create',
@@ -1245,7 +1245,7 @@ export function registerRepoHandlers(mainWindow: BrowserWindow, store: Store): v
     'repos:clone',
     async (_event, args: { url: string; destination: string }): Promise<Repo> => {
       // Why: the user picks a parent directory (e.g. ~/projects) and we derive
-      // the repo folder name from the URL (e.g. "orca" from .../orca.git).
+      // the repo folder name from the URL (e.g. "korca" from .../korca.git).
       // This matches the default git clone behavior where the last path segment
       // of the URL becomes the directory name.
       const clonePath = deriveValidatedClonePath(args)
@@ -1261,7 +1261,7 @@ export function registerRepoHandlers(mainWindow: BrowserWindow, store: Store): v
         }
         // Why: gitSpawn uses args.destination as cwd, so it must exist before
         // spawn — fresh installs may have a defaulted parent dir that does not
-        // exist yet (e.g. ~/orca). recursive: true is a no-op when present.
+        // exist yet (e.g. ~/korca). recursive: true is a no-op when present.
         await mkdir(args.destination, { recursive: true })
         const claimedTarget = await claimCloneTarget(clonePath)
 

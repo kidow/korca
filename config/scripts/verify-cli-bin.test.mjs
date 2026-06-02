@@ -5,12 +5,12 @@ import { describe, expect, it } from 'vitest'
 import { verifyPackageCliBin } from './verify-cli-bin.mjs'
 
 function makeProjectWithCli(content, mode = 0o755) {
-  const projectDir = mkdtempSync(path.join(tmpdir(), 'orca-cli-bin-'))
+  const projectDir = mkdtempSync(path.join(tmpdir(), 'korca-cli-bin-'))
   const cliPath = path.join(projectDir, 'out', 'cli', 'index.js')
   mkdirSync(path.dirname(cliPath), { recursive: true })
   writeFileSync(
     path.join(projectDir, 'package.json'),
-    JSON.stringify({ bin: { orca: './out/cli/index.js' } }),
+    JSON.stringify({ bin: { korca: './out/cli/index.js' } }),
     'utf8'
   )
   writeFileSync(cliPath, content, 'utf8')
@@ -34,18 +34,18 @@ describe('verifyPackageCliBin', () => {
   it('rejects an empty package bin target', () => {
     const { projectDir } = makeProjectWithCli('')
 
-    expect(() => verifyPackageCliBin({ projectDir })).toThrow('bin.orca target is empty')
+    expect(() => verifyPackageCliBin({ projectDir })).toThrow('bin.korca target is empty')
   })
 
   it('rejects package bin targets without a Node shebang', () => {
-    const { projectDir } = makeProjectWithCli('console.log("orca")\n')
+    const { projectDir } = makeProjectWithCli('console.log("korca")\n')
 
     expect(() => verifyPackageCliBin({ projectDir })).toThrow('Node shebang')
   })
 
   it.skipIf(process.platform === 'win32')('can repair the POSIX executable bit', () => {
     const { projectDir, cliPath } = makeProjectWithCli(
-      '#!/usr/bin/env node\nconsole.log("orca")\n',
+      '#!/usr/bin/env node\nconsole.log("korca")\n',
       0o644
     )
 

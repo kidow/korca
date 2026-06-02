@@ -1,16 +1,16 @@
 ---
 name: computer-use
-description: Use Orca's computer-use CLI to inspect and control local desktop apps through accessibility trees, screenshots, and safe UI actions. Use when an agent needs to list desktop apps, get an app state, read visible UI, click, type, press keys, scroll, drag, set values, or perform app accessibility actions. Triggers include "computer use", "orca computer", "list apps", "get app state", "read Spotify", "read Slack", "click app", "type text", "press key", "set value", "scroll app", "drag app", and desktop app interaction tasks.
+description: Use Korca's computer-use CLI to inspect and control local desktop apps through accessibility trees, screenshots, and safe UI actions. Use when an agent needs to list desktop apps, get an app state, read visible UI, click, type, press keys, scroll, drag, set values, or perform app accessibility actions. Triggers include "computer use", "korca computer", "list apps", "get app state", "read Spotify", "read Slack", "click app", "type text", "press key", "set value", "scroll app", "drag app", and desktop app interaction tasks.
 ---
 
 # Computer Use
 
-Use this skill when the task should operate through Orca's desktop computer-use surface rather than native Codex computer tools, raw AppleScript, ad hoc screenshots, or direct app internals.
+Use this skill when the task should operate through Korca's desktop computer-use surface rather than native Codex computer tools, raw AppleScript, ad hoc screenshots, or direct app internals.
 
 ## Preconditions
 
-- Prefer the public `orca computer ...` command.
-- In this Orca worktree, use `./config/scripts/orca-dev computer ...` when testing the local dev runtime.
+- Prefer the public `korca computer ...` command.
+- In this Korca worktree, use `./config/scripts/korca-dev computer ...` when testing the local dev runtime.
 - Prefer `--json` for agent-driven calls. Screenshot image bytes are omitted from JSON and written to `screenshot.path` when present.
 - Do not push, submit forms, send messages, buy items, delete data, or change account settings unless the user explicitly asked for that specific action.
 - If an app contains sensitive content, read only what the user requested and avoid unnecessary screenshots or logs.
@@ -18,14 +18,14 @@ Use this skill when the task should operate through Orca's desktop computer-use 
 Check runtime availability first:
 
 ```bash
-orca status --json
-orca computer capabilities --json
+korca status --json
+korca computer capabilities --json
 ```
 
 For local development against this worktree:
 
 ```bash
-./config/scripts/orca-dev status --json
+./config/scripts/korca-dev status --json
 ```
 
 ## Core Workflow
@@ -35,13 +35,13 @@ Use a snapshot-act-snapshot loop:
 1. Discover apps:
 
 ```bash
-orca computer list-apps --json
+korca computer list-apps --json
 ```
 
 2. Get a fresh state for the target app:
 
 ```bash
-orca computer get-app-state --app com.spotify.client --json
+korca computer get-app-state --app com.spotify.client --json
 ```
 
 3. Choose an element from that state.
@@ -49,13 +49,13 @@ orca computer get-app-state --app com.spotify.client --json
 4. Perform one action:
 
 ```bash
-orca computer click --app com.spotify.client --element-index 42 --json
+korca computer click --app com.spotify.client --element-index 42 --json
 ```
 
 5. Inspect the action result before deciding whether to act again. Actions return a fresh state:
 
 ```bash
-orca computer click --app com.spotify.client --element-index 42 --json
+korca computer click --app com.spotify.client --element-index 42 --json
 ```
 
 Element indexes are scoped to the current app state. They can go stale after navigation, focus changes, scrolling, window changes, or app re-rendering. Never carry indexes across unrelated steps without refreshing state.
@@ -65,39 +65,39 @@ Element indexes are scoped to the current app state. They can go stale after nav
 Prefer bundle IDs returned by `list-apps`:
 
 ```bash
-orca computer get-app-state --app com.microsoft.edgemac --json
-orca computer get-app-state --app com.spotify.client --json
+korca computer get-app-state --app com.microsoft.edgemac --json
+korca computer get-app-state --app com.spotify.client --json
 ```
 
 Names are acceptable when unambiguous:
 
 ```bash
-orca computer get-app-state --app Spotify --json
+korca computer get-app-state --app Spotify --json
 ```
 
 Use `pid:<number>` only when bundle ID or name matching is ambiguous:
 
 ```bash
-orca computer get-app-state --app pid:12345 --json
+korca computer get-app-state --app pid:12345 --json
 ```
 
 ## Commands
 
 ```bash
-orca computer permissions --json
-orca computer capabilities --json
-orca computer list-apps --json
-orca computer list-windows --app <app> --json
-orca computer get-app-state --app <app> --json
-orca computer click --app <app> --element-index <index> --json
-orca computer perform-secondary-action --app <app> --element-index <index> --action <name> --json
-orca computer set-value --app <app> --element-index <index> --value "text" --json
-orca computer type-text --app <app> --text "text" --json
-orca computer press-key --app <app> --key Return --json
-orca computer hotkey --app <app> --key CmdOrCtrl+A --json
-orca computer paste-text --app <app> --text "text" --json
-orca computer scroll --app <app> (--element-index <index> | --x <x> --y <y>) --direction down --json
-orca computer drag --app <app> --from-x 100 --from-y 100 --to-x 300 --to-y 300 --json
+korca computer permissions --json
+korca computer capabilities --json
+korca computer list-apps --json
+korca computer list-windows --app <app> --json
+korca computer get-app-state --app <app> --json
+korca computer click --app <app> --element-index <index> --json
+korca computer perform-secondary-action --app <app> --element-index <index> --action <name> --json
+korca computer set-value --app <app> --element-index <index> --value "text" --json
+korca computer type-text --app <app> --text "text" --json
+korca computer press-key --app <app> --key Return --json
+korca computer hotkey --app <app> --key CmdOrCtrl+A --json
+korca computer paste-text --app <app> --text "text" --json
+korca computer scroll --app <app> (--element-index <index> | --x <x> --y <y>) --direction down --json
+korca computer drag --app <app> --from-x 100 --from-y 100 --to-x 300 --to-y 300 --json
 ```
 
 Use `--no-screenshot` only when pixels are not needed. Screenshots are often the only useful signal for Electron, WebView, or canvas-heavy apps with shallow accessibility trees.
@@ -108,7 +108,7 @@ Use `--text-stdin` or `--value-stdin` for sensitive text so payloads do not land
 On Linux and Windows, action payloads still pass through a short-lived local operation file.
 
 ```bash
-printf '%s' "$TEXT" | orca computer set-value --app <app> --element-index <index> --value-stdin --json
+printf '%s' "$TEXT" | korca computer set-value --app <app> --element-index <index> --value-stdin --json
 ```
 
 ## Choosing Actions
@@ -145,7 +145,7 @@ If an action returns success but the UI did not change, do not repeat the same a
 Use restore only when appropriate for the task:
 
 ```bash
-orca computer get-app-state --app <app> --restore-window --json
+korca computer get-app-state --app <app> --restore-window --json
 ```
 
 ## App-Specific Notes
@@ -155,10 +155,10 @@ orca computer get-app-state --app <app> --restore-window --json
 For Edge, Chrome, and similar browsers, prefer setting the address/search field directly:
 
 ```bash
-orca computer get-app-state --app com.microsoft.edgemac --json
-orca computer set-value --app com.microsoft.edgemac --element-index <addressBarIndex> --value "test123" --json
-orca computer press-key --app com.microsoft.edgemac --key Return --json
-orca computer get-app-state --app com.microsoft.edgemac --json
+korca computer get-app-state --app com.microsoft.edgemac --json
+korca computer set-value --app com.microsoft.edgemac --element-index <addressBarIndex> --value "test123" --json
+korca computer press-key --app com.microsoft.edgemac --key Return --json
+korca computer get-app-state --app com.microsoft.edgemac --json
 ```
 
 Do not assume raw typing went to the address bar. Confirm the field or page changed after pressing Return.
@@ -179,7 +179,7 @@ Slack may expose a shallow accessibility tree while the screenshot contains the 
 - `element_not_found`: the index is stale; run `get-app-state` again.
 - `action_failed`: inspect the element role/actions and try a more semantic action.
 - Empty tree or no screenshot: the app may have no visible window, be minimized, or be blocked by permissions.
-- Permission errors: the user needs to grant Accessibility or Screen Recording to `Orca Computer Use`. Run `orca computer permissions --json`, use the setup UI, then retry `orca computer get-app-state --app <bundle> --json`.
+- Permission errors: the user needs to grant Accessibility or Screen Recording to `Korca Computer Use`. Run `korca computer permissions --json`, use the setup UI, then retry `korca computer get-app-state --app <bundle> --json`.
 
 ## Safety Checks
 

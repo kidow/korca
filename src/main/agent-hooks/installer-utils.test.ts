@@ -29,7 +29,7 @@ let tmpDir: string
 let configPath: string
 
 beforeEach(() => {
-  tmpDir = mkdtempSync(join(tmpdir(), 'orca-installer-utils-test-'))
+  tmpDir = mkdtempSync(join(tmpdir(), 'korca-installer-utils-test-'))
   configPath = join(tmpDir, 'settings.json')
 })
 
@@ -131,13 +131,13 @@ describe('createManagedCommandMatcher', () => {
 
   it('matches commands containing the agent-hooks/<scriptFileName> path', () => {
     expect(
-      match('/bin/sh "/Users/alice/Library/Application Support/Orca/agent-hooks/claude-hook.sh"')
+      match('/bin/sh "/Users/alice/Library/Application Support/Korca/agent-hooks/claude-hook.sh"')
     ).toBe(true)
     expect(match('/bin/sh "/some/other/location/agent-hooks/claude-hook.sh"')).toBe(true)
   })
 
   it('normalizes Windows backslashes so cmd-style paths still match', () => {
-    expect(match('C:\\Users\\alice\\AppData\\Roaming\\Orca\\agent-hooks\\claude-hook.sh')).toBe(
+    expect(match('C:\\Users\\alice\\AppData\\Roaming\\Korca\\agent-hooks\\claude-hook.sh')).toBe(
       true
     )
   })
@@ -162,18 +162,18 @@ describe('createManagedCommandMatcher', () => {
     // repeated installs would accumulate one guarded + one unguarded entry.
     expect(
       match(
-        'if [ -x "/Users/alice/Library/Application Support/Orca/agent-hooks/claude-hook.sh" ]; then /bin/sh "/Users/alice/Library/Application Support/Orca/agent-hooks/claude-hook.sh"; fi'
+        'if [ -x "/Users/alice/Library/Application Support/Korca/agent-hooks/claude-hook.sh" ]; then /bin/sh "/Users/alice/Library/Application Support/Korca/agent-hooks/claude-hook.sh"; fi'
       )
     ).toBe(true)
   })
 
-  it('matches the legacy per-userData script path AND the new shared ~/.orca path', () => {
+  it('matches the legacy per-userData script path AND the new shared ~/.korca path', () => {
     // Why: install() must sweep old per-userData commands when migrating to
-    // the shared ~/.orca script path, or stale launchers keep failing.
+    // the shared ~/.korca script path, or stale launchers keep failing.
     expect(
-      match("/bin/sh '/Users/alice/Library/Application Support/orca/agent-hooks/claude-hook.sh'")
+      match("/bin/sh '/Users/alice/Library/Application Support/korca/agent-hooks/claude-hook.sh'")
     ).toBe(true)
-    expect(match("/bin/sh '/Users/alice/.orca/agent-hooks/claude-hook.sh'")).toBe(true)
+    expect(match("/bin/sh '/Users/alice/.korca/agent-hooks/claude-hook.sh'")).toBe(true)
   })
 })
 
@@ -185,12 +185,12 @@ describe('removeManagedCommands', () => {
       [
         {
           type: 'command',
-          bash: '/bin/sh "/Users/alice/Orca/agent-hooks/copilot-hook.sh"',
+          bash: '/bin/sh "/Users/alice/Korca/agent-hooks/copilot-hook.sh"',
           timeoutSec: 5
         },
         {
           type: 'command',
-          powershell: "& 'C:\\Users\\alice\\Orca\\agent-hooks\\copilot-hook.sh'",
+          powershell: "& 'C:\\Users\\alice\\Korca\\agent-hooks\\copilot-hook.sh'",
           timeoutSec: 5
         },
         {
@@ -228,7 +228,7 @@ describe('hookDefinitionHasManagedCommand', () => {
 
     expect(
       hookDefinitionHasManagedCommand(
-        { bash: '/bin/sh "/Users/alice/Orca/agent-hooks/copilot-hook.sh"' },
+        { bash: '/bin/sh "/Users/alice/Korca/agent-hooks/copilot-hook.sh"' },
         match
       )
     ).toBe(true)
@@ -243,13 +243,13 @@ describe('hookDefinitionHasManagedCommand', () => {
 })
 
 describe('getSharedManagedScriptPath', () => {
-  it("returns ~/.orca/agent-hooks/<scriptFileName> rooted at the user's home", () => {
+  it("returns ~/.korca/agent-hooks/<scriptFileName> rooted at the user's home", () => {
     expect(getSharedManagedScriptPath('claude-hook.sh')).toBe(
-      join(homedir(), '.orca', 'agent-hooks', 'claude-hook.sh')
+      join(homedir(), '.korca', 'agent-hooks', 'claude-hook.sh')
     )
   })
 
-  it('does not depend on Electron app.getPath, so two Orca instances resolve to the same path', () => {
+  it('does not depend on Electron app.getPath, so two Korca instances resolve to the same path', () => {
     // Why: using userData here would reintroduce dev/prod settings thrash.
     const a = getSharedManagedScriptPath('claude-hook.sh')
     const b = getSharedManagedScriptPath('claude-hook.sh')
@@ -283,8 +283,8 @@ describe('wrapPosixHookCommand', () => {
     // Why: Electron's userData on macOS lives under "Application Support" with
     // a space. The guard must keep the path quoted so `[ -x ]` and `/bin/sh`
     // each see one argument.
-    const cmd = wrapPosixHookCommand('/Users/a/Library/Application Support/Orca/agent-hooks/x.sh')
-    expect(cmd).toContain("'/Users/a/Library/Application Support/Orca/agent-hooks/x.sh'")
+    const cmd = wrapPosixHookCommand('/Users/a/Library/Application Support/Korca/agent-hooks/x.sh')
+    expect(cmd).toContain("'/Users/a/Library/Application Support/Korca/agent-hooks/x.sh'")
   })
 
   it('escapes embedded single quotes so the wrapped command stays well-formed', () => {
@@ -299,10 +299,10 @@ describe('wrapPosixHookCommand', () => {
 
   it('can scope environment variables to the guarded script invocation', () => {
     const cmd = wrapPosixHookCommand('/does/not/exist.sh', {
-      ORCA_COPILOT_HOOK_EVENT: 'UserPromptSubmit'
+      KORCA_COPILOT_HOOK_EVENT: 'UserPromptSubmit'
     })
     expect(cmd).toBe(
-      "if [ -x '/does/not/exist.sh' ]; then ORCA_COPILOT_HOOK_EVENT='UserPromptSubmit' /bin/sh '/does/not/exist.sh'; fi"
+      "if [ -x '/does/not/exist.sh' ]; then KORCA_COPILOT_HOOK_EVENT='UserPromptSubmit' /bin/sh '/does/not/exist.sh'; fi"
     )
   })
 

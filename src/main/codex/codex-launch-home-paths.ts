@@ -20,10 +20,10 @@ import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import { parseWslUncPath } from '../../shared/wsl-paths'
-import { getOrcaManagedCodexHomePath } from './codex-home-paths'
+import { getKorcaManagedCodexHomePath } from './codex-home-paths'
 
-const LAUNCH_HOME_MARKER = '.orca-managed-launch-home'
-const LAUNCH_HOME_LINK_MARKERS_DIR = '.orca-launch-home-links'
+const LAUNCH_HOME_MARKER = '.korca-managed-launch-home'
+const LAUNCH_HOME_LINK_MARKERS_DIR = '.korca-launch-home-links'
 const LAUNCH_HOME_MARKER_VERSION = 1
 const SHARED_LAUNCH_ENTRY_NAMES = new Set([
   'config.toml',
@@ -53,25 +53,25 @@ type LaunchEntryMarker = {
   sourceDigest: string | null
 }
 
-export function getOrcaCodexLaunchHomePath(accountId: string | null): string {
-  return getScopedCodexLaunchHomePath(getOrcaCodexLaunchHostRootPath(), accountId)
+export function getKorcaCodexLaunchHomePath(accountId: string | null): string {
+  return getScopedCodexLaunchHomePath(getKorcaCodexLaunchHostRootPath(), accountId)
 }
 
-export function ensureOrcaCodexLaunchHome(accountId: string | null): string {
-  return ensureScopedCodexLaunchHome(getOrcaCodexLaunchHostRootPath(), accountId)
+export function ensureKorcaCodexLaunchHome(accountId: string | null): string {
+  return ensureScopedCodexLaunchHome(getKorcaCodexLaunchHostRootPath(), accountId)
 }
 
-export function materializeOrcaCodexLaunchHome(accountId: string | null): string {
+export function materializeKorcaCodexLaunchHome(accountId: string | null): string {
   return materializeScopedCodexLaunchHome(
-    getOrcaManagedCodexHomePath(),
-    getOrcaCodexLaunchHostRootPath(),
+    getKorcaManagedCodexHomePath(),
+    getKorcaCodexLaunchHostRootPath(),
     accountId
   )
 }
 
-export function removeOrcaCodexLaunchHome(accountId: string): void {
+export function removeKorcaCodexLaunchHome(accountId: string): void {
   removeScopedCodexLaunchHome(
-    getOrcaCodexLaunchHostRootPathWithOptions({ create: false }),
+    getKorcaCodexLaunchHostRootPathWithOptions({ create: false }),
     accountId
   )
 }
@@ -138,12 +138,12 @@ export function removeScopedCodexLaunchHome(launchRootPath: string, accountId: s
   rmSync(launchHomePath, { recursive: true, force: true })
 }
 
-function getOrcaCodexLaunchHostRootPath(): string {
-  return getOrcaCodexLaunchHostRootPathWithOptions({ create: true })
+function getKorcaCodexLaunchHostRootPath(): string {
+  return getKorcaCodexLaunchHostRootPathWithOptions({ create: true })
 }
 
-function getOrcaCodexLaunchHostRootPathWithOptions(options: { create: boolean }): string {
-  const rootPath = join(dirname(getOrcaManagedCodexHomePath()), 'launch', 'host')
+function getKorcaCodexLaunchHostRootPathWithOptions(options: { create: boolean }): string {
+  const rootPath = join(dirname(getKorcaManagedCodexHomePath()), 'launch', 'host')
   if (options.create) {
     mkdirSync(rootPath, { recursive: true })
   }

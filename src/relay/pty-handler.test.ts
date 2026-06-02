@@ -334,7 +334,7 @@ describe('PtyHandler', () => {
     const exits: { id: string; paneKey?: string }[] = []
     handler.setExitListener((evt) => exits.push(evt))
 
-    await dispatcher.callRequest('pty.spawn', { env: { ORCA_PANE_KEY: 'tab-fallback:0' } })
+    await dispatcher.callRequest('pty.spawn', { env: { KORCA_PANE_KEY: 'tab-fallback:0' } })
     await dispatcher.callRequest('pty.shutdown', { id: 'pty-1', immediate: false })
     vi.advanceTimersByTime(5000)
     onExitCb!({ exitCode: 137 })
@@ -483,28 +483,28 @@ describe('PtyHandler', () => {
 
   it('applies env augmenters after process.env and renderer-supplied env (augmenter wins on key conflict)', async () => {
     handler.addEnvAugmenter(() => ({
-      ORCA_AGENT_HOOK_PORT: '12345',
-      ORCA_AGENT_HOOK_TOKEN: 'abc-uuid',
+      KORCA_AGENT_HOOK_PORT: '12345',
+      KORCA_AGENT_HOOK_TOKEN: 'abc-uuid',
       // Why: also override a key the renderer supplied below so the test pins
       // the documented "augmenter wins on key conflict" invariant — see the
       // doc-comment on addEnvAugmenter in pty-handler.ts.
-      ORCA_PANE_KEY: 'augmenter-wins'
+      KORCA_PANE_KEY: 'augmenter-wins'
     }))
 
     await dispatcher.callRequest('pty.spawn', {
       cols: 80,
       rows: 24,
-      env: { ORCA_PANE_KEY: 'tab-1:0', ORCA_TAB_ID: 'tab-1' }
+      env: { KORCA_PANE_KEY: 'tab-1:0', KORCA_TAB_ID: 'tab-1' }
     })
 
     expect(mockPtySpawn).toHaveBeenCalled()
     const callArgs = mockPtySpawn.mock.calls[0][2] as { env: Record<string, string> }
-    expect(callArgs.env.ORCA_AGENT_HOOK_PORT).toBe('12345')
-    expect(callArgs.env.ORCA_AGENT_HOOK_TOKEN).toBe('abc-uuid')
+    expect(callArgs.env.KORCA_AGENT_HOOK_PORT).toBe('12345')
+    expect(callArgs.env.KORCA_AGENT_HOOK_TOKEN).toBe('abc-uuid')
     // Augmenter override beats the renderer-supplied value:
-    expect(callArgs.env.ORCA_PANE_KEY).toBe('augmenter-wins')
+    expect(callArgs.env.KORCA_PANE_KEY).toBe('augmenter-wins')
     // Renderer-supplied keys not in augmenter map flow through:
-    expect(callArgs.env.ORCA_TAB_ID).toBe('tab-1')
+    expect(callArgs.env.KORCA_TAB_ID).toBe('tab-1')
   })
 
   it('passes the PTY id and renderer paneKey to env augmenters', async () => {
@@ -517,7 +517,7 @@ describe('PtyHandler', () => {
     })
 
     await dispatcher.callRequest('pty.spawn', {
-      env: { ORCA_PANE_KEY: 'tab-context:0' }
+      env: { KORCA_PANE_KEY: 'tab-context:0' }
     })
     await dispatcher.callRequest('pty.spawn', {})
 
@@ -526,7 +526,7 @@ describe('PtyHandler', () => {
     expect(seenContexts[0]).toMatchObject({
       id: 'pty-1',
       paneKey: 'tab-context:0',
-      env: { ORCA_PANE_KEY: 'tab-context:0' }
+      env: { KORCA_PANE_KEY: 'tab-context:0' }
     })
     expect(seenContexts[1]).toMatchObject({ id: 'pty-2', paneKey: undefined })
     expect(firstEnv.env.OVERLAY_ID).toBe('tab-context:0')
@@ -577,9 +577,9 @@ describe('PtyHandler', () => {
 
         handler.addEnvAugmenter(() => ({
           OPENCODE_CONFIG_DIR: '/remote/overlay/opencode',
-          ORCA_OPENCODE_CONFIG_DIR: '/remote/overlay/opencode',
+          KORCA_OPENCODE_CONFIG_DIR: '/remote/overlay/opencode',
           PI_CODING_AGENT_DIR: '/remote/overlay/pi',
-          ORCA_PI_CODING_AGENT_DIR: '/remote/overlay/pi'
+          KORCA_PI_CODING_AGENT_DIR: '/remote/overlay/pi'
         }))
 
         await dispatcher.callRequest('pty.spawn', { env: { HOME: homeDir } })
@@ -598,16 +598,16 @@ describe('PtyHandler', () => {
 
       const shellArgs = mockPtySpawn.mock.calls[0][1]
       const spawnOptions = mockPtySpawn.mock.calls[0][2] as { env: Record<string, string> }
-      const rcfile = join(homeDir, '.orca-relay', 'shell-ready', 'bash', 'rcfile')
+      const rcfile = join(homeDir, '.korca-relay', 'shell-ready', 'bash', 'rcfile')
 
       expect(shellArgs).toEqual(['--rcfile', rcfile])
-      expect(spawnOptions.env.ORCA_OPENCODE_CONFIG_DIR).toBe('/remote/overlay/opencode')
-      expect(spawnOptions.env.ORCA_PI_CODING_AGENT_DIR).toBe('/remote/overlay/pi')
+      expect(spawnOptions.env.KORCA_OPENCODE_CONFIG_DIR).toBe('/remote/overlay/opencode')
+      expect(spawnOptions.env.KORCA_PI_CODING_AGENT_DIR).toBe('/remote/overlay/pi')
       expect(readFileSync(rcfile, 'utf8')).toContain(
-        'export OPENCODE_CONFIG_DIR="${ORCA_OPENCODE_CONFIG_DIR}"'
+        'export OPENCODE_CONFIG_DIR="${KORCA_OPENCODE_CONFIG_DIR}"'
       )
       expect(readFileSync(rcfile, 'utf8')).toContain(
-        'export PI_CODING_AGENT_DIR="${ORCA_PI_CODING_AGENT_DIR}"'
+        'export PI_CODING_AGENT_DIR="${KORCA_PI_CODING_AGENT_DIR}"'
       )
 
       rmSync(homeDir, { recursive: true, force: true })
@@ -620,9 +620,9 @@ describe('PtyHandler', () => {
       rows: 30,
       cwd: '/tmp',
       env: {
-        ORCA_PANE_KEY: 'tab-5:1',
-        ORCA_TAB_ID: 'tab-5',
-        ORCA_WORKTREE_ID: 'wt-5'
+        KORCA_PANE_KEY: 'tab-5:1',
+        KORCA_TAB_ID: 'tab-5',
+        KORCA_WORKTREE_ID: 'wt-5'
       }
     })
     const state = (await dispatcher.callRequest('pty.serialize', { ids: ['pty-1'] })) as string
@@ -632,8 +632,8 @@ describe('PtyHandler', () => {
     dispatcher = createMockDispatcher()
     handler = new PtyHandler(dispatcher as unknown as RelayDispatcher)
     handler.addEnvAugmenter(() => ({
-      ORCA_AGENT_HOOK_PORT: '12345',
-      ORCA_AGENT_HOOK_TOKEN: 'abc-uuid'
+      KORCA_AGENT_HOOK_PORT: '12345',
+      KORCA_AGENT_HOOK_TOKEN: 'abc-uuid'
     }))
     const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true)
     try {
@@ -644,11 +644,11 @@ describe('PtyHandler', () => {
 
     expect(mockPtySpawn).toHaveBeenCalledTimes(1)
     const callArgs = mockPtySpawn.mock.calls[0][2] as { env: Record<string, string> }
-    expect(callArgs.env.ORCA_PANE_KEY).toBe('tab-5:1')
-    expect(callArgs.env.ORCA_TAB_ID).toBe('tab-5')
-    expect(callArgs.env.ORCA_WORKTREE_ID).toBe('wt-5')
-    expect(callArgs.env.ORCA_AGENT_HOOK_PORT).toBe('12345')
-    expect(callArgs.env.ORCA_AGENT_HOOK_TOKEN).toBe('abc-uuid')
+    expect(callArgs.env.KORCA_PANE_KEY).toBe('tab-5:1')
+    expect(callArgs.env.KORCA_TAB_ID).toBe('tab-5')
+    expect(callArgs.env.KORCA_WORKTREE_ID).toBe('wt-5')
+    expect(callArgs.env.KORCA_AGENT_HOOK_PORT).toBe('12345')
+    expect(callArgs.env.KORCA_AGENT_HOOK_TOKEN).toBe('abc-uuid')
   })
 
   it('invokes the exit listener with the spawn-time paneKey', async () => {
@@ -665,7 +665,7 @@ describe('PtyHandler', () => {
     handler.setExitListener((evt) => exits.push(evt))
 
     await dispatcher.callRequest('pty.spawn', {
-      env: { ORCA_PANE_KEY: 'tab-2:1' }
+      env: { KORCA_PANE_KEY: 'tab-2:1' }
     })
     expect(onExitCb).toBeDefined()
     onExitCb!({ exitCode: 0 })
@@ -688,7 +688,7 @@ describe('PtyHandler', () => {
     handler.setExitListener((evt) => exits.push(evt))
 
     await dispatcher.callRequest('pty.spawn', {
-      env: { ORCA_PANE_KEY: 'tab-shutdown:0' }
+      env: { KORCA_PANE_KEY: 'tab-shutdown:0' }
     })
     await dispatcher.callRequest('pty.shutdown', { id: 'pty-1', immediate: true })
     onExitCb!({ exitCode: 0 })
@@ -709,8 +709,8 @@ describe('PtyHandler', () => {
     const exits: { id: string; paneKey?: string }[] = []
     handler.setExitListener((evt) => exits.push(evt))
 
-    await dispatcher.callRequest('pty.spawn', { env: { ORCA_PANE_KEY: 'tab-dispose:0' } })
-    await dispatcher.callRequest('pty.spawn', { env: { ORCA_PANE_KEY: 'tab-dispose:1' } })
+    await dispatcher.callRequest('pty.spawn', { env: { KORCA_PANE_KEY: 'tab-dispose:0' } })
+    await dispatcher.callRequest('pty.spawn', { env: { KORCA_PANE_KEY: 'tab-dispose:1' } })
     expect(handler.activePtyCount).toBe(2)
 
     handler.dispose()

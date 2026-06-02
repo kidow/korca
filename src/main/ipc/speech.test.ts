@@ -9,7 +9,7 @@ const { handleMock, fromWebContentsMock, getSpeechModelManagerMock, getSpeechStt
   }))
 
 vi.mock('electron', () => ({
-  app: { getPath: vi.fn(() => '/tmp/orca-speech-test') },
+  app: { getPath: vi.fn(() => '/tmp/korca-speech-test') },
   BrowserWindow: { fromWebContents: fromWebContentsMock },
   ipcMain: { handle: handleMock },
   systemPreferences: {

@@ -15,12 +15,12 @@ describe('getInitialProjectAddedWorktreeName', () => {
   })
 
   it('preserves caller-provided defaults', () => {
-    expect(getInitialProjectAddedWorktreeName('orca-worktree-1')).toBe('orca-worktree-1')
+    expect(getInitialProjectAddedWorktreeName('korca-worktree-1')).toBe('korca-worktree-1')
   })
 })
 
 describe('getInitialProjectAddedChoice', () => {
-  it('defaults to using existing worktrees when Orca found fewer than 10 linked worktrees', () => {
+  it('defaults to using existing worktrees when Korca found fewer than 10 linked worktrees', () => {
     expect(getInitialProjectAddedChoice(1)).toBe('existing')
     expect(getInitialProjectAddedChoice(9)).toBe('existing')
   })
@@ -29,7 +29,7 @@ describe('getInitialProjectAddedChoice', () => {
     expect(getInitialProjectAddedChoice(0)).toBe('create')
   })
 
-  it('defaults to creating a worktree when Orca found 10 or more linked worktrees', () => {
+  it('defaults to creating a worktree when Korca found 10 or more linked worktrees', () => {
     expect(getInitialProjectAddedChoice(10)).toBe('create')
     expect(getInitialProjectAddedChoice(11)).toBe('create')
   })

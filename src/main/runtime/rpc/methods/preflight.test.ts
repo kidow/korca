@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { RpcDispatcher } from '../dispatcher'
 import type { RpcRequest } from '../core'
-import type { OrcaRuntimeService } from '../../orca-runtime'
+import type { KorcaRuntimeService } from '../../korca-runtime'
 import { PREFLIGHT_METHODS } from './preflight'
 
 const {
@@ -36,7 +36,7 @@ describe('preflight RPC methods', () => {
       bitbucket: { configured: false, authenticated: false, account: null }
     }
     runPreflightCheckMock.mockResolvedValueOnce(status)
-    const runtime = { getRuntimeId: () => 'test-runtime' } as unknown as OrcaRuntimeService
+    const runtime = { getRuntimeId: () => 'test-runtime' } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: PREFLIGHT_METHODS })
 
     const response = await dispatcher.dispatch(makeRequest('preflight.check', { force: true }))
@@ -54,7 +54,7 @@ describe('preflight RPC methods', () => {
       pathSource: 'shell_hydrate',
       pathFailureReason: 'none'
     })
-    const runtime = { getRuntimeId: () => 'test-runtime' } as unknown as OrcaRuntimeService
+    const runtime = { getRuntimeId: () => 'test-runtime' } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: PREFLIGHT_METHODS })
 
     const detected = await dispatcher.dispatch(makeRequest('preflight.detectAgents'))
@@ -71,7 +71,7 @@ describe('preflight RPC methods', () => {
 
   it('detects agents on remote SSH connections through runtime RPC', async () => {
     detectRemoteAgentsMock.mockResolvedValueOnce(['claude'])
-    const runtime = { getRuntimeId: () => 'test-runtime' } as unknown as OrcaRuntimeService
+    const runtime = { getRuntimeId: () => 'test-runtime' } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: PREFLIGHT_METHODS })
 
     const response = await dispatcher.dispatch(

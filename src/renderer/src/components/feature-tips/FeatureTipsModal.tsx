@@ -23,9 +23,9 @@ import { CliSkillSetupTerminal } from './CliSkillSetupTerminal'
 import { installCliFromFeatureTip } from './feature-tip-cli-install-action'
 import { getFeatureTipForModal } from './feature-tip-modal-state'
 import {
-  getOrcaCliFeatureTipTelemetrySource,
-  trackOrcaCliFeatureTipSetupClicked,
-  trackOrcaCliFeatureTipSetupResult
+  getKorcaCliFeatureTipTelemetrySource,
+  trackKorcaCliFeatureTipSetupClicked,
+  trackKorcaCliFeatureTipSetupResult
 } from './feature-tip-telemetry'
 import { useMountedRef } from '@/hooks/useMountedRef'
 
@@ -199,38 +199,38 @@ export default function FeatureTipsModal(): JSX.Element | null {
           mountedRef.current &&
           activeModalRef.current === 'feature-tips' &&
           setupRequestIdRef.current === setupRequestId
-        const telemetrySource = getOrcaCliFeatureTipTelemetrySource(modalData.source)
-        trackOrcaCliFeatureTipSetupClicked(telemetrySource)
+        const telemetrySource = getKorcaCliFeatureTipTelemetrySource(modalData.source)
+        trackKorcaCliFeatureTipSetupClicked(telemetrySource)
         setPrimaryBusy(true)
         try {
           const result = await installCliFromFeatureTip(() => window.api.cli.install())
           if (result.kind === 'installed') {
-            trackOrcaCliFeatureTipSetupResult(telemetrySource, 'installed')
+            trackKorcaCliFeatureTipSetupResult(telemetrySource, 'installed')
             if (!canApplySetupResult()) {
               return
             }
             enableOrchestrationSkillSetup()
-            toast.success('Registered `orca` in PATH.')
+            toast.success('Registered `korca` in PATH.')
             setSkillTerminalOpen(true)
             return
           }
 
-          trackOrcaCliFeatureTipSetupResult(telemetrySource, 'needs_attention')
+          trackKorcaCliFeatureTipSetupResult(telemetrySource, 'needs_attention')
           if (!canApplySetupResult()) {
             return
           }
-          toast.warning('Orca CLI needs attention', {
+          toast.warning('Korca CLI needs attention', {
             description: result.status.detail ?? 'Open Settings to finish CLI setup.'
           })
           closeModal()
           openCliSettings()
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'Failed to install Orca CLI.'
+          const message = error instanceof Error ? error.message : 'Failed to install Korca CLI.'
           if (
             import.meta.env.DEV &&
             message.includes('Development mode uses a generated launcher for validation only')
           ) {
-            trackOrcaCliFeatureTipSetupResult(telemetrySource, 'dev_preview')
+            trackKorcaCliFeatureTipSetupResult(telemetrySource, 'dev_preview')
             if (!canApplySetupResult()) {
               return
             }
@@ -240,7 +240,7 @@ export default function FeatureTipsModal(): JSX.Element | null {
             return
           }
 
-          trackOrcaCliFeatureTipSetupResult(telemetrySource, 'failed')
+          trackKorcaCliFeatureTipSetupResult(telemetrySource, 'failed')
           if (canApplySetupResult()) {
             toast.error(message)
           }

@@ -9,7 +9,7 @@
    daemon reconnect, and handler registration. Splitting the orchestration
    would hide the startup order, which is the important invariant here. */
 
-// Orca Relay — lightweight daemon deployed to remote hosts.
+// Korca Relay — lightweight daemon deployed to remote hosts.
 // Communicates over stdin/stdout using the framed JSON-RPC protocol.
 // The Electron app (client) deploys this script via SCP and launches
 // it via an SSH exec channel.
@@ -63,7 +63,7 @@ const SOCK_NAME = 'relay.sock'
 const CONNECT_TIMEOUT_MS = 5_000
 const STALE_SOCKET_PROBE_TIMEOUT_MS = 500
 const EMPTY_DETACHED_STARTUP_GRACE_MS = parseNonNegativeIntEnv(
-  'ORCA_RELAY_EMPTY_STARTUP_GRACE_MS',
+  'KORCA_RELAY_EMPTY_STARTUP_GRACE_MS',
   60_000
 )
 
@@ -119,7 +119,7 @@ function parseArgs(argv: string[]): {
       i++
     } else if (argv[i] === '--connect') {
       connectMode = true
-    } else if (argv[i] === '--orca-cli') {
+    } else if (argv[i] === '--korca-cli') {
       cliMode = true
     } else if (argv[i] === '--detached') {
       detached = true
@@ -199,7 +199,7 @@ function runConnectMode(sockPath: string): void {
   })
 }
 
-function runOrcaCliMode(sockPath: string, argv: string[]): void {
+function runKorcaCliMode(sockPath: string, argv: string[]): void {
   const myVersion = readLaunchVersion()
   const sock = createConnection({ path: sockPath })
   let nextSeq = 1
@@ -212,7 +212,7 @@ function runOrcaCliMode(sockPath: string, argv: string[]): void {
       {
         jsonrpc: '2.0',
         id: requestId,
-        method: 'orca.cli',
+        method: 'korca.cli',
         params: {
           argv,
           cwd: process.cwd(),
@@ -258,7 +258,7 @@ function runOrcaCliMode(sockPath: string, argv: string[]): void {
   })
 
   const connectTimeout = setTimeout(() => {
-    process.stderr.write(`[orca-cli] Relay connection timed out after ${CONNECT_TIMEOUT_MS}ms\n`)
+    process.stderr.write(`[korca-cli] Relay connection timed out after ${CONNECT_TIMEOUT_MS}ms\n`)
     sock.destroy()
     process.exit(1)
   }, CONNECT_TIMEOUT_MS)
@@ -280,14 +280,14 @@ function runOrcaCliMode(sockPath: string, argv: string[]): void {
 
   sock.on('error', (err) => {
     clearTimeout(connectTimeout)
-    process.stderr.write(`[orca-cli] Relay socket error: ${err.message}\n`)
+    process.stderr.write(`[korca-cli] Relay socket error: ${err.message}\n`)
     process.exit(1)
   })
 }
 
 function pickRemoteCliEnv(env: NodeJS.ProcessEnv): Record<string, string> {
   const picked: Record<string, string> = {}
-  for (const key of ['ORCA_TERMINAL_HANDLE', 'ORCA_USER_DATA_PATH', 'PATH', 'Path']) {
+  for (const key of ['KORCA_TERMINAL_HANDLE', 'KORCA_USER_DATA_PATH', 'PATH', 'Path']) {
     const value = env[key]
     if (typeof value === 'string') {
       picked[key] = value
@@ -306,8 +306,8 @@ async function main(): Promise<void> {
     return
   }
   if (cliMode) {
-    const marker = process.argv.indexOf('--orca-cli')
-    runOrcaCliMode(sockPath, marker >= 0 ? process.argv.slice(marker + 1) : [])
+    const marker = process.argv.indexOf('--korca-cli')
+    runKorcaCliMode(sockPath, marker >= 0 ? process.argv.slice(marker + 1) : [])
     return
   }
 
@@ -420,8 +420,8 @@ async function main(): Promise<void> {
   const _workspaceSessionHandler = new WorkspaceSessionHandler(dispatcher)
   void _workspaceSessionHandler
 
-  dispatcher.onRequest('orca.cli', async (params, context) => {
-    return await dispatcher.requestAnyClient('orca.cli', params, {
+  dispatcher.onRequest('korca.cli', async (params, context) => {
+    return await dispatcher.requestAnyClient('korca.cli', params, {
       excludeClientId: context.clientId
     })
   })
@@ -446,7 +446,7 @@ async function main(): Promise<void> {
   // ── Agent-hook server ─────────────────────────────────────────────
   // Why: hosts a loopback HTTP receiver inside the relay process so agent
   // CLIs running in remote PTYs can post hook events without leaving the
-  // host. Each parsed payload is forwarded to Orca via an `agent.hook`
+  // host. Each parsed payload is forwarded to Korca via an `agent.hook`
   // JSON-RPC notification on the existing SSH channel — see
   // docs/design/agent-status-over-ssh.md §2-§5.
   const hookServer = new RelayAgentHookServer({
@@ -458,7 +458,7 @@ async function main(): Promise<void> {
       // Why: dispatcher.notify is fire-and-forget — when the SSH channel is
       // mid-reconnect the write callback no-ops and the notification is
       // silently dropped. The per-paneKey cache inside `hookServer` lets us
-      // replay the last status for each live pane after Orca re-wires its
+      // replay the last status for each live pane after Korca re-wires its
       // handler post-`--connect`.
       dispatcher.notify(
         AGENT_HOOK_NOTIFICATION_METHOD,
@@ -468,7 +468,7 @@ async function main(): Promise<void> {
   })
   // Why: await the hook-server bind before announcing readiness so the very
   // first PTY spawn (which can land within milliseconds of the sentinel)
-  // already sees populated ORCA_AGENT_HOOK_* env. The bind is a local-loopback
+  // already sees populated KORCA_AGENT_HOOK_* env. The bind is a local-loopback
   // listen — measured in ms — so the latency cost is trivial and removes a
   // class of "first agent invocation has no status" races. Bind failure is
   // treated as soft: log and continue, the augmenter returns {} and agent
@@ -481,7 +481,7 @@ async function main(): Promise<void> {
     )
   }
 
-  // Why: every relay-spawned PTY needs the live ORCA_AGENT_HOOK_* coords. The
+  // Why: every relay-spawned PTY needs the live KORCA_AGENT_HOOK_* coords. The
   // augmenter is read on every spawn so a hook-server bind that succeeded
   // late (or after a stop/start) lands in the next PTY's env without a
   // restart.
@@ -489,9 +489,9 @@ async function main(): Promise<void> {
 
   // Why: per-PTY plugin overlays for OpenCode and Pi. `OPENCODE_CONFIG_DIR`
   // and `PI_CODING_AGENT_DIR` only make sense on the relay's own filesystem
-  // — paths the renderer would synthesize for the Orca host's userData are
+  // — paths the renderer would synthesize for the Korca host's userData are
   // meaningless on the remote. The overlay manager materializes a per-PTY
-  // dir on the remote (rooted at $HOME/.orca-relay/) so the agent CLI inside
+  // dir on the remote (rooted at $HOME/.korca-relay/) so the agent CLI inside
   // the relay-spawned PTY loads the bundled status plugin and posts to the
   // relay's hook server. Source bodies arrive over JSON-RPC (see
   // `agent_hook.installPlugins` below) — not bundled with the relay binary.
@@ -508,9 +508,9 @@ async function main(): Promise<void> {
       const dir = pluginOverlay.materializeOpenCode(overlayId, sourceDir)
       if (dir) {
         env.OPENCODE_CONFIG_DIR = dir
-        env.ORCA_OPENCODE_CONFIG_DIR = dir
+        env.KORCA_OPENCODE_CONFIG_DIR = dir
         if (sourceDir) {
-          env.ORCA_OPENCODE_SOURCE_CONFIG_DIR = sourceDir
+          env.KORCA_OPENCODE_SOURCE_CONFIG_DIR = sourceDir
         }
       }
     }
@@ -529,29 +529,29 @@ async function main(): Promise<void> {
           env.PI_CODING_AGENT_DIR = dir
           // Why: shadow var is agent-scoped so remote shell-ready wrappers can
           // restore Pi by default while the `omp` wrapper switches on demand.
-          env.ORCA_PI_CODING_AGENT_DIR = dir
+          env.KORCA_PI_CODING_AGENT_DIR = dir
           if (sourceDir) {
-            env.ORCA_PI_SOURCE_AGENT_DIR = sourceDir
+            env.KORCA_PI_SOURCE_AGENT_DIR = sourceDir
           }
         }
       }
       if (shouldPrepareOmpShadow) {
         // Why: in a bare shell, PI_CODING_AGENT_DIR is historically Pi's
         // default. Do not mirror it into OMP; use OMP's own default unless an
-        // OMP-scoped source shadow is already present from a nested Orca shell.
+        // OMP-scoped source shadow is already present from a nested Korca shell.
         const sourceDir =
           kind === 'omp'
             ? resolvePiSourceAgentDir(ctx.env, ctx.shell, 'omp')
-            : ctx.env.ORCA_OMP_SOURCE_AGENT_DIR
+            : ctx.env.KORCA_OMP_SOURCE_AGENT_DIR
         const dir = pluginOverlay.materializePi(overlayId, sourceDir, 'omp')
         if (dir) {
           if (kind === 'omp') {
             env.PI_CODING_AGENT_DIR = dir
           }
-          env.ORCA_OMP_CODING_AGENT_DIR = dir
-          env.ORCA_OMP_STATUS_EXTENSION = getRelayPiStatusExtensionPath(dir)
+          env.KORCA_OMP_CODING_AGENT_DIR = dir
+          env.KORCA_OMP_STATUS_EXTENSION = getRelayPiStatusExtensionPath(dir)
           if (sourceDir) {
-            env.ORCA_OMP_SOURCE_AGENT_DIR = sourceDir
+            env.KORCA_OMP_SOURCE_AGENT_DIR = sourceDir
           }
         }
       }
@@ -570,7 +570,7 @@ async function main(): Promise<void> {
     pluginOverlay.clearOverlay(paneKey ?? id)
   })
 
-  // Why: request-driven replay. Orca issues this *after* it re-wires the
+  // Why: request-driven replay. Korca issues this *after* it re-wires the
   // `agent.hook` filter on the new mux post-`--connect`. We forward each
   // cached entry as a fresh notification BEFORE returning so the response
   // strictly trails all replays on the dispatcher's single write callback —
@@ -581,13 +581,13 @@ async function main(): Promise<void> {
     return { replayed }
   })
 
-  // Why: Orca ships the OpenCode plugin / Pi extension source bodies over
+  // Why: Korca ships the OpenCode plugin / Pi extension source bodies over
   // the wire at session-ready (the renderer's bundled hook-service strings
   // change as new agent events are added — pinning them to the relay binary
-  // would force a relay redeploy on every Orca update). Cache them so each
+  // would force a relay redeploy on every Korca update). Cache them so each
   // subsequent PTY spawn can materialize a per-PTY overlay rooted under
-  // $HOME/.orca-relay/. See docs/design/agent-status-over-ssh.md §4.
-  // Why: bound the per-source size so a buggy/hostile Orca can't OOM the
+  // $HOME/.korca-relay/. See docs/design/agent-status-over-ssh.md §4.
+  // Why: bound the per-source size so a buggy/hostile Korca can't OOM the
   // relay by pushing a giant string. The HTTP path has HOOK_REQUEST_MAX_BYTES
   // = 1 MB; the JSON-RPC path needs an equivalent ceiling. Real plugin sources
   // are <50 KB today; 256 KB leaves generous headroom.

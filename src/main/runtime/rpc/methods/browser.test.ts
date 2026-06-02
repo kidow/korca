@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { RpcDispatcher } from '../dispatcher'
 import type { RpcRequest } from '../core'
-import type { OrcaRuntimeService } from '../../orca-runtime'
+import type { KorcaRuntimeService } from '../../korca-runtime'
 import { BROWSER_CORE_METHODS } from './browser-core'
 import { BROWSER_EXTRA_METHODS } from './browser-extras'
 import { BROWSER_SCREENCAST_METHODS } from './browser-screencast'
@@ -20,7 +20,7 @@ describe('browser RPC methods', () => {
       browserProfileImportFromBrowser: vi.fn().mockResolvedValue({ ok: false, reason: 'empty' }),
       browserTabCreate: vi.fn().mockResolvedValue({ browserPageId: 'page-1' }),
       browserTabSwitch: vi.fn().mockResolvedValue({ browserPageId: 'page-1' })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: BROWSER_CORE_METHODS })
 
     await dispatcher.dispatch(makeRequest('browser.snapshot', { worktree: 'id:wt-1' }))
@@ -87,7 +87,7 @@ describe('browser RPC methods', () => {
           options.emit({ type: 'end', subscriptionId: 'browser-screencast:page-1:test' })
         }
       )
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: BROWSER_SCREENCAST_METHODS })
     const replies: string[] = []
 
@@ -133,7 +133,7 @@ describe('browser RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       cleanupSubscription: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: BROWSER_SCREENCAST_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -156,7 +156,7 @@ describe('browser RPC methods', () => {
       browserSetViewport: vi.fn().mockResolvedValue({ ok: true }),
       browserMouseWheel: vi.fn().mockResolvedValue({ ok: true }),
       browserStorageLocalSet: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: BROWSER_EXTRA_METHODS })
 
     await dispatcher.dispatch(
@@ -185,7 +185,7 @@ describe('browser RPC methods', () => {
       makeRequest('browser.storage.local.set', {
         worktree: 'id:wt-1',
         page: 'page-1',
-        key: 'orca',
+        key: 'korca',
         value: 'enabled'
       })
     )
@@ -209,7 +209,7 @@ describe('browser RPC methods', () => {
     expect(runtime.browserStorageLocalSet).toHaveBeenCalledWith({
       worktree: 'id:wt-1',
       page: 'page-1',
-      key: 'orca',
+      key: 'korca',
       value: 'enabled'
     })
   })
@@ -218,7 +218,7 @@ describe('browser RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       browserCheck: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: BROWSER_CORE_METHODS })
 
     const response = await dispatcher.dispatch(

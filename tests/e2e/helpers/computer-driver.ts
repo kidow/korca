@@ -17,12 +17,12 @@ export type CliResult = {
   stderr: string
 }
 
-export async function runOrcaCli(args: string[]): Promise<CliResult> {
-  const devCli = join(process.cwd(), 'config/scripts/orca-dev')
+export async function runKorcaCli(args: string[]): Promise<CliResult> {
+  const devCli = join(process.cwd(), 'config/scripts/korca-dev')
   const builtCli = join(process.cwd(), 'out/cli/index.js')
   const command =
-    process.env.ORCA_COMPUTER_CLI ?? (process.platform === 'win32' ? process.execPath : devCli)
-  const cliArgs = process.env.ORCA_COMPUTER_CLI
+    process.env.KORCA_COMPUTER_CLI ?? (process.platform === 'win32' ? process.execPath : devCli)
+  const cliArgs = process.env.KORCA_COMPUTER_CLI
     ? args
     : process.platform === 'win32'
       ? [builtCli, ...args]
@@ -43,7 +43,7 @@ export async function runOrcaCli(args: string[]): Promise<CliResult> {
 
 export async function ensureTextEditLaunched(): Promise<void> {
   await killTextEdit()
-  textEditTempDir = await mkdtemp(join(tmpdir(), 'orca-computer-e2e-'))
+  textEditTempDir = await mkdtemp(join(tmpdir(), 'korca-computer-e2e-'))
   const filePath = join(textEditTempDir, 'textedit-target.txt')
   await writeFile(filePath, 'seed', 'utf8')
   await execFileAsync('open', ['-a', 'TextEdit', '-n', filePath])
@@ -64,7 +64,7 @@ export async function killTextEdit(): Promise<void> {
 
 export async function ensureGeditLaunched(): Promise<void> {
   await killGedit()
-  linuxTempDir = await mkdtemp(join(tmpdir(), 'orca-computer-linux-e2e-'))
+  linuxTempDir = await mkdtemp(join(tmpdir(), 'korca-computer-linux-e2e-'))
   const filePath = join(linuxTempDir, 'gedit-target.txt')
   await writeFile(filePath, 'seed', 'utf8')
   geditProcess = spawn('gedit', [filePath], { detached: true, stdio: 'ignore' })
@@ -89,8 +89,8 @@ export async function killGedit(): Promise<void> {
 
 export async function ensureNotepadLaunched(): Promise<void> {
   await killNotepad()
-  windowsTempDir = await mkdtemp(join(tmpdir(), 'orca-computer-windows-e2e-'))
-  const filePath = join(windowsTempDir, `orca-notepad-${Date.now()}.txt`)
+  windowsTempDir = await mkdtemp(join(tmpdir(), 'korca-computer-windows-e2e-'))
+  const filePath = join(windowsTempDir, `korca-notepad-${Date.now()}.txt`)
   await writeFile(filePath, 'seed', 'utf8')
   await execFileAsync('powershell.exe', [
     '-NoProfile',

@@ -1,5 +1,5 @@
 import type { Page } from '@stablyai/playwright-test'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import { waitForActiveWorktree, waitForSessionReady } from './helpers/store'
 import type { CreateHostedReviewResult } from '../../src/shared/hosted-review'
 
@@ -100,7 +100,7 @@ async function seedCreatePREligibleBranch(
       number: 73,
       title: 'E2E에서 풀 리퀘스트 생성',
       state: 'open' as const,
-      url: 'https://github.com/acme/orca/pull/73',
+      url: 'https://github.com/acme/korca/pull/73',
       checksStatus: 'pending' as const,
       updatedAt: '2026-05-15T00:00:00.000Z',
       mergeable: 'UNKNOWN' as const
@@ -166,7 +166,7 @@ async function seedCreatePREligibleBranch(
         return {
           ok: true as const,
           number: 73,
-          url: 'https://github.com/acme/orca/pull/73'
+          url: 'https://github.com/acme/korca/pull/73'
         }
       }
     }))
@@ -178,25 +178,25 @@ async function seedCreatePREligibleBranch(
 }
 
 test.describe('Source Control create pull request', () => {
-  test.beforeEach(async ({ orcaPage }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
+  test.beforeEach(async ({ korcaPage }) => {
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
   })
 
-  test('creates the pull request from the Source Control primary action', async ({ orcaPage }) => {
-    const { branch, worktreeId } = await seedCreatePREligibleBranch(orcaPage)
-    await openSourceControl(orcaPage, worktreeId)
-    await forceCreatePREligibleStatus(orcaPage, worktreeId, branch)
+  test('creates the pull request from the Source Control primary action', async ({ korcaPage }) => {
+    const { branch, worktreeId } = await seedCreatePREligibleBranch(korcaPage)
+    await openSourceControl(korcaPage, worktreeId)
+    await forceCreatePREligibleStatus(korcaPage, worktreeId, branch)
 
-    const createButton = orcaPage.getByRole('button', { name: 'PR 생성' })
+    const createButton = korcaPage.getByRole('button', { name: 'PR 생성' })
     await expect(createButton).toBeVisible({ timeout: 10_000 })
     await expect(createButton).toBeDisabled()
-    const titleInput = orcaPage.getByRole('textbox', { name: '풀 리퀘스트 제목' })
-    const descriptionInput = orcaPage.getByRole('textbox', {
+    const titleInput = korcaPage.getByRole('textbox', { name: '풀 리퀘스트 제목' })
+    const descriptionInput = korcaPage.getByRole('textbox', {
       name: '풀 리퀘스트 설명'
     })
     await expect(titleInput).toHaveValue('')
-    await expect(orcaPage.getByRole('textbox', { name: '풀 리퀘스트 기준 브랜치' })).toHaveValue(
+    await expect(korcaPage.getByRole('textbox', { name: '풀 리퀘스트 기준 브랜치' })).toHaveValue(
       'main'
     )
     await expect(descriptionInput).toHaveValue('')
@@ -208,7 +208,7 @@ test.describe('Source Control create pull request', () => {
     await expect
       .poll(
         () =>
-          orcaPage.evaluate(
+          korcaPage.evaluate(
             () =>
               (window as unknown as { __createPRPayloads: CreatePRPayload[] }).__createPRPayloads
                 .length
@@ -217,7 +217,7 @@ test.describe('Source Control create pull request', () => {
       )
       .toBe(1)
 
-    const payloads = await orcaPage.evaluate(
+    const payloads = await korcaPage.evaluate(
       () => (window as unknown as { __createPRPayloads: CreatePRPayload[] }).__createPRPayloads
     )
     expect(payloads).toHaveLength(1)
@@ -232,22 +232,22 @@ test.describe('Source Control create pull request', () => {
   })
 
   test('surfaces create failures without clearing the pull request composer', async ({
-    orcaPage
+    korcaPage
   }) => {
     const failureMessage = 'PR 생성 실패: GitHub API rate limit exceeded'
-    const { branch, worktreeId } = await seedCreatePREligibleBranch(orcaPage, {
+    const { branch, worktreeId } = await seedCreatePREligibleBranch(korcaPage, {
       createResult: {
         ok: false,
         code: 'unknown',
         error: failureMessage
       }
     })
-    await openSourceControl(orcaPage, worktreeId)
-    await forceCreatePREligibleStatus(orcaPage, worktreeId, branch)
+    await openSourceControl(korcaPage, worktreeId)
+    await forceCreatePREligibleStatus(korcaPage, worktreeId, branch)
 
-    const createButton = orcaPage.getByRole('button', { name: 'PR 생성' })
-    const titleInput = orcaPage.getByRole('textbox', { name: '풀 리퀘스트 제목' })
-    const descriptionInput = orcaPage.getByRole('textbox', {
+    const createButton = korcaPage.getByRole('button', { name: 'PR 생성' })
+    const titleInput = korcaPage.getByRole('textbox', { name: '풀 리퀘스트 제목' })
+    const descriptionInput = korcaPage.getByRole('textbox', {
       name: '풀 리퀘스트 설명'
     })
     await expect(createButton).toBeVisible({ timeout: 10_000 })
@@ -256,10 +256,10 @@ test.describe('Source Control create pull request', () => {
     await expect(createButton).toBeEnabled()
     await createButton.click()
 
-    await expect(orcaPage.getByText(failureMessage)).toBeVisible()
+    await expect(korcaPage.getByText(failureMessage)).toBeVisible()
     await expect(titleInput).toHaveValue('실패하는 풀 리퀘스트')
     await expect(descriptionInput).toHaveValue('이 초안은 생성 실패 후에도 유지되어야 합니다.')
-    await expect(orcaPage.getByRole('textbox', { name: '풀 리퀘스트 기준 브랜치' })).toHaveValue(
+    await expect(korcaPage.getByRole('textbox', { name: '풀 리퀘스트 기준 브랜치' })).toHaveValue(
       'main'
     )
     await expect(createButton).toBeEnabled()

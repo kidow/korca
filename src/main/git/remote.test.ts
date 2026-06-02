@@ -30,7 +30,7 @@ describe('git remote operations', () => {
   it('pushes to the configured upstream remote and branch', async () => {
     gitExecFileAsyncMock
       .mockResolvedValueOnce({ stdout: 'review/pr-1738\n', stderr: '' })
-      .mockResolvedValueOnce({ stdout: 'pr-prateek-orca\n', stderr: '' })
+      .mockResolvedValueOnce({ stdout: 'pr-prateek-korca\n', stderr: '' })
       .mockResolvedValueOnce({
         stdout: 'refs/heads/prateek/fix-sidebar-agents-toggle\n',
         stderr: ''
@@ -44,7 +44,7 @@ describe('git remote operations', () => {
       [['config', '--get', 'branch.review/pr-1738.remote'], { cwd: '/repo' }],
       [['config', '--get', 'branch.review/pr-1738.merge'], { cwd: '/repo' }],
       [
-        ['push', '--set-upstream', 'pr-prateek-orca', 'HEAD:prateek/fix-sidebar-agents-toggle'],
+        ['push', '--set-upstream', 'pr-prateek-korca', 'HEAD:prateek/fix-sidebar-agents-toggle'],
         { cwd: '/repo' }
       ]
     ])

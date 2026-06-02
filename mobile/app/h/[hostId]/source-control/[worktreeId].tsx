@@ -438,7 +438,7 @@ export default function MobileSourceControlScreen() {
             if (isMobileGitUnavailable(response.error?.code, response.error?.message)) {
               setScreenState({
                 kind: 'unavailable',
-                message: '모바일에서 소스 컨트롤을 사용하려면 Orca 데스크톱을 업데이트하세요.'
+                message: '모바일에서 소스 컨트롤을 사용하려면 Korca 데스크톱을 업데이트하세요.'
               })
               return false
             }

@@ -69,7 +69,7 @@ describe('patchPackagedProcessPath', () => {
     const segments = (process.env.PATH ?? '').split(':')
     // Why: issue #829 — ~/.opencode/bin and ~/.vite-plus/bin are the documented
     // fallback install locations for the opencode and Pi CLI install scripts.
-    // Without them on PATH, GUI-launched Orca reports both as "Not installed"
+    // Without them on PATH, GUI-launched Korca reports both as "Not installed"
     // even when `which` resolves them in the user's shell.
     expect(segments).toContain(join('/Users/tester', '.opencode/bin'))
     expect(segments).toContain(join('/Users/tester', '.vite-plus/bin'))
@@ -112,32 +112,32 @@ describe('configureDevUserDataPath', () => {
   it('uses an explicit dev userData override when provided', async () => {
     const { app } = await import('electron')
     const { configureDevUserDataPath } = await import('./configure-process')
-    const originalOverride = process.env.ORCA_DEV_USER_DATA_PATH
-    process.env.ORCA_DEV_USER_DATA_PATH = '/tmp/orca-dev-repro'
+    const originalOverride = process.env.KORCA_DEV_USER_DATA_PATH
+    process.env.KORCA_DEV_USER_DATA_PATH = '/tmp/korca-dev-repro'
 
     try {
       configureDevUserDataPath(true)
     } finally {
       if (originalOverride === undefined) {
-        delete process.env.ORCA_DEV_USER_DATA_PATH
+        delete process.env.KORCA_DEV_USER_DATA_PATH
       } else {
-        process.env.ORCA_DEV_USER_DATA_PATH = originalOverride
+        process.env.KORCA_DEV_USER_DATA_PATH = originalOverride
       }
     }
 
-    expect(app.setPath).toHaveBeenCalledWith('userData', '/tmp/orca-dev-repro')
+    expect(app.setPath).toHaveBeenCalledWith('userData', '/tmp/korca-dev-repro')
   })
 
-  it('moves dev runs onto an orca-dev userData path', async () => {
+  it('moves dev runs onto an korca-dev userData path', async () => {
     const { app } = await import('electron')
     const { configureDevUserDataPath } = await import('./configure-process')
 
-    delete process.env.ORCA_DEV_USER_DATA_PATH
+    delete process.env.KORCA_DEV_USER_DATA_PATH
     configureDevUserDataPath(true)
 
-    // Why: production code uses path.join(app.getPath('appData'), 'orca-dev')
+    // Why: production code uses path.join(app.getPath('appData'), 'korca-dev')
     // which produces platform-specific separators.
-    expect(app.setPath).toHaveBeenCalledWith('userData', join('/tmp/app-data', 'orca-dev'))
+    expect(app.setPath).toHaveBeenCalledWith('userData', join('/tmp/app-data', 'korca-dev'))
   })
 
   it('leaves packaged runs on the default userData path', async () => {
@@ -281,7 +281,7 @@ describe('installDevParentWatchdog', () => {
 
 describe('enableMainProcessGpuFeatures', () => {
   const originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform')
-  const originalE2EUserDataDir = process.env.ORCA_E2E_USER_DATA_DIR
+  const originalE2EUserDataDir = process.env.KORCA_E2E_USER_DATA_DIR
 
   function setPlatform(platform: NodeJS.Platform): void {
     Object.defineProperty(process, 'platform', {
@@ -295,9 +295,9 @@ describe('enableMainProcessGpuFeatures', () => {
       Object.defineProperty(process, 'platform', originalPlatform)
     }
     if (originalE2EUserDataDir === undefined) {
-      delete process.env.ORCA_E2E_USER_DATA_DIR
+      delete process.env.KORCA_E2E_USER_DATA_DIR
     } else {
-      process.env.ORCA_E2E_USER_DATA_DIR = originalE2EUserDataDir
+      process.env.KORCA_E2E_USER_DATA_DIR = originalE2EUserDataDir
     }
   })
 
@@ -305,7 +305,7 @@ describe('enableMainProcessGpuFeatures', () => {
     const { app } = await import('electron')
     const { enableMainProcessGpuFeatures } = await import('./configure-process')
 
-    delete process.env.ORCA_E2E_USER_DATA_DIR
+    delete process.env.KORCA_E2E_USER_DATA_DIR
     vi.mocked(app.commandLine.appendSwitch).mockClear()
     enableMainProcessGpuFeatures()
 
@@ -321,7 +321,7 @@ describe('enableMainProcessGpuFeatures', () => {
     const { enableMainProcessGpuFeatures } = await import('./configure-process')
 
     setPlatform('linux')
-    process.env.ORCA_E2E_USER_DATA_DIR = '/tmp/orca-e2e'
+    process.env.KORCA_E2E_USER_DATA_DIR = '/tmp/korca-e2e'
     vi.mocked(app.disableHardwareAcceleration).mockClear()
     vi.mocked(app.commandLine.appendSwitch).mockClear()
 
@@ -339,7 +339,7 @@ describe('enableMainProcessGpuFeatures', () => {
     const { app } = await import('electron')
     const { enableMainProcessGpuFeatures } = await import('./configure-process')
 
-    delete process.env.ORCA_E2E_USER_DATA_DIR
+    delete process.env.KORCA_E2E_USER_DATA_DIR
     vi.mocked(app.commandLine.appendSwitch).mockClear()
     vi.mocked(app.commandLine.getSwitchValue).mockReturnValue('ExistingFeature')
     enableMainProcessGpuFeatures()

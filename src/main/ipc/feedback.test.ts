@@ -102,7 +102,7 @@ describe('submitFeedback', () => {
   it('falls back when the primary feedback request stalls', async () => {
     vi.useFakeTimers()
     fetchMock.mockImplementation((url: string, init?: RequestInit) => {
-      if (url.includes('api.onorca.dev')) {
+      if (url.includes('api.onkorca.dev')) {
         return new Promise((_resolve, reject) => {
           init?.signal?.addEventListener('abort', () => reject(new Error('request aborted')))
         })
@@ -125,7 +125,7 @@ describe('submitFeedback', () => {
   it('does not retry the fallback when the fallback fails after a primary server error', async () => {
     vi.useFakeTimers()
     fetchMock.mockImplementation((url: string, init?: RequestInit) => {
-      if (url.includes('api.onorca.dev')) {
+      if (url.includes('api.onkorca.dev')) {
         return Promise.resolve({ ok: false, status: 500 } as Response)
       }
       return new Promise((_resolve, reject) => {

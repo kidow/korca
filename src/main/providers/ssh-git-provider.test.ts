@@ -147,25 +147,25 @@ describe('SshGitProvider', () => {
 
     await provider.execNonInteractive(
       '/bin/bash',
-      ['-lc', 'echo "$ORCA_WORKTREE_PATH"'],
+      ['-lc', 'echo "$KORCA_WORKTREE_PATH"'],
       '/home/user/repo',
       120_000,
       undefined,
       {
-        ORCA_ROOT_PATH: '/home/user/repo',
-        ORCA_WORKTREE_PATH: '/home/user/repo-feature'
+        KORCA_ROOT_PATH: '/home/user/repo',
+        KORCA_WORKTREE_PATH: '/home/user/repo-feature'
       }
     )
 
     expect(mux.request).toHaveBeenCalledWith('agent.execNonInteractive', {
       binary: '/bin/bash',
-      args: ['-lc', 'echo "$ORCA_WORKTREE_PATH"'],
+      args: ['-lc', 'echo "$KORCA_WORKTREE_PATH"'],
       cwd: '/home/user/repo',
       stdin: null,
       timeoutMs: 120_000,
       env: {
-        ORCA_ROOT_PATH: '/home/user/repo',
-        ORCA_WORKTREE_PATH: '/home/user/repo-feature'
+        KORCA_ROOT_PATH: '/home/user/repo',
+        KORCA_WORKTREE_PATH: '/home/user/repo-feature'
       }
     })
   })
@@ -550,14 +550,14 @@ describe('SshGitProvider', () => {
 
   it('pushBranch sends git.push request and forwards publish mode and target', async () => {
     await provider.pushBranch('/home/user/repo', true, {
-      remoteName: 'pr-fork-orca',
+      remoteName: 'pr-fork-korca',
       branchName: 'contributor/fix'
     })
     expect(mux.request).toHaveBeenCalledWith('git.push', {
       worktreePath: '/home/user/repo',
       publish: true,
       pushTarget: {
-        remoteName: 'pr-fork-orca',
+        remoteName: 'pr-fork-korca',
         branchName: 'contributor/fix'
       }
     })

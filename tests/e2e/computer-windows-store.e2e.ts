@@ -1,16 +1,16 @@
 import { describe, expect, test } from 'vitest'
 import type { ComputerListAppsResult, ComputerSnapshotResult } from '../../src/shared/runtime-types'
-import { findRoleIndex, parseJsonOutput, runOrcaCli } from './helpers/computer-driver'
+import { findRoleIndex, parseJsonOutput, runKorcaCli } from './helpers/computer-driver'
 
 const isWindows = process.platform === 'win32'
-const e2eOptIn = process.env.ORCA_COMPUTER_E2E === '1'
+const e2eOptIn = process.env.KORCA_COMPUTER_E2E === '1'
 
 describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Store apps)', () => {
   test('Store app windows are discoverable by title and clickable', async () => {
     await launchCalculator()
     try {
       const apps = parseJsonOutput<{ result: ComputerListAppsResult }>(
-        (await runOrcaCli(['computer', 'list-apps', '--json'])).stdout
+        (await runKorcaCli(['computer', 'list-apps', '--json'])).stdout
       )
       expect(apps.result.apps).toEqual(
         expect.arrayContaining([
@@ -20,7 +20,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Store apps)'
 
       let state = parseJsonOutput<{ result: ComputerSnapshotResult }>(
         (
-          await runOrcaCli([
+          await runKorcaCli([
             'computer',
             'get-app-state',
             '--app',
@@ -39,7 +39,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Store apps)'
       for (const index of [one, plus, two, equals]) {
         state = parseJsonOutput<{ result: ComputerSnapshotResult }>(
           (
-            await runOrcaCli([
+            await runKorcaCli([
               'computer',
               'click',
               '--app',

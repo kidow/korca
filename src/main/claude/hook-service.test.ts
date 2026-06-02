@@ -104,7 +104,7 @@ function createFakeSftp(): { sftp: SFTPWrapper; fs: FakeFs } {
 
 describe('ClaudeHookService.install', () => {
   it('installs managed hooks into Claude settings and preserves user Bedrock settings', () => {
-    const tmpHome = mkdtempSync(join(tmpdir(), 'orca-claude-hooks-'))
+    const tmpHome = mkdtempSync(join(tmpdir(), 'korca-claude-hooks-'))
     vi.stubEnv('HOME', tmpHome)
     try {
       const legacyPath = join(tmpHome, '.claude', 'settings.json')
@@ -128,7 +128,7 @@ describe('ClaudeHookService.install', () => {
                 hooks: [
                   {
                     type: 'command',
-                    command: '/Users/old/.orca/agent-hooks/claude-hook.sh'
+                    command: '/Users/old/.korca/agent-hooks/claude-hook.sh'
                   }
                 ]
               }
@@ -160,7 +160,7 @@ describe('ClaudeHookService.install', () => {
       )
       expect(
         legacyCommands.some((command: string) =>
-          command.includes('/Users/old/.orca/agent-hooks/claude-hook.sh')
+          command.includes('/Users/old/.korca/agent-hooks/claude-hook.sh')
         )
       ).toBe(false)
       expect(legacy.hooks.StopFailure[0].hooks[0].command).toContain('claude-hook.sh')
@@ -197,12 +197,12 @@ describe('ClaudeHookService.installRemote', () => {
     ]) {
       expect(parsed.hooks[event]).toBeTruthy()
       const cmd = parsed.hooks[event][0].hooks[0].command as string
-      expect(cmd).toContain('/home/dev/.orca/agent-hooks/claude-hook.sh')
+      expect(cmd).toContain('/home/dev/.korca/agent-hooks/claude-hook.sh')
       expect(cmd).toMatch(/^if \[ -x /)
     }
     // Managed script body
-    expect(fs.files.get('/home/dev/.orca/agent-hooks/claude-hook.sh')).toContain('#!/bin/sh')
-    expect(fs.modes.get('/home/dev/.orca/agent-hooks/claude-hook.sh')).toBe(0o755)
+    expect(fs.files.get('/home/dev/.korca/agent-hooks/claude-hook.sh')).toContain('#!/bin/sh')
+    expect(fs.modes.get('/home/dev/.korca/agent-hooks/claude-hook.sh')).toBe(0o755)
   })
 
   it('reports parse error when remote settings.json cannot be parsed', async () => {
@@ -231,7 +231,7 @@ describe('ClaudeHookService.installRemote', () => {
                 {
                   type: 'command',
                   command:
-                    'if [ -x /home/dev/.orca/agent-hooks/claude-hook.sh ]; then /bin/sh /home/dev/.orca/agent-hooks/claude-hook.sh; fi'
+                    'if [ -x /home/dev/.korca/agent-hooks/claude-hook.sh ]; then /bin/sh /home/dev/.korca/agent-hooks/claude-hook.sh; fi'
                 }
               ]
             }
@@ -241,7 +241,7 @@ describe('ClaudeHookService.installRemote', () => {
     )
     await svc.installRemote(sftp, '/home/dev')
     const parsed = JSON.parse(fs.files.get('/home/dev/.claude/settings.json')!)
-    // Original user-authored entry survives, while stale Orca entries are
+    // Original user-authored entry survives, while stale Korca entries are
     // replaced with the current managed hook command.
     const stopDefs = parsed.hooks.Stop as { hooks: { command: string }[] }[]
     const userCmds = stopDefs.flatMap((d) => d.hooks.map((h) => h.command))
@@ -259,7 +259,7 @@ describe('OpenClaudeHookService-compatible install', () => {
     })
 
   it('installs managed hooks into OpenClaude settings without touching Claude settings', () => {
-    const tmpHome = mkdtempSync(join(tmpdir(), 'orca-openclaude-hooks-'))
+    const tmpHome = mkdtempSync(join(tmpdir(), 'korca-openclaude-hooks-'))
     vi.stubEnv('HOME', tmpHome)
     try {
       const openClaudeSettings = join(tmpHome, '.openclaude', 'settings.json')
@@ -279,7 +279,7 @@ describe('OpenClaudeHookService-compatible install', () => {
         expect(command).toContain('openclaude-hook.sh')
       }
       expect(
-        readFileSync(join(tmpHome, '.orca', 'agent-hooks', 'openclaude-hook.sh'), 'utf-8')
+        readFileSync(join(tmpHome, '.korca', 'agent-hooks', 'openclaude-hook.sh'), 'utf-8')
       ).toContain('/hook/claude')
       expect(existsSync(join(tmpHome, '.claude', 'settings.json'))).toBe(false)
     } finally {
@@ -300,7 +300,7 @@ describe('OpenClaudeHookService-compatible install', () => {
     })
     const parsed = JSON.parse(fs.files.get('/home/dev/.openclaude/settings.json')!)
     const command = parsed.hooks.StopFailure[0].hooks[0].command as string
-    expect(command).toContain('/home/dev/.orca/agent-hooks/openclaude-hook.sh')
-    expect(fs.files.get('/home/dev/.orca/agent-hooks/openclaude-hook.sh')).toContain('/hook/claude')
+    expect(command).toContain('/home/dev/.korca/agent-hooks/openclaude-hook.sh')
+    expect(fs.files.get('/home/dev/.korca/agent-hooks/openclaude-hook.sh')).toContain('/hook/claude')
   })
 })

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { RpcDispatcher } from '../dispatcher'
 import type { RpcRequest } from '../core'
-import type { OrcaRuntimeService } from '../../orca-runtime'
+import type { KorcaRuntimeService } from '../../korca-runtime'
 import { SPEECH_METHODS } from './speech'
 
 function makeRequest(method: string, params?: unknown): RpcRequest {
@@ -13,7 +13,7 @@ describe('speech RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       feedMobileDictation: vi.fn().mockReturnValue({ dictationId: 'dict-1' })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: SPEECH_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -38,7 +38,7 @@ describe('speech RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       feedMobileDictation: vi.fn().mockReturnValue({ dictationId: 'dict-1' })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: SPEECH_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -57,7 +57,7 @@ describe('speech RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       feedMobileDictation: vi.fn().mockReturnValue({ dictationId: 'dict-1' })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: SPEECH_METHODS })
 
     const response = await dispatcher.dispatch(

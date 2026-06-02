@@ -4,7 +4,7 @@ import { basename, join } from 'path'
 import { app } from 'electron'
 import { createHash } from 'crypto'
 import {
-  ORCA_PI_AGENT_STATUS_EXTENSION_FILE,
+  KORCA_PI_AGENT_STATUS_EXTENSION_FILE,
   getPiAgentStatusExtensionSource
 } from './agent-status-extension-source'
 import {
@@ -21,8 +21,8 @@ import type { PiAgentKind } from '../../shared/pi-agent-kind'
 // keeps holding after the helper moved to src/main/pty/overlay-mirror.ts.
 export const isSafeDescendCandidate = sharedIsSafeDescendCandidate
 
-const ORCA_PI_EXTENSION_FILE = 'orca-titlebar-spinner.ts'
-const ORCA_PI_PREFILL_EXTENSION_FILE = 'orca-prefill.ts'
+const KORCA_PI_EXTENSION_FILE = 'korca-titlebar-spinner.ts'
+const KORCA_PI_PREFILL_EXTENSION_FILE = 'korca-prefill.ts'
 const PI_AGENT_SUBDIR = 'agent'
 const PI_AGENT_SETTINGS_FILE = 'settings.json'
 
@@ -38,31 +38,31 @@ const OVERLAY_ROOT_DIR_NAME: Record<PiAgentKind, string> = {
 // by which `~/.<agent>/agent` dir happens to exist on disk first. A
 // cross-agent fallback (Pi -> OMP or vice versa) silently shadows the other
 // agent's user extensions when both are installed and the user picks the
-// shadowed one in Orca's per-launch agent picker.
+// shadowed one in Korca's per-launch agent picker.
 const AGENT_HOME_DIR_NAME: Record<PiAgentKind, string> = {
   pi: '.pi',
   omp: '.omp'
 }
 
-// Why: prefill-without-submit needs an env-var the bundled `orca-prefill.ts`
+// Why: prefill-without-submit needs an env-var the bundled `korca-prefill.ts`
 // extension can read on session_start. Each kind owns its own variable so an
 // OMP PTY never honors a Pi draft (or vice versa) - the only state the two
 // share is the binary-mandated `PI_CODING_AGENT_DIR` itself. Pi keeps its
 // original name for back-compat with PTYs already in flight at upgrade time;
-// OMP gets a parallel `ORCA_OMP_PREFILL`.
+// OMP gets a parallel `KORCA_OMP_PREFILL`.
 const PREFILL_ENV_VAR_BY_KIND: Record<PiAgentKind, string> = {
-  pi: 'ORCA_PI_PREFILL',
-  omp: 'ORCA_OMP_PREFILL'
+  pi: 'KORCA_PI_PREFILL',
+  omp: 'KORCA_OMP_PREFILL'
 }
 
 /** Pi's prefill env var. Exported for callers that need the literal name
  *  (renderer draft-launch plan builder, tests). OMP callers should read
- *  `ORCA_OMP_PREFILL_ENV_VAR` instead. */
-export const ORCA_PI_PREFILL_ENV_VAR = PREFILL_ENV_VAR_BY_KIND.pi
+ *  `KORCA_OMP_PREFILL_ENV_VAR` instead. */
+export const KORCA_PI_PREFILL_ENV_VAR = PREFILL_ENV_VAR_BY_KIND.pi
 
-/** OMP's prefill env var. Mirrors `ORCA_PI_PREFILL_ENV_VAR` for OMP launches
+/** OMP's prefill env var. Mirrors `KORCA_PI_PREFILL_ENV_VAR` for OMP launches
  *  so renderer plans and shell-ready restore lines can stay agent-scoped. */
-export const ORCA_OMP_PREFILL_ENV_VAR = PREFILL_ENV_VAR_BY_KIND.omp
+export const KORCA_OMP_PREFILL_ENV_VAR = PREFILL_ENV_VAR_BY_KIND.omp
 
 // Why: pi/OMP both expose an `ExtensionAPI` to the default-exported factory.
 // The extension reads its kind-specific env var on session_start and types
@@ -206,7 +206,7 @@ export class PiTitlebarExtensionService {
 
       // Why: PI_CODING_AGENT_DIR controls Pi's / OMP's entire state tree, not
       // just extension discovery. Mirror the user's top-level resources into
-      // the overlay so enabling Orca's titlebar extension preserves auth,
+      // the overlay so enabling Korca's titlebar extension preserves auth,
       // sessions, skills, prompts, themes, and any future files stored there.
       mirrorEntry(sourcePath, join(overlayDir, basename(sourcePath)))
     }
@@ -226,7 +226,7 @@ export class PiTitlebarExtensionService {
   }
 
   private writeOverlaySettings(sourceAgentDir: string, overlayDir: string): void {
-    // Why: settings.json is a real overlay file, not a mirror, so Orca can
+    // Why: settings.json is a real overlay file, not a mirror, so Korca can
     // apply UI-only safeguards without modifying the user's Pi / OMP config.
     const settings = mergePiOverlayUiSettings(this.readPiSettings(sourceAgentDir))
     writeFileSync(
@@ -248,7 +248,7 @@ export class PiTitlebarExtensionService {
       this.safeRemoveOverlay(this.getLegacyOverlayDir(ptyId, kind), kind)
     } catch {
       // Why: on Windows the overlay directory can be locked by another process
-      // (e.g. antivirus, indexer, or a previous Orca session that didn't clean up).
+      // (e.g. antivirus, indexer, or a previous Korca session that didn't clean up).
       // If we can't remove the stale overlay, fall back to the user's own
       // agent dir (Pi or OMP - both consume PI_CODING_AGENT_DIR) so the
       // terminal still spawns - the titlebar spinner is not worth blocking
@@ -264,13 +264,13 @@ export class PiTitlebarExtensionService {
       const extensionsDir = join(overlayDir, 'extensions')
       mkdirSync(extensionsDir, { recursive: true })
       // Why: Pi / OMP both auto-load global extensions from
-      // PI_CODING_AGENT_DIR/extensions. Add Orca's titlebar extension alongside
+      // PI_CODING_AGENT_DIR/extensions. Add Korca's titlebar extension alongside
       // the user's existing extensions instead of replacing that directory,
-      // otherwise Orca terminals would silently disable the user's
-      // customization inside Orca only.
-      writeFileSync(join(extensionsDir, ORCA_PI_EXTENSION_FILE), getPiTitlebarExtensionSource())
+      // otherwise Korca terminals would silently disable the user's
+      // customization inside Korca only.
+      writeFileSync(join(extensionsDir, KORCA_PI_EXTENSION_FILE), getPiTitlebarExtensionSource())
       writeFileSync(
-        join(extensionsDir, ORCA_PI_PREFILL_EXTENSION_FILE),
+        join(extensionsDir, KORCA_PI_PREFILL_EXTENSION_FILE),
         getPiPrefillExtensionSource(kind)
       )
       // Why: bundled status extension that bridges the in-process event API
@@ -279,7 +279,7 @@ export class PiTitlebarExtensionService {
       // agentStatusByPaneKey and the dashboard would fall back to terminal-title
       // heuristics like any uninstrumented CLI.
       writeFileSync(
-        join(extensionsDir, ORCA_PI_AGENT_STATUS_EXTENSION_FILE),
+        join(extensionsDir, KORCA_PI_AGENT_STATUS_EXTENSION_FILE),
         getPiAgentStatusExtensionSource(kind)
       )
     } catch {
@@ -287,7 +287,7 @@ export class PiTitlebarExtensionService {
       // on Windows can occur when the userData directory is restricted or when
       // symlink/junction creation fails without developer mode. Fall back to
       // the user's own agent dir (Pi or OMP) so the terminal spawns without
-      // the Orca extension.
+      // the Korca extension.
       this.clearPty(ptyId)
       return existingAgentDir ? { PI_CODING_AGENT_DIR: existingAgentDir } : {}
     }

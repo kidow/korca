@@ -30,7 +30,7 @@ function runInteractiveBashRcfile(rcfileContent: string, tempDir: string): strin
       env: {
         ...process.env,
         HOME: tempDir,
-        ORCA_SHELL_READY_MARKER: '1',
+        KORCA_SHELL_READY_MARKER: '1',
         TERM: process.env.TERM || 'xterm'
       },
       timeout: 5000
@@ -59,27 +59,27 @@ function expectBashOsc133Lifecycle(output: string): void {
 
 describePosix('daemon shell-ready launch config', () => {
   let previousUserDataPath: string | undefined
-  let previousOrcaOrigZdotdir: string | undefined
+  let previousKorcaOrigZdotdir: string | undefined
   let userDataPath: string
 
   beforeEach(() => {
-    previousUserDataPath = process.env.ORCA_USER_DATA_PATH
-    previousOrcaOrigZdotdir = process.env.ORCA_ORIG_ZDOTDIR
-    delete process.env.ORCA_ORIG_ZDOTDIR
+    previousUserDataPath = process.env.KORCA_USER_DATA_PATH
+    previousKorcaOrigZdotdir = process.env.KORCA_ORIG_ZDOTDIR
+    delete process.env.KORCA_ORIG_ZDOTDIR
     userDataPath = mkdtempSync(join(tmpdir(), 'daemon-shell-ready-test-'))
-    process.env.ORCA_USER_DATA_PATH = userDataPath
+    process.env.KORCA_USER_DATA_PATH = userDataPath
   })
 
   afterEach(() => {
     if (previousUserDataPath === undefined) {
-      delete process.env.ORCA_USER_DATA_PATH
+      delete process.env.KORCA_USER_DATA_PATH
     } else {
-      process.env.ORCA_USER_DATA_PATH = previousUserDataPath
+      process.env.KORCA_USER_DATA_PATH = previousUserDataPath
     }
-    if (previousOrcaOrigZdotdir === undefined) {
-      delete process.env.ORCA_ORIG_ZDOTDIR
+    if (previousKorcaOrigZdotdir === undefined) {
+      delete process.env.KORCA_ORIG_ZDOTDIR
     } else {
-      process.env.ORCA_ORIG_ZDOTDIR = previousOrcaOrigZdotdir
+      process.env.KORCA_ORIG_ZDOTDIR = previousKorcaOrigZdotdir
     }
     rmSync(userDataPath, { recursive: true, force: true })
     vi.restoreAllMocks()
@@ -117,20 +117,20 @@ describePosix('daemon shell-ready launch config', () => {
     expect(existsSync(join(userDataPath, 'shell-ready', 'zsh', '.zshenv'))).toBe(true)
   })
 
-  it('falls back to HOME for ORCA_ORIG_ZDOTDIR when inherited ZDOTDIR points at a wrapper dir', async () => {
+  it('falls back to HOME for KORCA_ORIG_ZDOTDIR when inherited ZDOTDIR points at a wrapper dir', async () => {
     // Why: guards against the zsh recursion loop that happens when the daemon
-    // was forked from a shell which was itself an Orca PTY. Such a shell has
+    // was forked from a shell which was itself an Korca PTY. Such a shell has
     // ZDOTDIR=<some>/shell-ready/zsh; propagating that unchanged would make
-    // the wrapper `source "$ORCA_ORIG_ZDOTDIR/.zshenv"` source itself.
+    // the wrapper `source "$KORCA_ORIG_ZDOTDIR/.zshenv"` source itself.
     const previousZdotdir = process.env.ZDOTDIR
     const previousHome = process.env.HOME
-    process.env.ZDOTDIR = '/some/other/orca/shell-ready/zsh'
+    process.env.ZDOTDIR = '/some/other/korca/shell-ready/zsh'
     process.env.HOME = '/Users/alice'
     try {
       const { getShellReadyLaunchConfig } = await importFreshShellReady()
       const config = getShellReadyLaunchConfig('/bin/zsh')
-      expect(config.env.ORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
-      expect(config.env.ORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice')
+      expect(config.env.KORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
+      expect(config.env.KORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice')
     } finally {
       if (previousZdotdir === undefined) {
         delete process.env.ZDOTDIR
@@ -145,18 +145,18 @@ describePosix('daemon shell-ready launch config', () => {
     }
   })
 
-  it('uses inherited ORCA_ORIG_ZDOTDIR when ZDOTDIR is an Orca wrapper dir', async () => {
+  it('uses inherited KORCA_ORIG_ZDOTDIR when ZDOTDIR is an Korca wrapper dir', async () => {
     const previousZdotdir = process.env.ZDOTDIR
-    const previousOrigZdotdir = process.env.ORCA_ORIG_ZDOTDIR
+    const previousOrigZdotdir = process.env.KORCA_ORIG_ZDOTDIR
     const previousHome = process.env.HOME
-    process.env.ZDOTDIR = '/some/other/orca/shell-ready/zsh'
-    process.env.ORCA_ORIG_ZDOTDIR = '/Users/alice/.config/zsh'
+    process.env.ZDOTDIR = '/some/other/korca/shell-ready/zsh'
+    process.env.KORCA_ORIG_ZDOTDIR = '/Users/alice/.config/zsh'
     process.env.HOME = '/Users/alice'
     try {
       const { getShellReadyLaunchConfig } = await importFreshShellReady()
       const config = getShellReadyLaunchConfig('/bin/zsh')
-      expect(config.env.ORCA_ORIG_ZDOTDIR).toBe('/Users/alice/.config/zsh')
-      expect(config.env.ORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice')
+      expect(config.env.KORCA_ORIG_ZDOTDIR).toBe('/Users/alice/.config/zsh')
+      expect(config.env.KORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice')
     } finally {
       if (previousZdotdir === undefined) {
         delete process.env.ZDOTDIR
@@ -164,9 +164,9 @@ describePosix('daemon shell-ready launch config', () => {
         process.env.ZDOTDIR = previousZdotdir
       }
       if (previousOrigZdotdir === undefined) {
-        delete process.env.ORCA_ORIG_ZDOTDIR
+        delete process.env.KORCA_ORIG_ZDOTDIR
       } else {
-        process.env.ORCA_ORIG_ZDOTDIR = previousOrigZdotdir
+        process.env.KORCA_ORIG_ZDOTDIR = previousOrigZdotdir
       }
       if (previousHome === undefined) {
         delete process.env.HOME
@@ -176,18 +176,18 @@ describePosix('daemon shell-ready launch config', () => {
     }
   })
 
-  it('falls back to HOME when inherited ORCA_ORIG_ZDOTDIR points at a wrapper dir', async () => {
+  it('falls back to HOME when inherited KORCA_ORIG_ZDOTDIR points at a wrapper dir', async () => {
     const previousZdotdir = process.env.ZDOTDIR
-    const previousOrigZdotdir = process.env.ORCA_ORIG_ZDOTDIR
+    const previousOrigZdotdir = process.env.KORCA_ORIG_ZDOTDIR
     const previousHome = process.env.HOME
     delete process.env.ZDOTDIR
-    process.env.ORCA_ORIG_ZDOTDIR = '/some/other/orca/shell-ready/zsh'
+    process.env.KORCA_ORIG_ZDOTDIR = '/some/other/korca/shell-ready/zsh'
     process.env.HOME = '/Users/alice'
     try {
       const { getShellReadyLaunchConfig } = await importFreshShellReady()
       const config = getShellReadyLaunchConfig('/bin/zsh')
-      expect(config.env.ORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
-      expect(config.env.ORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice')
+      expect(config.env.KORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
+      expect(config.env.KORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice')
     } finally {
       if (previousZdotdir === undefined) {
         delete process.env.ZDOTDIR
@@ -195,9 +195,9 @@ describePosix('daemon shell-ready launch config', () => {
         process.env.ZDOTDIR = previousZdotdir
       }
       if (previousOrigZdotdir === undefined) {
-        delete process.env.ORCA_ORIG_ZDOTDIR
+        delete process.env.KORCA_ORIG_ZDOTDIR
       } else {
-        process.env.ORCA_ORIG_ZDOTDIR = previousOrigZdotdir
+        process.env.KORCA_ORIG_ZDOTDIR = previousOrigZdotdir
       }
       if (previousHome === undefined) {
         delete process.env.HOME
@@ -207,15 +207,15 @@ describePosix('daemon shell-ready launch config', () => {
     }
   })
 
-  it('writes zsh wrappers that guard against ORCA_ORIG_ZDOTDIR self-loops', async () => {
+  it('writes zsh wrappers that guard against KORCA_ORIG_ZDOTDIR self-loops', async () => {
     const { getShellReadyLaunchConfig } = await importFreshShellReady()
 
     getShellReadyLaunchConfig('/bin/zsh')
 
     const zshenv = readFileSync(join(userDataPath, 'shell-ready', 'zsh', '.zshenv'), 'utf8')
-    expect(zshenv).toContain('_orca_user_zdotdir="${_orca_spawn_orig_zdotdir:-$HOME}"')
-    expect(zshenv).toContain('*/shell-ready/zsh) _orca_user_zdotdir="$HOME" ;;')
-    expect(zshenv).toContain('""|*/shell-ready/zsh) export ORCA_ORIG_ZDOTDIR="$HOME" ;;')
+    expect(zshenv).toContain('_korca_user_zdotdir="${_korca_spawn_orig_zdotdir:-$HOME}"')
+    expect(zshenv).toContain('*/shell-ready/zsh) _korca_user_zdotdir="$HOME" ;;')
+    expect(zshenv).toContain('""|*/shell-ready/zsh) export KORCA_ORIG_ZDOTDIR="$HOME" ;;')
   })
 
   it('writes wrappers that restore OpenCode and Pi config after user startup files', async () => {
@@ -228,14 +228,14 @@ describePosix('daemon shell-ready launch config', () => {
     const zlogin = readFileSync(join(userDataPath, 'shell-ready', 'zsh', '.zlogin'), 'utf8')
     const bashRc = readFileSync(join(userDataPath, 'shell-ready', 'bash', 'rcfile'), 'utf8')
     const restoreLine =
-      '[[ -n "${ORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="${ORCA_OPENCODE_CONFIG_DIR}"'
+      '[[ -n "${KORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="${KORCA_OPENCODE_CONFIG_DIR}"'
     const piRestoreLine =
-      '[[ -n "${ORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="${ORCA_PI_CODING_AGENT_DIR}"'
+      '[[ -n "${KORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="${KORCA_PI_CODING_AGENT_DIR}"'
     const codexRestoreLine =
-      '[[ -n "${ORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="${ORCA_CODEX_HOME}"'
+      '[[ -n "${KORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="${KORCA_CODEX_HOME}"'
     const ompRestoreLine =
-      'if [[ -z "${ORCA_PI_CODING_AGENT_DIR:-}" && -n "${ORCA_OMP_CODING_AGENT_DIR:-}" ]]; then'
-    const ompWrapperLine = 'command omp --extension "${ORCA_OMP_STATUS_EXTENSION}" "$@"'
+      'if [[ -z "${KORCA_PI_CODING_AGENT_DIR:-}" && -n "${KORCA_OMP_CODING_AGENT_DIR:-}" ]]; then'
+    const ompWrapperLine = 'command omp --extension "${KORCA_OMP_STATUS_EXTENSION}" "$@"'
     expect(zshrc).toContain(restoreLine)
     expect(zlogin).toContain(restoreLine)
     expect(bashRc).toContain(restoreLine)
@@ -245,7 +245,7 @@ describePosix('daemon shell-ready launch config', () => {
     expect(zshrc).toContain(codexRestoreLine)
     expect(zlogin).toContain(codexRestoreLine)
     expect(bashRc).toContain(codexRestoreLine)
-    // OMP launches use ORCA_OMP_CODING_AGENT_DIR; both restore lines must be
+    // OMP launches use KORCA_OMP_CODING_AGENT_DIR; both restore lines must be
     // present so a PTY of either kind has its overlay restored after rc files.
     expect(zshrc).toContain(ompRestoreLine)
     expect(zlogin).toContain(ompRestoreLine)
@@ -270,10 +270,10 @@ describePosix('daemon shell-ready launch config', () => {
     expect(bashRc).toContain('printf "\\033]133;D;%s\\007"')
     expect(bashRc).toContain('printf "\\033]133;C\\007"')
     expect(bashRc).toContain(
-      'PROMPT_COMMAND="__orca_osc133_precmd${PROMPT_COMMAND:+;${PROMPT_COMMAND}}"'
+      'PROMPT_COMMAND="__korca_osc133_precmd${PROMPT_COMMAND:+;${PROMPT_COMMAND}}"'
     )
-    expect(bashRc.indexOf("trap '__orca_osc133_preexec' DEBUG")).toBeGreaterThan(
-      bashRc.indexOf('if [[ "${ORCA_SHELL_READY_MARKER:-0}" == "1" ]]; then')
+    expect(bashRc.indexOf("trap '__korca_osc133_preexec' DEBUG")).toBeGreaterThan(
+      bashRc.indexOf('if [[ "${KORCA_SHELL_READY_MARKER:-0}" == "1" ]]; then')
     )
     expect(zshrc).toContain('printf "\\033]133;D;%s\\007"')
     expect(zshrc).toContain('printf "\\033]133;C\\007"')
@@ -323,17 +323,17 @@ describePosix('daemon shell-ready launch config', () => {
     expectBashOsc133Lifecycle(output)
   })
 
-  it('preserves a real inherited ZDOTDIR as ORCA_ORIG_ZDOTDIR', async () => {
+  it('preserves a real inherited ZDOTDIR as KORCA_ORIG_ZDOTDIR', async () => {
     // Why: users who run a custom zsh dotfiles directory legitimately set
-    // ZDOTDIR before launching Orca. We only want to reject the self-loop
+    // ZDOTDIR before launching Korca. We only want to reject the self-loop
     // case — any real user ZDOTDIR must round-trip so their configs load.
     const previousZdotdir = process.env.ZDOTDIR
     process.env.ZDOTDIR = '/Users/alice/.config/zsh'
     try {
       const { getShellReadyLaunchConfig } = await importFreshShellReady()
       const config = getShellReadyLaunchConfig('/bin/zsh')
-      expect(config.env.ORCA_ORIG_ZDOTDIR).toBe('/Users/alice/.config/zsh')
-      expect(config.env.ORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice/.config/zsh')
+      expect(config.env.KORCA_ORIG_ZDOTDIR).toBe('/Users/alice/.config/zsh')
+      expect(config.env.KORCA_ZSHENV_SOURCE_DIR).toBe('/Users/alice/.config/zsh')
     } finally {
       if (previousZdotdir === undefined) {
         delete process.env.ZDOTDIR
@@ -349,12 +349,12 @@ describePosix('daemon shell-ready launch config', () => {
     // guards against a regression that would reintroduce the recursion loop.
     const previousZdotdir = process.env.ZDOTDIR
     const previousHome = process.env.HOME
-    process.env.ZDOTDIR = '/some/other/orca/shell-ready/zsh/'
+    process.env.ZDOTDIR = '/some/other/korca/shell-ready/zsh/'
     process.env.HOME = '/Users/alice'
     try {
       const { getShellReadyLaunchConfig } = await importFreshShellReady()
       const config = getShellReadyLaunchConfig('/bin/zsh')
-      expect(config.env.ORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
+      expect(config.env.KORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
     } finally {
       if (previousZdotdir === undefined) {
         delete process.env.ZDOTDIR
@@ -381,7 +381,7 @@ describePosix('daemon shell-ready launch config', () => {
     try {
       const { getShellReadyLaunchConfig } = await importFreshShellReady()
       const config = getShellReadyLaunchConfig('/bin/zsh')
-      expect(config.env.ORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
+      expect(config.env.KORCA_ORIG_ZDOTDIR).toBe('/Users/alice')
     } finally {
       if (previousZdotdir === undefined) {
         delete process.env.ZDOTDIR
@@ -405,7 +405,7 @@ describePosix('daemon shell-ready launch config', () => {
     try {
       const { getShellReadyLaunchConfig } = await importFreshShellReady()
       const config = getShellReadyLaunchConfig('/bin/zsh')
-      expect(config.env.ORCA_ORIG_ZDOTDIR).toBe('/Users/alice/shell-ready/zsh-custom')
+      expect(config.env.KORCA_ORIG_ZDOTDIR).toBe('/Users/alice/shell-ready/zsh-custom')
     } finally {
       if (previousZdotdir === undefined) {
         delete process.env.ZDOTDIR
@@ -426,18 +426,18 @@ describePosix('daemon shell-ready launch config', () => {
     const zshenv = readFileSync(join(userDataPath, 'shell-ready', 'zsh', '.zshenv'), 'utf8')
 
     expect(zshenv).toContain('unset ZDOTDIR')
-    expect(zshenv).toContain('_orca_zshenv_source_dir="${ORCA_ZSHENV_SOURCE_DIR:-$HOME}"')
-    expect(zshenv).toContain('source "${_orca_zshenv_path}"')
-    expect(zshenv).toContain('_orca_discovered_zdotdir="${ZDOTDIR:-}"')
+    expect(zshenv).toContain('_korca_zshenv_source_dir="${KORCA_ZSHENV_SOURCE_DIR:-$HOME}"')
+    expect(zshenv).toContain('source "${_korca_zshenv_path}"')
+    expect(zshenv).toContain('_korca_discovered_zdotdir="${ZDOTDIR:-}"')
     expect(zshenv).toContain(
-      'export ORCA_ORIG_ZDOTDIR="${_orca_discovered_zdotdir:-${_orca_user_zdotdir:-$HOME}}"'
+      'export KORCA_ORIG_ZDOTDIR="${_korca_discovered_zdotdir:-${_korca_user_zdotdir:-$HOME}}"'
     )
     expect(zshenv).toContain('export ZDOTDIR=')
   })
 
-  it('preserves spawn-env ORCA_ORIG_ZDOTDIR as fallback when discovery yields nothing', async () => {
+  it('preserves spawn-env KORCA_ORIG_ZDOTDIR as fallback when discovery yields nothing', async () => {
     // Why: if user .zshenv returns early or doesn't set ZDOTDIR, the wrapper
-    // should fall back to the spawn-env ORCA_ORIG_ZDOTDIR (if present), then HOME.
+    // should fall back to the spawn-env KORCA_ORIG_ZDOTDIR (if present), then HOME.
     const { getShellReadyLaunchConfig } = await importFreshShellReady()
 
     getShellReadyLaunchConfig('/bin/zsh')
@@ -445,9 +445,9 @@ describePosix('daemon shell-ready launch config', () => {
     const zshenv = readFileSync(join(userDataPath, 'shell-ready', 'zsh', '.zshenv'), 'utf8')
 
     // Save spawn-env value before sourcing user .zshenv
-    expect(zshenv).toContain('_orca_spawn_orig_zdotdir="${ORCA_ORIG_ZDOTDIR:-}"')
+    expect(zshenv).toContain('_korca_spawn_orig_zdotdir="${KORCA_ORIG_ZDOTDIR:-}"')
 
     // Fallback chain: discovered → normalized spawn-env path → HOME
-    expect(zshenv).toContain('${_orca_discovered_zdotdir:-${_orca_user_zdotdir:-$HOME}}')
+    expect(zshenv).toContain('${_korca_discovered_zdotdir:-${_korca_user_zdotdir:-$HOME}}')
   })
 })

@@ -23,7 +23,7 @@ type MeaningfulContentDetector = (chunk: string) => boolean
 /**
  * Lightweight normalization to detect whether a PTY data chunk contains
  * meaningful (non-ANSI, non-OSC) output. Mirrors the regex passes in
- * orca-runtime.ts normalizeTerminalChunk but avoids importing the runtime.
+ * korca-runtime.ts normalizeTerminalChunk but avoids importing the runtime.
  */
 function hasMeaningfulContent(chunk: string): boolean {
   // Why: large plain-text PTY bursts should not pay the full ANSI stripping
@@ -82,7 +82,7 @@ export class AgentDetector {
   }
 
   /**
-   * Called on every PTY data chunk (from orca-runtime.ts onPtyData).
+   * Called on every PTY data chunk (from korca-runtime.ts onPtyData).
    * Receives raw data BEFORE normalization, since normalizeTerminalChunk
    * strips OSC sequences that we need for agent detection.
    */
@@ -156,7 +156,7 @@ export class AgentDetector {
   }
 
   /**
-   * Called when a PTY process exits (from orca-runtime.ts onPtyExit).
+   * Called when a PTY process exits (from korca-runtime.ts onPtyExit).
    */
   onExit(ptyId: string): void {
     const record = this.ptys.get(ptyId)

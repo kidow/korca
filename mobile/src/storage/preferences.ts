@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const PINS_PREFIX = 'orca:pins:'
-const PREFS_PREFIX = 'orca:prefs:'
-const NOTIF_KEY = 'orca:pushNotificationsEnabled'
+const PINS_PREFIX = 'korca:pins:'
+const PREFS_PREFIX = 'korca:prefs:'
+const NOTIF_KEY = 'korca:pushNotificationsEnabled'
 
 // Why: default-off so the iOS notification permission prompt never
 // fires until the user explicitly opts in via Settings → Notifications.

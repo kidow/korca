@@ -2,8 +2,8 @@ import { spawn as spawnProcess, type SpawnOptions } from 'child_process'
 import { dirname, resolve } from 'path'
 import { RuntimeClientError } from './types'
 
-export function launchOrcaApp(): void {
-  const overrideCommand = process.env.ORCA_OPEN_COMMAND
+export function launchKorcaApp(): void {
+  const overrideCommand = process.env.KORCA_OPEN_COMMAND
   if (typeof overrideCommand === 'string' && overrideCommand.trim().length > 0) {
     spawnProcess(overrideCommand, {
       detached: true,
@@ -13,7 +13,7 @@ export function launchOrcaApp(): void {
     return
   }
 
-  const overrideExecutable = process.env.ORCA_APP_EXECUTABLE
+  const overrideExecutable = process.env.KORCA_APP_EXECUTABLE
   if (typeof overrideExecutable === 'string' && overrideExecutable.trim().length > 0) {
     spawnProcess(overrideExecutable, getExecutableAppArgs(), {
       detached: true,
@@ -50,11 +50,11 @@ export function launchOrcaApp(): void {
 
   throw new RuntimeClientError(
     'runtime_open_failed',
-    'Could not determine how to launch Orca. Start Orca manually and try again.'
+    'Could not determine how to launch Korca. Start Korca manually and try again.'
   )
 }
 
-export function serveOrcaApp(
+export function serveKorcaApp(
   args: {
     json?: boolean
     port?: string | null
@@ -63,7 +63,7 @@ export function serveOrcaApp(
     mobilePairing?: boolean
   } = {}
 ): Promise<number> {
-  const executable = resolveForegroundOrcaExecutable()
+  const executable = resolveForegroundKorcaExecutable()
   const childArgs = [...getExecutableAppArgs(), '--serve']
   if (args.json) {
     childArgs.push('--serve-json')
@@ -116,13 +116,13 @@ export function serveOrcaApp(
         resolve(code)
         return
       }
-      reject(new RuntimeClientError('runtime_serve_failed', `Orca serve exited via ${signal}`))
+      reject(new RuntimeClientError('runtime_serve_failed', `Korca serve exited via ${signal}`))
     })
   })
 }
 
 function getExecutableAppArgs(): string[] {
-  return process.env.ORCA_APP_EXECUTABLE_NEEDS_APP_ROOT === '1' ? [resolveAppRoot()] : []
+  return process.env.KORCA_APP_EXECUTABLE_NEEDS_APP_ROOT === '1' ? [resolveAppRoot()] : []
 }
 
 function getExecutableSpawnOptions(executable: string): Pick<SpawnOptions, 'shell'> {
@@ -131,13 +131,13 @@ function getExecutableSpawnOptions(executable: string): Pick<SpawnOptions, 'shel
 
 function resolveAppRoot(): string {
   // Why: dev-mode resource resolution in the Electron child may consult
-  // process.cwd(). Pin it to the app root so `orca serve` behaves the same
+  // process.cwd(). Pin it to the app root so `korca serve` behaves the same
   // regardless of the shell directory it was launched from.
   return resolve(__dirname, '../../..')
 }
 
-function resolveForegroundOrcaExecutable(): string {
-  const overrideExecutable = process.env.ORCA_APP_EXECUTABLE
+function resolveForegroundKorcaExecutable(): string {
+  const overrideExecutable = process.env.KORCA_APP_EXECUTABLE
   if (typeof overrideExecutable === 'string' && overrideExecutable.trim().length > 0) {
     return overrideExecutable
   }
@@ -146,7 +146,7 @@ function resolveForegroundOrcaExecutable(): string {
   }
   throw new RuntimeClientError(
     'runtime_serve_failed',
-    'Could not determine how to start Orca server. Set ORCA_APP_EXECUTABLE to the Orca executable.'
+    'Could not determine how to start Korca server. Set KORCA_APP_EXECUTABLE to the Korca executable.'
   )
 }
 

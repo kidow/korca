@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
-  canCleanupUnregisteredOrcaWorktreeDirectory,
+  canCleanupUnregisteredKorcaWorktreeDirectory,
   isWorktreePathMissing,
-  stripOrcaProvenanceMetaUpdates
+  stripKorcaProvenanceMetaUpdates
 } from './worktree-removal-safety'
 
 describe('isWorktreePathMissing', () => {
@@ -29,71 +29,71 @@ describe('isWorktreePathMissing', () => {
   })
 })
 
-describe('canCleanupUnregisteredOrcaWorktreeDirectory', () => {
-  it('does not treat orcaCreatedAt alone as cleanup authority', () => {
+describe('canCleanupUnregisteredKorcaWorktreeDirectory', () => {
+  it('does not treat korcaCreatedAt alone as cleanup authority', () => {
     expect(
-      canCleanupUnregisteredOrcaWorktreeDirectory({
-        meta: { orcaCreatedAt: Date.now() },
+      canCleanupUnregisteredKorcaWorktreeDirectory({
+        meta: { korcaCreatedAt: Date.now() },
         worktreePath: '/outside/orphan',
         repo: { path: '/repo' },
-        knownOrcaLayouts: []
+        knownKorcaLayouts: []
       })
     ).toBe(false)
     expect(
-      canCleanupUnregisteredOrcaWorktreeDirectory({
+      canCleanupUnregisteredKorcaWorktreeDirectory({
         meta: {
-          orcaCreatedAt: Date.now(),
-          orcaCreationSource: 'runtime'
+          korcaCreatedAt: Date.now(),
+          korcaCreationSource: 'runtime'
         },
         worktreePath: '/outside/orphan',
         repo: { path: '/repo' },
-        knownOrcaLayouts: []
+        knownKorcaLayouts: []
       })
     ).toBe(true)
   })
 
-  it('accepts legacy Orca-created metadata before explicit provenance existed', () => {
+  it('accepts legacy Korca-created metadata before explicit provenance existed', () => {
     expect(
-      canCleanupUnregisteredOrcaWorktreeDirectory({
+      canCleanupUnregisteredKorcaWorktreeDirectory({
         meta: { createdAt: Date.now() },
         worktreePath: '/outside/orphan',
         repo: { path: '/repo' },
-        knownOrcaLayouts: []
+        knownKorcaLayouts: []
       })
     ).toBe(true)
   })
 
-  it('accepts legacy repo-nested Orca workspace paths without metadata provenance', () => {
+  it('accepts legacy repo-nested Korca workspace paths without metadata provenance', () => {
     expect(
-      canCleanupUnregisteredOrcaWorktreeDirectory({
+      canCleanupUnregisteredKorcaWorktreeDirectory({
         meta: undefined,
-        worktreePath: '/orca/workspaces/app/legacy-orphan',
+        worktreePath: '/korca/workspaces/app/legacy-orphan',
         repo: { path: '/repos/app' },
-        knownOrcaLayouts: [{ path: '/orca/workspaces', nestWorkspaces: true }]
+        knownKorcaLayouts: [{ path: '/korca/workspaces', nestWorkspaces: true }]
       })
     ).toBe(true)
   })
 
   it('does not trust flat workspace-root paths without legacy metadata', () => {
     expect(
-      canCleanupUnregisteredOrcaWorktreeDirectory({
+      canCleanupUnregisteredKorcaWorktreeDirectory({
         meta: undefined,
-        worktreePath: '/orca/workspaces/legacy-orphan',
+        worktreePath: '/korca/workspaces/legacy-orphan',
         repo: { path: '/repos/app' },
-        knownOrcaLayouts: [{ path: '/orca/workspaces', nestWorkspaces: false }]
+        knownKorcaLayouts: [{ path: '/korca/workspaces', nestWorkspaces: false }]
       })
     ).toBe(false)
   })
 })
 
-describe('stripOrcaProvenanceMetaUpdates', () => {
-  it('removes Orca-owned provenance fields from user metadata updates', () => {
+describe('stripKorcaProvenanceMetaUpdates', () => {
+  it('removes Korca-owned provenance fields from user metadata updates', () => {
     expect(
-      stripOrcaProvenanceMetaUpdates({
+      stripKorcaProvenanceMetaUpdates({
         comment: 'keep me',
-        orcaCreatedAt: 123,
-        orcaCreationSource: 'desktop',
-        orcaCreationWorkspaceLayout: { path: '/workspace', nestWorkspaces: false }
+        korcaCreatedAt: 123,
+        korcaCreationSource: 'desktop',
+        korcaCreationWorkspaceLayout: { path: '/workspace', nestWorkspaces: false }
       })
     ).toEqual({ comment: 'keep me' })
   })

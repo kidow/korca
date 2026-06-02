@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { writeFileAtomically } from '../codex-accounts/fs-utils'
-import { getOrcaManagedCodexHomePath } from './codex-home-paths'
+import { getKorcaManagedCodexHomePath } from './codex-home-paths'
 
 type CodexConfigSyncState = {
   lastMirrorableSystemConfigDigest: string
@@ -30,7 +30,7 @@ type CodexConfigSyncStateRead =
 const SYSTEM_CONFIG_DIGEST_PATTERN = /^sha256:[a-f0-9]{64}$/
 
 function getCodexConfigSyncStatePath(): string {
-  return join(dirname(getOrcaManagedCodexHomePath()), 'config-sync-state.json')
+  return join(dirname(getKorcaManagedCodexHomePath()), 'config-sync-state.json')
 }
 
 export function getSystemCodexConfigDigest(systemConfig: string): string {

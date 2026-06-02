@@ -175,10 +175,10 @@ export function NotificationStep({
             <div className="min-w-0 space-y-1">
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <Settings className="size-4" />
-                macOS에서 Orca 허용
+                macOS에서 Korca 허용
               </div>
               <p className="max-w-[58ch] text-[13px] leading-relaxed text-muted-foreground">
-                시스템 설정을 열고 Orca가 알림을 보낼 수 있도록 허용하세요.
+                시스템 설정을 열고 Korca가 알림을 보낼 수 있도록 허용하세요.
               </p>
             </div>
             <Button
@@ -198,7 +198,7 @@ export function NotificationStep({
         <div className="space-y-1">
           <h2 className="text-sm font-semibold text-foreground">소리 선택</h2>
           <p className="text-[13px] leading-relaxed text-muted-foreground">
-            데스크톱 알림이 도착한 뒤 Orca가 재생할 알림음을 고르세요.
+            데스크톱 알림이 도착한 뒤 Korca가 재생할 알림음을 고르세요.
           </p>
         </div>
 

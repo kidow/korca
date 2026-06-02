@@ -122,7 +122,7 @@ export class CdpBridge {
     _worktreeId?: string,
     browserPageId?: string
   ): { browserPageId: string; url: string; title: string } | null {
-    // Why: OrcaRuntimeService pushes navigation/title updates after commands
+    // Why: KorcaRuntimeService pushes navigation/title updates after commands
     // using a bridge-agnostic contract. The CDP bridge only routes one active
     // tab at a time, but it still needs to expose the same metadata lookup.
     const resolvedPageId = browserPageId ?? this.getActivePageId()
@@ -1071,7 +1071,7 @@ export class CdpBridge {
     if (tabs.length === 0) {
       throw new BrowserError(
         'browser_no_tab',
-        'No browser tab is open. Use the Orca UI to open a browser tab first.'
+        'No browser tab is open. Use the Korca UI to open a browser tab first.'
       )
     }
     if (tabs.length === 1) {
@@ -1079,7 +1079,7 @@ export class CdpBridge {
     } else {
       throw new BrowserError(
         'browser_no_tab',
-        "Multiple browser tabs are open. Run 'orca tab list' and 'orca tab switch --index <n>' to select one."
+        "Multiple browser tabs are open. Run 'korca tab list' and 'korca tab switch --index <n>' to select one."
       )
     }
 
@@ -1088,7 +1088,7 @@ export class CdpBridge {
       this.activeWebContentsId = null
       throw new BrowserError(
         'browser_debugger_detached',
-        "The active browser tab was closed. Run 'orca tab list' to find remaining tabs."
+        "The active browser tab was closed. Run 'korca tab list' to find remaining tabs."
       )
     }
     return guest
@@ -1408,7 +1408,7 @@ export class CdpBridge {
     if (!state.snapshotResult) {
       throw new BrowserError(
         'browser_stale_ref',
-        "No snapshot exists for this tab. Run 'orca snapshot' first."
+        "No snapshot exists for this tab. Run 'korca snapshot' first."
       )
     }
 
@@ -1416,7 +1416,7 @@ export class CdpBridge {
     if (!entry) {
       throw new BrowserError(
         'browser_ref_not_found',
-        `Element ref ${ref} was not found. Run 'orca snapshot' to see available refs.`
+        `Element ref ${ref} was not found. Run 'korca snapshot' to see available refs.`
       )
     }
 
@@ -1430,7 +1430,7 @@ export class CdpBridge {
         state.navigationId = null
         throw new BrowserError(
           'browser_stale_ref',
-          "The page has navigated since the last snapshot. Run 'orca snapshot' to get fresh refs."
+          "The page has navigated since the last snapshot. Run 'korca snapshot' to get fresh refs."
         )
       }
     }
@@ -1452,7 +1452,7 @@ export class CdpBridge {
       state.snapshotResult = null
       throw new BrowserError(
         'browser_stale_ref',
-        `Element ${ref} no longer exists in the DOM. Run 'orca snapshot' to get fresh refs.`
+        `Element ${ref} no longer exists in the DOM. Run 'korca snapshot' to get fresh refs.`
       )
     }
   }

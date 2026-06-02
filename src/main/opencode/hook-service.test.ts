@@ -46,33 +46,33 @@ describe('OpenCode hook plugin source', () => {
   it('still accepts an optional opaque plugin context instead of destructuring', () => {
     const source = _internals.getOpenCodePluginSource()
 
-    expect(source).toContain('export const OrcaOpenCodeStatusPlugin = async (_ctx) => {')
+    expect(source).toContain('export const KorcaOpenCodeStatusPlugin = async (_ctx) => {')
     expect(source).toContain('const client = _ctx?.client;')
   })
 
   it('resolves hook coords from the endpoint file before falling back to process.env', () => {
-    // Why: a long-running OpenCode session was fork()ed with the prior Orca's
+    // Why: a long-running OpenCode session was fork()ed with the prior Korca's
     // PORT/TOKEN frozen into process.env. The plugin must prefer the on-disk
-    // endpoint file (rewritten on every Orca start()) over env, otherwise it
-    // keeps posting to a dead port after an Orca restart.
+    // endpoint file (rewritten on every Korca start()) over env, otherwise it
+    // keeps posting to a dead port after an Korca restart.
     const source = _internals.getOpenCodePluginSource()
 
     expect(source).toContain('function readEndpointFile()')
-    expect(source).toContain('process.env.ORCA_AGENT_HOOK_ENDPOINT')
+    expect(source).toContain('process.env.KORCA_AGENT_HOOK_ENDPOINT')
     // Parser accepts both `KEY=VALUE` (Unix) and `set KEY=VALUE` (Windows):
     expect(source).toContain('/^(?:set\\s+)?([A-Z0-9_]+)=(.*)$/')
     expect(source).toContain('function resolveHookCoords()')
     // File takes precedence over env — the whole point of v2:
     expect(source).toContain(
-      'port: fileEnv.ORCA_AGENT_HOOK_PORT || process.env.ORCA_AGENT_HOOK_PORT'
+      'port: fileEnv.KORCA_AGENT_HOOK_PORT || process.env.KORCA_AGENT_HOOK_PORT'
     )
     expect(source).toContain(
-      'token: fileEnv.ORCA_AGENT_HOOK_TOKEN || process.env.ORCA_AGENT_HOOK_TOKEN'
+      'token: fileEnv.KORCA_AGENT_HOOK_TOKEN || process.env.KORCA_AGENT_HOOK_TOKEN'
     )
     // post() uses the resolved coords, not a cached-at-startup url:
     expect(source).toContain('const coords = resolveHookCoords();')
     expect(source).toContain('`http://127.0.0.1:${coords.port}/hook/opencode`')
-    expect(source).toContain('"X-Orca-Agent-Hook-Token": coords.token')
+    expect(source).toContain('"X-Korca-Agent-Hook-Token": coords.token')
   })
 
   it('caches the parsed endpoint file on mtime+size+inode to skip re-reads per post', () => {
@@ -180,7 +180,7 @@ describe('OpenCodeHookService buildPtyEnv / clearPty round-trip', () => {
   let userDataDir: string
 
   beforeAll(() => {
-    userDataDir = mkdtempSync(join(tmpdir(), 'orca-opencode-hooks-'))
+    userDataDir = mkdtempSync(join(tmpdir(), 'korca-opencode-hooks-'))
     getPathMock.mockImplementation((name: string) => {
       if (name === 'userData') {
         return userDataDir
@@ -207,11 +207,11 @@ describe('OpenCodeHookService buildPtyEnv / clearPty round-trip', () => {
       join(userDataDir, 'opencode-hooks', toSafeDirName(daemonSessionId))
     )
 
-    const pluginPath = join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'orca-opencode-status.js')
+    const pluginPath = join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'korca-opencode-status.js')
     expect(existsSync(pluginPath)).toBe(true)
     // Sanity-check the file has plugin source, not a stray write.
     const pluginSource = readFileSync(pluginPath, 'utf8')
-    expect(pluginSource).toContain('OrcaOpenCodeStatusPlugin')
+    expect(pluginSource).toContain('KorcaOpenCodeStatusPlugin')
     expect(pluginSource).toContain('messageID: part.messageID')
   })
 
@@ -240,7 +240,7 @@ describe('OpenCodeHookService buildPtyEnv / clearPty round-trip', () => {
     // must not blow away the user's own OPENCODE_CONFIG_DIR. The status
     // plugin is forfeited, but the user's plugins/auth/keymap keep loading.
     const service = new OpenCodeHookService()
-    const userDir = mkdtempSync(join(tmpdir(), 'orca-opencode-userdir-'))
+    const userDir = mkdtempSync(join(tmpdir(), 'korca-opencode-userdir-'))
     try {
       expect(service.buildPtyEnv('', userDir)).toEqual({ OPENCODE_CONFIG_DIR: userDir })
     } finally {
@@ -255,7 +255,7 @@ describe('OpenCodeHookService buildPtyEnv / clearPty round-trip', () => {
     expect(env.OPENCODE_CONFIG_DIR).toBe(
       join(userDataDir, 'opencode-hooks', toSafeDirName(plainUuidId))
     )
-    expect(existsSync(join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'orca-opencode-status.js'))).toBe(
+    expect(existsSync(join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'korca-opencode-status.js'))).toBe(
       true
     )
 
@@ -267,16 +267,16 @@ describe('OpenCodeHookService buildPtyEnv / clearPty round-trip', () => {
 describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () => {
   // Why: locks in docs/opencode-config-dir-collision.md — when the user has
   // their own OPENCODE_CONFIG_DIR (e.g. a company-wide opencode config repo),
-  // Orca must mirror it into a per-PTY overlay rather than `delete` its own
+  // Korca must mirror it into a per-PTY overlay rather than `delete` its own
   // injection (the prior bug) or overwrite the user's value (Superset's
-  // failure mode). The user's auth/models/keymap and Orca's status plugin
+  // failure mode). The user's auth/models/keymap and Korca's status plugin
   // both load via a single OPENCODE_CONFIG_DIR.
   const ptyId = 'overlay-pty-1'
   let userDataDir: string
   let userConfigDir: string
 
   beforeAll(() => {
-    userDataDir = mkdtempSync(join(tmpdir(), 'orca-opencode-overlay-userdata-'))
+    userDataDir = mkdtempSync(join(tmpdir(), 'korca-opencode-overlay-userdata-'))
     getPathMock.mockImplementation((name: string) => {
       if (name === 'userData') {
         return userDataDir
@@ -290,7 +290,7 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
   })
 
   beforeEach(() => {
-    userConfigDir = mkdtempSync(join(tmpdir(), 'orca-opencode-overlay-userconfig-'))
+    userConfigDir = mkdtempSync(join(tmpdir(), 'korca-opencode-overlay-userconfig-'))
     // Realistic user config: top-level files plus a plugins/ dir with a user plugin.
     writeFileSync(join(userConfigDir, 'opencode.json'), '{"userTheme":"solarized"}')
     writeFileSync(join(userConfigDir, 'auth.json'), 'user-auth-token')
@@ -314,7 +314,7 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
     )
   }
 
-  it('builds an overlay under userData and exposes user config + Orca plugin together', () => {
+  it('builds an overlay under userData and exposes user config + Korca plugin together', () => {
     const service = new OpenCodeHookService()
     const env = service.buildPtyEnv(ptyId, userConfigDir)
 
@@ -334,10 +334,10 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
       'export default () => {}'
     )
 
-    // Orca's status plugin is a sibling, not a replacement.
-    const orcaPluginPath = join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'orca-opencode-status.js')
-    expect(existsSync(orcaPluginPath)).toBe(true)
-    expect(readFileSync(orcaPluginPath, 'utf8')).toContain('OrcaOpenCodeStatusPlugin')
+    // Korca's status plugin is a sibling, not a replacement.
+    const korcaPluginPath = join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'korca-opencode-status.js')
+    expect(existsSync(korcaPluginPath)).toBe(true)
+    expect(readFileSync(korcaPluginPath, 'utf8')).toContain('KorcaOpenCodeStatusPlugin')
 
     expectUserConfigIntact()
   })
@@ -345,7 +345,7 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
   it.skipIf(process.platform === 'win32')(
     'mirrors top-level entries via symlinks so plugins/ is a real directory',
     () => {
-      // Why: only the plugins/ subtree needs entry-by-entry mirroring so Orca
+      // Why: only the plugins/ subtree needs entry-by-entry mirroring so Korca
       // can drop a sibling file alongside the user's plugins. Other top-level
       // entries (auth.json, opencode.json) are mirrored as a single symlink so
       // user edits propagate live on POSIX.
@@ -355,7 +355,7 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
       const overlay = env.OPENCODE_CONFIG_DIR!
       expect(lstatSync(join(overlay, 'opencode.json')).isSymbolicLink()).toBe(true)
       expect(lstatSync(join(overlay, 'auth.json')).isSymbolicLink()).toBe(true)
-      // plugins/ must be a real directory in the overlay so Orca can write
+      // plugins/ must be a real directory in the overlay so Korca can write
       // its sibling status plugin into it.
       expect(lstatSync(join(overlay, 'plugins')).isDirectory()).toBe(true)
       expect(lstatSync(join(overlay, 'plugins')).isSymbolicLink()).toBe(false)
@@ -364,40 +364,40 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
     }
   )
 
-  it("does not overwrite a user plugin file with the same filename as Orca's plugin", () => {
+  it("does not overwrite a user plugin file with the same filename as Korca's plugin", () => {
     // Why: the failure mode this guards against — a user-owned plugin file
-    // happens to be named orca-opencode-status.js. Without the per-entry
+    // happens to be named korca-opencode-status.js. Without the per-entry
     // skip in mirrorUserConfig, the file would be linked into the overlay
-    // and Orca's writeFileSync would write through the symlink, destroying
+    // and Korca's writeFileSync would write through the symlink, destroying
     // the user's content on their real filesystem.
-    const userOrcaSentinel = 'USER OWNED ORCA-NAMED PLUGIN — DO NOT CLOBBER'
-    writeFileSync(join(userConfigDir, 'plugins', 'orca-opencode-status.js'), userOrcaSentinel)
+    const userKorcaSentinel = 'USER OWNED KORCA-NAMED PLUGIN — DO NOT CLOBBER'
+    writeFileSync(join(userConfigDir, 'plugins', 'korca-opencode-status.js'), userKorcaSentinel)
 
     const service = new OpenCodeHookService()
     const env = service.buildPtyEnv(ptyId, userConfigDir)
 
     // User's source file must be untouched.
-    expect(readFileSync(join(userConfigDir, 'plugins', 'orca-opencode-status.js'), 'utf8')).toBe(
-      userOrcaSentinel
+    expect(readFileSync(join(userConfigDir, 'plugins', 'korca-opencode-status.js'), 'utf8')).toBe(
+      userKorcaSentinel
     )
 
-    // Overlay copy is Orca's real plugin source, not the user's file.
+    // Overlay copy is Korca's real plugin source, not the user's file.
     const overlayPlugin = readFileSync(
-      join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'orca-opencode-status.js'),
+      join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'korca-opencode-status.js'),
       'utf8'
     )
-    expect(overlayPlugin).toContain('OrcaOpenCodeStatusPlugin')
-    expect(overlayPlugin).not.toBe(userOrcaSentinel)
+    expect(overlayPlugin).toContain('KorcaOpenCodeStatusPlugin')
+    expect(overlayPlugin).not.toBe(userKorcaSentinel)
     expectUserConfigIntact()
   })
 
   it.skipIf(process.platform === 'win32')(
     'does not write through a symlinked plugins/ directory into the user filesystem',
     () => {
-      // Why: if plugins/ is a symlink (common dotfiles pattern), writing Orca's
+      // Why: if plugins/ is a symlink (common dotfiles pattern), writing Korca's
       // status plugin through it would land in the user's real filesystem —
       // exactly the failure mode docs/opencode-config-dir-collision.md rejects.
-      const realPluginsDir = mkdtempSync(join(tmpdir(), 'orca-real-plugins-'))
+      const realPluginsDir = mkdtempSync(join(tmpdir(), 'korca-real-plugins-'))
       try {
         writeFileSync(join(realPluginsDir, 'real-plugin.js'), 'REAL USER PLUGIN')
 
@@ -409,14 +409,14 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
         const service = new OpenCodeHookService()
         const env = service.buildPtyEnv(ptyId, userConfigDir)
 
-        // The user's real filesystem must NOT receive Orca's status plugin.
-        expect(existsSync(join(realPluginsDir, 'orca-opencode-status.js'))).toBe(false)
+        // The user's real filesystem must NOT receive Korca's status plugin.
+        expect(existsSync(join(realPluginsDir, 'korca-opencode-status.js'))).toBe(false)
         // Overlay's plugins/ must be a real directory, not a symlink that
         // would write through to the user's filesystem.
         expect(lstatSync(join(env.OPENCODE_CONFIG_DIR!, 'plugins')).isSymbolicLink()).toBe(false)
-        // Orca's status plugin lands in the overlay only.
+        // Korca's status plugin lands in the overlay only.
         expect(
-          existsSync(join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'orca-opencode-status.js'))
+          existsSync(join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'korca-opencode-status.js'))
         ).toBe(true)
         // The user's sentinel plugin is reachable through the overlay (mirrored
         // entry-by-entry after resolving the symlink target).
@@ -430,12 +430,12 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
   )
 
   it("preserves the user's OPENCODE_CONFIG_DIR when the path does not exist", () => {
-    // Why: typoed user path — overriding it with an Orca-owned dir would let
-    // Orca's status plugin "succeed" while silently hiding the user's typo.
+    // Why: typoed user path — overriding it with an Korca-owned dir would let
+    // Korca's status plugin "succeed" while silently hiding the user's typo.
     // The design rejects that: leave the user's value alone and let OpenCode
     // surface the typo on its own.
     const service = new OpenCodeHookService()
-    const missingPath = join(tmpdir(), `orca-opencode-nope-${Date.now()}`)
+    const missingPath = join(tmpdir(), `korca-opencode-nope-${Date.now()}`)
     expect(existsSync(missingPath)).toBe(false)
 
     const env = service.buildPtyEnv(ptyId, missingPath)
@@ -452,7 +452,7 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
     // Why: mock the shared mirrorEntry helper to throw on the first symlink
     // (e.g. Windows without developer mode → EPERM). The hook service must
     // catch and fall back to { OPENCODE_CONFIG_DIR: existingConfigDir } —
-    // the user's plugins/auth/models keep loading; only Orca's status plugin
+    // the user's plugins/auth/models keep loading; only Korca's status plugin
     // is forfeited.
     const overlayMirror = await import('../pty/overlay-mirror')
     const mirrorSpy = vi.spyOn(overlayMirror, 'mirrorEntry').mockImplementation(() => {
@@ -497,15 +497,15 @@ describe('OpenCodeHookService overlay mode (user OPENCODE_CONFIG_DIR set)', () =
     // Mirrors the daemon cold-restore code path that calls buildPtyEnv with
     // the same sessionId across restarts. Each rebuild must clear the prior
     // overlay safely (no symlink-walk into user data) and produce a fresh
-    // overlay with both user files and Orca's plugin.
+    // overlay with both user files and Korca's plugin.
     const service = new OpenCodeHookService()
     service.buildPtyEnv(ptyId, userConfigDir)
     service.buildPtyEnv(ptyId, userConfigDir)
     const env = service.buildPtyEnv(ptyId, userConfigDir)
 
     expect(
-      readFileSync(join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'orca-opencode-status.js'), 'utf8')
-    ).toContain('OrcaOpenCodeStatusPlugin')
+      readFileSync(join(env.OPENCODE_CONFIG_DIR!, 'plugins', 'korca-opencode-status.js'), 'utf8')
+    ).toContain('KorcaOpenCodeStatusPlugin')
     expectUserConfigIntact()
   })
 })

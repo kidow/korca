@@ -116,14 +116,14 @@ function resetMocks(): void {
 
 function mockGitHubProvider(): void {
   getProjectSlugMock.mockResolvedValue(null)
-  getRepoSlugMock.mockResolvedValue({ owner: 'acme', repo: 'orca' })
+  getRepoSlugMock.mockResolvedValue({ owner: 'acme', repo: 'korca' })
   getBitbucketRepoSlugMock.mockResolvedValue(null)
   getAzureDevOpsRepoSlugMock.mockResolvedValue(null)
   getGiteaRepoSlugMock.mockResolvedValue(null)
 }
 
 function mockGitLabProvider(): void {
-  getProjectSlugMock.mockResolvedValue({ host: 'gitlab.com', path: 'acme/orca' })
+  getProjectSlugMock.mockResolvedValue({ host: 'gitlab.com', path: 'acme/korca' })
   getRepoSlugMock.mockResolvedValue(null)
   getBitbucketRepoSlugMock.mockResolvedValue(null)
   getAzureDevOpsRepoSlugMock.mockResolvedValue(null)
@@ -162,12 +162,12 @@ describe('createHostedReview', () => {
     createGitHubPullRequestMock.mockResolvedValue({
       ok: true,
       number: 12,
-      url: 'https://github.com/acme/orca/pull/12'
+      url: 'https://github.com/acme/korca/pull/12'
     })
     createGitLabMergeRequestMock.mockResolvedValue({
       ok: true,
       number: 44,
-      url: 'https://gitlab.com/acme/orca/-/merge_requests/44'
+      url: 'https://gitlab.com/acme/korca/-/merge_requests/44'
     })
   })
 
@@ -228,7 +228,7 @@ describe('createHostedReview', () => {
     ).resolves.toEqual({
       ok: true,
       number: 12,
-      url: 'https://github.com/acme/orca/pull/12'
+      url: 'https://github.com/acme/korca/pull/12'
     })
     expect(createGitHubPullRequestMock).toHaveBeenCalledOnce()
   })
@@ -246,7 +246,7 @@ describe('createHostedReview', () => {
     ).resolves.toEqual({
       ok: true,
       number: 44,
-      url: 'https://gitlab.com/acme/orca/-/merge_requests/44'
+      url: 'https://gitlab.com/acme/korca/-/merge_requests/44'
     })
 
     expect(glabExecFileAsyncMock).toHaveBeenCalledWith(
@@ -304,7 +304,7 @@ describe('createHostedReview', () => {
     ).resolves.toEqual({
       ok: true,
       number: 12,
-      url: 'https://github.com/acme/orca/pull/12'
+      url: 'https://github.com/acme/korca/pull/12'
     })
 
     expect(remoteGit.exec).toHaveBeenCalledWith(
@@ -341,7 +341,7 @@ describe('createHostedReview', () => {
       number: 31,
       title: 'Existing feature',
       state: 'open',
-      url: 'https://github.com/acme/orca/pull/31',
+      url: 'https://github.com/acme/korca/pull/31',
       status: 'pending',
       updatedAt: '2026-05-15T00:00:00.000Z',
       mergeable: 'UNKNOWN'
@@ -360,7 +360,7 @@ describe('createHostedReview', () => {
       error: 'A pull request already exists for this branch.',
       existingReview: {
         number: 31,
-        url: 'https://github.com/acme/orca/pull/31'
+        url: 'https://github.com/acme/korca/pull/31'
       }
     })
     expect(createGitHubPullRequestMock).not.toHaveBeenCalled()

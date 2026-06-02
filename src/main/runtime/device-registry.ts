@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { hardenExistingSecureFile, writeSecureJsonFile } from '../../shared/secure-file'
 
-const DEVICE_REGISTRY_FILENAME = 'orca-devices.json'
+const DEVICE_REGISTRY_FILENAME = 'korca-devices.json'
 
 export type DeviceScope = 'mobile' | 'runtime'
 

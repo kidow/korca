@@ -55,10 +55,10 @@ export function normalizeAzureDevOpsApiBaseUrl(value: string): string {
 
 function getAuthConfig(): AzureDevOpsAuthConfig {
   return {
-    apiBaseUrl: envValue('ORCA_AZURE_DEVOPS_API_BASE_URL'),
-    pat: envValue('ORCA_AZURE_DEVOPS_TOKEN') ?? envValue('ORCA_AZURE_DEVOPS_PAT'),
-    accessToken: envValue('ORCA_AZURE_DEVOPS_ACCESS_TOKEN'),
-    username: envValue('ORCA_AZURE_DEVOPS_USERNAME')
+    apiBaseUrl: envValue('KORCA_AZURE_DEVOPS_API_BASE_URL'),
+    pat: envValue('KORCA_AZURE_DEVOPS_TOKEN') ?? envValue('KORCA_AZURE_DEVOPS_PAT'),
+    accessToken: envValue('KORCA_AZURE_DEVOPS_ACCESS_TOKEN'),
+    username: envValue('KORCA_AZURE_DEVOPS_USERNAME')
   }
 }
 

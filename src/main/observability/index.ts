@@ -15,8 +15,8 @@
 //   DO_NOT_TRACK=1            → disable OTLP + bundle button. KEEP local file.
 //                                Local file writes never leave the machine,
 //                                so they are not "tracking" in the DNT sense.
-//   ORCA_TELEMETRY_DISABLED=1 → identical to DO_NOT_TRACK for this lane.
-//   ORCA_DIAGNOSTICS_DISABLED=1 → ALSO disable local file writes. The escape
+//   KORCA_TELEMETRY_DISABLED=1 → identical to DO_NOT_TRACK for this lane.
+//   KORCA_DIAGNOSTICS_DISABLED=1 → ALSO disable local file writes. The escape
 //                                hatch for users on devices where even local
 //                                debug logs are policy-forbidden.
 //   CI detection              → disable everything in this lane.
@@ -76,8 +76,8 @@ export type ObservabilityConsent = {
   /** Reason any of the lanes are disabled, for debug surfaces. */
   readonly disabledReason?:
     | 'do_not_track'
-    | 'orca_telemetry_disabled'
-    | 'orca_diagnostics_disabled'
+    | 'korca_telemetry_disabled'
+    | 'korca_diagnostics_disabled'
     | 'ci'
 }
 
@@ -100,8 +100,8 @@ export function resolveObservabilityConsent(): ObservabilityConsent {
   // CI and DNT/disabled have different effects on which sub-lanes are gated.
   // Keep the ordering aligned with §Consent boundaries above.
   const dnt = envOn('DO_NOT_TRACK')
-  const orcaDisabled = envOn('ORCA_TELEMETRY_DISABLED')
-  const diagnosticsDisabled = envOn('ORCA_DIAGNOSTICS_DISABLED')
+  const korcaDisabled = envOn('KORCA_TELEMETRY_DISABLED')
+  const diagnosticsDisabled = envOn('KORCA_DIAGNOSTICS_DISABLED')
   const ci = inCI()
 
   if (ci) {
@@ -118,25 +118,25 @@ export function resolveObservabilityConsent(): ObservabilityConsent {
       localFileEnabled: false,
       otlpEnabled: false,
       bundleEnabled: false,
-      otlpStatus: 'Disabled by ORCA_DIAGNOSTICS_DISABLED',
-      disabledReason: 'orca_diagnostics_disabled'
+      otlpStatus: 'Disabled by KORCA_DIAGNOSTICS_DISABLED',
+      disabledReason: 'korca_diagnostics_disabled'
     }
   }
-  if (dnt || orcaDisabled) {
+  if (dnt || korcaDisabled) {
     // Local file remains active — DNT is a *network* signal, and the local
     // file never leaves the machine.
     return {
       localFileEnabled: true,
       otlpEnabled: false,
       bundleEnabled: false,
-      otlpStatus: dnt ? 'Disabled by DO_NOT_TRACK' : 'Disabled by ORCA_TELEMETRY_DISABLED',
-      disabledReason: dnt ? 'do_not_track' : 'orca_telemetry_disabled'
+      otlpStatus: dnt ? 'Disabled by DO_NOT_TRACK' : 'Disabled by KORCA_TELEMETRY_DISABLED',
+      disabledReason: dnt ? 'do_not_track' : 'korca_telemetry_disabled'
     }
   }
 
   // Normal path: everything is on, but the OTLP exporter only initializes
-  // if the user has set ORCA_OTLP_TRACES_URL.
-  const tracesUrl = process.env.ORCA_OTLP_TRACES_URL
+  // if the user has set KORCA_OTLP_TRACES_URL.
+  const tracesUrl = process.env.KORCA_OTLP_TRACES_URL
   return {
     localFileEnabled: true,
     otlpEnabled: tracesUrl !== undefined && tracesUrl.length > 0,
@@ -144,12 +144,12 @@ export function resolveObservabilityConsent(): ObservabilityConsent {
     otlpStatus:
       tracesUrl !== undefined && tracesUrl.length > 0
         ? `Enabled — exporting to ${tracesUrl}`
-        : 'Disabled (set ORCA_OTLP_TRACES_URL to enable)'
+        : 'Disabled (set KORCA_OTLP_TRACES_URL to enable)'
   }
 }
 
 /** Path for the trace NDJSON file. macOS conventional location is
- *  `~/Library/Application Support/Orca/logs/main.trace.ndjson`; we resolve
+ *  `~/Library/Application Support/Korca/logs/main.trace.ndjson`; we resolve
  *  the same intent on Windows / Linux via Electron's `userData` dir. The
  *  function falls back to homedir when Electron is not available (tests).
  */
@@ -163,11 +163,11 @@ export function getTraceFilePath(): string {
     // without spinning up the full Electron runtime.
     const home = homedir()
     if (platform() === 'darwin') {
-      userData = join(home, 'Library', 'Application Support', 'Orca')
+      userData = join(home, 'Library', 'Application Support', 'Korca')
     } else if (platform() === 'win32') {
-      userData = join(process.env.APPDATA ?? home, 'Orca')
+      userData = join(process.env.APPDATA ?? home, 'Korca')
     } else {
-      userData = join(home, '.config', 'Orca')
+      userData = join(home, '.config', 'Korca')
     }
   }
   return join(userData, 'logs', 'main.trace.ndjson')
@@ -253,7 +253,7 @@ export function initObservability(): ObservabilityConsent {
   const c = resolveObservabilityConsent()
   consent = c
   if (!c.localFileEnabled) {
-    // Disabled at the CI / ORCA_DIAGNOSTICS_DISABLED level — leave the
+    // Disabled at the CI / KORCA_DIAGNOSTICS_DISABLED level — leave the
     // tracer's active sink unset, so all spans are no-ops.
     return c
   }
@@ -341,14 +341,14 @@ export function clearLocalTraces(): void {
 }
 
 /** Collect a bundle from the live trace folder. The `appVersion` /
- *  `platform` / `arch` / `osRelease` / `orcaChannel` inputs come from main
+ *  `platform` / `arch` / `osRelease` / `korcaChannel` inputs come from main
  *  and are baked into the bundle header. NEVER pass `install_id` here —
  *  the bundle's identity is the per-bundle submission ID, not the
  *  PostHog-lane install_id (Issue 8 in the security review). */
 export function collectDiagnosticBundle(
   meta: Pick<
     CollectBundleOptions,
-    'appVersion' | 'platform' | 'arch' | 'osRelease' | 'orcaChannel' | 'lookbackMinutes'
+    'appVersion' | 'platform' | 'arch' | 'osRelease' | 'korcaChannel' | 'lookbackMinutes'
   >
 ): CollectedBundle {
   // Flush the active sink first so the very latest spans are present in the

@@ -28,7 +28,7 @@ describe('WorktreeCardDetailsHover', () => {
           number: 456,
           title: 'Fix stale GH PR',
           state: 'open',
-          url: 'https://github.com/acme/orca/pull/456',
+          url: 'https://github.com/acme/korca/pull/456',
           status: 'success',
           updatedAt: '2026-05-17T00:00:00.000Z',
           mergeable: 'MERGEABLE'
@@ -56,7 +56,7 @@ describe('WorktreeCardDetailsHover', () => {
           number: 456,
           title: 'Fix stale GH PR',
           state: 'open',
-          url: 'https://github.com/acme/orca/pull/456',
+          url: 'https://github.com/acme/korca/pull/456',
           status: 'success',
           updatedAt: '2026-05-17T00:00:00.000Z',
           mergeable: 'MERGEABLE'

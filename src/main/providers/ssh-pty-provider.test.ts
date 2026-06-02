@@ -66,19 +66,19 @@ describe('SshPtyProvider', () => {
       })
     })
 
-    it('injects the relay-backed Orca CLI bridge into remote PTY env', async () => {
+    it('injects the relay-backed Korca CLI bridge into remote PTY env', async () => {
       mux.request.mockResolvedValue({ id: 'pty-bridge' })
       provider = new SshPtyProvider('conn-1', mux as never, {
-        binDir: '/home/user/.orca-relay/bin',
-        relayDir: '/home/user/.orca-relay/relay-v1',
+        binDir: '/home/user/.korca-relay/bin',
+        relayDir: '/home/user/.korca-relay/relay-v1',
         nodePath: '/usr/bin/node',
-        sockPath: '/home/user/.orca-relay/relay.sock'
+        sockPath: '/home/user/.korca-relay/relay.sock'
       })
 
       await provider.spawn({
         cols: 120,
         rows: 40,
-        env: { PATH: '/usr/bin', ORCA_TERMINAL_HANDLE: 'term_ssh' }
+        env: { PATH: '/usr/bin', KORCA_TERMINAL_HANDLE: 'term_ssh' }
       })
 
       expect(mux.request).toHaveBeenCalledWith('pty.spawn', {
@@ -86,12 +86,12 @@ describe('SshPtyProvider', () => {
         rows: 40,
         cwd: undefined,
         env: {
-          PATH: '/home/user/.orca-relay/bin:/usr/bin',
-          ORCA_TERMINAL_HANDLE: 'term_ssh',
-          ORCA_REMOTE_CLI_BIN_DIR: '/home/user/.orca-relay/bin',
-          ORCA_RELAY_DIR: '/home/user/.orca-relay/relay-v1',
-          ORCA_RELAY_NODE_PATH: '/usr/bin/node',
-          ORCA_RELAY_SOCKET_PATH: '/home/user/.orca-relay/relay.sock'
+          PATH: '/home/user/.korca-relay/bin:/usr/bin',
+          KORCA_TERMINAL_HANDLE: 'term_ssh',
+          KORCA_REMOTE_CLI_BIN_DIR: '/home/user/.korca-relay/bin',
+          KORCA_RELAY_DIR: '/home/user/.korca-relay/relay-v1',
+          KORCA_RELAY_NODE_PATH: '/usr/bin/node',
+          KORCA_RELAY_SOCKET_PATH: '/home/user/.korca-relay/relay.sock'
         }
       })
     })
@@ -99,16 +99,16 @@ describe('SshPtyProvider', () => {
     it('does not clobber the remote relay PATH when caller env has no PATH', async () => {
       mux.request.mockResolvedValue({ id: 'pty-bridge' })
       provider = new SshPtyProvider('conn-1', mux as never, {
-        binDir: '/home/user/.orca-relay/bin',
-        relayDir: '/home/user/.orca-relay/relay-v1',
+        binDir: '/home/user/.korca-relay/bin',
+        relayDir: '/home/user/.korca-relay/relay-v1',
         nodePath: '/usr/bin/node',
-        sockPath: '/home/user/.orca-relay/relay.sock'
+        sockPath: '/home/user/.korca-relay/relay.sock'
       })
 
       await provider.spawn({
         cols: 120,
         rows: 40,
-        env: { ORCA_TERMINAL_HANDLE: 'term_ssh' }
+        env: { KORCA_TERMINAL_HANDLE: 'term_ssh' }
       })
 
       expect(mux.request).toHaveBeenCalledWith('pty.spawn', {
@@ -116,11 +116,11 @@ describe('SshPtyProvider', () => {
         rows: 40,
         cwd: undefined,
         env: {
-          ORCA_TERMINAL_HANDLE: 'term_ssh',
-          ORCA_REMOTE_CLI_BIN_DIR: '/home/user/.orca-relay/bin',
-          ORCA_RELAY_DIR: '/home/user/.orca-relay/relay-v1',
-          ORCA_RELAY_NODE_PATH: '/usr/bin/node',
-          ORCA_RELAY_SOCKET_PATH: '/home/user/.orca-relay/relay.sock'
+          KORCA_TERMINAL_HANDLE: 'term_ssh',
+          KORCA_REMOTE_CLI_BIN_DIR: '/home/user/.korca-relay/bin',
+          KORCA_RELAY_DIR: '/home/user/.korca-relay/relay-v1',
+          KORCA_RELAY_NODE_PATH: '/usr/bin/node',
+          KORCA_RELAY_SOCKET_PATH: '/home/user/.korca-relay/relay.sock'
         }
       })
     })

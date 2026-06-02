@@ -1,9 +1,9 @@
 import type { IPtyProvider } from '../providers/types'
-import type { OrcaRuntimeService } from './orca-runtime'
+import type { KorcaRuntimeService } from './korca-runtime'
 import { listRegisteredPtys } from '../memory/pty-registry'
 
 export type WorktreeTeardownDeps = {
-  runtime?: OrcaRuntimeService
+  runtime?: KorcaRuntimeService
   localProvider: IPtyProvider
 }
 

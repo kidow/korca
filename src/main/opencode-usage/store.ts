@@ -57,12 +57,12 @@ export function normalizePersistedState(
 }
 
 export function initOpenCodeUsagePath(): void {
-  _openCodeUsageFile = join(app.getPath('userData'), 'orca-opencode-usage.json')
+  _openCodeUsageFile = join(app.getPath('userData'), 'korca-opencode-usage.json')
 }
 
 function getOpenCodeUsageFile(): string {
   if (!_openCodeUsageFile) {
-    _openCodeUsageFile = join(app.getPath('userData'), 'orca-opencode-usage.json')
+    _openCodeUsageFile = join(app.getPath('userData'), 'korca-opencode-usage.json')
   }
   return _openCodeUsageFile
 }
@@ -431,7 +431,7 @@ export class OpenCodeUsageStore {
   ): OpenCodeUsageDailyAggregate[] {
     const cutoff = getRangeCutoff(range)
     return this.state.dailyAggregates.filter((row) => {
-      if (scope === 'orca' && !row.worktreeId) {
+      if (scope === 'korca' && !row.worktreeId) {
         return false
       }
       if (cutoff && row.day < cutoff) {
@@ -444,7 +444,7 @@ export class OpenCodeUsageStore {
   private getFilteredSessions(scope: OpenCodeUsageScope, range: OpenCodeUsageRange) {
     const cutoff = getRangeCutoff(range)
     return this.state.sessions.filter((session) => {
-      if (scope === 'orca' && !session.primaryWorktreeId) {
+      if (scope === 'korca' && !session.primaryWorktreeId) {
         return false
       }
       if (cutoff) {

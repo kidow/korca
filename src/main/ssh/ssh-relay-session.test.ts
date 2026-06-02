@@ -131,7 +131,7 @@ function mockDeploySuccess() {
 describe('SshRelaySession', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    delete process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS
+    delete process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS
     muxRequestMock.mockReset()
     muxRequestMock.mockResolvedValue([])
     installRemoteManagedAgentHooksMock.mockReset()
@@ -161,10 +161,10 @@ describe('SshRelaySession', () => {
   })
 
   it('installs remote managed hooks and relay-owned plugin assets before registering the SSH PTY provider', async () => {
-    process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS = '1'
+    process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS = '1'
     muxRequestMock.mockImplementation(async (method: string) => {
       if (method === 'session.resolveHome') {
-        return { resolvedPath: '/home/orca' }
+        return { resolvedPath: '/home/korca' }
       }
       return { ok: true }
     })
@@ -187,7 +187,7 @@ describe('SshRelaySession', () => {
       ompExtensionSource: expect.stringContaining('/hook/omp')
     })
     expect(mockConn.sftp).toHaveBeenCalledTimes(1)
-    expect(installRemoteManagedAgentHooksMock).toHaveBeenCalledWith(sftp, '/home/orca')
+    expect(installRemoteManagedAgentHooksMock).toHaveBeenCalledWith(sftp, '/home/korca')
     expect(sftp.end).toHaveBeenCalledTimes(1)
     expect(installRemoteManagedAgentHooksMock.mock.invocationCallOrder[0]).toBeLessThan(
       muxRequestMock.mock.invocationCallOrder[installPluginsCallIndex]
@@ -198,7 +198,7 @@ describe('SshRelaySession', () => {
   })
 
   it('does not register providers if dispose wins during initial plugin sync', async () => {
-    process.env.ORCA_FEATURE_REMOTE_AGENT_HOOKS = '1'
+    process.env.KORCA_FEATURE_REMOTE_AGENT_HOOKS = '1'
     let resolvePluginInstall!: () => void
     muxRequestMock.mockImplementation(async (method: string) => {
       if (method === AGENT_HOOK_INSTALL_PLUGINS_METHOD) {

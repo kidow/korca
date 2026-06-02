@@ -109,7 +109,7 @@ function makeFakeStore(settings: GlobalSettings): Store {
 // on a dev laptop (where none are set) and in CI (where `CI` always is).
 const CONSENT_ENV_VARS = [
   'DO_NOT_TRACK',
-  'ORCA_TELEMETRY_DISABLED',
+  'KORCA_TELEMETRY_DISABLED',
   'CI',
   'GITHUB_ACTIONS',
   'GITLAB_CI',
@@ -147,7 +147,7 @@ const BASE_COMMON: CommonProps = {
   os_release: '25.3.0',
   install_id: '00000000-0000-4000-8000-000000000000',
   session_id: 'ffffffff-ffff-4fff-8fff-ffffffffffff',
-  orca_channel: 'stable'
+  korca_channel: 'stable'
 }
 
 describe('track()', () => {
@@ -448,7 +448,7 @@ describe('persistBannerAcknowledgeWithoutEmitting()', () => {
 // tells us the existing-user opt-out flow works.
 describe('shouldOptOutSdkAtInit()', () => {
   it('opts out the SDK for every disabled-reason', () => {
-    for (const reason of ['user_opt_out', 'ci', 'do_not_track', 'orca_disabled'] as const) {
+    for (const reason of ['user_opt_out', 'ci', 'do_not_track', 'korca_disabled'] as const) {
       expect(shouldOptOutSdkAtInit({ effective: 'disabled', reason })).toBe(true)
     }
   })

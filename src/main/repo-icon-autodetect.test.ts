@@ -11,7 +11,7 @@ const PNG_1X1_BASE64 =
 const tempDirs: string[] = []
 
 async function makeTempRepoDir(): Promise<string> {
-  const dir = await mkdtemp(join(tmpdir(), 'orca-repo-icon-'))
+  const dir = await mkdtemp(join(tmpdir(), 'korca-repo-icon-'))
   tempDirs.push(dir)
   return dir
 }
@@ -117,7 +117,7 @@ describe('detectRepoIcon', () => {
   it('falls back to the GitHub owner avatar for GitHub repos', async () => {
     const repoPath = await makeTempRepoDir()
     await gitExecFileAsync(['init'], { cwd: repoPath })
-    await gitExecFileAsync(['remote', 'add', 'origin', 'git@github.com:stablyai/orca.git'], {
+    await gitExecFileAsync(['remote', 'add', 'origin', 'git@github.com:stablyai/korca.git'], {
       cwd: repoPath
     })
 
@@ -125,7 +125,7 @@ describe('detectRepoIcon', () => {
       type: 'image',
       src: 'https://github.com/stablyai.png?size=64',
       source: 'github',
-      label: 'stablyai/orca'
+      label: 'stablyai/korca'
     })
   })
 
@@ -133,10 +133,10 @@ describe('detectRepoIcon', () => {
     const repoPath = await makeTempRepoDir()
     await writeFile(
       join(repoPath, 'package.json'),
-      JSON.stringify({ homepage: 'https://github.com/stablyai/orca' })
+      JSON.stringify({ homepage: 'https://github.com/stablyai/korca' })
     )
     await gitExecFileAsync(['init'], { cwd: repoPath })
-    await gitExecFileAsync(['remote', 'add', 'origin', 'https://github.com/stablyai/orca.git'], {
+    await gitExecFileAsync(['remote', 'add', 'origin', 'https://github.com/stablyai/korca.git'], {
       cwd: repoPath
     })
 
@@ -144,7 +144,7 @@ describe('detectRepoIcon', () => {
       type: 'image',
       src: 'https://github.com/stablyai.png?size=64',
       source: 'github',
-      label: 'stablyai/orca'
+      label: 'stablyai/korca'
     })
   })
 })

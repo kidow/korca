@@ -42,10 +42,10 @@ let userDataDir: string
 let previousUserDataPath: string | undefined
 
 beforeEach(() => {
-  tmpHome = mkdtempSync(join(tmpdir(), 'orca-codex-home-'))
-  userDataDir = mkdtempSync(join(tmpdir(), 'orca-codex-user-data-'))
-  previousUserDataPath = process.env.ORCA_USER_DATA_PATH
-  process.env.ORCA_USER_DATA_PATH = userDataDir
+  tmpHome = mkdtempSync(join(tmpdir(), 'korca-codex-home-'))
+  userDataDir = mkdtempSync(join(tmpdir(), 'korca-codex-user-data-'))
+  previousUserDataPath = process.env.KORCA_USER_DATA_PATH
+  process.env.KORCA_USER_DATA_PATH = userDataDir
   homedirMock.mockReturnValue(tmpHome)
   getPathMock.mockImplementation((name: string) => {
     if (name === 'userData') {
@@ -59,9 +59,9 @@ afterEach(() => {
   rmSync(tmpHome, { recursive: true, force: true })
   rmSync(userDataDir, { recursive: true, force: true })
   if (previousUserDataPath === undefined) {
-    delete process.env.ORCA_USER_DATA_PATH
+    delete process.env.KORCA_USER_DATA_PATH
   } else {
-    process.env.ORCA_USER_DATA_PATH = previousUserDataPath
+    process.env.KORCA_USER_DATA_PATH = previousUserDataPath
   }
   vi.clearAllMocks()
 })
@@ -94,7 +94,7 @@ function canonicalizeHookTrustKeyForTest(key: string): string {
 }
 
 describe('CodexHookService', () => {
-  it('installs PermissionRequest with trust so Codex approval prompts reach Orca', () => {
+  it('installs PermissionRequest with trust so Codex approval prompts reach Korca', () => {
     const systemCodexHome = join(tmpHome, '.codex')
     mkdirSync(systemCodexHome, { recursive: true })
     writeFileSync(
@@ -131,15 +131,15 @@ describe('CodexHookService', () => {
     expect(trustConfig).toContain(':permission_request:0:0')
   })
 
-  it('keeps hooks isolated by Orca userData instead of mutating system ~/.codex', () => {
+  it('keeps hooks isolated by Korca userData instead of mutating system ~/.codex', () => {
     const systemCodexHome = join(tmpHome, '.codex')
     const systemHooksPath = join(systemCodexHome, 'hooks.json')
     const existingSystemHooks = '{"hooks":{"Stop":[{"hooks":[{"command":"user-hook"}]}]}}\n'
     mkdirSync(systemCodexHome, { recursive: true })
     writeFileSync(systemHooksPath, existingSystemHooks, 'utf-8')
 
-    const devUserDataDir = mkdtempSync(join(tmpdir(), 'orca-dev-codex-user-data-'))
-    const prodUserDataDir = mkdtempSync(join(tmpdir(), 'orca-prod-codex-user-data-'))
+    const devUserDataDir = mkdtempSync(join(tmpdir(), 'korca-dev-codex-user-data-'))
+    const prodUserDataDir = mkdtempSync(join(tmpdir(), 'korca-prod-codex-user-data-'))
     try {
       getPathMock.mockImplementation((name: string) => {
         if (name === 'userData') {
@@ -147,7 +147,7 @@ describe('CodexHookService', () => {
         }
         throw new Error(`unexpected app.getPath(${name})`)
       })
-      process.env.ORCA_USER_DATA_PATH = devUserDataDir
+      process.env.KORCA_USER_DATA_PATH = devUserDataDir
       expect(new CodexHookService().install().state).toBe('installed')
 
       getPathMock.mockImplementation((name: string) => {
@@ -156,7 +156,7 @@ describe('CodexHookService', () => {
         }
         throw new Error(`unexpected app.getPath(${name})`)
       })
-      process.env.ORCA_USER_DATA_PATH = prodUserDataDir
+      process.env.KORCA_USER_DATA_PATH = prodUserDataDir
       expect(new CodexHookService().install().state).toBe('installed')
 
       const devHooksPath = join(devUserDataDir, 'codex-runtime-home', 'home', 'hooks.json')
@@ -191,7 +191,7 @@ describe('CodexHookService', () => {
       ).toBe(true)
       expect(readFileSync(systemHooksPath, 'utf-8')).toBe(existingSystemHooks)
     } finally {
-      process.env.ORCA_USER_DATA_PATH = userDataDir
+      process.env.KORCA_USER_DATA_PATH = userDataDir
       rmSync(devUserDataDir, { recursive: true, force: true })
       rmSync(prodUserDataDir, { recursive: true, force: true })
     }
@@ -591,7 +591,7 @@ describe('CodexHookService', () => {
     expect(stopCommands).not.toContain('user-hook-old')
   })
 
-  it('refreshes runtime user hooks without installing Orca-managed hooks', () => {
+  it('refreshes runtime user hooks without installing Korca-managed hooks', () => {
     const systemCodexHome = join(tmpHome, '.codex')
     const systemHooksPath = join(systemCodexHome, 'hooks.json')
     mkdirSync(systemCodexHome, { recursive: true })
@@ -660,12 +660,12 @@ describe('CodexHookService', () => {
     expect(runtimeToml).not.toContain(':permission_request:0:0')
   })
 
-  it('removes legacy Orca-managed hooks from system ~/.codex during install', () => {
+  it('removes legacy Korca-managed hooks from system ~/.codex during install', () => {
     const systemCodexHome = join(tmpHome, '.codex')
     const systemHooksPath = join(systemCodexHome, 'hooks.json')
     const legacyScriptPath = join(
       tmpHome,
-      '.orca',
+      '.korca',
       'agent-hooks',
       process.platform === 'win32' ? 'codex-hook.cmd' : 'codex-hook.sh'
     )
@@ -723,12 +723,12 @@ describe('CodexHookService', () => {
     expect(systemToml).not.toContain(':session_start:0:0')
   })
 
-  it('removes very large legacy Orca-managed hook lists from system ~/.codex', () => {
+  it('removes very large legacy Korca-managed hook lists from system ~/.codex', () => {
     const systemCodexHome = join(tmpHome, '.codex')
     const systemHooksPath = join(systemCodexHome, 'hooks.json')
     const legacyScriptPath = join(
       tmpHome,
-      '.orca',
+      '.korca',
       'agent-hooks',
       process.platform === 'win32' ? 'codex-hook.cmd' : 'codex-hook.sh'
     )
@@ -764,19 +764,19 @@ describe('CodexHookService', () => {
     expect(systemHooks.hooks.Stop).toBeUndefined()
   })
 
-  it('removes the legacy Orca Codex profile file when it only contains managed hooks', () => {
+  it('removes the legacy Korca Codex profile file when it only contains managed hooks', () => {
     const systemCodexHome = join(tmpHome, '.codex')
-    const profilePath = join(systemCodexHome, 'orca-agent-status.config.toml')
+    const profilePath = join(systemCodexHome, 'korca-agent-status.config.toml')
     mkdirSync(systemCodexHome, { recursive: true })
     writeFileSync(
       profilePath,
       [
-        '# BEGIN ORCA AGENT STATUS HOOKS',
+        '# BEGIN KORCA AGENT STATUS HOOKS',
         '[[hooks.PermissionRequest]]',
         '[[hooks.PermissionRequest.hooks]]',
         'type = "command"',
         'command = "codex-hook"',
-        '# END ORCA AGENT STATUS HOOKS',
+        '# END KORCA AGENT STATUS HOOKS',
         ''
       ].join('\n'),
       'utf-8'
@@ -787,21 +787,21 @@ describe('CodexHookService', () => {
     expect(existsSync(profilePath)).toBe(false)
   })
 
-  it('removes only the legacy Orca block from a user-edited Codex profile file', () => {
+  it('removes only the legacy Korca block from a user-edited Codex profile file', () => {
     const systemCodexHome = join(tmpHome, '.codex')
-    const profilePath = join(systemCodexHome, 'orca-agent-status.config.toml')
+    const profilePath = join(systemCodexHome, 'korca-agent-status.config.toml')
     mkdirSync(systemCodexHome, { recursive: true })
     writeFileSync(
       profilePath,
       [
         'model = "gpt-5.5"',
         '',
-        '# BEGIN ORCA AGENT STATUS HOOKS',
+        '# BEGIN KORCA AGENT STATUS HOOKS',
         '[[hooks.PermissionRequest]]',
         '[[hooks.PermissionRequest.hooks]]',
         'type = "command"',
         'command = "codex-hook"',
-        '# END ORCA AGENT STATUS HOOKS',
+        '# END KORCA AGENT STATUS HOOKS',
         ''
       ].join('\n'),
       'utf-8'
@@ -811,7 +811,7 @@ describe('CodexHookService', () => {
 
     const profileConfig = readFileSync(profilePath, 'utf-8')
     expect(profileConfig).toContain('model = "gpt-5.5"')
-    expect(profileConfig).not.toContain('ORCA AGENT STATUS HOOKS')
+    expect(profileConfig).not.toContain('KORCA AGENT STATUS HOOKS')
     expect(profileConfig).not.toContain('codex-hook')
   })
 
@@ -822,10 +822,10 @@ describe('CodexHookService', () => {
 
     const systemCodexHome = join(tmpHome, '.codex')
     const systemHooksPath = join(systemCodexHome, 'hooks.json')
-    const profilePath = join(systemCodexHome, 'orca-agent-status.config.toml')
+    const profilePath = join(systemCodexHome, 'korca-agent-status.config.toml')
     const legacyScriptPath = join(
       tmpHome,
-      '.orca',
+      '.korca',
       'agent-hooks',
       process.platform === 'win32' ? 'codex-hook.cmd' : 'codex-hook.sh'
     )
@@ -852,12 +852,12 @@ describe('CodexHookService', () => {
     writeFileSync(
       profilePath,
       [
-        '# BEGIN ORCA AGENT STATUS HOOKS',
+        '# BEGIN KORCA AGENT STATUS HOOKS',
         '[[hooks.PermissionRequest]]',
         '[[hooks.PermissionRequest.hooks]]',
         'type = "command"',
         'command = "codex-hook"',
-        '# END ORCA AGENT STATUS HOOKS',
+        '# END KORCA AGENT STATUS HOOKS',
         ''
       ].join('\n'),
       'utf-8'
@@ -879,10 +879,10 @@ describe('CodexHookService', () => {
     const systemCodexHome = join(tmpHome, '.codex')
     const systemHooksPath = join(systemCodexHome, 'hooks.json')
     const systemTomlPath = join(systemCodexHome, 'config.toml')
-    const legacyProfilePath = join(systemCodexHome, 'orca-agent-status.config.toml')
+    const legacyProfilePath = join(systemCodexHome, 'korca-agent-status.config.toml')
     const legacyScriptPath = join(
       tmpHome,
-      '.orca',
+      '.korca',
       'agent-hooks',
       process.platform === 'win32' ? 'codex-hook.cmd' : 'codex-hook.sh'
     )
@@ -933,12 +933,12 @@ describe('CodexHookService', () => {
     writeFileSync(
       legacyProfilePath,
       [
-        '# BEGIN ORCA AGENT STATUS HOOKS',
+        '# BEGIN KORCA AGENT STATUS HOOKS',
         '[[hooks.PermissionRequest]]',
         '[[hooks.PermissionRequest.hooks]]',
         'type = "command"',
         'command = "codex-hook"',
-        '# END ORCA AGENT STATUS HOOKS',
+        '# END KORCA AGENT STATUS HOOKS',
         ''
       ].join('\n'),
       'utf-8'
@@ -981,7 +981,7 @@ describe('CodexHookService', () => {
   it('removes managed trust entries when userData resolves through a symlink', () => {
     const linkedUserDataDir = join(tmpHome, 'linked-user-data')
     symlinkSync(userDataDir, linkedUserDataDir, process.platform === 'win32' ? 'junction' : 'dir')
-    process.env.ORCA_USER_DATA_PATH = linkedUserDataDir
+    process.env.KORCA_USER_DATA_PATH = linkedUserDataDir
 
     const service = new CodexHookService()
     expect(service.install().state).toBe('installed')

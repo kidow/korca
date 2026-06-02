@@ -47,26 +47,26 @@ describe('issue source operations', () => {
   })
 
   it('gets a single issue from the issue owner/repo', async () => {
-    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockResolvedValueOnce({
       stdout: JSON.stringify({
         number: 923,
         title: 'Use upstream issues',
         state: 'open',
-        html_url: 'https://github.com/stablyai/orca/issues/923',
+        html_url: 'https://github.com/stablyai/korca/issues/923',
         labels: []
       })
     })
 
     await expect(getIssue('/repo-root', 923)).resolves.toMatchObject({ number: 923 })
     expect(ghExecFileAsyncMock).toHaveBeenCalledWith(
-      ['api', '--cache', '300s', 'repos/stablyai/orca/issues/923'],
+      ['api', '--cache', '300s', 'repos/stablyai/korca/issues/923'],
       { cwd: '/repo-root' }
     )
   })
 
   it('lists issues from the issue owner/repo', async () => {
-    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockResolvedValueOnce({ stdout: '[]' })
 
     await expect(listIssues('/repo-root', 5)).resolves.toEqual({ items: [] })
@@ -76,7 +76,7 @@ describe('issue source operations', () => {
         'api',
         '--cache',
         '120s',
-        'repos/stablyai/orca/issues?per_page=5&state=open&sort=updated&direction=desc'
+        'repos/stablyai/korca/issues?per_page=5&state=open&sort=updated&direction=desc'
       ],
       { cwd: '/repo-root' }
     )
@@ -86,7 +86,7 @@ describe('issue source operations', () => {
     // Why: parent design doc §3 — a 403 on a private upstream must not
     // masquerade as "No issues". The envelope carries an error the UI can
     // render as a banner with retry, not a silent empty list.
-    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockRejectedValueOnce(
       new Error('HTTP 403: Resource not accessible by integration')
     )
@@ -98,25 +98,25 @@ describe('issue source operations', () => {
   })
 
   it('creates issues in the issue owner/repo', async () => {
-    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockResolvedValueOnce({
       stdout: JSON.stringify({
         number: 924,
-        html_url: 'https://github.com/stablyai/orca/issues/924'
+        html_url: 'https://github.com/stablyai/korca/issues/924'
       })
     })
 
     await expect(createIssue('/repo-root', 'New issue', 'Body')).resolves.toEqual({
       ok: true,
       number: 924,
-      url: 'https://github.com/stablyai/orca/issues/924'
+      url: 'https://github.com/stablyai/korca/issues/924'
     })
     expect(ghExecFileAsyncMock).toHaveBeenCalledWith(
       [
         'api',
         '-X',
         'POST',
-        'repos/stablyai/orca/issues',
+        'repos/stablyai/korca/issues',
         '--raw-field',
         'title=New issue',
         '--raw-field',
@@ -127,11 +127,11 @@ describe('issue source operations', () => {
   })
 
   it('creates issues with labels and assignees', async () => {
-    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockResolvedValueOnce({
       stdout: JSON.stringify({
         number: 925,
-        html_url: 'https://github.com/stablyai/orca/issues/925'
+        html_url: 'https://github.com/stablyai/korca/issues/925'
       })
     })
 
@@ -143,14 +143,14 @@ describe('issue source operations', () => {
     ).resolves.toEqual({
       ok: true,
       number: 925,
-      url: 'https://github.com/stablyai/orca/issues/925'
+      url: 'https://github.com/stablyai/korca/issues/925'
     })
     expect(ghExecFileAsyncMock).toHaveBeenCalledWith(
       [
         'api',
         '-X',
         'POST',
-        'repos/stablyai/orca/issues',
+        'repos/stablyai/korca/issues',
         '--raw-field',
         'title=New issue',
         '--raw-field',
@@ -167,14 +167,14 @@ describe('issue source operations', () => {
   })
 
   it('updates issue body through the REST issue endpoint', async () => {
-    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValueOnce({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockResolvedValueOnce({ stdout: '' })
 
     await expect(updateIssue('/repo-root', 924, { body: 'Updated body' })).resolves.toEqual({
       ok: true
     })
     expect(ghExecFileAsyncMock).toHaveBeenCalledWith(
-      ['api', '-X', 'PATCH', 'repos/stablyai/orca/issues/924', '--raw-field', 'body=Updated body'],
+      ['api', '-X', 'PATCH', 'repos/stablyai/korca/issues/924', '--raw-field', 'body=Updated body'],
       { cwd: '/repo-root' }
     )
   })

@@ -38,8 +38,8 @@ createRoot(rootElement).render(
     <RecoverableRenderErrorBoundary
       boundaryId="app.root"
       surface="app-root"
-      title="Orca 렌더러 오류가 발생했습니다."
-      description="앱 셸을 끝까지 렌더링하지 못했습니다. 다시 마운트해 보거나, 오류가 계속되면 Orca를 다시 실행하세요."
+      title="Korca 렌더러 오류가 발생했습니다."
+      description="앱 셸을 끝까지 렌더링하지 못했습니다. 다시 마운트해 보거나, 오류가 계속되면 Korca를 다시 실행하세요."
     >
       <App />
     </RecoverableRenderErrorBoundary>

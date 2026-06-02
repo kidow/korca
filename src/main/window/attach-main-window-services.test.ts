@@ -392,7 +392,7 @@ describe('attachMainWindowServices', () => {
     browserPermissionHandler(guestWc, 'fullscreen', cb)
     browserPermissionHandler(guestWc, 'notifications', cb)
     // Why: `media` routes through macOS TCC instead of being denied outright,
-    // so pages inside the in-app browser can use camera/mic once Orca has been
+    // so pages inside the in-app browser can use camera/mic once Korca has been
     // granted Camera/Microphone at the OS level.
     browserPermissionHandler(guestWc, 'media', cb, { mediaTypes: ['video'] })
     await vi.waitFor(() => expect(cb.mock.calls).toEqual([[true], [false], [true]]))
@@ -567,10 +567,10 @@ describe('attachMainWindowServices', () => {
     notifier.worktreesChanged('repo-1')
     notifier.reposChanged()
     notifier.activateWorktree('repo-1', 'wt-1', {
-      runnerScriptPath: '/tmp/repo/.git/orca/setup-runner.sh',
+      runnerScriptPath: '/tmp/repo/.git/korca/setup-runner.sh',
       envVars: {
-        ORCA_ROOT_PATH: '/tmp/repo',
-        ORCA_WORKTREE_PATH: '/tmp/worktrees/wt-1'
+        KORCA_ROOT_PATH: '/tmp/repo',
+        KORCA_WORKTREE_PATH: '/tmp/worktrees/wt-1'
       }
     })
 
@@ -583,10 +583,10 @@ describe('attachMainWindowServices', () => {
           repoId: 'repo-1',
           worktreeId: 'wt-1',
           setup: {
-            runnerScriptPath: '/tmp/repo/.git/orca/setup-runner.sh',
+            runnerScriptPath: '/tmp/repo/.git/korca/setup-runner.sh',
             envVars: {
-              ORCA_ROOT_PATH: '/tmp/repo',
-              ORCA_WORKTREE_PATH: '/tmp/worktrees/wt-1'
+              KORCA_ROOT_PATH: '/tmp/repo',
+              KORCA_WORKTREE_PATH: '/tmp/worktrees/wt-1'
             }
           }
         }

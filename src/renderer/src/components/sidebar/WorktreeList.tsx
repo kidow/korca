@@ -294,7 +294,7 @@ function getWorktreeVisibilityMenuLabel(repo: Repo): string {
     repo,
     isLegacyRepoForExternalWorktreeVisibility(repo)
   )
-  return visibility === 'show' ? 'Hide non-Orca worktrees' : 'Show hidden worktrees'
+  return visibility === 'show' ? 'Hide non-Korca worktrees' : 'Show hidden worktrees'
 }
 
 const LINEAGE_INDENT = 18

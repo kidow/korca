@@ -7,10 +7,10 @@ import {
 import { usePrefersReducedMotion } from '@/components/feature-wall/feature-wall-modal-helpers'
 
 const CLI_AGENT_COMMANDS = [
-  'orca worktree create --name auth-pr-1',
-  'orca worktree create --name auth-pr-2',
-  'orca orchestration dispatch --task pr1 --to w1',
-  'orca orchestration dispatch --task pr2 --to w2'
+  'korca worktree create --name auth-pr-1',
+  'korca worktree create --name auth-pr-2',
+  'korca orchestration dispatch --task pr1 --to w1',
+  'korca orchestration dispatch --task pr2 --to w2'
 ]
 
 export function CliFeatureTipVisual(): JSX.Element {

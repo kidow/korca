@@ -53,12 +53,12 @@ function span(overrides: Partial<RedactableSpan> = {}): RedactableSpan {
 }
 
 describe('otlp-exporter — env gating', () => {
-  it('returns null when ORCA_OTLP_TRACES_URL is unset', () => {
-    const before = process.env.ORCA_OTLP_TRACES_URL
-    delete process.env.ORCA_OTLP_TRACES_URL
+  it('returns null when KORCA_OTLP_TRACES_URL is unset', () => {
+    const before = process.env.KORCA_OTLP_TRACES_URL
+    delete process.env.KORCA_OTLP_TRACES_URL
     expect(createOtlpExporterFromEnv()).toBeNull()
     if (before !== undefined) {
-      process.env.ORCA_OTLP_TRACES_URL = before
+      process.env.KORCA_OTLP_TRACES_URL = before
     }
   })
 })
@@ -81,7 +81,7 @@ describe('otlp-exporter — flushing', () => {
     })
     const exporter = createOtlpExporter({
       tracesUrl: `${baseUrl}/v1/traces`,
-      serviceName: 'orca-test',
+      serviceName: 'korca-test',
       timeoutMs: 1_000
     })
 
@@ -118,7 +118,7 @@ describe('otlp-exporter — flushing', () => {
     })
     const exporter = createOtlpExporter({
       tracesUrl: `${baseUrl}/v1/traces`,
-      serviceName: 'orca-test',
+      serviceName: 'korca-test',
       timeoutMs: 1_000,
       maxQueueSpans: 4
     })
@@ -174,11 +174,11 @@ describe('otlp-exporter — span kind mapping', () => {
 
 describe('otlp-exporter — payload encoding', () => {
   it('builds a valid OTLP payload skeleton with service.name', () => {
-    const out = encodeOtlpPayload('orca-test', [span()])
+    const out = encodeOtlpPayload('korca-test', [span()])
     expect(out.resourceSpans).toHaveLength(1)
     expect(out.resourceSpans[0].resource.attributes).toContainEqual({
       key: 'service.name',
-      value: { stringValue: 'orca-test' }
+      value: { stringValue: 'korca-test' }
     })
     expect(out.resourceSpans[0].scopeSpans[0].spans).toHaveLength(1)
   })

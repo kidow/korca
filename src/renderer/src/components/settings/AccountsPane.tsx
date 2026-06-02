@@ -509,7 +509,7 @@ export function AccountsPane({
             Claude
           </h3>
           <p className="text-xs text-muted-foreground">
-            Optional. Orca can use your normal Claude login; add accounts only if you want quick
+            Optional. Korca can use your normal Claude login; add accounts only if you want quick
             switching without moving chat sessions.
           </p>
         </div>
@@ -590,7 +590,7 @@ export function AccountsPane({
             </button>
             {visibleClaudeAccounts.length === 0 ? (
               <div className="rounded-md border border-dashed border-border/70 px-3 py-4 text-xs text-muted-foreground">
-                No managed Claude accounts for {accountRuntime.label}. Orca will use that
+                No managed Claude accounts for {accountRuntime.label}. Korca will use that
                 environment&apos;s system default Claude login until you add one here.
               </div>
             ) : (
@@ -697,18 +697,18 @@ export function AccountsPane({
             Codex
           </h3>
           <p className="text-xs text-muted-foreground">
-            Optional. Orca can use your normal Codex login; add accounts only if you want quick
-            switching in Orca.
+            Optional. Korca can use your normal Codex login; add accounts only if you want quick
+            switching in Korca.
           </p>
           <p className="text-xs text-muted-foreground">
-            Each account keeps its own local sign-in context in Orca. Account auth stays on this
+            Each account keeps its own local sign-in context in Korca. Account auth stays on this
             device.
           </p>
         </div>
 
         <SearchableSetting
           title="Codex Accounts"
-          description="Manage which Codex account Orca uses for live rate limit fetching."
+          description="Manage which Codex account Korca uses for live rate limit fetching."
           // Why: this single SearchableSetting backs the whole Codex section,
           // including the "Active Codex Account" sub-control (account picker
           // below). Roll every Codex search entry's title/description/keywords
@@ -821,7 +821,7 @@ export function AccountsPane({
             </button>
             {visibleCodexAccounts.length === 0 ? (
               <div className="rounded-md border border-dashed border-border/70 px-3 py-4 text-xs text-muted-foreground">
-                No managed Codex accounts for {accountRuntime.label}. Orca will use that
+                No managed Codex accounts for {accountRuntime.label}. Korca will use that
                 environment&apos;s system default Codex login until you add one here.
               </div>
             ) : (
@@ -973,7 +973,7 @@ export function AccountsPane({
 
         <SearchableSetting
           title="Use Gemini CLI credentials"
-          description="Extracts OAuth credentials from your local Gemini CLI installation to authenticate with Google. This uses credentials issued to the Gemini CLI app, not Orca. May break if Google updates the CLI. Use at your own risk."
+          description="Extracts OAuth credentials from your local Gemini CLI installation to authenticate with Google. This uses credentials issued to the Gemini CLI app, not Korca. May break if Google updates the CLI. Use at your own risk."
           keywords={[
             'gemini',
             'cli',
@@ -990,7 +990,7 @@ export function AccountsPane({
             <p className="text-xs text-muted-foreground">
               Extracts OAuth credentials from your local Gemini CLI installation to authenticate
               with Google for {accountRuntime.label}. This uses credentials issued to the Gemini CLI
-              app, not Orca. May break if Google updates the CLI. Use at your own risk.
+              app, not Korca. May break if Google updates the CLI. Use at your own risk.
             </p>
           </div>
           <button
@@ -1118,8 +1118,8 @@ export function AccountsPane({
           <DialogHeader>
             <DialogTitle>Remove Codex Account?</DialogTitle>
             <DialogDescription>
-              Orca will delete the managed Codex home for this saved account. If it is currently
-              active, Orca falls back to the system default Codex login.
+              Korca will delete the managed Codex home for this saved account. If it is currently
+              active, Korca falls back to the system default Codex login.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1152,8 +1152,8 @@ export function AccountsPane({
           <DialogHeader>
             <DialogTitle>Remove Claude Account?</DialogTitle>
             <DialogDescription>
-              Orca will delete the managed Claude auth for this saved account. If it is currently
-              active, Orca falls back to the system default Claude login.
+              Korca will delete the managed Claude auth for this saved account. If it is currently
+              active, Korca falls back to the system default Claude login.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

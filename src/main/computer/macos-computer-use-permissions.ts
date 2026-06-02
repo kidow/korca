@@ -18,7 +18,7 @@ import type {
   ComputerUsePermissionStatusResult
 } from '../../shared/computer-use-permissions-types'
 
-const DEFAULT_COMPUTER_USE_BUNDLE_ID = 'com.stablyai.orca.computer-use'
+const DEFAULT_COMPUTER_USE_BUNDLE_ID = 'com.stablyai.korca.computer-use'
 const PERMISSION_STATUS_HELPER_LAUNCH_TIMEOUT_MS = 5_000
 
 export function openComputerUsePermissions(
@@ -47,7 +47,7 @@ async function openComputerUsePermissionsAsync(
 
   const helperAppPath = resolveMacOSComputerUseAppPath()
   if (!helperAppPath) {
-    throw new RuntimeClientError('accessibility_error', 'Orca Computer Use.app was not found')
+    throw new RuntimeClientError('accessibility_error', 'Korca Computer Use.app was not found')
   }
   const status = await getComputerUsePermissionStatus()
   if (status.helperUnavailableReason) {
@@ -106,7 +106,7 @@ async function resetComputerUsePermissionsAsync(): Promise<ComputerUsePermission
 
   const helperAppPath = resolveMacOSComputerUseAppPath()
   if (!helperAppPath) {
-    throw new RuntimeClientError('accessibility_error', 'Orca Computer Use.app was not found')
+    throw new RuntimeClientError('accessibility_error', 'Korca Computer Use.app was not found')
   }
 
   const status = await getComputerUsePermissionStatus()
@@ -129,8 +129,8 @@ function closeExistingPermissionHelpers(): void {
   // Why: status probes use --permission-status-file and must not be killed
   // while setup helpers are being replaced.
   const setupHelperPatterns = [
-    'orca-computer-use-macos[[:space:]]+--permission([[:space:]]|$)',
-    'orca-computer-use-macos[[:space:]]+--permissions([[:space:]]|$)'
+    'korca-computer-use-macos[[:space:]]+--permission([[:space:]]|$)',
+    'korca-computer-use-macos[[:space:]]+--permissions([[:space:]]|$)'
   ]
   for (const pattern of setupHelperPatterns) {
     spawnSync('/usr/bin/pkill', ['-f', pattern], {
@@ -158,13 +158,13 @@ async function getComputerUsePermissionStatusAsync(): Promise<ComputerUsePermiss
 
   const helperAppPath = resolveMacOSComputerUseAppPath()
   if (!helperAppPath) {
-    return createUnavailablePermissionStatus('Orca Computer Use.app was not found', null)
+    return createUnavailablePermissionStatus('Korca Computer Use.app was not found', null)
   }
 
   const executablePath = resolveMacOSComputerUseExecutablePath()
   if (!executablePath) {
     return createUnavailablePermissionStatus(
-      `${helperAppPath}/Contents/MacOS/orca-computer-use-macos was not found`,
+      `${helperAppPath}/Contents/MacOS/korca-computer-use-macos was not found`,
       helperAppPath
     )
   }
@@ -200,7 +200,7 @@ function createUnavailablePermissionStatus(
 async function readPermissionStatusFromHelperApp(
   helperAppPath: string
 ): Promise<Partial<Record<ComputerUsePermissionId, ComputerUsePermissionStatus>>> {
-  const tempDir = await mkdtemp(join(tmpdir(), 'orca-computer-use-permissions-'))
+  const tempDir = await mkdtemp(join(tmpdir(), 'korca-computer-use-permissions-'))
   const statusPath = join(tempDir, 'status.json')
   try {
     // Why: TCC status must be checked through the helper app identity. Directly
@@ -355,5 +355,5 @@ function nextPermissionStep(
   if (!missing) {
     return null
   }
-  return `Grant ${missing.id === 'accessibility' ? 'Accessibility' : 'Screen Recording'} to Orca Computer Use, then retry get-app-state.`
+  return `Grant ${missing.id === 'accessibility' ? 'Accessibility' : 'Screen Recording'} to Korca Computer Use, then retry get-app-state.`
 }

@@ -96,7 +96,7 @@ import type {
   NotificationPermissionStatusResult,
   NotificationSoundResult,
   OnboardingState,
-  OrcaHooks,
+  KorcaHooks,
   PathSource,
   PersistedUIState,
   PRCheckDetail,
@@ -360,7 +360,7 @@ export type BrowserApi = {
   onPaneFocus: (
     callback: (data: { worktreeId: string | null; browserPageId: string }) => void
   ) => () => void
-  onOpenLinkInOrcaTab: (
+  onOpenLinkInKorcaTab: (
     callback: (event: { browserPageId: string; url: string }) => void
   ) => () => void
   acceptDownload: (args: {
@@ -513,8 +513,8 @@ export type DiagnosticsStatusPayload = {
   readonly traceFamilySize: number
   readonly disabledReason?:
     | 'do_not_track'
-    | 'orca_telemetry_disabled'
-    | 'orca_diagnostics_disabled'
+    | 'korca_telemetry_disabled'
+    | 'korca_diagnostics_disabled'
     | 'ci'
 }
 export type DiagnosticsBundlePayload = {
@@ -612,7 +612,7 @@ export type AppApi = {
    *  by settings panes that need a full restart to apply changes (e.g. the
    *  terminal-window blur setting in TerminalWindowSection). */
   relaunch: () => Promise<void>
-  /** Restarts Orca through the normal quit pipeline so daemon-backed terminal
+  /** Restarts Korca through the normal quit pipeline so daemon-backed terminal
    *  sessions survive and can reattach after the new process starts. */
   restart: () => Promise<void>
   /** Reloads the current app renderer through main so expected renderer
@@ -628,7 +628,7 @@ export type AppApi = {
   setUnreadDockBadgeCount: (count: number) => Promise<void>
   /** Resolves the launch directory for global Floating Terminal tabs. */
   getFloatingTerminalCwd: (args?: FloatingTerminalCwdRequest) => Promise<string>
-  /** Resolves Orca's app-owned directory for auto-created Floating Workspace
+  /** Resolves Korca's app-owned directory for auto-created Floating Workspace
    *  markdown notes. */
   getFloatingMarkdownDirectory: () => Promise<string>
   /** Opens a native picker for markdown documents, rooted in the floating
@@ -1126,8 +1126,8 @@ export type PreloadApi = {
         number: number
       }) => void
     ) => () => void
-    checkOrcaStarred: () => Promise<boolean | null>
-    starOrca: (source: AppStarSource) => Promise<boolean>
+    checkKorcaStarred: () => Promise<boolean | null>
+    starKorca: (source: AppStarSource) => Promise<boolean>
     /**
      * GitHub API rate-limit snapshot. Does NOT consume quota (the
      * `rate_limit` endpoint is exempt). Cached 30s server-side — pass
@@ -1570,7 +1570,7 @@ export type PreloadApi = {
     check: (args: { repoId: string }) => Promise<{
       status?: 'ok' | 'error'
       hasHooks: boolean
-      hooks: OrcaHooks | null
+      hooks: KorcaHooks | null
       mayNeedUpdate: boolean
     }>
     inspectSetupScriptImports: (args: { repoId: string }) => Promise<SetupScriptImportCandidate[]>

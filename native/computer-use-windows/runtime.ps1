@@ -18,7 +18,7 @@ Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 
-public static class OrcaDesktopWin32 {
+public static class KorcaDesktopWin32 {
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT {
         public int Left;
@@ -99,32 +99,32 @@ $MouseEvents = @{
     Wheel = 0x0800
 }
 
-function Write-OrcaJson($Payload) {
+function Write-KorcaJson($Payload) {
     $Payload | ConvertTo-Json -Depth 100 -Compress
 }
 
-function New-OrcaFrame([double]$X, [double]$Y, [double]$Width, [double]$Height) {
+function New-KorcaFrame([double]$X, [double]$Y, [double]$Width, [double]$Height) {
     if ($Width -le 0 -or $Height -le 0) { return $null }
     [pscustomobject]@{ x = $X; y = $Y; width = $Width; height = $Height }
 }
 
-function Read-OrcaOperation([string]$Path) {
+function Read-KorcaOperation([string]$Path) {
     Get-Content -Raw -Encoding UTF8 -Path $Path | ConvertFrom-Json
 }
 
-function ConvertTo-OrcaLParam([int]$X, [int]$Y) {
+function ConvertTo-KorcaLParam([int]$X, [int]$Y) {
     [IntPtr]((($Y -band 0xffff) -shl 16) -bor ($X -band 0xffff))
 }
 
-function ConvertTo-OrcaWheelParam([int]$Delta) {
+function ConvertTo-KorcaWheelParam([int]$Delta) {
     [IntPtr](($Delta -band 0xffff) -shl 16)
 }
 
-function Get-OrcaWindowProcesses {
+function Get-KorcaWindowProcesses {
     @(Get-Process | Where-Object { $_.MainWindowHandle -ne 0 } | Sort-Object ProcessName, Id)
 }
 
-function Find-OrcaProcess([string]$Query) {
+function Find-KorcaProcess([string]$Query) {
     $needle = ""
     if ($null -ne $Query) { $needle = $Query.Trim() }
     if ([string]::IsNullOrWhiteSpace($needle)) { throw 'appNotFound("")' }
@@ -133,11 +133,11 @@ function Find-OrcaProcess([string]$Query) {
     }
 
     $parsedProcessId = 0
-    $processes = Get-OrcaWindowProcesses
+    $processes = Get-KorcaWindowProcesses
     if ([int]::TryParse($needle, [ref]$parsedProcessId)) {
         $match = $processes | Where-Object { $_.Id -eq $parsedProcessId } | Select-Object -First 1
         if ($null -ne $match) {
-            Assert-OrcaProcessAllowed $match
+            Assert-KorcaProcessAllowed $match
             return $match
         }
     }
@@ -154,14 +154,14 @@ function Find-OrcaProcess([string]$Query) {
         $_.MainWindowTitle -ilike "*$needle*"
     } | Select-Object -First 1
     if ($null -ne $match) {
-        Assert-OrcaProcessAllowed $match
+        Assert-KorcaProcessAllowed $match
         return $match
     }
 
     throw "appNotFound(`"$Query`")"
 }
 
-function Assert-OrcaProcessAllowed($Process) {
+function Assert-KorcaProcessAllowed($Process) {
     $values = @($Process.ProcessName, $Process.MainWindowTitle) | ForEach-Object { ([string]$_).ToLowerInvariant() }
     foreach ($fragment in $BlockedAppFragments) {
         foreach ($value in $values) {
@@ -172,91 +172,91 @@ function Assert-OrcaProcessAllowed($Process) {
     }
 }
 
-function Get-OrcaRootElement($Process) {
+function Get-KorcaRootElement($Process) {
     if ($Process.MainWindowHandle -eq 0) {
         throw "No top-level UI Automation window is available for $($Process.ProcessName)."
     }
     [Windows.Automation.AutomationElement]::FromHandle([IntPtr]$Process.MainWindowHandle)
 }
 
-function Get-OrcaWindowFrame($Process, $RootElement) {
-    $rect = New-Object OrcaDesktopWin32+RECT
-    if ([OrcaDesktopWin32]::GetWindowRect([IntPtr]$Process.MainWindowHandle, [ref]$rect)) {
-        return New-OrcaFrame $rect.Left $rect.Top ($rect.Right - $rect.Left) ($rect.Bottom - $rect.Top)
+function Get-KorcaWindowFrame($Process, $RootElement) {
+    $rect = New-Object KorcaDesktopWin32+RECT
+    if ([KorcaDesktopWin32]::GetWindowRect([IntPtr]$Process.MainWindowHandle, [ref]$rect)) {
+        return New-KorcaFrame $rect.Left $rect.Top ($rect.Right - $rect.Left) ($rect.Bottom - $rect.Top)
     }
 
     try {
         $bounds = $RootElement.Current.BoundingRectangle
         if (-not $bounds.IsEmpty) {
-            return New-OrcaFrame $bounds.X $bounds.Y $bounds.Width $bounds.Height
+            return New-KorcaFrame $bounds.X $bounds.Y $bounds.Width $bounds.Height
         }
     } catch {}
     $null
 }
 
-function Get-OrcaWindowId($Process) {
+function Get-KorcaWindowId($Process) {
     [int64]$Process.MainWindowHandle
 }
 
-function Get-OrcaAppName($Process) {
+function Get-KorcaAppName($Process) {
     if ($Process.ProcessName -eq "ApplicationFrameHost" -and -not [string]::IsNullOrWhiteSpace($Process.MainWindowTitle)) {
         return [string]$Process.MainWindowTitle
     }
     [string]$Process.ProcessName
 }
 
-function New-OrcaAppRecord($Process) {
+function New-KorcaAppRecord($Process) {
     [pscustomobject]@{
-        name = Get-OrcaAppName $Process
+        name = Get-KorcaAppName $Process
         bundleIdentifier = $Process.ProcessName
         bundleId = $Process.ProcessName
         pid = [int]$Process.Id
     }
 }
 
-function Assert-OrcaWindowTarget($Process, $WindowId, $WindowIndex) {
+function Assert-KorcaWindowTarget($Process, $WindowId, $WindowIndex) {
     if ($null -ne $WindowIndex -and [int]$WindowIndex -ne 0) {
         throw "windowNotFound(`"$WindowIndex`")"
     }
-    if ($null -ne $WindowId -and [int64]$WindowId -ne (Get-OrcaWindowId $Process)) {
+    if ($null -ne $WindowId -and [int64]$WindowId -ne (Get-KorcaWindowId $Process)) {
         throw "windowNotFound(`"$WindowId`")"
     }
 }
 
-function Restore-OrcaWindow($Process) {
+function Restore-KorcaWindow($Process) {
     if ($Process.MainWindowHandle -eq 0) { return }
-    [void][OrcaDesktopWin32]::ShowWindow([IntPtr]$Process.MainWindowHandle, 9)
-    [void][OrcaDesktopWin32]::SetForegroundWindow([IntPtr]$Process.MainWindowHandle)
+    [void][KorcaDesktopWin32]::ShowWindow([IntPtr]$Process.MainWindowHandle, 9)
+    [void][KorcaDesktopWin32]::SetForegroundWindow([IntPtr]$Process.MainWindowHandle)
 }
 
-function Assert-OrcaKeyboardFocus([IntPtr]$WindowHandle, $Operation) {
+function Assert-KorcaKeyboardFocus([IntPtr]$WindowHandle, $Operation) {
     if ([bool]$Operation.restoreWindow) { return }
-    if ([OrcaDesktopWin32]::GetForegroundWindow() -eq $WindowHandle) { return }
+    if ([KorcaDesktopWin32]::GetForegroundWindow() -eq $WindowHandle) { return }
     throw "window_not_focused: keyboard input requires the target window to be focused; retry with --restore-window"
 }
 
-function Get-OrcaElementFrame($Element, $WindowFrame) {
+function Get-KorcaElementFrame($Element, $WindowFrame) {
     try {
         $bounds = $Element.Current.BoundingRectangle
         if ($bounds.IsEmpty) { return $null }
         if ($null -eq $WindowFrame) {
-            return New-OrcaFrame $bounds.X $bounds.Y $bounds.Width $bounds.Height
+            return New-KorcaFrame $bounds.X $bounds.Y $bounds.Width $bounds.Height
         }
-        New-OrcaFrame ($bounds.X - $WindowFrame.x) ($bounds.Y - $WindowFrame.y) $bounds.Width $bounds.Height
+        New-KorcaFrame ($bounds.X - $WindowFrame.x) ($bounds.Y - $WindowFrame.y) $bounds.Width $bounds.Height
     } catch {
         $null
     }
 }
 
-function Get-OrcaProperty($Element, [string]$Name) {
+function Get-KorcaProperty($Element, [string]$Name) {
     try { [string]$Element.Current.$Name } catch { "" }
 }
 
-function Get-OrcaRuntimeId($Element) {
+function Get-KorcaRuntimeId($Element) {
     try { @($Element.GetRuntimeId()) } catch { @() }
 }
 
-function Get-OrcaValueText($Element) {
+function Get-KorcaValueText($Element) {
     try {
         if ($Element.Current.IsPassword) { return "[redacted]" }
         $pattern = $Element.GetCurrentPattern([Windows.Automation.ValuePattern]::Pattern)
@@ -269,7 +269,7 @@ function Get-OrcaValueText($Element) {
     }
 }
 
-function Get-OrcaActions($Element) {
+function Get-KorcaActions($Element) {
     $actions = New-Object System.Collections.Generic.List[string]
     foreach ($pattern in $Element.GetSupportedPatterns()) {
         $name = [string]$pattern.ProgrammaticName
@@ -282,18 +282,18 @@ function Get-OrcaActions($Element) {
     @($actions | Select-Object -Unique)
 }
 
-function Get-OrcaMeaningfulActions($Actions) {
+function Get-KorcaMeaningfulActions($Actions) {
     $noisy = @("Invoke", "ScrollToVisible", "ShowMenu")
     @($Actions | Where-Object { $noisy -notcontains $_ })
 }
 
-function Format-OrcaSnapshotText([string]$Text) {
+function Format-KorcaSnapshotText([string]$Text) {
     if ([string]::IsNullOrWhiteSpace($Text)) { return "" }
     (($Text -replace "\s+", " ").Trim())
 }
 
-function Format-OrcaValueSegment([string]$RoleKey, [string]$Title, [string]$Value) {
-    $clean = Format-OrcaSnapshotText $Value
+function Format-KorcaValueSegment([string]$RoleKey, [string]$Title, [string]$Value) {
+    $clean = Format-KorcaSnapshotText $Value
     if ([string]::IsNullOrWhiteSpace($clean) -or $clean -eq $Title) { return "" }
     if ($RoleKey -eq "heading" -and $clean -match "^\d+$") { return "" }
     if ($RoleKey -in @("text", "edit", "document", "scroll bar", "progress bar")) {
@@ -302,8 +302,8 @@ function Format-OrcaValueSegment([string]$RoleKey, [string]$Title, [string]$Valu
     ", Value: $clean"
 }
 
-function Test-OrcaSuppressChildren([string]$RoleKey, [string]$Title, [string]$Value, [string]$Summary) {
-    $hasCompactLabel = -not [string]::IsNullOrWhiteSpace($Title) -or -not [string]::IsNullOrWhiteSpace((Format-OrcaSnapshotText $Value)) -or -not [string]::IsNullOrWhiteSpace((Format-OrcaSnapshotText $Summary))
+function Test-KorcaSuppressChildren([string]$RoleKey, [string]$Title, [string]$Value, [string]$Summary) {
+    $hasCompactLabel = -not [string]::IsNullOrWhiteSpace($Title) -or -not [string]::IsNullOrWhiteSpace((Format-KorcaSnapshotText $Value)) -or -not [string]::IsNullOrWhiteSpace((Format-KorcaSnapshotText $Summary))
     $hasCompactLabel -and $RoleKey -in @(
         "button",
         "check box",
@@ -317,15 +317,15 @@ function Test-OrcaSuppressChildren([string]$RoleKey, [string]$Title, [string]$Va
     )
 }
 
-function Get-OrcaTextSnippets($Element, [int]$Limit = 6, [int]$MaxDepth = 3) {
+function Get-KorcaTextSnippets($Element, [int]$Limit = 6, [int]$MaxDepth = 3) {
     $values = New-Object System.Collections.Generic.List[string]
     $seen = New-Object System.Collections.Generic.HashSet[string]
 
-    function Visit-OrcaText($Node, [int]$Depth) {
+    function Visit-KorcaText($Node, [int]$Depth) {
         if ($values.Count -ge $Limit -or $Depth -gt $MaxDepth) { return }
         $role = try { [string]$Node.Current.LocalizedControlType } catch { "" }
         if ($role -match "text|link|label") {
-            foreach ($raw in @((Get-OrcaProperty $Node "Name"), (Get-OrcaValueText $Node))) {
+            foreach ($raw in @((Get-KorcaProperty $Node "Name"), (Get-KorcaValueText $Node))) {
                 $value = (($raw -replace "\s+", " ").Trim())
                 if (-not [string]::IsNullOrWhiteSpace($value) -and $seen.Add($value)) {
                     if ($value.Length -gt 80) { $value = $value.Substring(0, 80) + "..." }
@@ -337,58 +337,58 @@ function Get-OrcaTextSnippets($Element, [int]$Limit = 6, [int]$MaxDepth = 3) {
         try {
             $children = $Node.FindAll([Windows.Automation.TreeScope]::Children, [Windows.Automation.Condition]::TrueCondition)
             for ($i = 0; $i -lt $children.Count; $i++) {
-                Visit-OrcaText $children.Item($i) ($Depth + 1)
+                Visit-KorcaText $children.Item($i) ($Depth + 1)
                 if ($values.Count -ge $Limit) { return }
             }
         } catch {}
     }
 
-    Visit-OrcaText $Element 0
+    Visit-KorcaText $Element 0
     @($values.ToArray())
 }
 
-function Test-OrcaPlainTextSubtree($Element, [int]$MaxDepth = 4) {
-    $script:sawOrcaText = $false
+function Test-KorcaPlainTextSubtree($Element, [int]$MaxDepth = 4) {
+    $script:sawKorcaText = $false
     $allowed = @("pane", "group", "custom", "unknown", "text", "link", "image")
 
-    function Visit-OrcaPlainText($Node, [int]$Depth) {
+    function Visit-KorcaPlainText($Node, [int]$Depth) {
         if ($Depth -gt $MaxDepth) { return $false }
         $role = try { [string]$Node.Current.LocalizedControlType } catch { "" }
         $roleKey = $role.ToLowerInvariant()
         if ($allowed -notcontains $roleKey) { return $false }
-        if ($roleKey -match "text|link") { $script:sawOrcaText = $true }
-        if (@(Get-OrcaMeaningfulActions @(Get-OrcaActions $Node)).Count -gt 0) { return $false }
+        if ($roleKey -match "text|link") { $script:sawKorcaText = $true }
+        if (@(Get-KorcaMeaningfulActions @(Get-KorcaActions $Node)).Count -gt 0) { return $false }
         try {
             $children = $Node.FindAll([Windows.Automation.TreeScope]::Children, [Windows.Automation.Condition]::TrueCondition)
             for ($i = 0; $i -lt $children.Count; $i++) {
-                if (-not (Visit-OrcaPlainText $children.Item($i) ($Depth + 1))) { return $false }
+                if (-not (Visit-KorcaPlainText $children.Item($i) ($Depth + 1))) { return $false }
             }
         } catch {}
         return $true
     }
 
-    (Visit-OrcaPlainText $Element 0) -and $script:sawOrcaText
+    (Visit-KorcaPlainText $Element 0) -and $script:sawKorcaText
 }
 
-function New-OrcaElementRecord($Element, [int]$Index, $WindowFrame) {
+function New-KorcaElementRecord($Element, [int]$Index, $WindowFrame) {
     $controlType = try { [string]$Element.Current.ControlType.ProgrammaticName } catch { "" }
     $nativeWindowHandle = try { [int64]$Element.Current.NativeWindowHandle } catch { 0 }
     [pscustomobject]@{
         index = $Index
-        runtimeId = @(Get-OrcaRuntimeId $Element)
-        automationId = Get-OrcaProperty $Element "AutomationId"
-        name = Get-OrcaProperty $Element "Name"
+        runtimeId = @(Get-KorcaRuntimeId $Element)
+        automationId = Get-KorcaProperty $Element "AutomationId"
+        name = Get-KorcaProperty $Element "Name"
         controlType = $controlType
-        localizedControlType = Get-OrcaProperty $Element "LocalizedControlType"
-        className = Get-OrcaProperty $Element "ClassName"
-        value = Get-OrcaValueText $Element
+        localizedControlType = Get-KorcaProperty $Element "LocalizedControlType"
+        className = Get-KorcaProperty $Element "ClassName"
+        value = Get-KorcaValueText $Element
         nativeWindowHandle = $nativeWindowHandle
-        frame = Get-OrcaElementFrame $Element $WindowFrame
-        actions = @(Get-OrcaActions $Element)
+        frame = Get-KorcaElementFrame $Element $WindowFrame
+        actions = @(Get-KorcaActions $Element)
     }
 }
 
-function Render-OrcaTree($RootElement, $WindowFrame) {
+function Render-KorcaTree($RootElement, $WindowFrame) {
     $records = New-Object System.Collections.Generic.List[object]
     $lines = New-Object System.Collections.Generic.List[string]
     $seen = New-Object System.Collections.Generic.HashSet[string]
@@ -399,7 +399,7 @@ function Render-OrcaTree($RootElement, $WindowFrame) {
         maxDepthReached = $false
     }
 
-    function Visit-OrcaNode($Node, [int]$Depth) {
+    function Visit-KorcaNode($Node, [int]$Depth) {
         if ($records.Count -ge $MaxNodes -or $Depth -gt $MaxDepth) {
             $truncation.truncated = $true
             if ($Depth -gt $MaxDepth) { $truncation.maxDepthReached = $true }
@@ -408,37 +408,37 @@ function Render-OrcaTree($RootElement, $WindowFrame) {
         $identity = try { (@($Node.GetRuntimeId()) -join ".") } catch { [Guid]::NewGuid().ToString() }
         if (-not $seen.Add($identity)) { return }
 
-        $record = New-OrcaElementRecord $Node $records.Count $WindowFrame
+        $record = New-KorcaElementRecord $Node $records.Count $WindowFrame
         $children = @()
         try {
             $children = @($Node.FindAll([Windows.Automation.TreeScope]::Children, [Windows.Automation.Condition]::TrueCondition))
         } catch {}
-        $meaningfulActions = @(Get-OrcaMeaningfulActions $record.actions)
+        $meaningfulActions = @(Get-KorcaMeaningfulActions $record.actions)
         $title = if ([string]::IsNullOrWhiteSpace($record.name)) { $record.automationId } else { $record.name }
         $role = if ([string]::IsNullOrWhiteSpace($record.localizedControlType)) { $record.controlType } else { $record.localizedControlType }
         $roleKey = $role.ToLowerInvariant()
-        $snippets = @(Get-OrcaTextSnippets $Node 8 4)
+        $snippets = @(Get-KorcaTextSnippets $Node 8 4)
         $genericSummary = $null
-        if (($roleKey -in @("pane", "group", "custom", "unknown")) -and [string]::IsNullOrWhiteSpace($title) -and [string]::IsNullOrWhiteSpace($record.value) -and $snippets.Count -ge 2 -and (Test-OrcaPlainTextSubtree $Node)) {
+        if (($roleKey -in @("pane", "group", "custom", "unknown")) -and [string]::IsNullOrWhiteSpace($title) -and [string]::IsNullOrWhiteSpace($record.value) -and $snippets.Count -ge 2 -and (Test-KorcaPlainTextSubtree $Node)) {
             $genericSummary = ($snippets -join " ")
         }
         if (($roleKey -in @("pane", "group", "custom", "unknown")) -and [string]::IsNullOrWhiteSpace($title) -and [string]::IsNullOrWhiteSpace($record.value) -and $meaningfulActions.Count -eq 0 -and $null -eq $genericSummary -and $children.Count -le 1) {
             for ($i = 0; $i -lt $children.Count; $i++) {
-                Visit-OrcaNode $children.Item($i) $Depth
+                Visit-KorcaNode $children.Item($i) $Depth
             }
             return
         }
 
         $records.Add($record)
 
-        $line = "$($record.index) $role $(Format-OrcaSnapshotText $title)".TrimEnd()
-        $line += Format-OrcaValueSegment $roleKey $title $record.value
+        $line = "$($record.index) $role $(Format-KorcaSnapshotText $title)".TrimEnd()
+        $line += Format-KorcaValueSegment $roleKey $title $record.value
         if (-not [string]::IsNullOrWhiteSpace($genericSummary) -and $genericSummary -ne $title) {
-            $line += ", Text: " + (Format-OrcaSnapshotText $genericSummary)
+            $line += ", Text: " + (Format-KorcaSnapshotText $genericSummary)
         } elseif ($roleKey -in @("row", "data item", "list item")) {
-            $rowSummary = @((Get-OrcaTextSnippets $Node 6 3)) -join " "
+            $rowSummary = @((Get-KorcaTextSnippets $Node 6 3)) -join " "
             if (-not [string]::IsNullOrWhiteSpace($rowSummary) -and $rowSummary -ne $title) {
-                $line += ", Text: " + (Format-OrcaSnapshotText $rowSummary)
+                $line += ", Text: " + (Format-KorcaSnapshotText $rowSummary)
             }
         }
         if ($meaningfulActions.Count -gt 0) {
@@ -446,17 +446,17 @@ function Render-OrcaTree($RootElement, $WindowFrame) {
         }
         $lines.Add(("`t" * $Depth) + $line)
 
-        if (-not [string]::IsNullOrWhiteSpace($genericSummary) -or (Test-OrcaSuppressChildren $roleKey $title $record.value $genericSummary)) { return }
+        if (-not [string]::IsNullOrWhiteSpace($genericSummary) -or (Test-KorcaSuppressChildren $roleKey $title $record.value $genericSummary)) { return }
         for ($i = 0; $i -lt $children.Count; $i++) {
-            Visit-OrcaNode $children.Item($i) ($Depth + 1)
+            Visit-KorcaNode $children.Item($i) ($Depth + 1)
         }
     }
 
-    Visit-OrcaNode $RootElement 0
+    Visit-KorcaNode $RootElement 0
     [pscustomobject]@{ elements = @($records.ToArray()); lines = @($lines.ToArray()); truncation = $truncation }
 }
 
-function ConvertTo-OrcaPngBytes([System.Drawing.Image]$Image) {
+function ConvertTo-KorcaPngBytes([System.Drawing.Image]$Image) {
     $stream = $null
     try {
         $stream = New-Object System.IO.MemoryStream
@@ -467,7 +467,7 @@ function ConvertTo-OrcaPngBytes([System.Drawing.Image]$Image) {
     }
 }
 
-function New-OrcaScreenshotPayload([byte[]]$Bytes, [int]$Width, [int]$Height, [double]$Scale) {
+function New-KorcaScreenshotPayload([byte[]]$Bytes, [int]$Width, [int]$Height, [double]$Scale) {
     [pscustomobject]@{
         base64 = [Convert]::ToBase64String($Bytes)
         width = $Width
@@ -476,7 +476,7 @@ function New-OrcaScreenshotPayload([byte[]]$Bytes, [int]$Width, [int]$Height, [d
     }
 }
 
-function Resize-OrcaBitmap([System.Drawing.Bitmap]$Source, [int]$Width, [int]$Height) {
+function Resize-KorcaBitmap([System.Drawing.Bitmap]$Source, [int]$Width, [int]$Height) {
     $resized = $null
     $graphics = $null
     try {
@@ -493,12 +493,12 @@ function Resize-OrcaBitmap([System.Drawing.Bitmap]$Source, [int]$Width, [int]$He
     }
 }
 
-function Get-OrcaBoundedScreenshotPayload([System.Drawing.Bitmap]$Bitmap) {
+function Get-KorcaBoundedScreenshotPayload([System.Drawing.Bitmap]$Bitmap) {
     $originalWidth = [int][Math]::Max(1, $Bitmap.Width)
     $originalHeight = [int][Math]::Max(1, $Bitmap.Height)
-    $pngBytes = ConvertTo-OrcaPngBytes $Bitmap
+    $pngBytes = ConvertTo-KorcaPngBytes $Bitmap
     if ($pngBytes.Length -le $MaxScreenshotPngBytes) {
-        return New-OrcaScreenshotPayload $pngBytes $originalWidth $originalHeight 1.0
+        return New-KorcaScreenshotPayload $pngBytes $originalWidth $originalHeight 1.0
     }
 
     # Why: screenshots cross process boundaries as PNG base64 in JSON; cap noisy
@@ -517,10 +517,10 @@ function Get-OrcaBoundedScreenshotPayload([System.Drawing.Bitmap]$Bitmap) {
 
         $resized = $null
         try {
-            $resized = Resize-OrcaBitmap $Bitmap $width $height
-            $candidateBytes = ConvertTo-OrcaPngBytes $resized
+            $resized = Resize-KorcaBitmap $Bitmap $width $height
+            $candidateBytes = ConvertTo-KorcaPngBytes $resized
             if ($candidateBytes.Length -le $MaxScreenshotPngBytes) {
-                return New-OrcaScreenshotPayload $candidateBytes $width $height ($width / [double]$originalWidth)
+                return New-KorcaScreenshotPayload $candidateBytes $width $height ($width / [double]$originalWidth)
             }
             if ($candidateBytes.Length -lt $bestBytes.Length) {
                 $bestBytes = $candidateBytes
@@ -534,10 +534,10 @@ function Get-OrcaBoundedScreenshotPayload([System.Drawing.Bitmap]$Bitmap) {
         $scale *= $ScreenshotScaleStep
     }
 
-    New-OrcaScreenshotPayload $bestBytes $bestWidth $bestHeight ($bestWidth / [double]$originalWidth)
+    New-KorcaScreenshotPayload $bestBytes $bestWidth $bestHeight ($bestWidth / [double]$originalWidth)
 }
 
-function Get-OrcaScreenshot([bool]$IncludeScreenshot, $WindowFrame) {
+function Get-KorcaScreenshot([bool]$IncludeScreenshot, $WindowFrame) {
     if (-not $IncludeScreenshot -or $null -eq $WindowFrame) { return $null }
     $bitmap = $null
     $graphics = $null
@@ -547,7 +547,7 @@ function Get-OrcaScreenshot([bool]$IncludeScreenshot, $WindowFrame) {
         $bitmap = New-Object System.Drawing.Bitmap $width, $height
         $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
         $graphics.CopyFromScreen([int][Math]::Round($WindowFrame.x), [int][Math]::Round($WindowFrame.y), 0, 0, $bitmap.Size)
-        Get-OrcaBoundedScreenshotPayload $bitmap
+        Get-KorcaBoundedScreenshotPayload $bitmap
     } catch {
         $null
     } finally {
@@ -556,20 +556,20 @@ function Get-OrcaScreenshot([bool]$IncludeScreenshot, $WindowFrame) {
     }
 }
 
-function New-OrcaSnapshot([string]$Query, [bool]$IncludeScreenshot, $WindowId = $null, $WindowIndex = $null, [bool]$RestoreWindow = $false) {
-    $process = Find-OrcaProcess $Query
-    if ($RestoreWindow) { Restore-OrcaWindow $process }
-    Assert-OrcaWindowTarget $process $WindowId $WindowIndex
-    $root = Get-OrcaRootElement $process
-    $windowFrame = Get-OrcaWindowFrame $process $root
-    $tree = Render-OrcaTree $root $windowFrame
-    $screenshot = Get-OrcaScreenshot $IncludeScreenshot $windowFrame
+function New-KorcaSnapshot([string]$Query, [bool]$IncludeScreenshot, $WindowId = $null, $WindowIndex = $null, [bool]$RestoreWindow = $false) {
+    $process = Find-KorcaProcess $Query
+    if ($RestoreWindow) { Restore-KorcaWindow $process }
+    Assert-KorcaWindowTarget $process $WindowId $WindowIndex
+    $root = Get-KorcaRootElement $process
+    $windowFrame = Get-KorcaWindowFrame $process $root
+    $tree = Render-KorcaTree $root $windowFrame
+    $screenshot = Get-KorcaScreenshot $IncludeScreenshot $windowFrame
 
     [pscustomobject]@{
         snapshotId = [guid]::NewGuid().ToString()
-        app = New-OrcaAppRecord $process
+        app = New-KorcaAppRecord $process
         windowTitle = $process.MainWindowTitle
-        windowId = Get-OrcaWindowId $process
+        windowId = Get-KorcaWindowId $process
         windowBounds = $windowFrame
         screenshotPngBase64 = if ($null -ne $screenshot) { $screenshot.base64 } else { $null }
         screenshotWidth = if ($null -ne $screenshot) { $screenshot.width } else { $null }
@@ -585,16 +585,16 @@ function New-OrcaSnapshot([string]$Query, [bool]$IncludeScreenshot, $WindowId = 
     }
 }
 
-function Get-OrcaAppList {
-    @(Get-OrcaWindowProcesses | ForEach-Object {
-        New-OrcaAppRecord $_
+function Get-KorcaAppList {
+    @(Get-KorcaWindowProcesses | ForEach-Object {
+        New-KorcaAppRecord $_
     })
 }
 
-function Get-OrcaWindowList([string]$Query) {
-    $process = Find-OrcaProcess $Query
-    $root = Get-OrcaRootElement $process
-    $windowFrame = Get-OrcaWindowFrame $process $root
+function Get-KorcaWindowList([string]$Query) {
+    $process = Find-KorcaProcess $Query
+    $root = Get-KorcaRootElement $process
+    $windowFrame = Get-KorcaWindowFrame $process $root
     $x = $null
     $y = $null
     $width = 0
@@ -605,13 +605,13 @@ function Get-OrcaWindowList([string]$Query) {
         $width = [int][Math]::Max(0, [Math]::Round($windowFrame.width))
         $height = [int][Math]::Max(0, [Math]::Round($windowFrame.height))
     }
-    $app = New-OrcaAppRecord $process
+    $app = New-KorcaAppRecord $process
     [pscustomobject]@{
         app = $app
         windows = @([pscustomobject]@{
             index = 0
             app = $app
-            id = Get-OrcaWindowId $process
+            id = Get-KorcaWindowId $process
             title = $process.MainWindowTitle
             x = $x
             y = $y
@@ -620,15 +620,15 @@ function Get-OrcaWindowList([string]$Query) {
             isMinimized = $false
             isOffscreen = $false
             screenIndex = $null
-            platform = [pscustomobject]@{ backend = "uia"; nativeWindowHandle = Get-OrcaWindowId $process }
+            platform = [pscustomobject]@{ backend = "uia"; nativeWindowHandle = Get-KorcaWindowId $process }
         })
     }
 }
 
-function Get-OrcaHandshake {
+function Get-KorcaHandshake {
     [pscustomobject]@{
         platform = "win32"
-        provider = "orca-computer-use-windows"
+        provider = "korca-computer-use-windows"
         providerVersion = "1.0.0"
         protocolVersion = 1
         supports = [pscustomobject]@{
@@ -651,7 +651,7 @@ function Get-OrcaHandshake {
     }
 }
 
-function Test-OrcaSameRuntimeId($Left, $Right) {
+function Test-KorcaSameRuntimeId($Left, $Right) {
     if ($null -eq $Left -or $null -eq $Right -or $Left.Count -ne $Right.Count) { return $false }
     for ($i = 0; $i -lt $Left.Count; $i++) {
         if ([int]$Left[$i] -ne [int]$Right[$i]) { return $false }
@@ -659,7 +659,7 @@ function Test-OrcaSameRuntimeId($Left, $Right) {
     $true
 }
 
-function Find-OrcaElement($RootElement, $Record) {
+function Find-KorcaElement($RootElement, $Record) {
     if ($null -eq $Record) { return $null }
     if ($Record.index -eq 0) { return $RootElement }
 
@@ -667,7 +667,7 @@ function Find-OrcaElement($RootElement, $Record) {
         $descendants = $RootElement.FindAll([Windows.Automation.TreeScope]::Descendants, [Windows.Automation.Condition]::TrueCondition)
         for ($i = 0; $i -lt $descendants.Count; $i++) {
             $candidate = $descendants.Item($i)
-            if (Test-OrcaSameRuntimeId @($candidate.GetRuntimeId()) @($Record.runtimeId)) {
+            if (Test-KorcaSameRuntimeId @($candidate.GetRuntimeId()) @($Record.runtimeId)) {
                 return $candidate
             }
         }
@@ -675,7 +675,7 @@ function Find-OrcaElement($RootElement, $Record) {
     $null
 }
 
-function Invoke-OrcaPrimaryAction($Element) {
+function Invoke-KorcaPrimaryAction($Element) {
     foreach ($pattern in @(
         [Windows.Automation.InvokePattern]::Pattern,
         [Windows.Automation.SelectionItemPattern]::Pattern,
@@ -691,7 +691,7 @@ function Invoke-OrcaPrimaryAction($Element) {
     $false
 }
 
-function Invoke-OrcaNamedAction($Element, [string]$Action) {
+function Invoke-KorcaNamedAction($Element, [string]$Action) {
     $wanted = ""
     if ($null -ne $Action) { $wanted = $Action.Trim().ToLowerInvariant() }
     switch ($wanted) {
@@ -716,7 +716,7 @@ function Invoke-OrcaNamedAction($Element, [string]$Action) {
     }
 }
 
-function Set-OrcaElementValue($Element, [string]$Value) {
+function Set-KorcaElementValue($Element, [string]$Value) {
     try {
         $pattern = $Element.GetCurrentPattern([Windows.Automation.ValuePattern]::Pattern)
         if (-not $pattern.Current.IsReadOnly) {
@@ -727,7 +727,7 @@ function Set-OrcaElementValue($Element, [string]$Value) {
     $false
 }
 
-function Get-OrcaScreenPoint($Operation, $WindowFrame) {
+function Get-KorcaScreenPoint($Operation, $WindowFrame) {
     if ($null -ne $Operation.element) {
         throw "stale element frame; run get-app-state again and use a fresh element index"
     }
@@ -737,7 +737,7 @@ function Get-OrcaScreenPoint($Operation, $WindowFrame) {
     }
 }
 
-function Get-OrcaElementScreenPoint($Element) {
+function Get-KorcaElementScreenPoint($Element) {
     if ($null -eq $Element) { return $null }
     try {
         $rect = $Element.Current.BoundingRectangle
@@ -751,9 +751,9 @@ function Get-OrcaElementScreenPoint($Element) {
     $null
 }
 
-function Send-OrcaMouseClick([IntPtr]$WindowHandle, [int]$ScreenX, [int]$ScreenY, [string]$Button, [int]$Count) {
-    [void][OrcaDesktopWin32]::SetForegroundWindow($WindowHandle)
-    [void][OrcaDesktopWin32]::SetCursorPos($ScreenX, $ScreenY)
+function Send-KorcaMouseClick([IntPtr]$WindowHandle, [int]$ScreenX, [int]$ScreenY, [string]$Button, [int]$Count) {
+    [void][KorcaDesktopWin32]::SetForegroundWindow($WindowHandle)
+    [void][KorcaDesktopWin32]::SetCursorPos($ScreenX, $ScreenY)
     $down = $MouseEvents.LeftDown
     $up = $MouseEvents.LeftUp
     if ($Button -eq "right") {
@@ -765,46 +765,46 @@ function Send-OrcaMouseClick([IntPtr]$WindowHandle, [int]$ScreenX, [int]$ScreenY
     }
 
     for ($i = 0; $i -lt [Math]::Max(1, $Count); $i++) {
-        [OrcaDesktopWin32]::mouse_event($down, 0, 0, 0, [UIntPtr]::Zero)
+        [KorcaDesktopWin32]::mouse_event($down, 0, 0, 0, [UIntPtr]::Zero)
         Start-Sleep -Milliseconds 35
-        [OrcaDesktopWin32]::mouse_event($up, 0, 0, 0, [UIntPtr]::Zero)
+        [KorcaDesktopWin32]::mouse_event($up, 0, 0, 0, [UIntPtr]::Zero)
     }
 }
 
-function Send-OrcaDrag([IntPtr]$WindowHandle, $From, $To) {
-    [void][OrcaDesktopWin32]::SetForegroundWindow($WindowHandle)
+function Send-KorcaDrag([IntPtr]$WindowHandle, $From, $To) {
+    [void][KorcaDesktopWin32]::SetForegroundWindow($WindowHandle)
     $startX = [int]$From.x
     $startY = [int]$From.y
     $endX = [int]$To.x
     $endY = [int]$To.y
-    [void][OrcaDesktopWin32]::SetCursorPos($startX, $startY)
-    [OrcaDesktopWin32]::mouse_event($MouseEvents.LeftDown, 0, 0, 0, [UIntPtr]::Zero)
+    [void][KorcaDesktopWin32]::SetCursorPos($startX, $startY)
+    [KorcaDesktopWin32]::mouse_event($MouseEvents.LeftDown, 0, 0, 0, [UIntPtr]::Zero)
     for ($step = 1; $step -le 12; $step++) {
         $x = [int][Math]::Round($startX + (($endX - $startX) * $step / 12))
         $y = [int][Math]::Round($startY + (($endY - $startY) * $step / 12))
-        [void][OrcaDesktopWin32]::SetCursorPos($x, $y)
+        [void][KorcaDesktopWin32]::SetCursorPos($x, $y)
         Start-Sleep -Milliseconds 20
     }
-    [OrcaDesktopWin32]::mouse_event($MouseEvents.LeftUp, 0, 0, 0, [UIntPtr]::Zero)
+    [KorcaDesktopWin32]::mouse_event($MouseEvents.LeftUp, 0, 0, 0, [UIntPtr]::Zero)
 }
 
-function Send-OrcaText([IntPtr]$WindowHandle, [string]$Text) {
-    [void][OrcaDesktopWin32]::SetForegroundWindow($WindowHandle)
+function Send-KorcaText([IntPtr]$WindowHandle, [string]$Text) {
+    [void][KorcaDesktopWin32]::SetForegroundWindow($WindowHandle)
     $hasNonAscii = $false
     foreach ($character in $Text.ToCharArray()) {
         if ([int][char]$character -gt 0x7F) { $hasNonAscii = $true; break }
     }
     if ($hasNonAscii) {
         foreach ($character in $Text.ToCharArray()) {
-            [void][OrcaDesktopWin32]::PostMessage($WindowHandle, $WindowsMessages.Char, [IntPtr][int][char]$character, [IntPtr]::Zero)
+            [void][KorcaDesktopWin32]::PostMessage($WindowHandle, $WindowsMessages.Char, [IntPtr][int][char]$character, [IntPtr]::Zero)
             Start-Sleep -Milliseconds 8
         }
         return
     }
-    [System.Windows.Forms.SendKeys]::SendWait((ConvertTo-OrcaSendKeysText $Text))
+    [System.Windows.Forms.SendKeys]::SendWait((ConvertTo-KorcaSendKeysText $Text))
 }
 
-function Get-OrcaVirtualKey([string]$Key) {
+function Get-KorcaVirtualKey([string]$Key) {
     $normalized = $Key.ToLowerInvariant()
     $map = @{
         "return" = 0x0D; "enter" = 0x0D; "tab" = 0x09; "escape" = 0x1B; "esc" = 0x1B
@@ -816,12 +816,12 @@ function Get-OrcaVirtualKey([string]$Key) {
     throw "Unsupported key: $Key"
 }
 
-function Send-OrcaKey([IntPtr]$WindowHandle, [string]$Key) {
-    [void][OrcaDesktopWin32]::SetForegroundWindow($WindowHandle)
-    [System.Windows.Forms.SendKeys]::SendWait((ConvertTo-OrcaSendKeysKey $Key))
+function Send-KorcaKey([IntPtr]$WindowHandle, [string]$Key) {
+    [void][KorcaDesktopWin32]::SetForegroundWindow($WindowHandle)
+    [System.Windows.Forms.SendKeys]::SendWait((ConvertTo-KorcaSendKeysKey $Key))
 }
 
-function Get-OrcaModifierVirtualKey([string]$Modifier) {
+function Get-KorcaModifierVirtualKey([string]$Modifier) {
     switch ($Modifier.ToLowerInvariant()) {
         { $_ -in @("ctrl", "control", "cmdorctrl", "commandorcontrol") } { return 0x11 }
         { $_ -in @("shift") } { return 0x10 }
@@ -831,21 +831,21 @@ function Get-OrcaModifierVirtualKey([string]$Modifier) {
     }
 }
 
-function Send-OrcaHotkey([IntPtr]$WindowHandle, [string]$KeySpec) {
+function Send-KorcaHotkey([IntPtr]$WindowHandle, [string]$KeySpec) {
     $parts = @($KeySpec.Split("+") | ForEach-Object { $_.Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
     if ($parts.Count -eq 0) { throw "Unsupported key: $KeySpec" }
     $key = $parts[$parts.Count - 1]
     $prefix = ""
     if ($parts.Count -gt 1) {
         foreach ($modifier in $parts[0..($parts.Count - 2)]) {
-            $prefix += ConvertTo-OrcaSendKeysModifier $modifier
+            $prefix += ConvertTo-KorcaSendKeysModifier $modifier
         }
     }
-    [void][OrcaDesktopWin32]::SetForegroundWindow($WindowHandle)
-    [System.Windows.Forms.SendKeys]::SendWait($prefix + (ConvertTo-OrcaSendKeysKey $key))
+    [void][KorcaDesktopWin32]::SetForegroundWindow($WindowHandle)
+    [System.Windows.Forms.SendKeys]::SendWait($prefix + (ConvertTo-KorcaSendKeysKey $key))
 }
 
-function ConvertTo-OrcaSendKeysText([string]$Text) {
+function ConvertTo-KorcaSendKeysText([string]$Text) {
     $builder = New-Object System.Text.StringBuilder
     foreach ($character in $Text.ToCharArray()) {
         $value = [string]$character
@@ -860,7 +860,7 @@ function ConvertTo-OrcaSendKeysText([string]$Text) {
     $builder.ToString()
 }
 
-function ConvertTo-OrcaSendKeysKey([string]$Key) {
+function ConvertTo-KorcaSendKeysKey([string]$Key) {
     switch ($Key.ToLowerInvariant()) {
         { $_ -in @("return", "enter") } { return "{ENTER}" }
         "tab" { return "{TAB}" }
@@ -875,13 +875,13 @@ function ConvertTo-OrcaSendKeysKey([string]$Key) {
         "home" { return "{HOME}" }
         "end" { return "{END}" }
         default {
-            if ($Key.Length -eq 1) { return (ConvertTo-OrcaSendKeysText $Key) }
+            if ($Key.Length -eq 1) { return (ConvertTo-KorcaSendKeysText $Key) }
             throw "Unsupported key: $Key"
         }
     }
 }
 
-function ConvertTo-OrcaSendKeysModifier([string]$Modifier) {
+function ConvertTo-KorcaSendKeysModifier([string]$Modifier) {
     switch ($Modifier.ToLowerInvariant()) {
         { $_ -in @("ctrl", "control", "cmdorctrl", "commandorcontrol") } { return "^" }
         "shift" { return "+" }
@@ -890,14 +890,14 @@ function ConvertTo-OrcaSendKeysModifier([string]$Modifier) {
     }
 }
 
-function Send-OrcaPasteText([IntPtr]$WindowHandle, [string]$Text) {
+function Send-KorcaPasteText([IntPtr]$WindowHandle, [string]$Text) {
     $previous = $null
     $hadPrevious = $false
     try { $previous = [System.Windows.Forms.Clipboard]::GetDataObject() } catch {}
     $hadPrevious = $null -ne $previous
     try {
         Set-Clipboard -Value $Text
-        Send-OrcaHotkey $WindowHandle "Ctrl+v"
+        Send-KorcaHotkey $WindowHandle "Ctrl+v"
     } finally {
         if ($hadPrevious) {
             try { [System.Windows.Forms.Clipboard]::SetDataObject($previous, $true) } catch {}
@@ -907,33 +907,33 @@ function Send-OrcaPasteText([IntPtr]$WindowHandle, [string]$Text) {
     }
 }
 
-function Invoke-OrcaOperation($Operation) {
+function Invoke-KorcaOperation($Operation) {
     $includeScreenshot = -not [bool]$Operation.noScreenshot
     if ($Operation.tool -eq "handshake") {
-        return [pscustomobject]@{ ok = $true; capabilities = Get-OrcaHandshake }
+        return [pscustomobject]@{ ok = $true; capabilities = Get-KorcaHandshake }
     }
     if ($Operation.tool -eq "list_apps") {
-        return [pscustomobject]@{ ok = $true; apps = @(Get-OrcaAppList) }
+        return [pscustomobject]@{ ok = $true; apps = @(Get-KorcaAppList) }
     }
     if ($Operation.tool -eq "list_windows") {
-        $list = Get-OrcaWindowList $Operation.app
+        $list = Get-KorcaWindowList $Operation.app
         return [pscustomobject]@{ ok = $true; app = $list.app; windows = @($list.windows) }
     }
     if ($Operation.tool -eq "get_app_state") {
-        return [pscustomobject]@{ ok = $true; snapshot = New-OrcaSnapshot $Operation.app $includeScreenshot $Operation.windowId $Operation.windowIndex ([bool]$Operation.restoreWindow) }
+        return [pscustomobject]@{ ok = $true; snapshot = New-KorcaSnapshot $Operation.app $includeScreenshot $Operation.windowId $Operation.windowIndex ([bool]$Operation.restoreWindow) }
     }
 
-    $process = Find-OrcaProcess $Operation.app
-    if ([bool]$Operation.restoreWindow) { Restore-OrcaWindow $process }
-    Assert-OrcaWindowTarget $process $Operation.windowId $Operation.windowIndex
-    $root = Get-OrcaRootElement $process
-    $windowFrame = if ($null -ne $Operation.windowBounds) { $Operation.windowBounds } else { Get-OrcaWindowFrame $process $root }
-    $element = Find-OrcaElement $root $Operation.element
-    $fromElement = Find-OrcaElement $root $Operation.fromElement
-    $toElement = Find-OrcaElement $root $Operation.toElement
+    $process = Find-KorcaProcess $Operation.app
+    if ([bool]$Operation.restoreWindow) { Restore-KorcaWindow $process }
+    Assert-KorcaWindowTarget $process $Operation.windowId $Operation.windowIndex
+    $root = Get-KorcaRootElement $process
+    $windowFrame = if ($null -ne $Operation.windowBounds) { $Operation.windowBounds } else { Get-KorcaWindowFrame $process $root }
+    $element = Find-KorcaElement $root $Operation.element
+    $fromElement = Find-KorcaElement $root $Operation.fromElement
+    $toElement = Find-KorcaElement $root $Operation.toElement
     $handle = [IntPtr]$process.MainWindowHandle
     if ($Operation.tool -in @("type_text", "press_key", "hotkey", "paste_text")) {
-        Assert-OrcaKeyboardFocus $handle $Operation
+        Assert-KorcaKeyboardFocus $handle $Operation
     }
     $action = $null
 
@@ -941,12 +941,12 @@ function Invoke-OrcaOperation($Operation) {
         "click" {
             $handledByPattern = $false
             if ($null -ne $element -and $Operation.mouse_button -ne "right" -and $Operation.mouse_button -ne "middle" -and [int]$Operation.click_count -le 1) {
-                $handledByPattern = Invoke-OrcaPrimaryAction $element
+                $handledByPattern = Invoke-KorcaPrimaryAction $element
             }
             if (-not $handledByPattern) {
-                $point = Get-OrcaElementScreenPoint $element
-                if ($null -eq $point) { $point = Get-OrcaScreenPoint $Operation $windowFrame }
-                Send-OrcaMouseClick $handle $point.x $point.y $Operation.mouse_button ([int]$Operation.click_count)
+                $point = Get-KorcaElementScreenPoint $element
+                if ($null -eq $point) { $point = Get-KorcaScreenPoint $Operation $windowFrame }
+                Send-KorcaMouseClick $handle $point.x $point.y $Operation.mouse_button ([int]$Operation.click_count)
                 $action = [pscustomobject]@{ path = "synthetic"; actionName = $null; fallbackReason = "actionUnsupported" }
             } else {
                 $action = [pscustomobject]@{ path = "accessibility"; actionName = "primaryAction"; fallbackReason = $null }
@@ -954,7 +954,7 @@ function Invoke-OrcaOperation($Operation) {
         }
         "perform_secondary_action" {
             if ($null -eq $element) { throw "unknown element_index" }
-            if (-not (Invoke-OrcaNamedAction $element $Operation.action)) {
+            if (-not (Invoke-KorcaNamedAction $element $Operation.action)) {
                 throw "$($Operation.action) is not a valid secondary action"
             }
             $action = [pscustomobject]@{ path = "accessibility"; actionName = $Operation.action; fallbackReason = $null }
@@ -962,41 +962,41 @@ function Invoke-OrcaOperation($Operation) {
         "scroll" {
             $delta = 120 * [int][Math]::Max(1, [Math]::Ceiling([double]$Operation.pages))
             if ($Operation.direction -eq "down" -or $Operation.direction -eq "right") { $delta = -1 * $delta }
-            $point = Get-OrcaElementScreenPoint $element
-            if ($null -eq $point) { $point = Get-OrcaScreenPoint $Operation $windowFrame }
-            [void][OrcaDesktopWin32]::SetForegroundWindow($handle)
-            [void][OrcaDesktopWin32]::SetCursorPos([int]$point.x, [int]$point.y)
-            [OrcaDesktopWin32]::mouse_event($MouseEvents.Wheel, 0, 0, $delta, [UIntPtr]::Zero)
+            $point = Get-KorcaElementScreenPoint $element
+            if ($null -eq $point) { $point = Get-KorcaScreenPoint $Operation $windowFrame }
+            [void][KorcaDesktopWin32]::SetForegroundWindow($handle)
+            [void][KorcaDesktopWin32]::SetCursorPos([int]$point.x, [int]$point.y)
+            [KorcaDesktopWin32]::mouse_event($MouseEvents.Wheel, 0, 0, $delta, [UIntPtr]::Zero)
             $action = [pscustomobject]@{ path = "synthetic"; actionName = "scroll"; fallbackReason = $null }
         }
         "drag" {
-            $from = Get-OrcaElementScreenPoint $fromElement
+            $from = Get-KorcaElementScreenPoint $fromElement
             if ($null -eq $from -and $null -ne $Operation.fromElement) { throw "stale element frame; run get-app-state again and use a fresh element index" }
             if ($null -eq $from) { $from = @{ x = $windowFrame.x + [double]$Operation.from_x; y = $windowFrame.y + [double]$Operation.from_y } }
-            $to = Get-OrcaElementScreenPoint $toElement
+            $to = Get-KorcaElementScreenPoint $toElement
             if ($null -eq $to -and $null -ne $Operation.toElement) { throw "stale element frame; run get-app-state again and use a fresh element index" }
             if ($null -eq $to) { $to = @{ x = $windowFrame.x + [double]$Operation.to_x; y = $windowFrame.y + [double]$Operation.to_y } }
-            Send-OrcaDrag $handle $from $to
+            Send-KorcaDrag $handle $from $to
             $action = [pscustomobject]@{ path = "synthetic"; actionName = "drag"; fallbackReason = $null }
         }
         "type_text" {
-            Send-OrcaText $handle ([string]$Operation.text)
+            Send-KorcaText $handle ([string]$Operation.text)
             $action = [pscustomobject]@{ path = "synthetic"; actionName = "typeText"; fallbackReason = $null }
         }
         "press_key" {
-            Send-OrcaKey $handle ([string]$Operation.key)
+            Send-KorcaKey $handle ([string]$Operation.key)
             $action = [pscustomobject]@{ path = "synthetic"; actionName = "pressKey"; fallbackReason = $null }
         }
         "hotkey" {
-            Send-OrcaHotkey $handle ([string]$Operation.key)
+            Send-KorcaHotkey $handle ([string]$Operation.key)
             $action = [pscustomobject]@{ path = "synthetic"; actionName = "hotkey"; fallbackReason = $null; verification = [pscustomobject]@{ state = "unverified"; reason = "synthetic_input" } }
         }
         "paste_text" {
-            Send-OrcaPasteText $handle ([string]$Operation.text)
+            Send-KorcaPasteText $handle ([string]$Operation.text)
             $action = [pscustomobject]@{ path = "clipboard"; actionName = "paste"; fallbackReason = $null; verification = [pscustomobject]@{ state = "unverified"; reason = "clipboard_paste" } }
         }
         "set_value" {
-            if ($null -eq $element -or -not (Set-OrcaElementValue $element ([string]$Operation.value))) {
+            if ($null -eq $element -or -not (Set-KorcaElementValue $element ([string]$Operation.value))) {
                 throw "element value is not settable"
             }
             $action = [pscustomobject]@{ path = "accessibility"; actionName = "setValue"; fallbackReason = $null }
@@ -1007,20 +1007,20 @@ function Invoke-OrcaOperation($Operation) {
     }
 
     try {
-        $snapshot = New-OrcaSnapshot $Operation.app $includeScreenshot $Operation.windowId $Operation.windowIndex
+        $snapshot = New-KorcaSnapshot $Operation.app $includeScreenshot $Operation.windowId $Operation.windowIndex
     } catch {
         if ($null -eq $Operation.windowId -and $null -eq $Operation.windowIndex) { throw }
         if ($null -eq $action.verification) {
             $action | Add-Member -NotePropertyName verification -NotePropertyValue ([pscustomobject]@{ state = "unverified"; reason = "window_changed" })
         }
-        $snapshot = New-OrcaSnapshot $Operation.app $includeScreenshot $null $null
+        $snapshot = New-KorcaSnapshot $Operation.app $includeScreenshot $null $null
     }
     [pscustomobject]@{ ok = $true; action = $action; snapshot = $snapshot }
 }
 
 try {
-    $operation = Read-OrcaOperation $OperationPath
-    Write-OrcaJson (Invoke-OrcaOperation $operation)
+    $operation = Read-KorcaOperation $OperationPath
+    Write-KorcaJson (Invoke-KorcaOperation $operation)
 } catch {
-    Write-OrcaJson ([pscustomobject]@{ ok = $false; error = [string]$_.Exception.Message })
+    Write-KorcaJson ([pscustomobject]@{ ok = $false; error = [string]$_.Exception.Message })
 }

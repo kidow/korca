@@ -149,7 +149,7 @@ Dashboard caveats:
 
 ### 2026-05-23 - Inline Tour Surface
 
-Scope: optional "Explore Orca" tour during onboarding and the Help menu entry point. This shipped the product surface, not the full retention cohort instrumentation. It also added `source = 'onboarding'` to the feature-wall open source enum and added feature-wall group/feature/docs click events with source.
+Scope: optional "Explore Korca" tour during onboarding and the Help menu entry point. This shipped the product surface, not the full retention cohort instrumentation. It also added `source = 'onboarding'` to the feature-wall open source enum and added feature-wall group/feature/docs click events with source.
 
 | Field                      | Value                                                                        |
 | -------------------------- | ---------------------------------------------------------------------------- |

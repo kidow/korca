@@ -11,11 +11,11 @@ import {
   getNotepadAppSelector,
   killNotepad,
   parseJsonOutput,
-  runOrcaCli
+  runKorcaCli
 } from './helpers/computer-driver'
 
 const isWindows = process.platform === 'win32'
-const e2eOptIn = process.env.ORCA_COMPUTER_E2E === '1'
+const e2eOptIn = process.env.KORCA_COMPUTER_E2E === '1'
 
 describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', () => {
   beforeAll(async () => {
@@ -27,7 +27,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
   })
 
   test('list-apps includes the test-owned Notepad process', async () => {
-    const result = await runOrcaCli(['computer', 'list-apps', '--json'])
+    const result = await runKorcaCli(['computer', 'list-apps', '--json'])
     const envelope = parseJsonOutput<{ result: ComputerListAppsResult }>(result.stdout)
     const pid = Number.parseInt(getNotepadAppSelector().slice(4), 10)
 
@@ -38,7 +38,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
 
   test('list-windows returns a targetable Notepad window', async () => {
     const app = getNotepadAppSelector()
-    const result = await runOrcaCli(['computer', 'list-windows', '--app', app, '--json'])
+    const result = await runKorcaCli(['computer', 'list-windows', '--app', app, '--json'])
     const envelope = parseJsonOutput<{ result: ComputerListWindowsResult }>(result.stdout)
 
     expect(envelope.result.windows).toEqual([
@@ -54,7 +54,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
   })
 
   test('Notepad exposes a basic accessibility tree', async () => {
-    const result = await runOrcaCli([
+    const result = await runKorcaCli([
       'computer',
       'get-app-state',
       '--app',
@@ -72,22 +72,22 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
     expect(envelope.result.screenshot?.format).toBe('png')
     expect(envelope.result.screenshot?.data).toBeUndefined()
     expect(envelope.result.screenshot?.dataOmitted).toBe(true)
-    expect(envelope.result.screenshot?.path).toContain('orca-computer-use')
+    expect(envelope.result.screenshot?.path).toContain('korca-computer-use')
   })
 
   test('set-value mutates the document through UI Automation', async () => {
     const app = getNotepadAppSelector()
     const before = parseJsonOutput<{ result: ComputerSnapshotResult }>(
-      (await runOrcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
+      (await runKorcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
         .stdout
     )
     const documentIndex = findRoleIndex(before.result.snapshot.treeText, 'document')
     expect(documentIndex).toBeGreaterThanOrEqual(0)
 
-    const marker = `orca-windows-set-${Date.now()}`
+    const marker = `korca-windows-set-${Date.now()}`
     const action = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'set-value',
           '--app',
@@ -108,10 +108,10 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
 
   test('paste-text mutates the test-owned document', async () => {
     const app = getNotepadAppSelector()
-    const marker = `orca-windows-paste-${Date.now()}`
+    const marker = `korca-windows-paste-${Date.now()}`
     const action = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'paste-text',
           '--app',
@@ -127,7 +127,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
     expect(action.result.action?.path).toBe('clipboard')
 
     const after = parseJsonOutput<{ result: ComputerSnapshotResult }>(
-      (await runOrcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
+      (await runKorcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
         .stdout
     )
     expect(after.result.snapshot.treeText).toContain(marker)
@@ -136,16 +136,16 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
   test('Unicode payloads survive set-value and paste-text', async () => {
     const app = getNotepadAppSelector()
     const before = parseJsonOutput<{ result: ComputerSnapshotResult }>(
-      (await runOrcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
+      (await runKorcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
         .stdout
     )
     const documentIndex = findRoleIndex(before.result.snapshot.treeText, 'document')
     expect(documentIndex).toBeGreaterThanOrEqual(0)
 
-    const unicode = `orca unicode café Ω 漢字 ${Date.now()}`
+    const unicode = `korca unicode café Ω 漢字 ${Date.now()}`
     const set = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'set-value',
           '--app',
@@ -163,7 +163,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
 
     const pasted = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'paste-text',
           '--app',
@@ -181,8 +181,8 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
 
   test('hotkey and paste-text can replace the document selection', async () => {
     const app = getNotepadAppSelector()
-    const first = `orca-windows-first-${Date.now()}`
-    await runOrcaCli([
+    const first = `korca-windows-first-${Date.now()}`
+    await runKorcaCli([
       'computer',
       'paste-text',
       '--app',
@@ -196,7 +196,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
 
     const selectAll = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'hotkey',
           '--app',
@@ -211,10 +211,10 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
     )
     expect(selectAll.result.action?.actionName).toBe('hotkey')
 
-    const marker = `orca-windows-replaced-${Date.now()}`
+    const marker = `korca-windows-replaced-${Date.now()}`
     const second = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'paste-text',
           '--app',
@@ -234,13 +234,13 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
   test('click and type-text send synthetic input to the document', async () => {
     const app = getNotepadAppSelector()
     const before = parseJsonOutput<{ result: ComputerSnapshotResult }>(
-      (await runOrcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
+      (await runKorcaCli(['computer', 'get-app-state', '--app', app, '--no-screenshot', '--json']))
         .stdout
     )
     const documentIndex = findRoleIndex(before.result.snapshot.treeText, 'document')
     expect(documentIndex).toBeGreaterThanOrEqual(0)
 
-    await runOrcaCli([
+    await runKorcaCli([
       'computer',
       'click',
       '--app',
@@ -255,7 +255,7 @@ describe.skipIf(!isWindows || !e2eOptIn)('computer-use Windows e2e (Notepad)', (
     const marker = ` typed-${Date.now()}`
     const typed = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'type-text',
           '--app',

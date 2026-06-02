@@ -155,7 +155,7 @@ type CustomViewConnectionResponse = {
     | null
 }
 
-const ORCA_PROJECT_FIELDS = `
+const KORCA_PROJECT_FIELDS = `
   id
   name
   description
@@ -211,8 +211,8 @@ const ORCA_PROJECT_FIELDS = `
   }
 `
 
-const ORCA_PROJECT_DETAIL_FIELDS = `
-  ${ORCA_PROJECT_FIELDS}
+const KORCA_PROJECT_DETAIL_FIELDS = `
+  ${KORCA_PROJECT_FIELDS}
   projectMilestones(first: 20) {
     nodes {
       id
@@ -244,7 +244,7 @@ const ORCA_PROJECT_DETAIL_FIELDS = `
   }
 `
 
-const ORCA_ISSUE_FIELDS = `
+const KORCA_ISSUE_FIELDS = `
   id
   identifier
   title
@@ -278,10 +278,10 @@ const ORCA_ISSUE_FIELDS = `
 `
 
 const PROJECTS_QUERY = `
-  query OrcaLinearProjects($first: Int, $filter: ProjectFilter, $orderBy: PaginationOrderBy) {
+  query KorcaLinearProjects($first: Int, $filter: ProjectFilter, $orderBy: PaginationOrderBy) {
     projects(first: $first, filter: $filter, orderBy: $orderBy) {
       nodes {
-        ${ORCA_PROJECT_FIELDS}
+        ${KORCA_PROJECT_FIELDS}
       }
       pageInfo {
         hasNextPage
@@ -291,10 +291,10 @@ const PROJECTS_QUERY = `
 `
 
 const SEARCH_PROJECTS_QUERY = `
-  query OrcaLinearProjectSearch($term: String!, $first: Int) {
+  query KorcaLinearProjectSearch($term: String!, $first: Int) {
     searchProjects(term: $term, first: $first) {
       nodes {
-        ${ORCA_PROJECT_FIELDS}
+        ${KORCA_PROJECT_FIELDS}
       }
       pageInfo {
         hasNextPage
@@ -304,19 +304,19 @@ const SEARCH_PROJECTS_QUERY = `
 `
 
 const PROJECT_QUERY = `
-  query OrcaLinearProject($id: String!) {
+  query KorcaLinearProject($id: String!) {
     project(id: $id) {
-      ${ORCA_PROJECT_DETAIL_FIELDS}
+      ${KORCA_PROJECT_DETAIL_FIELDS}
     }
   }
 `
 
 const PROJECT_ISSUES_QUERY = `
-  query OrcaLinearProjectIssues($id: String!, $first: Int, $orderBy: PaginationOrderBy) {
+  query KorcaLinearProjectIssues($id: String!, $first: Int, $orderBy: PaginationOrderBy) {
     project(id: $id) {
       issues(first: $first, orderBy: $orderBy) {
         nodes {
-          ${ORCA_ISSUE_FIELDS}
+          ${KORCA_ISSUE_FIELDS}
         }
         pageInfo {
           hasNextPage
@@ -327,7 +327,7 @@ const PROJECT_ISSUES_QUERY = `
 `
 
 const CUSTOM_VIEWS_QUERY = `
-  query OrcaLinearCustomViews(
+  query KorcaLinearCustomViews(
     $first: Int,
     $filter: CustomViewFilter,
     $orderBy: PaginationOrderBy
@@ -368,7 +368,7 @@ const CUSTOM_VIEWS_QUERY = `
 `
 
 const CUSTOM_VIEW_QUERY = `
-  query OrcaLinearCustomView($id: String!) {
+  query KorcaLinearCustomView($id: String!) {
     customView(id: $id) {
       id
       name
@@ -400,13 +400,13 @@ const CUSTOM_VIEW_QUERY = `
 `
 
 const CUSTOM_VIEW_ISSUES_QUERY = `
-  query OrcaLinearCustomViewIssues($id: String!, $first: Int, $orderBy: PaginationOrderBy) {
+  query KorcaLinearCustomViewIssues($id: String!, $first: Int, $orderBy: PaginationOrderBy) {
     customView(id: $id) {
       id
       modelName
       issues(first: $first, orderBy: $orderBy) {
         nodes {
-          ${ORCA_ISSUE_FIELDS}
+          ${KORCA_ISSUE_FIELDS}
         }
         pageInfo {
           hasNextPage
@@ -417,13 +417,13 @@ const CUSTOM_VIEW_ISSUES_QUERY = `
 `
 
 const CUSTOM_VIEW_PROJECTS_QUERY = `
-  query OrcaLinearCustomViewProjects($id: String!, $first: Int, $orderBy: PaginationOrderBy) {
+  query KorcaLinearCustomViewProjects($id: String!, $first: Int, $orderBy: PaginationOrderBy) {
     customView(id: $id) {
       id
       modelName
       projects(first: $first, orderBy: $orderBy) {
         nodes {
-          ${ORCA_PROJECT_FIELDS}
+          ${KORCA_PROJECT_FIELDS}
         }
         pageInfo {
           hasNextPage

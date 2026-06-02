@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
 import { RpcDispatcher } from './dispatcher'
 import type { RpcRequest } from './core'
-import type { OrcaRuntimeService } from '../orca-runtime'
+import type { KorcaRuntimeService } from '../korca-runtime'
 import { TERMINAL_METHODS } from './methods/terminal'
 
-function stubRuntime(overrides: Partial<OrcaRuntimeService> = {}): OrcaRuntimeService {
+function stubRuntime(overrides: Partial<KorcaRuntimeService> = {}): KorcaRuntimeService {
   return {
     getRuntimeId: () => 'test-runtime',
     ...overrides
-  } as OrcaRuntimeService
+  } as KorcaRuntimeService
 }
 
 function makeRequest(method: string, params?: unknown): RpcRequest {

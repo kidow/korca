@@ -54,7 +54,7 @@ source "$HOME/.config/zsh/env"
 EOF
 
       # Run: check discovered ZDOTDIR
-      zsh -c 'env | grep -E "^(ORCA_|ZDOTDIR|HOME)=" | sort'
+      zsh -c 'env | grep -E "^(KORCA_|ZDOTDIR|HOME)=" | sort'
     `,
       { userDataPath }
     )
@@ -85,7 +85,7 @@ EOF
     )
 
     expect(stdout).toMatchInlineSnapshot(`
-      "ORCA_ORIG_ZDOTDIR=<HOME>/.config/zsh-remote
+      "KORCA_ORIG_ZDOTDIR=<HOME>/.config/zsh-remote
       ZDOTDIR=<WRAPPER_DIR>
       "
     `)

@@ -119,7 +119,7 @@ describe('dispatchTerminalNotification', () => {
           }
         ]
       },
-      repos: [{ id: 'repo1', displayName: 'orca', connectionId: null }],
+      repos: [{ id: 'repo1', displayName: 'korca', connectionId: null }],
       settings: { experimentalTerminalAttention: true, notifications: { customSoundPath: null } },
       markWorktreeUnread: vi.fn(),
       markTerminalTabUnread: vi.fn(),
@@ -150,7 +150,7 @@ describe('dispatchTerminalNotification', () => {
         source: 'agent-task-complete',
         worktreeId: 'wt-primary',
         paneKey,
-        repoLabel: 'orca',
+        repoLabel: 'korca',
         worktreeLabel: 'master',
         terminalTitle: 'codex',
         isActiveWorktree: false,

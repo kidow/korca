@@ -8,7 +8,7 @@ import { bulkStageFiles, bulkUnstageFiles, stageFile, unstageFile } from './stat
 const tempRoots: string[] = []
 
 async function createRepoWithGlobNamedFiles(): Promise<string> {
-  const repo = await mkdtemp(path.join(tmpdir(), 'orca-status-pathspec-'))
+  const repo = await mkdtemp(path.join(tmpdir(), 'korca-status-pathspec-'))
   tempRoots.push(repo)
   execFileSync('git', ['init', '-q'], { cwd: repo })
   execFileSync('git', ['config', 'user.email', 'test@example.com'], { cwd: repo })

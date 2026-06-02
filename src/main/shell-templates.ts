@@ -7,67 +7,67 @@ function quotePosixSingle(value: string): string {
 
 export function getZshEnvTemplate(zshDir: string, headerPrefix = ''): string {
   const header = headerPrefix
-    ? `Orca ${headerPrefix} zsh shell-ready wrapper`
-    : 'Orca zsh shell-ready wrapper'
+    ? `Korca ${headerPrefix} zsh shell-ready wrapper`
+    : 'Korca zsh shell-ready wrapper'
   return `# ${header}
-_orca_spawn_orig_zdotdir="\${ORCA_ORIG_ZDOTDIR:-}"
-_orca_user_zdotdir="\${_orca_spawn_orig_zdotdir:-$HOME}"
-_orca_zshenv_source_dir="\${ORCA_ZSHENV_SOURCE_DIR:-$HOME}"
-_orca_zshenv_path=""
-unset ORCA_ZSHENV_SOURCE_DIR
+_korca_spawn_orig_zdotdir="\${KORCA_ORIG_ZDOTDIR:-}"
+_korca_user_zdotdir="\${_korca_spawn_orig_zdotdir:-$HOME}"
+_korca_zshenv_source_dir="\${KORCA_ZSHENV_SOURCE_DIR:-$HOME}"
+_korca_zshenv_path=""
+unset KORCA_ZSHENV_SOURCE_DIR
 
 # Normalize fallback and source roots before reading user .zshenv so nested
-# Orca PTYs never source another Orca wrapper recursively.
-while [[ "\${_orca_user_zdotdir}" == */ ]]; do
-  _orca_user_zdotdir="\${_orca_user_zdotdir%/}"
+# Korca PTYs never source another Korca wrapper recursively.
+while [[ "\${_korca_user_zdotdir}" == */ ]]; do
+  _korca_user_zdotdir="\${_korca_user_zdotdir%/}"
 done
-case "\${_orca_user_zdotdir}" in
-  ""|*/shell-ready/zsh) _orca_user_zdotdir="$HOME" ;;
+case "\${_korca_user_zdotdir}" in
+  ""|*/shell-ready/zsh) _korca_user_zdotdir="$HOME" ;;
 esac
-while [[ "\${_orca_zshenv_source_dir}" == */ ]]; do
-  _orca_zshenv_source_dir="\${_orca_zshenv_source_dir%/}"
+while [[ "\${_korca_zshenv_source_dir}" == */ ]]; do
+  _korca_zshenv_source_dir="\${_korca_zshenv_source_dir%/}"
 done
-case "\${_orca_zshenv_source_dir}" in
-  ""|*/shell-ready/zsh) _orca_zshenv_source_dir="$HOME" ;;
+case "\${_korca_zshenv_source_dir}" in
+  ""|*/shell-ready/zsh) _korca_zshenv_source_dir="$HOME" ;;
 esac
 
 # Why: source at wrapper top level, not in a function/subshell, so .zshenv
 # exports, functions, path/fpath typesets, and zsh options keep normal scope.
 unset ZDOTDIR
-if [[ -n "\${_orca_zshenv_source_dir:-}" && -f "\${_orca_zshenv_source_dir}/.zshenv" ]]; then
-  _orca_zshenv_path="\${_orca_zshenv_source_dir}/.zshenv"
+if [[ -n "\${_korca_zshenv_source_dir:-}" && -f "\${_korca_zshenv_source_dir}/.zshenv" ]]; then
+  _korca_zshenv_path="\${_korca_zshenv_source_dir}/.zshenv"
 fi
-if [[ -n "\${_orca_zshenv_path:-}" ]]; then
-  source "\${_orca_zshenv_path}"
+if [[ -n "\${_korca_zshenv_path:-}" ]]; then
+  source "\${_korca_zshenv_path}"
 fi
 
-_orca_discovered_zdotdir="\${ZDOTDIR:-}"
+_korca_discovered_zdotdir="\${ZDOTDIR:-}"
 
-while [[ "\${_orca_discovered_zdotdir}" == */ ]]; do
-  _orca_discovered_zdotdir="\${_orca_discovered_zdotdir%/}"
+while [[ "\${_korca_discovered_zdotdir}" == */ ]]; do
+  _korca_discovered_zdotdir="\${_korca_discovered_zdotdir%/}"
 done
 
-case "\${_orca_discovered_zdotdir}" in
+case "\${_korca_discovered_zdotdir}" in
   *[![:space:]]*) ;;
-  *) _orca_discovered_zdotdir="" ;;
+  *) _korca_discovered_zdotdir="" ;;
 esac
 
-if [[ -n "\${_orca_discovered_zdotdir}" && ! -d "\${_orca_discovered_zdotdir}" ]]; then
-  [[ "\${ORCA_DEBUG:-0}" == "1" ]] && echo "[orca-shell-ready] Discovered ZDOTDIR '\${_orca_discovered_zdotdir}' does not exist, falling back" >&2
-  _orca_discovered_zdotdir=""
+if [[ -n "\${_korca_discovered_zdotdir}" && ! -d "\${_korca_discovered_zdotdir}" ]]; then
+  [[ "\${KORCA_DEBUG:-0}" == "1" ]] && echo "[korca-shell-ready] Discovered ZDOTDIR '\${_korca_discovered_zdotdir}' does not exist, falling back" >&2
+  _korca_discovered_zdotdir=""
 fi
 
-export ORCA_ORIG_ZDOTDIR="\${_orca_discovered_zdotdir:-\${_orca_user_zdotdir:-$HOME}}"
+export KORCA_ORIG_ZDOTDIR="\${_korca_discovered_zdotdir:-\${_korca_user_zdotdir:-$HOME}}"
 
-while [[ "\${ORCA_ORIG_ZDOTDIR}" == */ ]]; do
-  ORCA_ORIG_ZDOTDIR="\${ORCA_ORIG_ZDOTDIR%/}"
+while [[ "\${KORCA_ORIG_ZDOTDIR}" == */ ]]; do
+  KORCA_ORIG_ZDOTDIR="\${KORCA_ORIG_ZDOTDIR%/}"
 done
 
-case "\${ORCA_ORIG_ZDOTDIR}" in
-  ""|*/shell-ready/zsh) export ORCA_ORIG_ZDOTDIR="$HOME" ;;
+case "\${KORCA_ORIG_ZDOTDIR}" in
+  ""|*/shell-ready/zsh) export KORCA_ORIG_ZDOTDIR="$HOME" ;;
 esac
 
 export ZDOTDIR=${quotePosixSingle(zshDir)}
-unset _orca_spawn_orig_zdotdir _orca_user_zdotdir _orca_zshenv_source_dir _orca_zshenv_path _orca_discovered_zdotdir
+unset _korca_spawn_orig_zdotdir _korca_user_zdotdir _korca_zshenv_source_dir _korca_zshenv_path _korca_discovered_zdotdir
 `
 }

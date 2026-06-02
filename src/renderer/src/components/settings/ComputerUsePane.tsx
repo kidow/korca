@@ -19,7 +19,7 @@ import {
 } from '@/lib/agent-feature-install-commands'
 import {
   AGENT_SKILL_CLI_PREREQUISITE_NOTICE,
-  ensureOrcaCliAvailableForAgentSkillTerminal
+  ensureKorcaCliAvailableForAgentSkillTerminal
 } from '@/lib/agent-skill-cli-prerequisite'
 import {
   GLOBAL_AGENT_SKILL_SOURCE_KINDS,
@@ -112,7 +112,7 @@ export function ComputerUsePane(): React.JSX.Element {
         ? 'Computer Use를 사용할 준비가 됐습니다.'
         : '로컬 앱을 사용하려면 설정을 완료하세요.'
   const summaryDescription = checking
-    ? 'Orca가 Computer Use 도우미의 macOS 개인정보 보호 권한을 확인하고 있습니다.'
+    ? 'Korca가 Computer Use 도우미의 macOS 개인정보 보호 권한을 확인하고 있습니다.'
     : setupUnavailable
       ? `Computer Use 권한을 사용할 수 없는 이유: ${helperUnavailableReason}.`
       : allGranted
@@ -347,7 +347,7 @@ export function ComputerUsePane(): React.JSX.Element {
         preInstallNotice={AGENT_SKILL_CLI_PREREQUISITE_NOTICE}
         onBeforeOpenTerminal={async () => {
           useAppStore.getState().recordFeatureInteraction('computer-use-setup')
-          await ensureOrcaCliAvailableForAgentSkillTerminal()
+          await ensureKorcaCliAvailableForAgentSkillTerminal()
         }}
         onRecheck={refreshComputerUseSkill}
       />

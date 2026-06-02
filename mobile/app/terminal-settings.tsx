@@ -309,7 +309,7 @@ export default function TerminalSettingsScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Text style={styles.groupHeading}>앱을 벗어났을 때</Text>
         <Text style={styles.groupDescription}>
-          휴대폰에서 터미널을 사용할 때 Orca는 화면에 맞게 크기를 줄입니다. 앱을 닫거나 다른 앱으로 전환했을 때 이 설정은 휴대폰 크기를 유지할지(그래야 대화형 CLI 도구가 다시 배치되지 않습니다) 아니면 데스크톱 크기로 다시 바꿀지를 정합니다. 터미널 배너의 복원을 눌러 언제든 수동으로 크기를 바꿀 수 있습니다.
+          휴대폰에서 터미널을 사용할 때 Korca는 화면에 맞게 크기를 줄입니다. 앱을 닫거나 다른 앱으로 전환했을 때 이 설정은 휴대폰 크기를 유지할지(그래야 대화형 CLI 도구가 다시 배치되지 않습니다) 아니면 데스크톱 크기로 다시 바꿀지를 정합니다. 터미널 배너의 복원을 눌러 언제든 수동으로 크기를 바꿀 수 있습니다.
         </Text>
 
         {hosts.length === 0 ? (

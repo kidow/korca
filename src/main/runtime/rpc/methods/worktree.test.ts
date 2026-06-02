@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { RpcDispatcher } from '../dispatcher'
 import type { RpcRequest } from '../core'
-import type { OrcaRuntimeService } from '../../orca-runtime'
+import type { KorcaRuntimeService } from '../../korca-runtime'
 import { WORKTREE_METHODS } from './worktree'
 
 function makeRequest(method: string, params?: unknown): RpcRequest {
@@ -13,7 +13,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       createManagedWorktree: vi.fn().mockResolvedValue({ worktree: { id: 'wt-1' } })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     await dispatcher.dispatch(
@@ -73,7 +73,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       createManagedWorktree: vi.fn().mockResolvedValue({ worktree: { id: 'wt-1' } })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     await dispatcher.dispatch(
@@ -81,7 +81,7 @@ describe('worktree RPC methods', () => {
         repo: 'repo-1',
         name: 'agent-startup',
         startupCommand: "codex 'summarize repo'",
-        startupEnv: { ORCA_AGENT_MODE: 'direct' },
+        startupEnv: { KORCA_AGENT_MODE: 'direct' },
         activate: true
       })
     )
@@ -93,7 +93,7 @@ describe('worktree RPC methods', () => {
         activate: true,
         startup: {
           command: "codex 'summarize repo'",
-          env: { ORCA_AGENT_MODE: 'direct' }
+          env: { KORCA_AGENT_MODE: 'direct' }
         }
       })
     )
@@ -103,14 +103,14 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       createManagedWorktree: vi.fn().mockResolvedValue({ worktree: { id: 'wt-1' } })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     await dispatcher.dispatch(
       makeRequest('worktree.create', {
         repo: 'repo-1',
         name: 'issue-123',
-        startupDraft: 'https://github.com/stablyai/orca/issues/123',
+        startupDraft: 'https://github.com/stablyai/korca/issues/123',
         createdWithAgent: 'codex',
         activate: true
       })
@@ -123,7 +123,7 @@ describe('worktree RPC methods', () => {
         activate: true,
         createdWithAgent: 'codex',
         startup: undefined,
-        startupDraft: 'https://github.com/stablyai/orca/issues/123'
+        startupDraft: 'https://github.com/stablyai/korca/issues/123'
       })
     )
   })
@@ -132,7 +132,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       prefetchManagedWorktreeCreateBase: vi.fn().mockResolvedValue(undefined)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -153,7 +153,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       createManagedWorktree: vi.fn().mockResolvedValue({ worktree: { id: 'wt-1' } })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -178,7 +178,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       createManagedWorktree: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -204,7 +204,7 @@ describe('worktree RPC methods', () => {
         branchNameOverride: 'feature/pr-head',
         pushTarget: { remoteName: 'origin', branchName: 'feature/pr-head' }
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -237,7 +237,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       resolveManagedMrBase: vi.fn().mockResolvedValue({ baseBranch: 'origin/mr-head' })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -262,7 +262,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       updateManagedWorktreeMeta: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -293,7 +293,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       listWorktreeLineage: vi.fn().mockResolvedValue(lineage)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(makeRequest('worktree.lineageList'))
@@ -306,7 +306,7 @@ describe('worktree RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       persistManagedWorktreeSortOrder: vi.fn().mockReturnValue({ updated: 2 })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: WORKTREE_METHODS })
 
     const response = await dispatcher.dispatch(

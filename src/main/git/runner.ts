@@ -1014,7 +1014,7 @@ export function wslAwareSpawn(
  * Translate absolute Linux paths in git output back to Windows UNC paths.
  *
  * Why: when git runs inside WSL, paths in output (e.g. `git worktree list`)
- * are Linux-native (/home/user/repo). The rest of Orca needs Windows UNC
+ * are Linux-native (/home/user/repo). The rest of Korca needs Windows UNC
  * paths (\\wsl.localhost\Ubuntu\home\user\repo) to read files via Node fs.
  */
 export function translateWslOutputPaths(output: string, originalCwd: string): string {

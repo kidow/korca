@@ -2,7 +2,7 @@ import { execFileSync } from 'child_process'
 import { rmSync, writeFileSync } from 'fs'
 import os from 'os'
 import path from 'path'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import { waitForSessionReady } from './helpers/store'
 
 function createWorktreeWithStagedChange(repoPath: string): {
@@ -41,7 +41,7 @@ function cleanupWorktree(repoPath: string, worktreePath: string, branchName: str
 
 test.describe('Source Control AI commit messages', () => {
   test('generates a commit message from staged changes through the Source Control UI', async ({
-    orcaPage,
+    korcaPage,
     testRepoPath
   }) => {
     const { branchName, worktreePath } = createWorktreeWithStagedChange(testRepoPath)
@@ -49,8 +49,8 @@ test.describe('Source Control AI commit messages', () => {
       'node -e "setTimeout(() => process.stdout.write(\'Add generated E2E message\'), 250)"'
 
     try {
-      await waitForSessionReady(orcaPage)
-      await orcaPage.evaluate(
+      await waitForSessionReady(korcaPage)
+      await korcaPage.evaluate(
         async ({ repoPath, worktreePath: targetWorktreePath, agentCommand: command }) => {
           const store = window.__store
           if (!store) {
@@ -104,7 +104,7 @@ test.describe('Source Control AI commit messages', () => {
       await expect
         .poll(
           async () =>
-            orcaPage.evaluate(() => {
+            korcaPage.evaluate(() => {
               const state = window.__store?.getState()
               return Boolean(state?.rightSidebarOpen && state?.rightSidebarTab === 'source-control')
             }),
@@ -112,17 +112,17 @@ test.describe('Source Control AI commit messages', () => {
         )
         .toBe(true)
 
-      const textarea = orcaPage.getByRole('textbox', { name: '커밋 메시지' })
+      const textarea = korcaPage.getByRole('textbox', { name: '커밋 메시지' })
       await expect(textarea).toBeVisible({ timeout: 10_000 })
       await expect(textarea).toHaveValue('')
 
-      const generate = orcaPage.getByRole('button', { name: 'AI로 커밋 메시지 생성' })
+      const generate = korcaPage.getByRole('button', { name: 'AI로 커밋 메시지 생성' })
       await expect(generate).toBeVisible()
       await expect(generate).toBeEnabled()
       await generate.click()
 
       await expect(
-        orcaPage.getByRole('button', { name: '커밋 메시지 생성 중지' })
+        korcaPage.getByRole('button', { name: '커밋 메시지 생성 중지' })
       ).toBeVisible()
       await expect(textarea).toHaveValue('Add generated E2E message', { timeout: 10_000 })
     } finally {

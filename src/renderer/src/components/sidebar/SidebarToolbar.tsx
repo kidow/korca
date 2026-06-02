@@ -28,7 +28,7 @@ import { showOnboardingFromRenderer } from '../onboarding/show-onboarding-event'
 import { SidebarFeedbackDialog } from './SidebarFeedbackDialog'
 import { ScrollToCurrentWorkspaceToolbarButton } from './ScrollToCurrentWorkspaceToolbarButton'
 
-const DOCS_URL = 'https://www.onorca.dev/docs'
+const DOCS_URL = 'https://www.onkorca.dev/docs'
 
 function openExternalUrl(url: string): void {
   void window.api.shell.openUrl(url)
@@ -43,7 +43,7 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [helpMenuOpen, setHelpMenuOpen] = useState(false)
   const [showAdminHelpOptions, setShowAdminHelpOptions] = useState(false)
-  const [isRestartingOrca, setIsRestartingOrca] = useState(false)
+  const [isRestartingKorca, setIsRestartingKorca] = useState(false)
   const lastShowOnboardingAtRef = React.useRef(0)
   const mountedRef = useMountedRef()
 
@@ -70,16 +70,16 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
     setShowAdminHelpOptions(altKey)
   }
 
-  const handleRestartOrca = (): void => {
-    if (isRestartingOrca) {
+  const handleRestartKorca = (): void => {
+    if (isRestartingKorca) {
       return
     }
-    setIsRestartingOrca(true)
-    toast.info('Restarting Orca…')
+    setIsRestartingKorca(true)
+    toast.info('Restarting Korca…')
     void window.api.app.restart().catch((error) => {
       if (mountedRef.current) {
-        setIsRestartingOrca(false)
-        toast.error('Couldn’t restart Orca.', {
+        setIsRestartingKorca(false)
+        toast.error('Couldn’t restart Korca.', {
           description: error instanceof Error ? error.message : undefined
         })
       }
@@ -137,7 +137,7 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={openMobilePage}>
                 <Smartphone className="size-3.5" />
-                Orca Mobile
+                Korca Mobile
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -182,9 +182,9 @@ const SidebarToolbar = React.memo(function SidebarToolbar() {
               {showAdminHelpOptions ? (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={handleRestartOrca} disabled={isRestartingOrca}>
+                  <DropdownMenuItem onSelect={handleRestartKorca} disabled={isRestartingKorca}>
                     <RotateCw className="size-3.5" />
-                    Restart Orca
+                    Restart Korca
                   </DropdownMenuItem>
                 </>
               ) : null}

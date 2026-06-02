@@ -33,7 +33,7 @@ describe('AntigravityHookService', () => {
   let homeDir: string
 
   beforeEach(() => {
-    homeDir = mkdtempSync(join(tmpdir(), 'orca-antigravity-home-'))
+    homeDir = mkdtempSync(join(tmpdir(), 'korca-antigravity-home-'))
     homedirMock.mockReturnValue(homeDir)
   })
 
@@ -52,28 +52,28 @@ describe('AntigravityHookService', () => {
     const config = JSON.parse(
       readFileSync(join(homeDir, '.gemini', 'config', 'hooks.json'), 'utf8')
     ) as {
-      'orca-status': Record<
+      'korca-status': Record<
         string,
         { matcher?: string; command?: string; hooks?: { command: string }[] }[]
       >
     }
-    expect(Object.keys(config['orca-status']).sort()).toEqual(
+    expect(Object.keys(config['korca-status']).sort()).toEqual(
       ['PostInvocation', 'PostToolUse', 'PreInvocation', 'Stop'].sort()
     )
-    expect(config['orca-status'].PreToolUse).toBeUndefined()
-    expect(config['orca-status'].PostToolUse[0].matcher).toBe('*')
-    expect(config['orca-status'].PreInvocation[0].command).toContain('antigravity-hook')
-    expect(config['orca-status'].PreInvocation[0].command).toContain(
-      "ORCA_ANTIGRAVITY_EVENT='PreInvocation'"
+    expect(config['korca-status'].PreToolUse).toBeUndefined()
+    expect(config['korca-status'].PostToolUse[0].matcher).toBe('*')
+    expect(config['korca-status'].PreInvocation[0].command).toContain('antigravity-hook')
+    expect(config['korca-status'].PreInvocation[0].command).toContain(
+      "KORCA_ANTIGRAVITY_EVENT='PreInvocation'"
     )
-    expect(config['orca-status'].Stop[0].command).toContain("ORCA_ANTIGRAVITY_EVENT='Stop'")
+    expect(config['korca-status'].Stop[0].command).toContain("KORCA_ANTIGRAVITY_EVENT='Stop'")
 
     const script = readFileSync(
-      join(homeDir, '.orca', 'agent-hooks', 'antigravity-hook.sh'),
+      join(homeDir, '.korca', 'agent-hooks', 'antigravity-hook.sh'),
       'utf8'
     )
     expect(script).toContain('/hook/antigravity')
-    expect(script).toContain('hook_event_name=${ORCA_ANTIGRAVITY_EVENT}')
+    expect(script).toContain('hook_event_name=${KORCA_ANTIGRAVITY_EVENT}')
     expect(script).toContain('payload=$(cat)')
     expect(script).toContain("payload='{}'")
     expect(script).not.toContain('if [ -z "$payload" ]; then\n  exit 0\nfi')
@@ -85,7 +85,7 @@ describe('AntigravityHookService', () => {
       const configPath = join(homeDir, '.gemini', 'config', 'hooks.json')
       const staleScriptPath = join(
         homeDir,
-        '.orca',
+        '.korca',
         'agent-hooks',
         'antigravity-hook.cmd'
       ).replaceAll('/', '\\')
@@ -94,14 +94,14 @@ describe('AntigravityHookService', () => {
         configPath,
         `${JSON.stringify(
           {
-            'orca-status': {
+            'korca-status': {
               PreToolUse: [
                 {
                   matcher: '*',
                   hooks: [
                     {
                       type: 'command',
-                      command: `cmd /d /s /c "set "ORCA_ANTIGRAVITY_EVENT=PreToolUse" && call "${staleScriptPath}""`
+                      command: `cmd /d /s /c "set "KORCA_ANTIGRAVITY_EVENT=PreToolUse" && call "${staleScriptPath}""`
                     }
                   ]
                 }
@@ -123,12 +123,12 @@ describe('AntigravityHookService', () => {
       expect(status.state).toBe('installed')
 
       const config = JSON.parse(readFileSync(configPath, 'utf8')) as {
-        'orca-status': Record<
+        'korca-status': Record<
           string,
           { matcher?: string; command?: string; hooks?: { command: string }[] }[]
         >
       }
-      expect(config['orca-status'].PreToolUse).toBeUndefined()
+      expect(config['korca-status'].PreToolUse).toBeUndefined()
 
       const expectedWrappers = {
         PreInvocation: 'antigravity-pre-invocation.cmd',
@@ -137,31 +137,31 @@ describe('AntigravityHookService', () => {
         PostToolUse: 'antigravity-post-tool-use.cmd'
       }
       for (const [eventName, wrapperFileName] of Object.entries(expectedWrappers)) {
-        const definition = config['orca-status'][eventName][0]
+        const definition = config['korca-status'][eventName][0]
         const command =
           eventName === 'PostToolUse' ? definition.hooks?.[0]?.command : definition.command
         expect(command).toContain(wrapperFileName)
         expect(command).not.toContain('cmd /d /s /c')
-        expect(command).not.toContain('ORCA_ANTIGRAVITY_EVENT')
+        expect(command).not.toContain('KORCA_ANTIGRAVITY_EVENT')
         expect(command).not.toContain('"')
 
-        const wrapper = readFileSync(join(homeDir, '.orca', 'agent-hooks', wrapperFileName), 'utf8')
-        expect(wrapper).toContain(`set "ORCA_ANTIGRAVITY_EVENT=${eventName}"`)
-        expect(wrapper).toContain('call "%ORCA_ANTIGRAVITY_CORE%"')
+        const wrapper = readFileSync(join(homeDir, '.korca', 'agent-hooks', wrapperFileName), 'utf8')
+        expect(wrapper).toContain(`set "KORCA_ANTIGRAVITY_EVENT=${eventName}"`)
+        expect(wrapper).toContain('call "%KORCA_ANTIGRAVITY_CORE%"')
       }
 
       const script = readFileSync(
-        join(homeDir, '.orca', 'agent-hooks', 'antigravity-hook.cmd'),
+        join(homeDir, '.korca', 'agent-hooks', 'antigravity-hook.cmd'),
         'utf8'
       )
       expect(script).toContain('/hook/antigravity')
-      expect(script).toContain('hook_event_name=$env:ORCA_ANTIGRAVITY_EVENT')
+      expect(script).toContain('hook_event_name=$env:KORCA_ANTIGRAVITY_EVENT')
       expect(script).toContain('[string]::IsNullOrWhiteSpace($inputData)) { @{} }')
       expect(script).not.toContain('[string]::IsNullOrWhiteSpace($inputData)) { exit 0 }')
     })
   })
 
-  it('preserves user-authored hook bundles and entries in Orca bundle', () => {
+  it('preserves user-authored hook bundles and entries in Korca bundle', () => {
     const configPath = join(homeDir, '.gemini', 'config', 'hooks.json')
     mkdirSync(dirname(configPath), { recursive: true })
     writeFileSync(
@@ -171,8 +171,8 @@ describe('AntigravityHookService', () => {
           'user-hook': {
             PreInvocation: [{ type: 'command', command: '/usr/local/bin/user-hook' }]
           },
-          'orca-status': {
-            PreInvocation: [{ type: 'command', command: '/usr/local/bin/orca-extra' }]
+          'korca-status': {
+            PreInvocation: [{ type: 'command', command: '/usr/local/bin/korca-extra' }]
           }
         },
         null,
@@ -184,11 +184,11 @@ describe('AntigravityHookService', () => {
 
     const config = JSON.parse(readFileSync(configPath, 'utf8')) as {
       'user-hook': { PreInvocation: { command: string }[] }
-      'orca-status': { PreInvocation: { command: string }[] }
+      'korca-status': { PreInvocation: { command: string }[] }
     }
     expect(config['user-hook'].PreInvocation[0].command).toBe('/usr/local/bin/user-hook')
-    const commands = config['orca-status'].PreInvocation.map((entry) => entry.command)
-    expect(commands).toContain('/usr/local/bin/orca-extra')
+    const commands = config['korca-status'].PreInvocation.map((entry) => entry.command)
+    expect(commands).toContain('/usr/local/bin/korca-extra')
     expect(commands.some((command) => command.includes('antigravity-hook.sh'))).toBe(true)
   })
 
@@ -199,7 +199,7 @@ describe('AntigravityHookService', () => {
       configPath,
       `${JSON.stringify(
         {
-          'orca-status': {
+          'korca-status': {
             OldEvent: [
               {
                 type: 'command',
@@ -222,14 +222,14 @@ describe('AntigravityHookService', () => {
     new AntigravityHookService().install()
 
     const config = JSON.parse(readFileSync(configPath, 'utf8')) as {
-      'orca-status': Record<string, { command?: string; hooks?: { command: string }[] }[]>
+      'korca-status': Record<string, { command?: string; hooks?: { command: string }[] }[]>
     }
-    expect(config['orca-status'].OldEvent).toBeUndefined()
-    expect(config['orca-status'].PreToolUse).toBeUndefined()
-    const commands = config['orca-status'].PostToolUse.flatMap((definition) =>
+    expect(config['korca-status'].OldEvent).toBeUndefined()
+    expect(config['korca-status'].PreToolUse).toBeUndefined()
+    const commands = config['korca-status'].PostToolUse.flatMap((definition) =>
       (definition.hooks ?? []).map((hook) => hook.command)
     )
     expect(commands).toHaveLength(1)
-    expect(commands[0]).toContain(join(homeDir, '.orca', 'agent-hooks', 'antigravity-hook.sh'))
+    expect(commands[0]).toContain(join(homeDir, '.korca', 'agent-hooks', 'antigravity-hook.sh'))
   })
 })

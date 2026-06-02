@@ -4,7 +4,7 @@ import { Label } from '../ui/label'
 import { ORCHESTRATION_SKILL_NAME } from '@/lib/agent-feature-install-commands'
 import {
   AGENT_SKILL_CLI_PREREQUISITE_NOTICE,
-  ensureOrcaCliAvailableForAgentSkillTerminal
+  ensureKorcaCliAvailableForAgentSkillTerminal
 } from '@/lib/agent-skill-cli-prerequisite'
 import { ORCHESTRATION_SKILL_INSTALL_COMMAND } from '@/lib/orchestration-install-command'
 import {
@@ -97,7 +97,7 @@ export function OrchestrationPane(): React.JSX.Element {
       {orchestrationEnabled ? (
         <AgentSkillSetupPanel
           title="조정 스킬"
-          description="에이전트가 컨텍스트를 넘기고 Orca를 통해 작업을 조정할 수 있게 합니다."
+          description="에이전트가 컨텍스트를 넘기고 Korca를 통해 작업을 조정할 수 있게 합니다."
           command={ORCHESTRATION_SKILL_INSTALL_COMMAND}
           terminalTitle="조정 설정"
           terminalAriaLabel="조정 스킬 설치 터미널"
@@ -109,7 +109,7 @@ export function OrchestrationPane(): React.JSX.Element {
           preInstallNotice={AGENT_SKILL_CLI_PREREQUISITE_NOTICE}
           onBeforeOpenTerminal={async () => {
             useAppStore.getState().recordFeatureInteraction('agent-orchestration-setup')
-            await ensureOrcaCliAvailableForAgentSkillTerminal()
+            await ensureKorcaCliAvailableForAgentSkillTerminal()
           }}
           onRecheck={refreshOrchestrationSkill}
         />

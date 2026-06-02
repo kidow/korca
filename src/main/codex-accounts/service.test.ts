@@ -61,10 +61,10 @@ function createSettings(overrides: Partial<GlobalSettings> = {}): GlobalSettings
     terminalLigatures: 'auto',
     terminalCursorStyle: 'block',
     terminalCursorBlink: false,
-    terminalThemeDark: 'orca-dark',
+    terminalThemeDark: 'korca-dark',
     terminalDividerColorDark: '#000000',
     terminalUseSeparateLightTheme: false,
-    terminalThemeLight: 'orca-light',
+    terminalThemeLight: 'korca-light',
     terminalDividerColorLight: '#ffffff',
     terminalInactivePaneOpacity: 0.5,
     terminalActivePaneOpacity: 1,
@@ -173,7 +173,7 @@ function createRuntimeHome() {
 function createManagedHome(rootDir: string, accountId: string, config = '', auth = ''): string {
   const managedHomePath = join(rootDir, 'codex-accounts', accountId, 'home')
   mkdirSync(managedHomePath, { recursive: true })
-  writeFileSync(join(managedHomePath, '.orca-managed-home'), `${accountId}\n`, 'utf-8')
+  writeFileSync(join(managedHomePath, '.korca-managed-home'), `${accountId}\n`, 'utf-8')
   if (config) {
     writeFileSync(join(managedHomePath, 'config.toml'), config, 'utf-8')
   }
@@ -187,8 +187,8 @@ describe('CodexAccountService config sync', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.clearAllMocks()
-    testState.userDataDir = mkdtempSync(join(tmpdir(), 'orca-codex-accounts-'))
-    testState.fakeHomeDir = mkdtempSync(join(tmpdir(), 'orca-codex-home-'))
+    testState.userDataDir = mkdtempSync(join(tmpdir(), 'korca-codex-accounts-'))
+    testState.fakeHomeDir = mkdtempSync(join(tmpdir(), 'korca-codex-home-'))
     mkdirSync(join(testState.fakeHomeDir, '.codex'), { recursive: true })
   })
 
@@ -487,7 +487,7 @@ describe('CodexAccountService config sync', () => {
 
     const wslManagedHomePath = join(testState.userDataDir, 'wsl-managed-home')
     const wslConfigPath = join(testState.userDataDir, 'wsl-config.toml')
-    const wslLinuxHomePath = '/home/alice/.local/share/orca/codex-accounts/account-id-for-test/home'
+    const wslLinuxHomePath = '/home/alice/.local/share/korca/codex-accounts/account-id-for-test/home'
     writeFileSync(wslConfigPath, 'sandbox_mode = "danger-full-access"\n', 'utf-8')
 
     const execFileSyncMock = vi.fn((_command: string, args: string[]) => {
@@ -500,7 +500,7 @@ describe('CodexAccountService config sync', () => {
         return `${wslLinuxHomePath}\n`
       }
       mkdirSync(wslManagedHomePath, { recursive: true })
-      writeFileSync(join(wslManagedHomePath, '.orca-managed-home'), 'account-id-for-test\n')
+      writeFileSync(join(wslManagedHomePath, '.korca-managed-home'), 'account-id-for-test\n')
       return ''
     })
     const spawnMock = vi.fn((command: string, args: string[]) => {
@@ -595,9 +595,9 @@ describe('CodexAccountService config sync', () => {
     })
 
     const wslManagedHomePath = join(testState.userDataDir, 'wsl-account', 'home')
-    const wslLinuxHomePath = '/home/alice/.local/share/orca/codex-accounts/account-1/home'
+    const wslLinuxHomePath = '/home/alice/.local/share/korca/codex-accounts/account-1/home'
     mkdirSync(wslManagedHomePath, { recursive: true })
-    writeFileSync(join(wslManagedHomePath, '.orca-managed-home'), 'account-1\n', 'utf-8')
+    writeFileSync(join(wslManagedHomePath, '.korca-managed-home'), 'account-1\n', 'utf-8')
     writeFileSync(
       join(wslManagedHomePath, 'auth.json'),
       JSON.stringify({
@@ -718,9 +718,9 @@ describe('CodexAccountService config sync', () => {
     })
 
     const wslManagedHomePath = join(testState.userDataDir, 'wsl-account', 'home')
-    const wslLinuxHomePath = '/home/alice/.local/share/orca/codex-accounts/account-1/home'
+    const wslLinuxHomePath = '/home/alice/.local/share/korca/codex-accounts/account-1/home'
     mkdirSync(wslManagedHomePath, { recursive: true })
-    writeFileSync(join(wslManagedHomePath, '.orca-managed-home'), 'account-1\n', 'utf-8')
+    writeFileSync(join(wslManagedHomePath, '.korca-managed-home'), 'account-1\n', 'utf-8')
 
     vi.doMock('node:child_process', () => ({
       execFileSync: vi.fn((_command: string, args: string[]) => {
@@ -834,7 +834,7 @@ describe('CodexAccountService config sync', () => {
       '{"account":"host"}\n'
     )
     const wslManagedHomePath =
-      '\\\\wsl.localhost\\Ubuntu\\home\\alice\\.local\\share\\orca\\codex-accounts\\wsl-account\\home'
+      '\\\\wsl.localhost\\Ubuntu\\home\\alice\\.local\\share\\korca\\codex-accounts\\wsl-account\\home'
     const settings = createSettings({
       codexManagedAccounts: [
         {
@@ -857,7 +857,7 @@ describe('CodexAccountService config sync', () => {
           managedHomePath: wslManagedHomePath,
           managedHomeRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxHomePath: '/home/alice/.local/share/orca/codex-accounts/wsl-account/home',
+          wslLinuxHomePath: '/home/alice/.local/share/korca/codex-accounts/wsl-account/home',
           providerAccountId: null,
           workspaceLabel: null,
           workspaceAccountId: null,

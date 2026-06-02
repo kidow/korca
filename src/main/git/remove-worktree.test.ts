@@ -638,10 +638,10 @@ describe('listWorktrees', () => {
       })
     )
 
-    await expect(listWorktrees('/private/tmp/orca-issue-1582-test/my-repo')).resolves.toEqual([])
+    await expect(listWorktrees('/private/tmp/korca-issue-1582-test/my-repo')).resolves.toEqual([])
 
     expect(gitExecFileAsyncMock).toHaveBeenCalledWith(['worktree', 'list', '--porcelain', '-z'], {
-      cwd: '/private/tmp/orca-issue-1582-test/my-repo'
+      cwd: '/private/tmp/korca-issue-1582-test/my-repo'
     })
     expect(warnSpy).not.toHaveBeenCalled()
     warnSpy.mockRestore()

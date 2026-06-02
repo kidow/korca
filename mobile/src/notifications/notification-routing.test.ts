@@ -7,14 +7,14 @@ describe('notification routing', () => {
       buildLocalNotificationData(
         {
           source: 'agent-task-complete',
-          worktreeId: 'repo::/Users/me/orca/workspaces/feature'
+          worktreeId: 'repo::/Users/me/korca/workspaces/feature'
         },
         'host-1'
       )
     ).toEqual({
       source: 'agent-task-complete',
       hostId: 'host-1',
-      worktreeId: 'repo::/Users/me/orca/workspaces/feature'
+      worktreeId: 'repo::/Users/me/korca/workspaces/feature'
     })
   })
 
@@ -22,9 +22,9 @@ describe('notification routing', () => {
     expect(
       getNotificationNavigationPath({
         hostId: 'host-1',
-        worktreeId: 'repo::/Users/me/orca/workspaces/feature'
+        worktreeId: 'repo::/Users/me/korca/workspaces/feature'
       })
-    ).toBe('/h/host-1/session/repo%3A%3A%2FUsers%2Fme%2Forca%2Fworkspaces%2Ffeature')
+    ).toBe('/h/host-1/session/repo%3A%3A%2FUsers%2Fme%2Fkorca%2Fworkspaces%2Ffeature')
   })
 
   it('falls back to the host screen when the payload has no worktree id', () => {

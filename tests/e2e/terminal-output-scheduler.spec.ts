@@ -9,7 +9,7 @@
  */
 
 import type { Page } from '@stablyai/playwright-test'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import {
   ensureTerminalVisible,
   getActiveTabId,
@@ -169,39 +169,39 @@ async function mainSnapshotContains(page: Page, ptyId: string, text: string): Pr
 
 test.describe('Terminal output scheduler', () => {
   test('background tab output bursts use the shared drain while the active tab renders', async ({
-    orcaPage
+    korcaPage
   }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
 
-    const firstTabId = await getActiveTabId(orcaPage)
+    const firstTabId = await getActiveTabId(korcaPage)
     if (!firstTabId) {
       throw new Error('Expected an initial terminal tab')
     }
 
     const tabIds = [firstTabId]
     const ptyIdsByTabId: Record<string, string> = {
-      [firstTabId]: await waitForTabPtyId(orcaPage, firstTabId)
+      [firstTabId]: await waitForTabPtyId(korcaPage, firstTabId)
     }
 
     while (tabIds.length < TAB_COUNT) {
-      const tabId = await createTerminalTab(orcaPage)
-      await waitForActiveTerminalManager(orcaPage, 30_000)
+      const tabId = await createTerminalTab(korcaPage)
+      await waitForActiveTerminalManager(korcaPage, 30_000)
       tabIds.push(tabId)
-      ptyIdsByTabId[tabId] = await waitForTabPtyId(orcaPage, tabId)
+      ptyIdsByTabId[tabId] = await waitForTabPtyId(korcaPage, tabId)
     }
 
-    await tabLocator(orcaPage, firstTabId).click()
+    await tabLocator(korcaPage, firstTabId).click()
     await expect
-      .poll(() => getDomActiveTabId(orcaPage), {
+      .poll(() => getDomActiveTabId(korcaPage), {
         timeout: 5_000,
         message: 'First terminal tab did not become active before the burst repro'
       })
       .toBe(firstTabId)
 
-    await resetSchedulerDebug(orcaPage)
+    await resetSchedulerDebug(korcaPage)
 
     const runId = Date.now()
     const foregroundMarker = `FG_SCHED_${runId}`
@@ -215,10 +215,10 @@ test.describe('Terminal output scheduler', () => {
     }))
 
     await sendPtyCommands(
-      orcaPage,
+      korcaPage,
       backgroundCommands.map(({ ptyId, command }) => ({ ptyId, command }))
     )
-    await sendPtyCommands(orcaPage, [
+    await sendPtyCommands(korcaPage, [
       {
         ptyId: ptyIdsByTabId[firstTabId],
         command: nodeConsoleCommand(`'${foregroundMarker}'`)
@@ -226,7 +226,7 @@ test.describe('Terminal output scheduler', () => {
     ])
 
     await expect
-      .poll(async () => (await getTerminalContent(orcaPage)).includes(foregroundMarker), {
+      .poll(async () => (await getTerminalContent(korcaPage)).includes(foregroundMarker), {
         timeout: 5_000,
         message: 'Active terminal did not render foreground output during background bursts'
       })
@@ -235,13 +235,13 @@ test.describe('Terminal output scheduler', () => {
     await expect
       .poll(
         async () => {
-          const debug = await getSchedulerDebug(orcaPage)
+          const debug = await getSchedulerDebug(korcaPage)
           if (debug.backgroundEnqueueCount >= backgroundCommands.length) {
             return true
           }
           const snapshots = await Promise.all(
             backgroundCommands.map(({ ptyId, marker }) =>
-              mainSnapshotContains(orcaPage, ptyId, marker)
+              mainSnapshotContains(korcaPage, ptyId, marker)
             )
           )
           return snapshots.every(Boolean)
@@ -253,7 +253,7 @@ test.describe('Terminal output scheduler', () => {
       )
       .toBe(true)
 
-    const debug = await getSchedulerDebug(orcaPage)
+    const debug = await getSchedulerDebug(korcaPage)
     expect(debug.foregroundWriteCount).toBeGreaterThan(0)
     if (debug.backgroundEnqueueCount > 0) {
       expect(debug.backgroundWriteCount).toBeGreaterThanOrEqual(backgroundCommands.length)
@@ -264,15 +264,15 @@ test.describe('Terminal output scheduler', () => {
 
     const firstBackground = backgroundCommands[0]
     const firstBackgroundTabId = tabIds[1]
-    await tabLocator(orcaPage, firstBackgroundTabId).click()
+    await tabLocator(korcaPage, firstBackgroundTabId).click()
     await expect
-      .poll(() => getDomActiveTabId(orcaPage), {
+      .poll(() => getDomActiveTabId(korcaPage), {
         timeout: 5_000,
         message: 'Background terminal tab did not become active for content verification'
       })
       .toBe(firstBackgroundTabId)
     await expect
-      .poll(async () => (await getTerminalContent(orcaPage)).includes(firstBackground.marker), {
+      .poll(async () => (await getTerminalContent(korcaPage)).includes(firstBackground.marker), {
         timeout: 5_000,
         message: 'Background terminal output was not preserved after scheduler drain'
       })
@@ -280,19 +280,19 @@ test.describe('Terminal output scheduler', () => {
   })
 
   test('visible bulk output uses the high-priority drain instead of synchronous xterm writes', async ({
-    orcaPage
+    korcaPage
   }, testInfo) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
 
-    const activeTabId = await createTerminalTab(orcaPage)
+    const activeTabId = await createTerminalTab(korcaPage)
     if (!activeTabId) {
       throw new Error('Expected a fresh terminal tab')
     }
-    const ptyId = await waitForTabPtyId(orcaPage, activeTabId)
-    await resetSchedulerDebug(orcaPage)
+    const ptyId = await waitForTabPtyId(korcaPage, activeTabId)
+    await resetSchedulerDebug(korcaPage)
 
     const runId = Date.now()
     const marker = `VISIBLE_THROUGHPUT_${runId}`
@@ -300,16 +300,16 @@ test.describe('Terminal output scheduler', () => {
       `const marker='VISIBLE' + '_THROUGHPUT_' + '${runId}'; process.stdout.write('VISIBLE_FILL_${runId}\\n' + 'x'.repeat(700000) + '\\n' + marker + '\\n')`
     )
 
-    await sendPtyCommands(orcaPage, [{ ptyId, command: floodCommand }])
+    await sendPtyCommands(korcaPage, [{ ptyId, command: floodCommand }])
 
     await expect
-      .poll(async () => (await getTerminalContent(orcaPage, 12_000)).includes(marker), {
+      .poll(async () => (await getTerminalContent(korcaPage, 12_000)).includes(marker), {
         timeout: 30_000,
         message: 'Active terminal did not render the visible throughput marker'
       })
       .toBe(true)
 
-    const debug = await getSchedulerDebug(orcaPage)
+    const debug = await getSchedulerDebug(korcaPage)
     await testInfo.attach('terminal-visible-throughput-proof', {
       body: JSON.stringify(debug, null, 2),
       contentType: 'application/json'
@@ -323,24 +323,24 @@ test.describe('Terminal output scheduler', () => {
   })
 
   test('hidden overflow restores from main-owned terminal state when the tab becomes visible', async ({
-    orcaPage
+    korcaPage
   }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
 
-    const foregroundTabId = await getActiveTabId(orcaPage)
+    const foregroundTabId = await getActiveTabId(korcaPage)
     if (!foregroundTabId) {
       throw new Error('Expected an initial terminal tab')
     }
-    const hiddenTabId = await createTerminalTab(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
-    const hiddenPtyId = await waitForTabPtyId(orcaPage, hiddenTabId)
+    const hiddenTabId = await createTerminalTab(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
+    const hiddenPtyId = await waitForTabPtyId(korcaPage, hiddenTabId)
 
-    await tabLocator(orcaPage, foregroundTabId).click()
+    await tabLocator(korcaPage, foregroundTabId).click()
     await expect
-      .poll(() => getDomActiveTabId(orcaPage), {
+      .poll(() => getDomActiveTabId(korcaPage), {
         timeout: 5_000,
         message: 'Foreground terminal tab did not become active before hidden flood'
       })
@@ -351,30 +351,30 @@ test.describe('Terminal output scheduler', () => {
       `for (let i = 0; i < 55000; i++) console.log('RECOVER_FILL_' + i + '_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); console.log('${marker}')`
     )
 
-    await sendPtyCommands(orcaPage, [{ ptyId: hiddenPtyId, command: floodCommand }])
+    await sendPtyCommands(korcaPage, [{ ptyId: hiddenPtyId, command: floodCommand }])
 
     await expect
-      .poll(async () => mainSnapshotContains(orcaPage, hiddenPtyId, marker), {
+      .poll(async () => mainSnapshotContains(korcaPage, hiddenPtyId, marker), {
         timeout: 30_000,
         message: 'Main-owned terminal snapshot did not capture the hidden flood marker'
       })
       .toBe(true)
 
-    await tabLocator(orcaPage, hiddenTabId).click()
+    await tabLocator(korcaPage, hiddenTabId).click()
     await expect
-      .poll(() => getDomActiveTabId(orcaPage), {
+      .poll(() => getDomActiveTabId(korcaPage), {
         timeout: 5_000,
         message: 'Hidden terminal tab did not become visible for recovery verification'
       })
       .toBe(hiddenTabId)
 
     await expect
-      .poll(async () => (await getTerminalContent(orcaPage)).includes(marker), {
+      .poll(async () => (await getTerminalContent(korcaPage)).includes(marker), {
         timeout: 10_000,
         message: 'Hidden terminal did not restore the marker from main-owned state'
       })
       .toBe(true)
 
-    expect(await getTerminalContent(orcaPage)).not.toContain('Orca skipped hidden terminal output')
+    expect(await getTerminalContent(korcaPage)).not.toContain('Korca skipped hidden terminal output')
   })
 })

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { RpcDispatcher } from '../dispatcher'
 import type { RpcRequest } from '../core'
-import type { OrcaRuntimeService } from '../../orca-runtime'
+import type { KorcaRuntimeService } from '../../korca-runtime'
 import { REPO_METHODS } from './repo'
 
 function makeRequest(method: string, params?: unknown): RpcRequest {
@@ -15,7 +15,7 @@ describe('repo RPC methods', () => {
       createRepo: vi.fn().mockResolvedValue({
         repo: { id: 'repo-1', path: '/srv/projects/new-app', kind: 'git' }
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -38,26 +38,26 @@ describe('repo RPC methods', () => {
       getRuntimeId: () => 'test-runtime',
       cloneRepo: vi.fn().mockResolvedValue({
         id: 'repo-1',
-        path: '/srv/projects/orca',
+        path: '/srv/projects/korca',
         kind: 'git'
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const response = await dispatcher.dispatch(
       makeRequest('repo.clone', {
-        url: 'https://github.com/example/orca.git',
+        url: 'https://github.com/example/korca.git',
         destination: '/srv/projects'
       })
     )
 
     expect(runtime.cloneRepo).toHaveBeenCalledWith(
-      'https://github.com/example/orca.git',
+      'https://github.com/example/korca.git',
       '/srv/projects'
     )
     expect(response).toMatchObject({
       ok: true,
-      result: { repo: { id: 'repo-1', path: '/srv/projects/orca' } }
+      result: { repo: { id: 'repo-1', path: '/srv/projects/korca' } }
     })
   })
 
@@ -66,10 +66,10 @@ describe('repo RPC methods', () => {
       getRuntimeId: () => 'test-runtime',
       showRepo: vi.fn().mockResolvedValue({
         id: 'repo-1',
-        path: '/srv/projects/orca',
+        path: '/srv/projects/korca',
         kind: 'git'
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const response = await dispatcher.dispatch(makeRequest('repo.show', { repo: 'repo-1' }))
@@ -77,7 +77,7 @@ describe('repo RPC methods', () => {
     expect(runtime.showRepo).toHaveBeenCalledWith('repo-1')
     expect(response).toMatchObject({
       ok: true,
-      result: { repo: { id: 'repo-1', path: '/srv/projects/orca' } }
+      result: { repo: { id: 'repo-1', path: '/srv/projects/korca' } }
     })
   })
 
@@ -94,7 +94,7 @@ describe('repo RPC methods', () => {
           updatedAt: 2
         }
       ])
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -119,7 +119,7 @@ describe('repo RPC methods', () => {
         createdAt: 1,
         updatedAt: 2
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -147,7 +147,7 @@ describe('repo RPC methods', () => {
         hasHooksFile: true,
         hooks: { scripts: { setup: 'pnpm install' } },
         setupRunPolicy: 'run-by-default',
-        source: 'orca.yaml',
+        source: 'korca.yaml',
         setupTrust: {
           contentHash: 'hash-1',
           scriptContent: 'pnpm install'
@@ -170,11 +170,11 @@ describe('repo RPC methods', () => {
         localContent: null,
         sharedContent: 'Fix {{artifact_url}}',
         effectiveContent: 'Fix {{artifact_url}}',
-        localFilePath: '/srv/repo/.orca/issue-command',
+        localFilePath: '/srv/repo/.korca/issue-command',
         source: 'shared'
       }),
       writeRepoIssueCommand: vi.fn().mockResolvedValue({ ok: true })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const hooksResponse = await dispatcher.dispatch(makeRequest('repo.hooks', { repo: 'repo-1' }))
@@ -207,7 +207,7 @@ describe('repo RPC methods', () => {
         path: '/srv/repo',
         issueSourcePreference: 'origin'
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -245,7 +245,7 @@ describe('repo RPC methods', () => {
       updateProjectGroup: vi.fn().mockResolvedValue({ ...group, name: 'Core' }),
       deleteProjectGroup: vi.fn().mockResolvedValue({ deleted: true }),
       moveProjectToGroup: vi.fn().mockResolvedValue({ id: 'repo-1', projectGroupId: group.id })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     await dispatcher.dispatch(makeRequest('projectGroup.list'))
@@ -298,7 +298,7 @@ describe('repo RPC methods', () => {
         alreadyKnownCount: 0,
         failedCount: 0
       })
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: REPO_METHODS })
 
     const response = await dispatcher.dispatch(

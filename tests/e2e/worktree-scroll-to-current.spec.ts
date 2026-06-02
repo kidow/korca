@@ -1,5 +1,5 @@
 import type { Page } from '@stablyai/playwright-test'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import { waitForActiveWorktree, waitForSessionReady } from './helpers/store'
 
 const WORKTREE_OPTION_PREFIX = 'worktree-list-option-'
@@ -90,17 +90,17 @@ async function expectNoRevealHighlightDuring(
 }
 
 test.describe('Reveal active workspace button', () => {
-  test.beforeEach(async ({ orcaPage }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
+  test.beforeEach(async ({ korcaPage }) => {
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
   })
 
   test('reveals the current workspace when it is clipped in the production sidebar', async ({
-    orcaPage
+    korcaPage
   }) => {
-    await prepareSidebarForScrollTest(orcaPage)
+    await prepareSidebarForScrollTest(korcaPage)
 
-    const renderedOptions = orcaPage.locator('[data-worktree-sidebar] [role="option"]')
+    const renderedOptions = korcaPage.locator('[data-worktree-sidebar] [role="option"]')
     await expect(renderedOptions).toHaveCount(2)
 
     const targetIdAttribute = await renderedOptions.last().getAttribute('id')
@@ -109,15 +109,15 @@ test.describe('Reveal active workspace button', () => {
     }
 
     const targetId = decodeURIComponent(targetIdAttribute.slice(WORKTREE_OPTION_PREFIX.length))
-    const targetRow = worktreeOption(orcaPage, targetId)
-    const revealButton = orcaPage.getByRole('button', { name: 'Reveal active workspace' })
+    const targetRow = worktreeOption(korcaPage, targetId)
+    const revealButton = korcaPage.getByRole('button', { name: 'Reveal active workspace' })
 
     await renderedOptions.last().click()
     await expect(targetRow).toHaveAttribute('aria-current', 'page')
-    await expectNoRevealHighlightDuring(orcaPage, targetId, 400)
+    await expectNoRevealHighlightDuring(korcaPage, targetId, 400)
     await expect(revealButton).toBeVisible()
     await expect(revealButton).toBeEnabled()
-    await forceCurrentWorkspaceClipped(orcaPage, targetId)
+    await forceCurrentWorkspaceClipped(korcaPage, targetId)
 
     await expect(revealButton).toBeVisible()
     await expect(revealButton).toBeEnabled()
@@ -128,7 +128,7 @@ test.describe('Reveal active workspace button', () => {
     await expect
       .poll(
         () =>
-          orcaPage.evaluate((targetId) => {
+          korcaPage.evaluate((targetId) => {
             const scroller = document.querySelector<HTMLElement>('[data-worktree-sidebar]')
             const target = document.getElementById(
               `worktree-list-option-${encodeURIComponent(targetId)}`
@@ -155,11 +155,11 @@ test.describe('Reveal active workspace button', () => {
   })
 
   test('clears sidebar filters before revealing a hidden current workspace', async ({
-    orcaPage
+    korcaPage
   }) => {
-    await prepareSidebarForScrollTest(orcaPage)
+    await prepareSidebarForScrollTest(korcaPage)
 
-    const renderedOptions = orcaPage.locator('[data-worktree-sidebar] [role="option"]')
+    const renderedOptions = korcaPage.locator('[data-worktree-sidebar] [role="option"]')
     await expect(renderedOptions).toHaveCount(2)
 
     const targetIdAttribute = await renderedOptions.last().getAttribute('id')
@@ -168,13 +168,13 @@ test.describe('Reveal active workspace button', () => {
     }
 
     const targetId = decodeURIComponent(targetIdAttribute.slice(WORKTREE_OPTION_PREFIX.length))
-    const targetRow = worktreeOption(orcaPage, targetId)
-    const revealButton = orcaPage.getByRole('button', { name: 'Reveal active workspace' })
+    const targetRow = worktreeOption(korcaPage, targetId)
+    const revealButton = korcaPage.getByRole('button', { name: 'Reveal active workspace' })
 
     await renderedOptions.last().click()
     await expect(targetRow).toHaveAttribute('aria-current', 'page')
 
-    await orcaPage.evaluate(() => {
+    await korcaPage.evaluate(() => {
       const store = window.__store
       if (!store) {
         throw new Error('window.__store is not available')
@@ -183,7 +183,7 @@ test.describe('Reveal active workspace button', () => {
     })
 
     await expect(renderedOptions).toHaveCount(0)
-    await expect(orcaPage.getByText('No workspaces found')).toBeVisible()
+    await expect(korcaPage.getByText('No workspaces found')).toBeVisible()
 
     await revealButton.click()
 
@@ -192,7 +192,7 @@ test.describe('Reveal active workspace button', () => {
     await expect
       .poll(
         () =>
-          orcaPage.evaluate(() => {
+          korcaPage.evaluate(() => {
             const store = window.__store
             if (!store) {
               throw new Error('window.__store is not available')

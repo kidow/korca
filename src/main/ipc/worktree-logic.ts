@@ -2,7 +2,7 @@ import { basename, resolve, relative, isAbsolute, posix, sep, win32 } from 'path
 import type {
   GitWorktreeInfo,
   GlobalSettings,
-  OrcaWorkspaceLayout,
+  KorcaWorkspaceLayout,
   Repo,
   Worktree,
   WorktreeMeta
@@ -101,8 +101,8 @@ export function computeBranchName(
  * must also live on the WSL filesystem. Creating them on the Windows side
  * (/mnt/c/...) would be extremely slow due to cross-filesystem I/O and
  * the terminal would open a Windows shell instead of WSL. We mirror the
- * Windows workspace layout inside ~/orca/workspaces on the WSL filesystem
- * (e.g. \\wsl.localhost\Ubuntu\home\user\orca\workspaces\repo\feature).
+ * Windows workspace layout inside ~/korca/workspaces on the WSL filesystem
+ * (e.g. \\wsl.localhost\Ubuntu\home\user\korca\workspaces\repo\feature).
  */
 export function computeWorktreePath(
   sanitizedName: string,
@@ -128,7 +128,7 @@ export function computeWorkspaceRoot(repoPath: string, settings: { workspaceDir:
       // Mirror absolute local desktop workspace roots inside the distro so
       // terminals stay on the WSL filesystem; repo-relative roots can resolve
       // directly against the WSL repo path.
-      return win32.join(wslHome, 'orca', 'workspaces')
+      return win32.join(wslHome, 'korca', 'workspaces')
     }
   }
   return resolveWorkspaceDirForRepo(repoPath, settings.workspaceDir)
@@ -165,7 +165,7 @@ export function getWorktreePathSettings(
 export function getWorktreeCreationLayout(
   repo: WorktreeBasePathRepo,
   settings: WorktreePathSettings
-): OrcaWorkspaceLayout {
+): KorcaWorkspaceLayout {
   return {
     path: getEffectiveWorktreeBasePath(repo, settings),
     nestWorkspaces: settings.nestWorkspaces
@@ -186,7 +186,7 @@ export function areWorktreePathsEqual(
     const right = win32.normalize(win32.resolve(rightPath))
     // Why: `git worktree list` can report the same Windows path with different
     // slash styles or drive-letter casing than the path we computed before
-    // creation. Orca must treat those as the same worktree or a successful
+    // creation. Korca must treat those as the same worktree or a successful
     // create spuriously fails until the next full reload repopulates state.
     return left.toLowerCase() === right.toLowerCase()
   }

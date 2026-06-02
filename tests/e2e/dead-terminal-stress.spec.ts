@@ -8,7 +8,7 @@
  * All tests require @headful mode for WebGL to be active.
  */
 
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import {
   waitForSessionReady,
   waitForActiveWorktree,
@@ -28,12 +28,12 @@ const STRESS_ITERATIONS = 5
 test.describe('Dead Terminal Stress @headful', () => {
   const createdWorktreeIds: string[] = []
 
-  test.beforeEach(async ({ orcaPage }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
+  test.beforeEach(async ({ korcaPage }) => {
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
 
-    await orcaPage.evaluate(async () => {
+    await korcaPage.evaluate(async () => {
       const state = window.__store?.getState()
       if (!state) {
         return
@@ -42,9 +42,9 @@ test.describe('Dead Terminal Stress @headful', () => {
     })
   })
 
-  test.afterEach(async ({ orcaPage }) => {
+  test.afterEach(async ({ korcaPage }) => {
     for (const id of createdWorktreeIds) {
-      await removeWorktreeViaStore(orcaPage, id)
+      await removeWorktreeViaStore(korcaPage, id)
     }
     createdWorktreeIds.length = 0
   })
@@ -55,21 +55,21 @@ test.describe('Dead Terminal Stress @headful', () => {
    * pressure — especially with many worktrees open. The recovery path is:
    * onContextLoss → dispose WebGL → DOM fallback → rAF → fit + refresh.
    */
-  test('@headful setup-split with forced WebGL context loss recovers', async ({ orcaPage }) => {
+  test('@headful setup-split with forced WebGL context loss recovers', async ({ korcaPage }) => {
     test.setTimeout(120_000)
-    const homeWorktreeId = await waitForActiveWorktree(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    const homeWorktreeId = await waitForActiveWorktree(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
 
     for (let i = 0; i < STRESS_ITERATIONS; i++) {
-      const newId = await createAndActivateWorktreeWithSetup(orcaPage, `ctxloss-${i}`, 'vertical')
+      const newId = await createAndActivateWorktreeWithSetup(korcaPage, `ctxloss-${i}`, 'vertical')
       createdWorktreeIds.push(newId)
 
-      await expect.poll(async () => getActiveWorktreeId(orcaPage), { timeout: 10_000 }).toBe(newId)
-      await ensureTerminalVisible(orcaPage)
-      await waitForActiveTerminalManager(orcaPage, 30_000)
-      await waitForPaneCount(orcaPage, 2, 15_000)
+      await expect.poll(async () => getActiveWorktreeId(korcaPage), { timeout: 10_000 }).toBe(newId)
+      await ensureTerminalVisible(korcaPage)
+      await waitForActiveTerminalManager(korcaPage, 30_000)
+      await waitForPaneCount(korcaPage, 2, 15_000)
 
-      const lostCount = await orcaPage.evaluate(() => {
+      const lostCount = await korcaPage.evaluate(() => {
         const canvases = document.querySelectorAll('.pane canvas:not(.xterm-link-layer)')
         let lost = 0
         for (const canvas of canvases) {
@@ -90,14 +90,14 @@ test.describe('Dead Terminal Stress @headful', () => {
         console.log(`[ctxloss-${i}] Forced context loss on ${lostCount} canvases`)
       }
 
-      await orcaPage.waitForTimeout(500)
-      await waitForAllPanesToHaveContent(orcaPage, `ctxloss-${i} after context loss`)
+      await korcaPage.waitForTimeout(500)
+      await waitForAllPanesToHaveContent(korcaPage, `ctxloss-${i} after context loss`)
 
-      await switchToWorktree(orcaPage, homeWorktreeId)
+      await switchToWorktree(korcaPage, homeWorktreeId)
       await expect
-        .poll(async () => getActiveWorktreeId(orcaPage), { timeout: 10_000 })
+        .poll(async () => getActiveWorktreeId(korcaPage), { timeout: 10_000 })
         .toBe(homeWorktreeId)
-      await removeWorktreeViaStore(orcaPage, newId)
+      await removeWorktreeViaStore(korcaPage, newId)
       createdWorktreeIds.pop()
     }
   })
@@ -107,33 +107,33 @@ test.describe('Dead Terminal Stress @headful', () => {
    * race between wrapInSplit() reparenting, WebGL context creation during
    * resumeRendering(), and the scheduleSplitScrollRestore 200ms timer.
    */
-  test('@headful rapid worktree switching during setup-split lifecycle', async ({ orcaPage }) => {
+  test('@headful rapid worktree switching during setup-split lifecycle', async ({ korcaPage }) => {
     test.setTimeout(120_000)
-    const homeWorktreeId = await waitForActiveWorktree(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    const homeWorktreeId = await waitForActiveWorktree(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
 
     for (let i = 0; i < 3; i++) {
-      const newId = await createAndActivateWorktreeWithSetup(orcaPage, `rapid-${i}`, 'vertical')
+      const newId = await createAndActivateWorktreeWithSetup(korcaPage, `rapid-${i}`, 'vertical')
       createdWorktreeIds.push(newId)
 
       // Switch away during the ~200ms scheduleSplitScrollRestore window
-      await orcaPage.waitForTimeout(50)
-      await switchToWorktree(orcaPage, homeWorktreeId)
-      await orcaPage.waitForTimeout(50)
+      await korcaPage.waitForTimeout(50)
+      await switchToWorktree(korcaPage, homeWorktreeId)
+      await korcaPage.waitForTimeout(50)
 
       // Switch back — triggers resumeRendering on partially-initialized panes
-      await switchToWorktree(orcaPage, newId)
-      await expect.poll(async () => getActiveWorktreeId(orcaPage), { timeout: 10_000 }).toBe(newId)
-      await ensureTerminalVisible(orcaPage)
-      await waitForActiveTerminalManager(orcaPage, 30_000)
-      await waitForPaneCount(orcaPage, 2, 15_000)
-      await waitForAllPanesToHaveContent(orcaPage, `rapid-${i} after return`)
+      await switchToWorktree(korcaPage, newId)
+      await expect.poll(async () => getActiveWorktreeId(korcaPage), { timeout: 10_000 }).toBe(newId)
+      await ensureTerminalVisible(korcaPage)
+      await waitForActiveTerminalManager(korcaPage, 30_000)
+      await waitForPaneCount(korcaPage, 2, 15_000)
+      await waitForAllPanesToHaveContent(korcaPage, `rapid-${i} after return`)
 
-      await switchToWorktree(orcaPage, homeWorktreeId)
+      await switchToWorktree(korcaPage, homeWorktreeId)
       await expect
-        .poll(async () => getActiveWorktreeId(orcaPage), { timeout: 10_000 })
+        .poll(async () => getActiveWorktreeId(korcaPage), { timeout: 10_000 })
         .toBe(homeWorktreeId)
-      await removeWorktreeViaStore(orcaPage, newId)
+      await removeWorktreeViaStore(korcaPage, newId)
       createdWorktreeIds.pop()
     }
   })

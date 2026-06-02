@@ -21,7 +21,7 @@ const stepCopy = {
   agent: {
     title: '기본 에이전트를 선택하세요',
     subtitle:
-      'Orca는 모든 CLI 에이전트와 함께 동작합니다. 가장 자주 쓸 에이전트를 고르세요. 언제든 바꿀 수 있습니다.'
+      'Korca는 모든 CLI 에이전트와 함께 동작합니다. 가장 자주 쓸 에이전트를 고르세요. 언제든 바꿀 수 있습니다.'
   },
   theme: {
     title: '익숙한 모습으로 맞추세요',
@@ -29,22 +29,22 @@ const stepCopy = {
   },
   notifications: {
     title: '알림을 설정하세요',
-    subtitle: '에이전트 작업이 끝나거나 도움이 필요할 때 Orca가 알려줍니다.'
+    subtitle: '에이전트 작업이 끝나거나 도움이 필요할 때 Korca가 알려줍니다.'
   },
   agentSetup: {
-    title: '에이전트용 Orca를 설정하세요',
-    subtitle: '에이전트가 쓸 고급 Orca 기능을 켜세요.'
+    title: '에이전트용 Korca를 설정하세요',
+    subtitle: '에이전트가 쓸 고급 Korca 기능을 켜세요.'
   },
   integrations: {
     title: 'GitHub 작업을 설정하세요',
     subtitle: 'GitHub CLI를 설치하면 다음을 할 수 있습니다:'
   },
   tour: {
-    title: 'Orca 둘러보기',
-    subtitle: 'Orca의 고급 기능을 60초 만에 살펴보세요.'
+    title: 'Korca 둘러보기',
+    subtitle: 'Korca의 고급 기능을 60초 만에 살펴보세요.'
   },
   repo: {
-    title: 'Orca가 볼 코드를 지정하세요',
+    title: 'Korca가 볼 코드를 지정하세요',
     subtitle: '폴더를 열거나 저장소를 복제해 설정을 마치세요.'
   }
 } as const
@@ -55,7 +55,7 @@ const stepTooltipLabels = {
   notifications: '알림',
   agentSetup: '에이전트 설정',
   integrations: '연동',
-  tour: 'Orca 둘러보기',
+  tour: 'Korca 둘러보기',
   repo: '프로젝트 만들기'
 } as const
 
@@ -187,7 +187,7 @@ export default function OnboardingFlow({
       <section
         ref={flow.setLifecycleRootRef}
         role="dialog"
-        aria-label="Orca 온보딩"
+        aria-label="Korca 온보딩"
         aria-modal="true"
         data-onboarding-modal
         className={cn(
@@ -203,7 +203,7 @@ export default function OnboardingFlow({
               aria-hidden="true"
               className="h-7 w-auto shrink-0 invert dark:invert-0"
             />
-            <span>Orca</span>
+            <span>Korca</span>
           </div>
 
           {isInlineTourRunning ? (
@@ -255,7 +255,7 @@ export default function OnboardingFlow({
             <div className="mt-8 shrink-0">
               {stepIndex === 0 && (
                 <div className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                  Orca에 오신 것을 환영합니다
+                  Korca에 오신 것을 환영합니다
                 </div>
               )}
               <h1 className="text-[34px] font-semibold leading-[1.15] tracking-tight text-foreground">

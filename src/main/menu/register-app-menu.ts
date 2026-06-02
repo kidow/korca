@@ -102,7 +102,7 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
   }
 
   const featureTourItem: Electron.MenuItemConstructorOptions = {
-    label: 'Orca 둘러보기',
+    label: 'Korca 둘러보기',
     click: (_menuItem, window) => onOpenFeatureTour(window)
   }
 
@@ -129,7 +129,7 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
   // Why: the macOS app-menu (named after the app) is mandatory on darwin and
   // owns hide/hideOthers/unhide/services/quit roles that only make sense in
   // the system menu bar. On Windows/Linux that menu would render as a
-  // redundant "Orca" entry with roles that don't apply, so we omit it there
+  // redundant "Korca" entry with roles that don't apply, so we omit it there
   // and distribute its items across File / Help instead.
   const macAppMenu: Electron.MenuItemConstructorOptions = {
     label: app.name,
@@ -218,7 +218,7 @@ function buildAndApplyMenu(options: RegisterAppMenuOptions): void {
         click: () => onToggleAppearance('showTasksButton')
       },
       {
-        label: 'Orca 모바일 버튼 표시',
+        label: 'Korca 모바일 버튼 표시',
         type: 'checkbox',
         checked: appearance.showMobileButton,
         click: () => onToggleAppearance('showMobileButton')

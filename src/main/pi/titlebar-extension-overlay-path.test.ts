@@ -4,7 +4,7 @@ import { tmpdir } from 'os'
 import { basename, join, sep } from 'path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-const userDataDir = mkdtempSync(join(tmpdir(), 'orca-pi-overlay-path-userdata-'))
+const userDataDir = mkdtempSync(join(tmpdir(), 'korca-pi-overlay-path-userdata-'))
 
 vi.mock('electron', () => ({
   app: {
@@ -23,7 +23,7 @@ const PATH_SHAPED_PTY_ID = [
   '50c010a2-bc8e-4eb1-8847-5812133ad6df',
   'Users',
   'dev',
-  'orca',
+  'korca',
   'workspaces',
   'noqa',
   'feature@@a1b2c3d4'
@@ -47,7 +47,7 @@ describe('PiTitlebarExtensionService overlay paths', () => {
   })
 
   it('hashes daemon-shaped pty ids into bounded overlay directory names', () => {
-    const piHome = mkdtempSync(join(tmpdir(), 'orca-pi-overlay-path-home-'))
+    const piHome = mkdtempSync(join(tmpdir(), 'korca-pi-overlay-path-home-'))
     const svc = new PiTitlebarExtensionService()
 
     try {
@@ -56,9 +56,9 @@ describe('PiTitlebarExtensionService overlay paths', () => {
       expect(env.PI_CODING_AGENT_DIR).toBe(overlayPath('pi', PATH_SHAPED_PTY_ID))
       expect(basename(env.PI_CODING_AGENT_DIR!)).toMatch(/^[a-f0-9]{32}$/)
       expect(readdirSync(join(env.PI_CODING_AGENT_DIR!, 'extensions')).sort()).toEqual([
-        'orca-agent-status.ts',
-        'orca-prefill.ts',
-        'orca-titlebar-spinner.ts'
+        'korca-agent-status.ts',
+        'korca-prefill.ts',
+        'korca-titlebar-spinner.ts'
       ])
     } finally {
       rmSync(piHome, { recursive: true, force: true })

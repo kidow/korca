@@ -24,7 +24,7 @@ describe('CommandCodeHookService', () => {
   let homeDir: string
 
   beforeEach(() => {
-    homeDir = mkdtempSync(join(tmpdir(), 'orca-command-code-home-'))
+    homeDir = mkdtempSync(join(tmpdir(), 'korca-command-code-home-'))
     homedirMock.mockReturnValue(homeDir)
   })
 
@@ -49,7 +49,7 @@ describe('CommandCodeHookService', () => {
     expect(config.hooks.PostToolUse[0].matcher).toBe('.*')
     expect(config.hooks.Stop[0].matcher).toBeUndefined()
     expect(config.hooks.PreToolUse[0].hooks[0].command).toContain('command-code-hook')
-    expect(config.hooks.PreToolUse[0].hooks[0].command).toContain(join(homeDir, '.orca'))
+    expect(config.hooks.PreToolUse[0].hooks[0].command).toContain(join(homeDir, '.korca'))
     expect(config.hooks.PreToolUse[0].hooks[0].command).toMatch(/^if \[ -x /)
   })
 
@@ -58,20 +58,20 @@ describe('CommandCodeHookService', () => {
 
     const scriptFileName =
       process.platform === 'win32' ? 'command-code-hook.cmd' : 'command-code-hook.sh'
-    const script = readFileSync(join(homeDir, '.orca', 'agent-hooks', scriptFileName), 'utf8')
+    const script = readFileSync(join(homeDir, '.korca', 'agent-hooks', scriptFileName), 'utf8')
 
     if (process.platform === 'win32') {
       expect(script).toContain('sourceEndpointByPort')
-      expect(script).toContain('orca-dev\\agent-hooks')
-      expect(script).toContain('set ORCA_AGENT_HOOK_PORT=')
+      expect(script).toContain('korca-dev\\agent-hooks')
+      expect(script).toContain('set KORCA_AGENT_HOOK_PORT=')
     } else {
       expect(script).toContain('Command Code strips TOKEN-like env vars')
       expect(script).toContain('Command Code sanitizes hook subprocess env')
-      expect(script).toContain('__orca_read_ancestor_var')
-      expect(script).toContain('__orca_fill_from_endpoint_file')
-      expect(script).toContain('[ "$__orca_endpoint_port" != "$ORCA_AGENT_HOOK_PORT" ]')
-      expect(script).toContain('ORCA_PANE_KEY')
-      expect(script).toContain('orca-dev/agent-hooks')
+      expect(script).toContain('__korca_read_ancestor_var')
+      expect(script).toContain('__korca_fill_from_endpoint_file')
+      expect(script).toContain('[ "$__korca_endpoint_port" != "$KORCA_AGENT_HOOK_PORT" ]')
+      expect(script).toContain('KORCA_PANE_KEY')
+      expect(script).toContain('korca-dev/agent-hooks')
       expect(script).toContain('endpoint_port=')
     }
   })
@@ -85,10 +85,10 @@ describe('CommandCodeHookService', () => {
     writeFileSync(
       staleEndpointPath,
       [
-        'ORCA_AGENT_HOOK_PORT=9',
-        'ORCA_AGENT_HOOK_TOKEN=stale-token',
-        'ORCA_AGENT_HOOK_ENV=development',
-        'ORCA_AGENT_HOOK_VERSION=1',
+        'KORCA_AGENT_HOOK_PORT=9',
+        'KORCA_AGENT_HOOK_TOKEN=stale-token',
+        'KORCA_AGENT_HOOK_ENV=development',
+        'KORCA_AGENT_HOOK_VERSION=1',
         ''
       ].join('\n')
     )
@@ -101,7 +101,7 @@ describe('CommandCodeHookService', () => {
         body += chunk
       })
       req.on('end', () => {
-        requests.push({ body, token: req.headers['x-orca-agent-hook-token'] })
+        requests.push({ body, token: req.headers['x-korca-agent-hook-token'] })
         res.statusCode = 204
         res.end()
       })
@@ -110,19 +110,19 @@ describe('CommandCodeHookService', () => {
     try {
       await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve))
       const address = server.address() as AddressInfo
-      const scriptPath = join(homeDir, '.orca', 'agent-hooks', 'command-code-hook.sh')
+      const scriptPath = join(homeDir, '.korca', 'agent-hooks', 'command-code-hook.sh')
       const child = spawn('/bin/sh', [scriptPath], {
         env: {
           ...process.env,
           HOME: homeDir,
-          ORCA_AGENT_HOOK_ENDPOINT: staleEndpointPath,
-          ORCA_AGENT_HOOK_PORT: String(address.port),
-          ORCA_AGENT_HOOK_TOKEN: 'current-token',
-          ORCA_PANE_KEY: 'tab:leaf',
-          ORCA_TAB_ID: 'tab',
-          ORCA_WORKTREE_ID: 'worktree',
-          ORCA_AGENT_HOOK_ENV: 'development',
-          ORCA_AGENT_HOOK_VERSION: '1'
+          KORCA_AGENT_HOOK_ENDPOINT: staleEndpointPath,
+          KORCA_AGENT_HOOK_PORT: String(address.port),
+          KORCA_AGENT_HOOK_TOKEN: 'current-token',
+          KORCA_PANE_KEY: 'tab:leaf',
+          KORCA_TAB_ID: 'tab',
+          KORCA_WORKTREE_ID: 'worktree',
+          KORCA_AGENT_HOOK_ENV: 'development',
+          KORCA_AGENT_HOOK_VERSION: '1'
         },
         stdio: ['pipe', 'ignore', 'pipe']
       })

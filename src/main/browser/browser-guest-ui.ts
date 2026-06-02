@@ -35,7 +35,7 @@ export function setupGuestContextMenu(args: {
     }
     // Why: redact Kagi session tokens before the URL leaves main; the renderer
     // pipes pageUrl into clipboard writes and shell.openExternal, both of which
-    // would otherwise expose the bearer token outside Orca.
+    // would otherwise expose the bearer token outside Korca.
     const pageUrl = redactKagiSessionToken(guest.getURL())
     // Why: params.linkURL is empty when the user right-clicks non-link
     // content. Normalizing an empty string through normalizeBrowserNavigationUrl
@@ -152,7 +152,7 @@ export function setupGrabShortcutForwarding(args: {
         return
       }
       // Why: a focused guest swallows bare keys before the renderer sees them.
-      // While grab mode is actively awaiting a pick, plain C/S belong to Orca's
+      // While grab mode is actively awaiting a pick, plain C/S belong to Korca's
       // copy/screenshot shortcuts rather than the page's typing behavior.
       event.preventDefault()
       renderer.send('browser:grabActionShortcut', { browserPageId: browserTabId, key: bareKey })
@@ -351,7 +351,7 @@ export function setupGuestShortcutForwarding(args: {
       keybindingMatchesAction('browser.hardReload', input, process.platform, keybindings)
     ) {
       // Why: Cmd/Ctrl+Shift+R is the browser convention for hard reload
-      // (bypass cache). The guest would handle it natively, but Orca's webview
+      // (bypass cache). The guest would handle it natively, but Korca's webview
       // reloadIgnoringCache() call must come from the renderer side so it goes
       // through the same parked-webview ref that owns the guest surface.
       renderer.send('ui:hardReloadBrowserPage')
@@ -365,7 +365,7 @@ export function setupGuestShortcutForwarding(args: {
       // Why: Cmd/Ctrl+F must be forwarded out of the guest so the renderer can
       // open its own find-in-page bar and call webview.findInPage(). Letting the
       // guest handle it natively would open Chromium's built-in find UI inside
-      // the guest frame, which is invisible behind Orca's chrome.
+      // the guest frame, which is invisible behind Korca's chrome.
       renderer.send('ui:findInBrowserPage')
     } else if (keybindingMatchesAction('tab.close', input, process.platform, keybindings)) {
       renderer.send('ui:closeActiveTab')

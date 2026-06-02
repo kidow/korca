@@ -82,7 +82,7 @@ function showLocalBaseRefRefreshToast(result: LocalBaseRefRefreshResult | undefi
   }
 
   toast.warning(`Local ${result.localBranch} was not refreshed`, {
-    description: `Workspace created from ${result.baseRef}, but Orca could not fast-forward local ${result.localBranch} because ${reason}`
+    description: `Workspace created from ${result.baseRef}, but Korca could not fast-forward local ${result.localBranch} because ${reason}`
   })
 }
 
@@ -108,7 +108,7 @@ function showPreservedBranchToast(
       }
     : undefined
   toast.warning(`${targetTitle} deleted, branch kept`, {
-    description: `Git could not safely delete branch "${branch}"${deletedTarget}, so Orca kept it to avoid losing local commits.`,
+    description: `Git could not safely delete branch "${branch}"${deletedTarget}, so Korca kept it to avoid losing local commits.`,
     ...(action ? { action } : {})
   })
 }
@@ -317,7 +317,7 @@ function toLegacyDetectedWorktreeResult(
     source: 'session-fallback',
     worktrees: result.worktrees.map((worktree) => ({
       ...worktree,
-      ownership: 'orca-managed',
+      ownership: 'korca-managed',
       selectedCheckout: false,
       visible: true
     }))

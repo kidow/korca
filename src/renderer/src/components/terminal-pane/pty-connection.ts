@@ -95,7 +95,7 @@ const FOREGROUND_INTERACTIVE_REDRAW_WINDOW_MS = 150
 // Why: this is only shown if renderer backlog overflowed and main-owned
 // terminal state is unavailable, so the user has an explicit loss signal.
 const HIDDEN_OUTPUT_RESTORE_UNAVAILABLE_WARNING =
-  '\x18\x1b[0m\r\n[Orca skipped hidden terminal output because the backlog exceeded 2 MB and main recovery was unavailable.]\r\n'
+  '\x18\x1b[0m\r\n[Korca skipped hidden terminal output because the backlog exceeded 2 MB and main recovery was unavailable.]\r\n'
 
 function firstStartupCommandToken(command: string): string {
   const trimmed = command.trim()
@@ -480,7 +480,7 @@ export function connectPanePty(
       }
       // Why: restored idle agent TUIs can repaint after reattach SIGWINCH and
       // reapply DECSCUSR steady-bar; the normal working→idle reset will not
-      // fire because the agent was already idle before Orca restarted.
+      // fire because the agent was already idle before Korca restarted.
       queueAgentIdleCursorReset()
     }, REATTACH_IDLE_AGENT_CURSOR_RESET_DELAY_MS)
   }
@@ -876,7 +876,7 @@ export function connectPanePty(
   // underneath. See POST_REPLAY_MODE_RESET in layout-serialization.ts.
   const onBell = (): void => {
     // Why: restored Claude Code sessions have been observed to emit a real
-    // standalone BEL some time after daemon snapshot reattach, even when Orca
+    // standalone BEL some time after daemon snapshot reattach, even when Korca
     // did not just forward focus/control input. Treat the BEL as authoritative
     // PTY output here; any product-side suppression should be an explicit UX
     // decision higher up, not a transport-layer guess.
@@ -1053,7 +1053,7 @@ export function connectPanePty(
       agentCompletionCoordinator.observeClassifiedTitleCompletion(title)
     }
     // Why: some agent TUIs leave xterm in DECSCUSR steady-cursor mode when
-    // they become idle. Reset to Orca's configured cursor once the turn ends.
+    // they become idle. Reset to Korca's configured cursor once the turn ends.
     queueAgentIdleCursorReset()
   }
   const onAgentBecameWorking = (): void => {
@@ -1077,15 +1077,15 @@ export function connectPanePty(
     // Why: title reversion alone is not process death. The process/PTY tracker
     // owns removing agent rows when the TUI actually exits.
   }
-  // Why: inject ORCA_PANE_KEY so global Claude/Codex hooks can attribute their
-  // callbacks to the correct Orca pane without resolving worktrees from cwd.
+  // Why: inject KORCA_PANE_KEY so global Claude/Codex hooks can attribute their
+  // callbacks to the correct Korca pane without resolving worktrees from cwd.
   // The key matches the `${tabId}:${leafId}` composite used for cacheTimerByKey
-  // and agentStatusByPaneKey. Treat it as opaque outside Orca.
+  // and agentStatusByPaneKey. Treat it as opaque outside Korca.
   const paneEnv = {
     ...paneStartup?.env,
-    ORCA_PANE_KEY: cacheKey,
-    ORCA_TAB_ID: deps.tabId,
-    ORCA_WORKTREE_ID: deps.worktreeId
+    KORCA_PANE_KEY: cacheKey,
+    KORCA_TAB_ID: deps.tabId,
+    KORCA_WORKTREE_ID: deps.worktreeId
   }
 
   // Why: remote repos route PTY spawn through the SSH provider. Resolve the

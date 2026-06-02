@@ -47,7 +47,7 @@ describe('filesystem-list-files real git fallback', () => {
 
   it('returns real paths for filenames Git would C-quote in newline output', async () => {
     checkRgAvailableMock.mockResolvedValue(false)
-    tempDir = await mkdtemp(join(tmpdir(), 'orca-quick-open-git-fallback-'))
+    tempDir = await mkdtemp(join(tmpdir(), 'korca-quick-open-git-fallback-'))
     const repoPath = join(tempDir, 'repo')
     await execFile('git', ['init', '-q', repoPath])
     const tabbedPath = join(repoPath, 'tab\tfile.txt')

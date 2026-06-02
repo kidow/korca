@@ -4,7 +4,7 @@ import { mkdtemp } from 'fs/promises'
 import os from 'os'
 import path from 'path'
 import type { ElectronApplication } from '@stablyai/playwright-test'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import { waitForSessionReady } from './helpers/store'
 
 const tempRoots: string[] = []
@@ -27,7 +27,7 @@ async function createShallowPriorityTruncationFixture(): Promise<{
   webClientPath: string
   groupName: string
 }> {
-  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'orca-e2e-shallow-priority-'))
+  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'korca-e2e-shallow-priority-'))
   tempRoots.push(parentPath)
   const archivePath = path.join(parentPath, 'archive')
   const webClientPath = path.join(parentPath, 'z-web-client')
@@ -53,7 +53,7 @@ async function createCancellableScanFixture(): Promise<{
   webPath: string
   groupName: string
 }> {
-  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'orca-e2e-cancellable-scan-'))
+  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'korca-e2e-cancellable-scan-'))
   tempRoots.push(parentPath)
   const apiPath = path.join(parentPath, 'api')
   const webPath = path.join(parentPath, 'web')
@@ -140,21 +140,21 @@ test.afterEach(() => {
 
 test('prioritizes shallow sibling repositories in a bounded nested scan', async ({
   electronApp,
-  orcaPage
+  korcaPage
 }) => {
-  await waitForSessionReady(orcaPage)
+  await waitForSessionReady(korcaPage)
   const fixture = await createShallowPriorityTruncationFixture()
   await chooseFolderInNativeDialog(electronApp, fixture.parentPath)
 
-  await orcaPage
+  await korcaPage
     .getByRole('button', { name: /Add Project/i })
     .first()
     .click()
-  const dialog = orcaPage.getByRole('dialog', { name: /Add a project/i })
+  const dialog = korcaPage.getByRole('dialog', { name: /Add a project/i })
   await expect(dialog).toBeVisible()
   await dialog.getByRole('button', { name: /Browse folder/i }).click()
 
-  const importDialog = orcaPage.getByRole('dialog', { name: /Import as project group/i })
+  const importDialog = korcaPage.getByRole('dialog', { name: /Import as project group/i })
   await expect(importDialog.getByText('Found 100 git repositories in this folder.')).toBeVisible()
   await expect(importDialog.getByText('Showing partial scan results.')).toBeVisible()
   await expect(importDialog.getByText('z-web-client', { exact: true }).first()).toBeVisible()
@@ -170,7 +170,7 @@ test('prioritizes shallow sibling repositories in a bounded nested scan', async 
   await expect
     .poll(
       () =>
-        orcaPage.evaluate(
+        korcaPage.evaluate(
           (args) => {
             const state = window.__store?.getState()
             if (!state) {
@@ -205,20 +205,20 @@ test('prioritizes shallow sibling repositories in a bounded nested scan', async 
       importedArchiveCount: 0
     })
 
-  await orcaPage.evaluate(() => {
+  await korcaPage.evaluate(() => {
     const state = window.__store?.getState()
     state?.closeModal()
     state?.setGroupBy('repo')
   })
-  await expect(orcaPage.getByText(fixture.groupName)).toBeVisible()
-  await expect(orcaPage.getByText('z-web-client').first()).toBeVisible()
+  await expect(korcaPage.getByText(fixture.groupName)).toBeVisible()
+  await expect(korcaPage.getByText('z-web-client').first()).toBeVisible()
 })
 
 test('can stop a nested repo scan and import repositories found so far', async ({
   electronApp,
-  orcaPage
+  korcaPage
 }) => {
-  await waitForSessionReady(orcaPage)
+  await waitForSessionReady(korcaPage)
   const fixture = await createCancellableScanFixture()
   await installCancellableNestedScanMock(electronApp, {
     selectedPath: fixture.parentPath,
@@ -234,14 +234,14 @@ test('can stop a nested repo scan and import repositories found so far', async (
   })
   await chooseFolderInNativeDialog(electronApp, fixture.parentPath)
 
-  await orcaPage
+  await korcaPage
     .getByRole('button', { name: /Add Project/i })
     .first()
     .click()
-  const dialog = orcaPage.getByRole('dialog', { name: /Add a project/i })
+  const dialog = korcaPage.getByRole('dialog', { name: /Add a project/i })
   await dialog.getByRole('button', { name: /Browse folder/i }).click()
 
-  const importDialog = orcaPage.getByRole('dialog', { name: /Import as project group/i })
+  const importDialog = korcaPage.getByRole('dialog', { name: /Import as project group/i })
   await expect(
     importDialog.getByText('Scanning... Found 1 git repository in this folder.')
   ).toBeVisible()
@@ -258,7 +258,7 @@ test('can stop a nested repo scan and import repositories found so far', async (
   await expect
     .poll(
       () =>
-        orcaPage.evaluate((args) => {
+        korcaPage.evaluate((args) => {
           const state = window.__store?.getState()
           if (!state) {
             return null

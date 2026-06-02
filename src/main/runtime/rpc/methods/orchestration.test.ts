@@ -3,19 +3,19 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ORCHESTRATION_METHODS } from './orchestration'
 import { buildRegistry, type RpcContext } from '../core'
 import { OrchestrationDb } from '../../orchestration/db'
-import { OrcaRuntimeService } from '../../orca-runtime'
+import { KorcaRuntimeService } from '../../korca-runtime'
 import type { RuntimeTerminalSummary } from '../../../../shared/runtime-types'
 
 describe('orchestration RPC methods', () => {
   let db: OrchestrationDb
   let dbOpen = false
-  let runtime: OrcaRuntimeService
+  let runtime: KorcaRuntimeService
   let ctx: RpcContext
 
   function setup(): void {
     db = new OrchestrationDb(':memory:')
     dbOpen = true
-    runtime = new OrcaRuntimeService()
+    runtime = new KorcaRuntimeService()
     runtime.setOrchestrationDb(db)
     ctx = { runtime }
   }
@@ -674,7 +674,7 @@ describe('orchestration RPC methods', () => {
         devMode: true
       })
 
-      expect(send.mock.calls[0]?.[1].text).toContain('orca-dev orchestration send')
+      expect(send.mock.calls[0]?.[1].text).toContain('korca-dev orchestration send')
     })
 
     it('rejects inject to terminal without recognized agent', async () => {

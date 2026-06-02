@@ -38,10 +38,10 @@ function envValue(name: string): string | null {
 
 function getAuthConfig(): BitbucketAuthConfig {
   return {
-    baseUrl: envValue('ORCA_BITBUCKET_API_BASE_URL') ?? DEFAULT_API_BASE_URL,
-    accessToken: envValue('ORCA_BITBUCKET_ACCESS_TOKEN'),
-    email: envValue('ORCA_BITBUCKET_EMAIL'),
-    apiToken: envValue('ORCA_BITBUCKET_API_TOKEN')
+    baseUrl: envValue('KORCA_BITBUCKET_API_BASE_URL') ?? DEFAULT_API_BASE_URL,
+    accessToken: envValue('KORCA_BITBUCKET_ACCESS_TOKEN'),
+    email: envValue('KORCA_BITBUCKET_EMAIL'),
+    apiToken: envValue('KORCA_BITBUCKET_API_TOKEN')
   }
 }
 

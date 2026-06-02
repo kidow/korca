@@ -16,14 +16,14 @@ import type {
   GitHubPrStartPoint,
   GitPushTarget,
   GitWorktreeInfo,
-  OrcaHooks,
+  KorcaHooks,
   Repo,
   RemoveWorktreeResult,
   Worktree,
   WorktreeMeta
 } from '../../shared/types'
 import {
-  buildKnownOrcaWorkspaceLayouts,
+  buildKnownKorcaWorkspaceLayouts,
   isLegacyRepoForExternalWorktreeVisibility,
   toDetectedWorktree
 } from '../../shared/worktree-ownership'
@@ -46,11 +46,11 @@ import {
   getEffectiveHooksFromConfig,
   getSetupRunnerEnvVars,
   loadHooks,
-  parseOrcaYaml,
+  parseKorcaYaml,
   readIssueCommand,
   runHook,
   hasHooksFile,
-  hasUnrecognizedOrcaYamlKeys,
+  hasUnrecognizedKorcaYamlKeys,
   writeIssueCommand
 } from '../hooks'
 import {
@@ -74,7 +74,7 @@ import {
   isENOENT,
   registerWorktreeRootsForRepo
 } from './filesystem-auth'
-import type { OrcaRuntimeService } from '../runtime/orca-runtime'
+import type { KorcaRuntimeService } from '../runtime/korca-runtime'
 import { killAllProcessesForWorktree } from '../runtime/worktree-teardown'
 import { getLocalPtyProvider } from './pty'
 import { removeWorktreeSymlinks } from './worktree-symlinks'
@@ -85,12 +85,12 @@ import { classifyWorkspaceCreateError } from './workspace-create-error-classifie
 import { advertisedUrlWatcher } from '../ports/advertised-url-watcher'
 import {
   assertWorktreeDoesNotContainRegisteredWorktree,
-  canCleanupUnregisteredOrcaWorktreeDirectory,
+  canCleanupUnregisteredKorcaWorktreeDirectory,
   canSafelyRemoveOrphanedWorktreeDirectory,
   findRegisteredDeletableWorktree,
   isWorktreePathMissing,
   ORPHANED_WORKTREE_DIRECTORY_MESSAGE,
-  stripOrcaProvenanceMetaUpdates
+  stripKorcaProvenanceMetaUpdates
 } from '../worktree-removal-safety'
 import { isWindowsAbsolutePathLike } from '../../shared/cross-platform-path'
 import { DEFAULT_WORKSPACE_STATUS_ID } from '../../shared/workspace-statuses'
@@ -128,7 +128,7 @@ function removeWorktreeMetadataAndTransientState(store: Store, worktreeId: strin
   deleteWorktreeHistoryDir(worktreeId)
 }
 
-// Why: worktrees discovered on disk (not created via Orca's UI) have no
+// Why: worktrees discovered on disk (not created via Korca's UI) have no
 // persisted WorktreeMeta, so mergeWorktree falls back to `lastActivityAt: 0`.
 // That makes them sort to the bottom of "Recent" even though the user just
 // added the repo / folder. Stamp discovery time the first time we see a
@@ -166,7 +166,7 @@ function getWorktreeRemovalOptionsKey(args: { force?: boolean; skipArchive?: boo
   return `${forceKey}:${archiveKey}`
 }
 
-async function getArchiveHooksForRemoval(repo: Repo): Promise<OrcaHooks | null> {
+async function getArchiveHooksForRemoval(repo: Repo): Promise<KorcaHooks | null> {
   if (!repo.connectionId) {
     return getEffectiveHooks(repo)
   }
@@ -177,8 +177,8 @@ async function getArchiveHooksForRemoval(repo: Repo): Promise<OrcaHooks | null> 
   }
 
   try {
-    const result = await fsProvider.readFile(joinWorktreeRelativePath(repo.path, 'orca.yaml'))
-    const yamlHooks = result.isBinary ? null : parseOrcaYaml(result.content)
+    const result = await fsProvider.readFile(joinWorktreeRelativePath(repo.path, 'korca.yaml'))
+    const yamlHooks = result.isBinary ? null : parseKorcaYaml(result.content)
     return getEffectiveHooksFromConfig(repo, yamlHooks)
   } catch {
     return getEffectiveHooksFromConfig(repo, null)
@@ -431,7 +431,7 @@ function buildDetectedGitWorktrees(
   gitWorktrees: GitWorktreeInfo[]
 ): DetectedWorktree[] {
   const settings = store.getSettings()
-  const knownOrcaLayouts = buildKnownOrcaWorkspaceLayouts(settings, repo)
+  const knownKorcaLayouts = buildKnownKorcaWorkspaceLayouts(settings, repo)
   const isLegacyRepoForVisibility = isLegacyRepoForExternalWorktreeVisibility(repo)
   return gitWorktrees.map((gitWorktree) => {
     const worktreeId = `${repo.id}::${gitWorktree.path}`
@@ -442,7 +442,7 @@ function buildDetectedGitWorktrees(
       worktree,
       meta,
       settings,
-      knownOrcaLayouts,
+      knownKorcaLayouts,
       isLegacyRepoForVisibility
     })
     if (!detected.visible) {
@@ -455,7 +455,7 @@ function buildDetectedGitWorktrees(
       worktree: mergeWorktree(repo.id, gitWorktree, meta, repo.displayName),
       meta,
       settings,
-      knownOrcaLayouts,
+      knownKorcaLayouts,
       isLegacyRepoForVisibility
     })
   })
@@ -561,7 +561,7 @@ function buildFolderDetectedWorktrees(store: Store, repo: Repo): DetectedWorktre
       worktree,
       meta: store.getWorktreeMeta(worktree.id),
       settings,
-      knownOrcaLayouts: [],
+      knownKorcaLayouts: [],
       isLegacyRepoForVisibility: true
     })
   )
@@ -589,8 +589,8 @@ function createFolderWorkspace(
     displayName: args.displayName || args.name,
     lastActivityAt: now,
     createdAt: now,
-    orcaCreatedAt: now,
-    orcaCreationSource: 'desktop',
+    korcaCreatedAt: now,
+    korcaCreationSource: 'desktop',
     ...(args.createdWithAgent ? { createdWithAgent: args.createdWithAgent } : {}),
     ...(args.linkedIssue !== undefined ? { linkedIssue: args.linkedIssue } : {}),
     ...(args.linkedPR !== undefined ? { linkedPR: args.linkedPR } : {}),
@@ -616,13 +616,13 @@ function buildDisconnectedDetectedWorktrees(
       worktree,
       meta,
       settings,
-      knownOrcaLayouts: [],
+      knownKorcaLayouts: [],
       isLegacyRepoForVisibility: true
     })
     return {
       ...detected,
       visible: true,
-      ownership: detected.ownership === 'orca-managed' ? 'orca-managed' : 'unknown-legacy'
+      ownership: detected.ownership === 'korca-managed' ? 'korca-managed' : 'unknown-legacy'
     }
   })
 }
@@ -630,7 +630,7 @@ function buildDisconnectedDetectedWorktrees(
 export function registerWorktreeHandlers(
   mainWindow: BrowserWindow,
   store: Store,
-  runtime: OrcaRuntimeService
+  runtime: KorcaRuntimeService
 ): void {
   // Remove any previously registered handlers so we can re-register them
   // (e.g. when macOS re-activates the app and creates a new window).
@@ -1063,13 +1063,13 @@ export function registerWorktreeHandlers(
         if (!registeredWorktree) {
           const fsProvider = repo.connectionId ? getSshFilesystemProvider(repo.connectionId) : null
           let canCleanOrphanedDirectory = false
-          const knownOrcaLayouts = buildKnownOrcaWorkspaceLayouts(store.getSettings(), repo)
+          const knownKorcaLayouts = buildKnownKorcaWorkspaceLayouts(store.getSettings(), repo)
           if (
-            canCleanupUnregisteredOrcaWorktreeDirectory({
+            canCleanupUnregisteredKorcaWorktreeDirectory({
               meta: removedMeta,
               worktreePath,
               repo,
-              knownOrcaLayouts
+              knownKorcaLayouts
             })
           ) {
             if (repo.connectionId) {
@@ -1128,7 +1128,7 @@ export function registerWorktreeHandlers(
           ) {
             // Why: a manually deleted worktree is already gone from Git and disk.
             // The sidebar delete action has persisted metadata proving this was
-            // an Orca-known row, so no force confirmation is needed.
+            // an Korca-known row, so no force confirmation is needed.
             if (repo.connectionId) {
               await cleanupUnusedWorktreePushTargetRemoteSsh(
                 provider!,
@@ -1383,7 +1383,7 @@ export function registerWorktreeHandlers(
     (_event, args: { worktreeId: string; updates: Partial<WorktreeMeta> }) => {
       const meta = store.setWorktreeMeta(
         args.worktreeId,
-        stripOrcaProvenanceMetaUpdates(args.updates)
+        stripKorcaProvenanceMetaUpdates(args.updates)
       )
       // Do NOT call notifyWorktreesChanged here. The renderer applies meta
       // updates optimistically before calling this IPC, so a notification
@@ -1447,11 +1447,11 @@ export function registerWorktreeHandlers(
         return { status: 'error', hasHooks: false, hooks: null, mayNeedUpdate: false }
       }
       try {
-        const result = await fsProvider.readFile(joinWorktreeRelativePath(repo.path, 'orca.yaml'))
+        const result = await fsProvider.readFile(joinWorktreeRelativePath(repo.path, 'korca.yaml'))
         return {
           status: 'ok',
           hasHooks: !result.isBinary,
-          hooks: result.isBinary ? null : parseOrcaYaml(result.content),
+          hooks: result.isBinary ? null : parseKorcaYaml(result.content),
           mayNeedUpdate: false
         }
       } catch (error) {
@@ -1466,11 +1466,11 @@ export function registerWorktreeHandlers(
 
     const has = hasHooksFile(repo.path)
     const hooks = has ? loadHooks(repo.path) : null
-    // Why: when a newer Orca version adds a top-level key to `orca.yaml`, older
+    // Why: when a newer Korca version adds a top-level key to `korca.yaml`, older
     // versions that don't recognise it return null and show "could not be parsed".
     // Detecting well-formed but unrecognised keys lets the UI suggest updating
     // instead of implying the file is broken.
-    const mayNeedUpdate = has && !hooks && hasUnrecognizedOrcaYamlKeys(repo.path)
+    const mayNeedUpdate = has && !hooks && hasUnrecognizedKorcaYamlKeys(repo.path)
     return {
       status: 'ok',
       hasHooks: has,
@@ -1565,7 +1565,7 @@ export function registerWorktreeHandlers(
       }
     }
     if (repo.connectionId) {
-      const issueCommandPath = joinWorktreeRelativePath(repo.path, '.orca/issue-command')
+      const issueCommandPath = joinWorktreeRelativePath(repo.path, '.korca/issue-command')
       const fsProvider = getSshFilesystemProvider(repo.connectionId)
       if (!fsProvider) {
         return {
@@ -1590,10 +1590,10 @@ export function registerWorktreeHandlers(
         }
       }
       try {
-        const result = await fsProvider.readFile(joinWorktreeRelativePath(repo.path, 'orca.yaml'))
+        const result = await fsProvider.readFile(joinWorktreeRelativePath(repo.path, 'korca.yaml'))
         sharedContent = result.isBinary
           ? null
-          : parseOrcaYaml(result.content)?.issueCommand?.trim() || null
+          : parseKorcaYaml(result.content)?.issueCommand?.trim() || null
       } catch (error) {
         if (!isENOENT(error)) {
           status = 'error'
@@ -1624,7 +1624,7 @@ export function registerWorktreeHandlers(
         return
       }
       if (repo.connectionId) {
-        const issueCommandPath = joinWorktreeRelativePath(repo.path, '.orca/issue-command')
+        const issueCommandPath = joinWorktreeRelativePath(repo.path, '.korca/issue-command')
         const fsProvider = getSshFilesystemProvider(repo.connectionId)
         if (!fsProvider) {
           throw new Error(
@@ -1640,19 +1640,19 @@ export function registerWorktreeHandlers(
           })
           return
         }
-        await fsProvider.createDir(joinWorktreeRelativePath(repo.path, '.orca'))
+        await fsProvider.createDir(joinWorktreeRelativePath(repo.path, '.korca'))
         const gitignorePath = joinWorktreeRelativePath(repo.path, '.gitignore')
         try {
           const result = await fsProvider.readFile(gitignorePath)
-          if (!result.isBinary && !/^\.orca\/?$/m.test(result.content)) {
+          if (!result.isBinary && !/^\.korca\/?$/m.test(result.content)) {
             const separator = result.content.endsWith('\n') ? '' : '\n'
-            await fsProvider.writeFile(gitignorePath, `${result.content}${separator}.orca\n`)
+            await fsProvider.writeFile(gitignorePath, `${result.content}${separator}.korca\n`)
           }
         } catch (error) {
           if (!isENOENT(error)) {
             throw error
           }
-          await fsProvider.writeFile(gitignorePath, '.orca\n')
+          await fsProvider.writeFile(gitignorePath, '.korca\n')
         }
         await fsProvider.writeFile(issueCommandPath, `${trimmed}\n`)
         return

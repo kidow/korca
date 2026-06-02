@@ -20,9 +20,9 @@ describe('resolveGitHubPrStartPoint', () => {
 
   it('falls back to the GitHub PR head ref when a direct branch fetch fails', async () => {
     getPullRequestPushTargetMock.mockResolvedValue({
-      remoteName: 'pr-contributor-orca',
+      remoteName: 'pr-contributor-korca',
       branchName: 'feat/onboarding-model-choice-782',
-      remoteUrl: 'git@github.com:contributor/orca.git'
+      remoteUrl: 'git@github.com:contributor/korca.git'
     })
     const gitExec = vi.fn(async (args: string[]) => {
       if (args[0] === 'fetch' && String(args[2]).startsWith('+refs/heads/')) {
@@ -51,9 +51,9 @@ describe('resolveGitHubPrStartPoint', () => {
     expect(result).toEqual({
       baseBranch: 'def456',
       pushTarget: {
-        remoteName: 'pr-contributor-orca',
+        remoteName: 'pr-contributor-korca',
         branchName: 'feat/onboarding-model-choice-782',
-        remoteUrl: 'git@github.com:contributor/orca.git'
+        remoteUrl: 'git@github.com:contributor/korca.git'
       }
     })
   })
@@ -112,9 +112,9 @@ describe('resolveGitHubPrStartPoint', () => {
       isCrossRepository: true
     })
     getPullRequestPushTargetMock.mockResolvedValue({
-      remoteName: 'pr-contributor-orca',
+      remoteName: 'pr-contributor-korca',
       branchName: 'contributor/fix',
-      remoteUrl: 'git@github.com:contributor/orca.git'
+      remoteUrl: 'git@github.com:contributor/korca.git'
     })
     const gitExec = vi.fn(async (args: string[]) => {
       if (args[0] === 'rev-parse') {
@@ -134,9 +134,9 @@ describe('resolveGitHubPrStartPoint', () => {
     expect(result).toEqual({
       baseBranch: 'abc123',
       pushTarget: {
-        remoteName: 'pr-contributor-orca',
+        remoteName: 'pr-contributor-korca',
         branchName: 'contributor/fix',
-        remoteUrl: 'git@github.com:contributor/orca.git'
+        remoteUrl: 'git@github.com:contributor/korca.git'
       }
     })
   })

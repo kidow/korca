@@ -52,7 +52,7 @@ describe('otlp exporter HTTP cleanup', () => {
 
     const exporter = createOtlpExporter({
       tracesUrl: 'http://collector.example/v1/traces',
-      serviceName: 'orca-test',
+      serviceName: 'korca-test',
       timeoutMs: 1000
     })
     exporter.exportSpan(span())
@@ -81,7 +81,7 @@ describe('otlp exporter HTTP cleanup', () => {
 
       const exporter = createOtlpExporter({
         tracesUrl: 'http://collector.example/v1/traces',
-        serviceName: 'orca-test',
+        serviceName: 'korca-test',
         timeoutMs: 1000
       })
       exporter.exportSpan(span())

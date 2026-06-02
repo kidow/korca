@@ -1,4 +1,4 @@
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import type { Page } from '@stablyai/playwright-test'
 import type { TerminalPaneLayoutNode } from '../../src/shared/types'
 import { ensureTerminalVisible, waitForActiveWorktree, waitForSessionReady } from './helpers/store'
@@ -162,29 +162,29 @@ async function seedSmartSortScenario(page: Page): Promise<SmartSortScenario> {
 }
 
 test.describe('Worktree Smart Sort', () => {
-  test.beforeEach(async ({ orcaPage }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
+  test.beforeEach(async ({ korcaPage }) => {
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
   })
 
   test('renders attention-needed worktrees above finished agents in Smart mode', async ({
-    orcaPage
+    korcaPage
   }) => {
-    const { blockedId, doneId } = await seedSmartSortScenario(orcaPage)
+    const { blockedId, doneId } = await seedSmartSortScenario(korcaPage)
 
     await expect
-      .poll(async () => (await getVisibleWorktreeIdsByTop(orcaPage)).slice(0, 2), {
+      .poll(async () => (await getVisibleWorktreeIdsByTop(korcaPage)).slice(0, 2), {
         timeout: 8_000,
         message: 'Smart sort did not promote the blocked worktree in the visible sidebar'
       })
       .toEqual([blockedId, doneId])
 
     await expect(
-      orcaPage.locator(`[id="${WORKTREE_OPTION_PREFIX}${encodeURIComponent(blockedId)}"]`)
+      korcaPage.locator(`[id="${WORKTREE_OPTION_PREFIX}${encodeURIComponent(blockedId)}"]`)
     ).toBeVisible()
     await expect(
-      orcaPage.locator(`[id="${WORKTREE_OPTION_PREFIX}${encodeURIComponent(doneId)}"]`)
+      korcaPage.locator(`[id="${WORKTREE_OPTION_PREFIX}${encodeURIComponent(doneId)}"]`)
     ).toBeVisible()
   })
 })

@@ -13,7 +13,7 @@ const { httpsGetMock, spawnMock } = vi.hoisted(() => ({
 
 vi.mock('electron', () => ({
   app: {
-    getPath: () => '/tmp/orca-speech-models-test'
+    getPath: () => '/tmp/korca-speech-models-test'
   }
 }))
 
@@ -58,7 +58,7 @@ describe('ModelManager', () => {
   })
 
   it('verifies downloaded archive hashes before extraction', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'orca-model-manager-'))
+    const dir = mkdtempSync(join(tmpdir(), 'korca-model-manager-'))
     try {
       const archivePath = join(dir, 'model.tar.bz2')
       writeFileSync(archivePath, 'known archive bytes')
@@ -75,7 +75,7 @@ describe('ModelManager', () => {
   })
 
   it('rejects non-HTTPS model downloads', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'orca-model-manager-'))
+    const dir = mkdtempSync(join(tmpdir(), 'korca-model-manager-'))
     try {
       const manager = new ModelManager(dir) as unknown as ModelManagerInternals
 
@@ -94,7 +94,7 @@ describe('ModelManager', () => {
   })
 
   it('aborts an in-flight model download request when cancelled', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'orca-model-manager-'))
+    const dir = mkdtempSync(join(tmpdir(), 'korca-model-manager-'))
     try {
       const manifest = SPEECH_MODEL_CATALOG[0]
       const errorHandlers: ((err: Error) => void)[] = []
@@ -167,7 +167,7 @@ describe('ModelManager', () => {
 
   it('times out a model download request that never responds', async () => {
     vi.useFakeTimers()
-    const dir = mkdtempSync(join(tmpdir(), 'orca-model-manager-'))
+    const dir = mkdtempSync(join(tmpdir(), 'korca-model-manager-'))
     try {
       const errorHandlers: ((err: Error) => void)[] = []
       const timeoutHandlers: (() => void)[] = []
@@ -245,7 +245,7 @@ describe('ModelManager', () => {
 
   it('clears extraction abort polling when the child does not close', async () => {
     vi.useFakeTimers()
-    const dir = mkdtempSync(join(tmpdir(), 'orca-model-manager-'))
+    const dir = mkdtempSync(join(tmpdir(), 'korca-model-manager-'))
     try {
       const handlers: Record<string, ((arg?: unknown) => void)[]> = {
         close: [],

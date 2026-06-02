@@ -77,8 +77,8 @@ describe('forge provider interface', () => {
   })
 
   it('preserves the existing hosted provider detection order', async () => {
-    getProjectSlugMock.mockResolvedValue({ host: 'gitlab.com', path: 'team/orca' })
-    getRepoSlugMock.mockResolvedValue({ owner: 'team', repo: 'orca' })
+    getProjectSlugMock.mockResolvedValue({ host: 'gitlab.com', path: 'team/korca' })
+    getRepoSlugMock.mockResolvedValue({ owner: 'team', repo: 'korca' })
 
     await expect(detectHostedReviewProvider({ repoPath: '/repo' })).resolves.toBe('gitlab')
     await expect(getForgeProviderForRepository({ repoPath: '/repo' })).resolves.toMatchObject({
@@ -100,7 +100,7 @@ describe('forge provider interface', () => {
     createGitHubPullRequestMock.mockResolvedValue({
       ok: true,
       number: 12,
-      url: 'https://github.com/team/orca/pull/12'
+      url: 'https://github.com/team/korca/pull/12'
     })
 
     const provider = getForgeProviderById('github')
@@ -114,7 +114,7 @@ describe('forge provider interface', () => {
     ).resolves.toEqual({
       ok: true,
       number: 12,
-      url: 'https://github.com/team/orca/pull/12'
+      url: 'https://github.com/team/korca/pull/12'
     })
     expect(createGitHubPullRequestMock).toHaveBeenCalledWith('/repo', {
       provider: 'github',
@@ -128,7 +128,7 @@ describe('forge provider interface', () => {
     createGitLabMergeRequestMock.mockResolvedValue({
       ok: true,
       number: 44,
-      url: 'https://gitlab.com/team/orca/-/merge_requests/44'
+      url: 'https://gitlab.com/team/korca/-/merge_requests/44'
     })
 
     const provider = getForgeProviderById('gitlab')
@@ -146,7 +146,7 @@ describe('forge provider interface', () => {
     ).resolves.toEqual({
       ok: true,
       number: 44,
-      url: 'https://gitlab.com/team/orca/-/merge_requests/44'
+      url: 'https://gitlab.com/team/korca/-/merge_requests/44'
     })
     expect(createGitLabMergeRequestMock).toHaveBeenCalledWith(
       '/repo',
@@ -165,7 +165,7 @@ describe('forge provider interface', () => {
       number: 7,
       title: 'Provider branch',
       state: 'open',
-      url: 'https://github.com/team/orca/pull/7',
+      url: 'https://github.com/team/korca/pull/7',
       checksStatus: 'success',
       updatedAt: '2026-05-29T00:00:00.000Z',
       mergeable: 'MERGEABLE'

@@ -13,7 +13,7 @@ const itWithBash = hasBash ? it : it.skip
 const tempDirs: string[] = []
 
 function makeTempDir(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'orca-omp-node-pty-'))
+  const dir = mkdtempSync(join(tmpdir(), 'korca-omp-node-pty-'))
   tempDirs.push(dir)
   return dir
 }
@@ -30,7 +30,7 @@ function writeFakeOmp(binDir: string): void {
     i=$((i + 1))
     printf 'ARG%s=%s\\n' "$i" "$arg"
   done
-} > "$ORCA_CAPTURE_FILE"
+} > "$KORCA_CAPTURE_FILE"
 `,
     { mode: 0o755 }
   )
@@ -104,7 +104,7 @@ describePosix('OMP shell wrapper node-pty reproduction', () => {
     mkdirSync(binDir)
     mkdirSync(piDir)
     mkdirSync(extensionDir, { recursive: true })
-    const statusExtension = join(extensionDir, 'orca-agent-status.ts')
+    const statusExtension = join(extensionDir, 'korca-agent-status.ts')
     writeFileSync(statusExtension, 'export default {}')
     writeFakeOmp(binDir)
 
@@ -113,11 +113,11 @@ describePosix('OMP shell wrapper node-pty reproduction', () => {
       HOME: tempDir,
       PATH: `${binDir}:${process.env.PATH ?? ''}`,
       PI_CODING_AGENT_DIR: piDir,
-      ORCA_PI_CODING_AGENT_DIR: piDir,
-      ORCA_OMP_CODING_AGENT_DIR: ompDir,
-      ORCA_OMP_STATUS_EXTENSION: statusExtension,
-      ORCA_CAPTURE_FILE: captureFile,
-      ORCA_AFTER_PI_FILE: afterPiFile,
+      KORCA_PI_CODING_AGENT_DIR: piDir,
+      KORCA_OMP_CODING_AGENT_DIR: ompDir,
+      KORCA_OMP_STATUS_EXTENSION: statusExtension,
+      KORCA_CAPTURE_FILE: captureFile,
+      KORCA_AFTER_PI_FILE: afterPiFile,
       TERM: process.env.TERM || 'xterm-256color'
     })
 
@@ -128,7 +128,7 @@ describePosix('OMP shell wrapper node-pty reproduction', () => {
       rcfileContent: '',
       env: makeEnv(unwrappedCapture, unwrappedAfterPi),
       input: `omp ask
-printf '%s' "$PI_CODING_AGENT_DIR" > "$ORCA_AFTER_PI_FILE"
+printf '%s' "$PI_CODING_AGENT_DIR" > "$KORCA_AFTER_PI_FILE"
 exit 0
 `
     })
@@ -142,12 +142,12 @@ exit 0
     const wrappedAfterPi = join(tempDir, 'wrapped-after-pi')
     const wrappedOutput = await runInteractiveBashPty({
       cwd: tempDir,
-      rcfileContent: `[[ -n "\${ORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${ORCA_PI_CODING_AGENT_DIR}"
+      rcfileContent: `[[ -n "\${KORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${KORCA_PI_CODING_AGENT_DIR}"
 ${getPosixOmpShellWrapper()}`,
       env: makeEnv(wrappedCapture, wrappedAfterPi),
       input: `type omp
 omp ask
-printf '%s' "$PI_CODING_AGENT_DIR" > "$ORCA_AFTER_PI_FILE"
+printf '%s' "$PI_CODING_AGENT_DIR" > "$KORCA_AFTER_PI_FILE"
 exit 0
 `
     })

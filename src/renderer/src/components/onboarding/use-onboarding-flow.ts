@@ -570,7 +570,7 @@ export function useOnboardingFlow(
       if (isGit) {
         openModal('project-added', {
           projectId,
-          defaultWorktreeName: 'orca-worktree-1',
+          defaultWorktreeName: 'korca-worktree-1',
           telemetrySource: 'onboarding'
         })
       }
@@ -1142,7 +1142,7 @@ export function useOnboardingFlow(
       (nextState) => {
         onOnboardingChange(nextState)
         // Why: users can skip optional preferences, but onboarding remains
-        // open because Orca needs a project before the app has a useful
+        // open because Korca needs a project before the app has a useful
         // first state.
         track('onboarding_step_skipped', {
           step: stepNumber,

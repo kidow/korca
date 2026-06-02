@@ -2,14 +2,14 @@ import { execFileSync } from 'child_process'
 import { mkdtempSync, realpathSync, rmSync } from 'fs'
 import os from 'os'
 import path from 'path'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 
 test.describe('Workspace Space git status checks', () => {
   test('checks every scanned deletable row, including rows after the first 50', async ({
-    orcaPage,
+    korcaPage,
     testRepoPath
   }) => {
-    const worktreeParent = mkdtempSync(path.join(os.tmpdir(), 'orca-space-git-status-'))
+    const worktreeParent = mkdtempSync(path.join(os.tmpdir(), 'korca-space-git-status-'))
     const worktreePaths = Array.from({ length: 60 }, (_, index) =>
       path.join(worktreeParent, `worktree-${index}`)
     )
@@ -25,7 +25,7 @@ test.describe('Workspace Space git status checks', () => {
         realpathSync(worktreePath)
       )
 
-      await orcaPage.evaluate(
+      await korcaPage.evaluate(
         async ({ testRepoPath, worktreePaths }) => {
           const store = window.__store
           if (!store) {
@@ -115,7 +115,7 @@ test.describe('Workspace Space git status checks', () => {
       await expect
         .poll(
           () =>
-            orcaPage.evaluate(() => {
+            korcaPage.evaluate(() => {
               const state = window.__store?.getState()
               if (!state?.workspaceSpaceAnalysis) {
                 return 60
@@ -128,7 +128,7 @@ test.describe('Workspace Space git status checks', () => {
         )
         .toBe(0)
 
-      await expect(orcaPage.getByText('Keep: git not checked')).toHaveCount(0)
+      await expect(korcaPage.getByText('Keep: git not checked')).toHaveCount(0)
     } finally {
       for (const worktreePath of worktreePaths) {
         try {

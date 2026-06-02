@@ -1,24 +1,24 @@
 import { track } from '@/lib/telemetry'
 import type { EventProps } from '../../../../shared/telemetry-events'
 
-export type OrcaCliFeatureTipSource = EventProps<'orca_cli_feature_tip_shown'>['source']
-export type OrcaCliFeatureTipSetupResult = EventProps<'orca_cli_feature_tip_setup_result'>['result']
+export type KorcaCliFeatureTipSource = EventProps<'korca_cli_feature_tip_shown'>['source']
+export type KorcaCliFeatureTipSetupResult = EventProps<'korca_cli_feature_tip_setup_result'>['result']
 
-export function getOrcaCliFeatureTipTelemetrySource(value: unknown): OrcaCliFeatureTipSource {
+export function getKorcaCliFeatureTipTelemetrySource(value: unknown): KorcaCliFeatureTipSource {
   return value === 'app_open' ? 'app_open' : 'manual'
 }
 
-export function trackOrcaCliFeatureTipShown(source: OrcaCliFeatureTipSource): void {
-  track('orca_cli_feature_tip_shown', { source })
+export function trackKorcaCliFeatureTipShown(source: KorcaCliFeatureTipSource): void {
+  track('korca_cli_feature_tip_shown', { source })
 }
 
-export function trackOrcaCliFeatureTipSetupClicked(source: OrcaCliFeatureTipSource): void {
-  track('orca_cli_feature_tip_setup_clicked', { source })
+export function trackKorcaCliFeatureTipSetupClicked(source: KorcaCliFeatureTipSource): void {
+  track('korca_cli_feature_tip_setup_clicked', { source })
 }
 
-export function trackOrcaCliFeatureTipSetupResult(
-  source: OrcaCliFeatureTipSource,
-  result: OrcaCliFeatureTipSetupResult
+export function trackKorcaCliFeatureTipSetupResult(
+  source: KorcaCliFeatureTipSource,
+  result: KorcaCliFeatureTipSetupResult
 ): void {
-  track('orca_cli_feature_tip_setup_result', { source, result })
+  track('korca_cli_feature_tip_setup_result', { source, result })
 }

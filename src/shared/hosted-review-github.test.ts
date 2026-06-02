@@ -9,7 +9,7 @@ const pr: PRInfo = {
   number: 12,
   title: 'Add queue badges',
   state: 'open',
-  url: 'https://github.com/acme/orca/pull/12',
+  url: 'https://github.com/acme/korca/pull/12',
   checksStatus: 'pending',
   updatedAt: '2026-05-12T00:00:00.000Z',
   mergeable: 'MERGEABLE',
@@ -21,7 +21,7 @@ describe('hostedReviewSummaryFromGitHubPRInfo', () => {
     const summary = hostedReviewSummaryFromGitHubPRInfo({
       pr,
       owner: 'acme',
-      repo: 'orca',
+      repo: 'korca',
       host: 'github.acme.internal'
     })
 
@@ -29,7 +29,7 @@ describe('hostedReviewSummaryFromGitHubPRInfo', () => {
       provider: 'github',
       host: 'github.acme.internal',
       owner: 'acme',
-      repo: 'orca',
+      repo: 'korca',
       number: 12
     })
     expect(summary.checksStatus).toBe('pending')
@@ -40,7 +40,7 @@ describe('hostedReviewSummaryFromGitHubPRInfo', () => {
     const summary = hostedReviewSummaryFromGitHubPRInfo({
       pr: { ...pr, checksStatus: 'success' },
       owner: 'acme',
-      repo: 'orca',
+      repo: 'korca',
       comments: [
         {
           id: 1,
@@ -84,7 +84,7 @@ describe('hostedReviewSummaryFromGitHubPRInfo', () => {
     const summary = hostedReviewSummaryFromGitHubPRInfo({
       pr: { ...pr, checksStatus: 'success' },
       owner: 'acme',
-      repo: 'orca',
+      repo: 'korca',
       checks: [{ name: 'ci', status: 'completed', conclusion: 'cancelled', url: null }]
     })
 
@@ -96,7 +96,7 @@ describe('hostedReviewSummaryFromGitHubPRInfo', () => {
       hostedReviewSummaryFromGitHubPRInfo({
         pr,
         owner: 'acme',
-        repo: 'orca'
+        repo: 'korca'
       }).threadSummary
     ).toBeUndefined()
 
@@ -104,7 +104,7 @@ describe('hostedReviewSummaryFromGitHubPRInfo', () => {
       hostedReviewSummaryFromGitHubPRInfo({
         pr,
         owner: 'acme',
-        repo: 'orca',
+        repo: 'korca',
         comments: []
       }).threadSummary
     ).toEqual({ unresolvedCount: 0, dataCompleteness: 'partial' })

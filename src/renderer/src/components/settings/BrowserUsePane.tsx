@@ -4,13 +4,13 @@ import { Import, Loader2, MousePointerClick } from 'lucide-react'
 import { toast } from 'sonner'
 import type { CliInstallStatus } from '../../../../shared/cli-install-types'
 import {
-  ORCA_CLI_SKILL_INSTALL_COMMAND,
-  ORCA_CLI_SKILL_NAME
+  KORCA_CLI_SKILL_INSTALL_COMMAND,
+  KORCA_CLI_SKILL_NAME
 } from '@/lib/agent-feature-install-commands'
 import {
   AGENT_SKILL_CLI_PREREQUISITE_NOTICE,
-  ensureOrcaCliAvailableForAgentSkillTerminal,
-  isOrcaCliAvailableOnPath
+  ensureKorcaCliAvailableForAgentSkillTerminal,
+  isKorcaCliAvailableOnPath
 } from '@/lib/agent-skill-cli-prerequisite'
 import { BROWSER_USE_ENABLED_STORAGE_KEY } from '@/lib/browser-use-setup-state'
 import {
@@ -118,7 +118,7 @@ export function BrowserUseSetup({
   // when the default profile — the one agents use — is still empty.
   const cookiesImported = !!defaultProfile?.source
 
-  const cliEnabled = isOrcaCliAvailableOnPath(cliStatus)
+  const cliEnabled = isKorcaCliAvailableOnPath(cliStatus)
   const cliPathNeedsAttention = cliStatus?.state === 'installed' && !cliStatus.pathConfigured
   const cliSupported = cliStatus?.supported ?? false
 
@@ -127,7 +127,7 @@ export function BrowserUseSetup({
     loading: skillLoading,
     error: skillError,
     refresh: refreshSkill
-  } = useInstalledAgentSkill(ORCA_CLI_SKILL_NAME, {
+  } = useInstalledAgentSkill(KORCA_CLI_SKILL_NAME, {
     enabled: browserUseEnabled,
     sourceKinds: GLOBAL_AGENT_SKILL_SOURCE_KINDS
   })
@@ -135,11 +135,11 @@ export function BrowserUseSetup({
   const handleEnableCli = async (): Promise<void> => {
     setCliBusy(true)
     try {
-      const next = await ensureOrcaCliAvailableForAgentSkillTerminal({
+      const next = await ensureKorcaCliAvailableForAgentSkillTerminal({
         onStatusChange: handleCliStatusChange
       })
-      if (mountedRef.current && isOrcaCliAvailableOnPath(next)) {
-        toast.success('PATH에 Orca CLI를 등록했습니다.')
+      if (mountedRef.current && isKorcaCliAvailableOnPath(next)) {
+        toast.success('PATH에 Korca CLI를 등록했습니다.')
       }
     } finally {
       if (mountedRef.current) {
@@ -268,8 +268,8 @@ export function BrowserUseSetup({
 
       {showStep1 ? (
         <SearchableSetting
-          title="Orca CLI 켜기"
-          description="에이전트가 브라우저를 조작할 수 있도록 Orca CLI를 등록합니다."
+          title="Korca CLI 켜기"
+          description="에이전트가 브라우저를 조작할 수 있도록 Korca CLI를 등록합니다."
           keywords={BROWSER_USE_PANE_SEARCH_ENTRIES[0].keywords}
           className="rounded-xl border border-border/60 bg-card/50 p-4"
         >
@@ -279,9 +279,9 @@ export function BrowserUseSetup({
               state={cliEnabled ? 'done' : cliBusy ? 'in-progress' : 'pending'}
             />
             <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-sm font-medium">Orca CLI 켜기</p>
+              <p className="text-sm font-medium">Korca CLI 켜기</p>
               <p className="text-xs text-muted-foreground">
-                에이전트가 셸에서 브라우저를 조작할 수 있도록 Orca CLI 명령을 등록합니다.
+                에이전트가 셸에서 브라우저를 조작할 수 있도록 Korca CLI 명령을 등록합니다.
               </p>
               {cliStatus?.commandPath && cliEnabled ? (
                 <p className="text-[11px] text-muted-foreground">
@@ -327,14 +327,14 @@ export function BrowserUseSetup({
       {showStep2 ? (
         <SearchableSetting
           title="Browser Use 스킬 설치"
-          description="에이전트가 Orca의 브라우저를 조작할 수 있도록 Browser Use 스킬을 설치합니다."
+          description="에이전트가 Korca의 브라우저를 조작할 수 있도록 Browser Use 스킬을 설치합니다."
           keywords={BROWSER_USE_PANE_SEARCH_ENTRIES[1].keywords}
           className={`rounded-xl border border-border/60 bg-card/50 p-4 ${
             cliEnabled ? '' : 'opacity-60'
           }`}
         >
           <BrowserUseSkillStep
-            command={ORCA_CLI_SKILL_INSTALL_COMMAND}
+            command={KORCA_CLI_SKILL_INSTALL_COMMAND}
             skillDetected={skillDetected}
             skillLoading={skillLoading}
             skillError={skillError}
@@ -342,7 +342,7 @@ export function BrowserUseSetup({
             preInstallNotice={AGENT_SKILL_CLI_PREREQUISITE_NOTICE}
             onBeforeOpenTerminal={async () => {
               useAppStore.getState().recordFeatureInteraction('agent-browser-setup')
-              await ensureOrcaCliAvailableForAgentSkillTerminal({
+              await ensureKorcaCliAvailableForAgentSkillTerminal({
                 onStatusChange: handleCliStatusChange
               })
             }}
@@ -368,7 +368,7 @@ export function BrowserUseSetup({
             <div className="min-w-0 flex-1 space-y-1">
               <p className="text-sm font-medium">브라우저 쿠키 가져오기</p>
               <p className="text-xs text-muted-foreground">
-                기존 로그인 정보를 Orca에 가져와 에이전트가 인증된 페이지에 접근할 수 있게 합니다. 기본 프로필로 가져옵니다.
+                기존 로그인 정보를 Korca에 가져와 에이전트가 인증된 페이지에 접근할 수 있게 합니다. 기본 프로필로 가져옵니다.
               </p>
               {sourceLabel ? (
                 <p className="text-[11px] text-muted-foreground">

@@ -3,7 +3,7 @@ import { networkInterfaces } from 'os'
 import QRCode from 'qrcode'
 import type { RuntimeAccessGrant } from '../../shared/runtime-access-grants'
 import type { DeviceEntry } from '../runtime/device-registry'
-import type { OrcaRuntimeRpcServer } from '../runtime/runtime-rpc'
+import type { KorcaRuntimeRpcServer } from '../runtime/runtime-rpc'
 
 export type NetworkInterface = {
   name: string
@@ -46,9 +46,9 @@ function toRuntimeAccessGrant(device: DeviceEntry): RuntimeAccessGrant {
 
 // Why: the mobile IPC handlers provide the renderer with QR code pairing data,
 // device management, and WebSocket readiness status. They depend on the
-// OrcaRuntimeRpcServer because it owns the device registry and TLS state.
+// KorcaRuntimeRpcServer because it owns the device registry and TLS state.
 
-export function registerMobileHandlers(rpcServer: OrcaRuntimeRpcServer): void {
+export function registerMobileHandlers(rpcServer: KorcaRuntimeRpcServer): void {
   ipcMain.handle('mobile:listNetworkInterfaces', (): { interfaces: NetworkInterface[] } => ({
     interfaces: getNetworkInterfaces()
   }))

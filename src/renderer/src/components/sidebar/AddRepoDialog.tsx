@@ -284,7 +284,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
   const hiddenWorktreeCount =
     detectedResult?.authoritative === true
       ? detectedResult.worktrees.filter(
-          (worktree) => !worktree.selectedCheckout && worktree.ownership !== 'orca-managed'
+          (worktree) => !worktree.selectedCheckout && worktree.ownership !== 'korca-managed'
         ).length
       : 0
   const otherWorktreesVisible = addedRepo
@@ -1117,8 +1117,8 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
               <DialogTitle>Add a project</DialogTitle>
               <DialogDescription>
                 {repos.length === 0
-                  ? 'Add a project to get started with Orca.'
-                  : 'Add another project to manage with Orca.'}
+                  ? 'Add a project to get started with Korca.'
+                  : 'Add another project to manage with Korca.'}
               </DialogDescription>
             </DialogHeader>
 
@@ -1205,7 +1205,7 @@ const AddRepoDialog = React.memo(function AddRepoDialog() {
             </div>
 
             {/* Secondary link rather than a fourth card — create-from-scratch
-               is a less common path than importing. See orca#763. */}
+               is a less common path than importing. See korca#763. */}
             <div className="flex items-center justify-center pt-1">
               <button
                 type="button"

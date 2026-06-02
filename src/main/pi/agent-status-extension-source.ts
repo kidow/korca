@@ -3,23 +3,23 @@
 // etc.). To get pi panes into the unified agent-hooks pipeline alongside
 // Claude/Codex/Gemini/OpenCode/Cursor, we ship a bundled extension into
 // the per-PTY Pi overlay (PiTitlebarExtensionService) that POSTs to
-// /hook/<kind> using the same ORCA_AGENT_HOOK_* + ORCA_PANE_KEY env that every
+// /hook/<kind> using the same KORCA_AGENT_HOOK_* + KORCA_PANE_KEY env that every
 // PTY already receives from ipc/pty.ts.
 //
 // The overlay is per-PTY, so each pi process boots with its own copy of
 // this extension and its own paneKey. Like the OpenCode plugin, the
 // returned source is a string (loaded by jiti from disk inside the pi
 // process), so we keep the source body in plain JS without TS types and
-// avoid pulling pi or any Orca dep into the pi runtime.
+// avoid pulling pi or any Korca dep into the pi runtime.
 import type { PiAgentKind } from '../../shared/pi-agent-kind'
 
-export const ORCA_PI_AGENT_STATUS_EXTENSION_FILE = 'orca-agent-status.ts'
+export const KORCA_PI_AGENT_STATUS_EXTENSION_FILE = 'korca-agent-status.ts'
 
 export function getPiAgentStatusExtensionSource(kind: PiAgentKind = 'pi'): string {
   // Why: keep this string self-contained — it runs inside the pi process,
-  // so it cannot import from Orca's main bundle. fs/http coords come from
+  // so it cannot import from Korca's main bundle. fs/http coords come from
   // the same endpoint file the OpenCode plugin reads (process.env is frozen
-  // at PTY spawn, so on Orca restart we have to re-read it from disk).
+  // at PTY spawn, so on Korca restart we have to re-read it from disk).
   return [
     '// Why: no package-specific type import here. Pi and OMP expose the same',
     '// extension API, but publish their types under different package names.',
@@ -34,7 +34,7 @@ export function getPiAgentStatusExtensionSource(kind: PiAgentKind = 'pi'): strin
     'let cachedEndpointValues: Record<string, string> | null = null',
     '',
     'function readEndpointFile(): Record<string, string> | null {',
-    '  const path = process.env.ORCA_AGENT_HOOK_ENDPOINT',
+    '  const path = process.env.KORCA_AGENT_HOOK_ENDPOINT',
     '  if (!path) return null',
     '  try {',
     "    const fs = require('fs')",
@@ -65,7 +65,7 @@ export function getPiAgentStatusExtensionSource(kind: PiAgentKind = 'pi'): strin
     '    const code = (err as { code?: string } | null)?.code',
     "    if (err && code !== 'ENOENT' && !warnedBadEndpoint) {",
     '      warnedBadEndpoint = true',
-    "      console.warn('[orca-pi-status] failed to parse endpoint file:', (err as Error).message)",
+    "      console.warn('[korca-pi-status] failed to parse endpoint file:', (err as Error).message)",
     '    }',
     '    return null',
     '  }',
@@ -74,10 +74,10 @@ export function getPiAgentStatusExtensionSource(kind: PiAgentKind = 'pi'): strin
     'function resolveHookCoords() {',
     '  const fileEnv = readEndpointFile() || {}',
     '  return {',
-    '    port: fileEnv.ORCA_AGENT_HOOK_PORT || process.env.ORCA_AGENT_HOOK_PORT,',
-    '    token: fileEnv.ORCA_AGENT_HOOK_TOKEN || process.env.ORCA_AGENT_HOOK_TOKEN,',
-    "    env: fileEnv.ORCA_AGENT_HOOK_ENV || process.env.ORCA_AGENT_HOOK_ENV || '',",
-    "    version: fileEnv.ORCA_AGENT_HOOK_VERSION || process.env.ORCA_AGENT_HOOK_VERSION || '',",
+    '    port: fileEnv.KORCA_AGENT_HOOK_PORT || process.env.KORCA_AGENT_HOOK_PORT,',
+    '    token: fileEnv.KORCA_AGENT_HOOK_TOKEN || process.env.KORCA_AGENT_HOOK_TOKEN,',
+    "    env: fileEnv.KORCA_AGENT_HOOK_ENV || process.env.KORCA_AGENT_HOOK_ENV || '',",
+    "    version: fileEnv.KORCA_AGENT_HOOK_VERSION || process.env.KORCA_AGENT_HOOK_VERSION || '',",
     '  }',
     '}',
     '',
@@ -107,13 +107,13 @@ export function getPiAgentStatusExtensionSource(kind: PiAgentKind = 'pi'): strin
     '',
     'async function post(hookEventName: string, extra: Record<string, unknown> = {}): Promise<void> {',
     '  const coords = resolveHookCoords()',
-    '  const paneKey = process.env.ORCA_PANE_KEY',
+    '  const paneKey = process.env.KORCA_PANE_KEY',
     '  if (!coords.port || !coords.token || !paneKey) return',
     '  const url = `http://127.0.0.1:${coords.port}${resolveHookPath()}`',
     '  const body = JSON.stringify({',
     '    paneKey,',
-    "    tabId: process.env.ORCA_TAB_ID || '',",
-    "    worktreeId: process.env.ORCA_WORKTREE_ID || '',",
+    "    tabId: process.env.KORCA_TAB_ID || '',",
+    "    worktreeId: process.env.KORCA_WORKTREE_ID || '',",
     '    env: coords.env,',
     '    version: coords.version,',
     '    payload: { hook_event_name: hookEventName, ...extra },',
@@ -123,13 +123,13 @@ export function getPiAgentStatusExtensionSource(kind: PiAgentKind = 'pi'): strin
     "      method: 'POST',",
     '      headers: {',
     "        'Content-Type': 'application/json',",
-    "        'X-Orca-Agent-Hook-Token': coords.token,",
+    "        'X-Korca-Agent-Hook-Token': coords.token,",
     '      },',
     '      body,',
     '    })',
     '  } catch {',
-    '    // Why: status reporting must never fail the pi run just because Orca',
-    '    // is unavailable or the loopback request failed (e.g. Orca restart).',
+    '    // Why: status reporting must never fail the pi run just because Korca',
+    '    // is unavailable or the loopback request failed (e.g. Korca restart).',
     '  }',
     '}',
     '',

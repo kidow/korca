@@ -90,7 +90,7 @@ function formatSparseDirectoryPreview(directories: string[]): string {
 }
 
 function isWebClient(): boolean {
-  return Boolean((window as unknown as { __ORCA_WEB_CLIENT__?: boolean }).__ORCA_WEB_CLIENT__)
+  return Boolean((window as unknown as { __KORCA_WEB_CLIENT__?: boolean }).__KORCA_WEB_CLIENT__)
 }
 
 const WorktreeCard = React.memo(function WorktreeCard({
@@ -499,7 +499,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
   const metaLinearIssue = showLinearIssue ? linearIssueDisplay : null
   const metaReview = showPR ? prDisplay : null
   const metaComment = showComment ? worktree.comment : null
-  const handleOpenGitHubIssueInOrca = useCallback(
+  const handleOpenGitHubIssueInKorca = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
       const issueUrl = metaIssue && 'url' in metaIssue ? metaIssue.url : undefined
@@ -522,7 +522,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
     },
     [metaIssue, openTaskPage, repo]
   )
-  const handleOpenReviewInOrca = useCallback(
+  const handleOpenReviewInKorca = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
       if (!repo || !metaReview?.url || metaReview.provider !== 'github') {
@@ -552,7 +552,7 @@ const WorktreeCard = React.memo(function WorktreeCard({
     },
     [updateWorktreeMeta, worktree.id]
   )
-  const handleOpenLinearIssueInOrca = useCallback(
+  const handleOpenLinearIssueInKorca = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
       if (!linearIssue) {
@@ -630,12 +630,12 @@ const WorktreeCard = React.memo(function WorktreeCard({
         detailsAfter={hasPorts ? <WorktreeCardPortsDetails ports={workspacePorts} /> : null}
         onEditIssue={handleEditIssue}
         onEditComment={handleEditComment}
-        onOpenGitHubIssueInOrca={
-          metaIssue && 'url' in metaIssue && metaIssue.url ? handleOpenGitHubIssueInOrca : undefined
+        onOpenGitHubIssueInKorca={
+          metaIssue && 'url' in metaIssue && metaIssue.url ? handleOpenGitHubIssueInKorca : undefined
         }
-        onOpenLinearIssueInOrca={linearIssue?.url ? handleOpenLinearIssueInOrca : undefined}
-        onOpenReviewInOrca={
-          metaReview?.url && metaReview.provider === 'github' ? handleOpenReviewInOrca : undefined
+        onOpenLinearIssueInKorca={linearIssue?.url ? handleOpenLinearIssueInKorca : undefined}
+        onOpenReviewInKorca={
+          metaReview?.url && metaReview.provider === 'github' ? handleOpenReviewInKorca : undefined
         }
         // Why: branch lookup can show a PR without persisted metadata. Only
         // expose unlink when this workspace has an explicit GitHub linkedPR.

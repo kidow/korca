@@ -207,7 +207,7 @@ describe('keybindings', () => {
     })
   })
 
-  it('keeps Orca-first terminal context backward compatible', () => {
+  it('keeps Korca-first terminal context backward compatible', () => {
     const ctrlP = {
       key: 'p',
       code: 'KeyP',
@@ -221,7 +221,7 @@ describe('keybindings', () => {
     expect(
       keybindingMatchesAction('worktree.quickOpen', ctrlP, 'linux', undefined, {
         context: 'terminal',
-        terminalShortcutPolicy: 'orca-first'
+        terminalShortcutPolicy: 'korca-first'
       })
     ).toBe(true)
     expect(

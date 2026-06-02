@@ -24,7 +24,7 @@ describe('connectMacOSProviderSocket', () => {
       const socket = new FakeSocket()
       createConnectionMock.mockReturnValueOnce(socket)
 
-      const promise = connectMacOSProviderSocket('/tmp/orca-computer.sock', 50)
+      const promise = connectMacOSProviderSocket('/tmp/korca-computer.sock', 50)
       await Promise.resolve()
 
       expect(socket.listenerCount('error')).toBe(1)

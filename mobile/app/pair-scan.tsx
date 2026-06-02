@@ -67,7 +67,7 @@ export default function PairScanScreen() {
       const offer = decodePairingUrl(data)
       if (!offer) {
         setStatus('error')
-        setErrorMessage('유효한 Orca QR 코드가 아닙니다')
+        setErrorMessage('유효한 Korca QR 코드가 아닙니다')
         processingRef.current = false
         return
       }
@@ -233,7 +233,7 @@ export default function PairScanScreen() {
           </Text>
           <Text style={styles.subtitle}>
             {canAskAgain
-              ? '데스크톱의 Orca에서 QR 코드를 스캔하거나, 대신 페어링 코드를 붙여넣으세요.'
+              ? '데스크톱의 Korca에서 QR 코드를 스캔하거나, 대신 페어링 코드를 붙여넣으세요.'
               : '설정에서 카메라 접근을 켜거나, 대신 페어링 코드를 붙여넣으세요.'}
           </Text>
           <Pressable
@@ -257,7 +257,7 @@ export default function PairScanScreen() {
           visible={pasteVisible}
           title="페어링 코드 붙여넣기"
           message="컴퓨터의 QR 아래에 표시된 코드를 복사하세요."
-          placeholder="orca://pair?code=... 또는 코드를 붙여넣기"
+          placeholder="korca://pair?code=... 또는 코드를 붙여넣기"
           onSubmit={handlePasteSubmit}
           onCancel={() => setPasteVisible(false)}
         />
@@ -272,7 +272,7 @@ export default function PairScanScreen() {
       </Pressable>
 
       <View style={styles.steps}>
-        <Step number={1} text="컴퓨터에서 Orca를 여세요" />
+        <Step number={1} text="컴퓨터에서 Korca를 여세요" />
         <Step number={2} text="설정 → 모바일로 이동하세요" />
         <Step number={3} text="QR 코드를 스캔하세요" />
       </View>
@@ -353,7 +353,7 @@ export default function PairScanScreen() {
         visible={pasteVisible}
         title="페어링 코드 붙여넣기"
         message="컴퓨터의 QR 아래에 표시된 코드를 복사하세요."
-        placeholder="orca://pair?code=... 또는 코드를 붙여넣기"
+        placeholder="korca://pair?code=... 또는 코드를 붙여넣기"
         onSubmit={handlePasteSubmit}
         onCancel={() => setPasteVisible(false)}
       />

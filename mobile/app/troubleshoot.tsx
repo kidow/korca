@@ -63,8 +63,8 @@ const sections: TroubleshootSection[] = [
     icon: <Shield size={16} color={colors.textSecondary} />,
     title: '방화벽이 6768 포트를 차단함',
     steps: [
-      'macOS: 시스템 설정 → 네트워크 → 방화벽에서 Orca를 허용하세요.',
-      'Windows: Defender 방화벽 → 앱 허용에서 비공개 네트워크용 Orca를 켜세요.',
+      'macOS: 시스템 설정 → 네트워크 → 방화벽에서 Korca를 허용하세요.',
+      'Windows: Defender 방화벽 → 앱 허용에서 비공개 네트워크용 Korca를 켜세요.',
       'Linux: sudo ufw allow 6768',
       '회사/학교 네트워크는 P2P를 막을 수 있습니다. 개인 핫스팟을 사용해 보세요.'
     ]
@@ -74,8 +74,8 @@ const sections: TroubleshootSection[] = [
     icon: <Monitor size={16} color={colors.textSecondary} />,
     title: '데스크톱 앱이 실행 중이 아님',
     steps: [
-      '연결을 받으려면 데스크톱에서 Orca가 열려 있어야 합니다.',
-      'Orca를 다시 시작해 보세요. 동반 서버는 실행 시 시작됩니다.',
+      '연결을 받으려면 데스크톱에서 Korca가 열려 있어야 합니다.',
+      'Korca를 다시 시작해 보세요. 동반 서버는 실행 시 시작됩니다.',
       '업데이트 후에는 QR 코드로 다시 페어링해야 할 수 있습니다.'
     ]
   },

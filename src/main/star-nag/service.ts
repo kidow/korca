@@ -1,11 +1,11 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { STAR_NAG_INITIAL_THRESHOLD } from '../../shared/constants'
-import { checkOrcaStarred } from '../github/client'
+import { checkKorcaStarred } from '../github/client'
 import type { Store } from '../persistence'
 import type { StatsCollector } from '../stats/collector'
 
 /**
- * Service that decides when to prompt the user with the "star Orca on GitHub"
+ * Service that decides when to prompt the user with the "star Korca on GitHub"
  * notification. Counts agents spawned since the current app version was first
  * seen; crosses a doubling threshold (default 50 → 100 → 200 …) to fire the
  * renderer notification via 'star-nag:show'.
@@ -109,12 +109,12 @@ export class StarNagService {
     this.evaluating = true
     try {
       // Why: the notification is only useful for users whose gh CLI can
-      // actually perform the star. Calling checkOrcaStarred both gates on gh
+      // actually perform the star. Calling checkKorcaStarred both gates on gh
       // availability and skips users who already starred outside the app.
       // Errors (network, gh missing) map to null — skip silently and leave
       // state unchanged so we retry on the next spawn without racing forward
       // to the next threshold.
-      const starred = await checkOrcaStarred()
+      const starred = await checkKorcaStarred()
       if (starred === null) {
         return
       }

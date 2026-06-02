@@ -19,7 +19,7 @@ function makeRepo(path: string, connectionId: string | null = null): Repo {
 
 describe('skill discovery', () => {
   it('discovers home and repo SKILL.md packages with provider metadata', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'orca-skills-'))
+    const root = await mkdtemp(join(tmpdir(), 'korca-skills-'))
     const home = join(root, 'home')
     const repo = join(root, 'repo')
     const codexSkill = join(home, '.codex', 'skills', 'review')
@@ -57,13 +57,13 @@ describe('skill discovery', () => {
   })
 
   it('discovers skill packages through symlinked skill directories', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'orca-skills-'))
+    const root = await mkdtemp(join(tmpdir(), 'korca-skills-'))
     const home = join(root, 'home')
-    const realSkill = join(root, 'central-skills', 'orca-cli')
-    const linkedSkill = join(home, '.agents', 'skills', 'orca-cli')
+    const realSkill = join(root, 'central-skills', 'korca-cli')
+    const linkedSkill = join(home, '.agents', 'skills', 'korca-cli')
     await mkdir(realSkill, { recursive: true })
     await mkdir(join(home, '.agents', 'skills'), { recursive: true })
-    await writeFile(join(realSkill, 'SKILL.md'), '# Orca CLI\n\nUse the Orca CLI.')
+    await writeFile(join(realSkill, 'SKILL.md'), '# Korca CLI\n\nUse the Korca CLI.')
     await symlink(realSkill, linkedSkill, process.platform === 'win32' ? 'junction' : 'dir')
 
     const result = await discoverSkills({
@@ -71,13 +71,13 @@ describe('skill discovery', () => {
       cwd: join(root, 'missing-cwd')
     })
 
-    const skill = result.skills.find((entry) => entry.name === 'Orca CLI')
+    const skill = result.skills.find((entry) => entry.name === 'Korca CLI')
     expect(skill?.sourceKind).toBe('home')
     expect(skill?.directoryPath).toBe(linkedSkill)
   })
 
   it('does not loop through recursive symlinked skill directories', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'orca-skills-'))
+    const root = await mkdtemp(join(tmpdir(), 'korca-skills-'))
     const home = join(root, 'home')
     const skillRoot = join(home, '.agents', 'skills')
     await mkdir(skillRoot, { recursive: true })
@@ -96,7 +96,7 @@ describe('skill discovery', () => {
   })
 
   it('enforces depth limits for valid child directories whose names start with dot-dot', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'orca-skills-'))
+    const root = await mkdtemp(join(tmpdir(), 'korca-skills-'))
     const home = join(root, 'home')
     const deepSkill = join(home, '.agents', 'skills', '..deep', 'a', 'b', 'c', 'd', 'too-deep')
     await mkdir(deepSkill, { recursive: true })

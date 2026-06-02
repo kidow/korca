@@ -135,7 +135,7 @@ export class ClaudeAccountService {
     try {
       const captured = await this.runClaudeLoginAndCapture(managedAuth)
       if (!captured.identity.email) {
-        throw new Error('Claude login completed, but Orca could not resolve the account email.')
+        throw new Error('Claude login completed, but Korca could not resolve the account email.')
       }
       await this.writeManagedAuth(accountId, managedAuthPath, captured)
 
@@ -195,7 +195,7 @@ export class ClaudeAccountService {
       wslLinuxAuthPath: account.wslLinuxAuthPath ?? null
     })
     if (!captured.identity.email) {
-      throw new Error('Claude login completed, but Orca could not resolve the account email.')
+      throw new Error('Claude login completed, but Korca could not resolve the account email.')
     }
 
     const settings = this.store.getSettings()
@@ -491,7 +491,7 @@ export class ClaudeAccountService {
   } {
     if (location.managedAuthRuntime !== 'wsl') {
       return {
-        windowsPath: mkdtempSync(join(tmpdir(), 'orca-claude-login-')),
+        windowsPath: mkdtempSync(join(tmpdir(), 'korca-claude-login-')),
         linuxPath: null,
         wslDistro: null
       }
@@ -507,7 +507,7 @@ export class ClaudeAccountService {
         '--',
         'bash',
         '-lc',
-        'mktemp -d "${TMPDIR:-/tmp}/orca-claude-login.XXXXXX"'
+        'mktemp -d "${TMPDIR:-/tmp}/korca-claude-login.XXXXXX"'
       ],
       { encoding: 'utf-8', timeout: 5000 }
     )
@@ -720,7 +720,7 @@ export class ClaudeAccountService {
 
     const managedAuthPath = join(this.getManagedAccountsRoot(), accountId, 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), `${accountId}\n`, 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), `${accountId}\n`, 'utf-8')
     return {
       managedAuthPath: this.assertManagedAuthPath(managedAuthPath, accountId),
       managedAuthRuntime: 'host',
@@ -753,8 +753,8 @@ export class ClaudeAccountService {
       throw new Error('Could not resolve the active WSL home directory for Claude login.')
     }
 
-    const wslLinuxAuthPath = `${home.replace(/\/$/, '')}/.local/share/orca/claude-accounts/${accountId}/auth`
-    const markerPath = `${wslLinuxAuthPath}/.orca-managed-claude-auth`
+    const wslLinuxAuthPath = `${home.replace(/\/$/, '')}/.local/share/korca/claude-accounts/${accountId}/auth`
+    const markerPath = `${wslLinuxAuthPath}/.korca-managed-claude-auth`
     execFileSync(
       'wsl.exe',
       [
@@ -787,10 +787,10 @@ export class ClaudeAccountService {
     const wslInfo = parseWslUncPath(candidatePath)
     if (wslInfo) {
       if (
-        !wslInfo.linuxPath.includes('/.local/share/orca/claude-accounts/') ||
+        !wslInfo.linuxPath.includes('/.local/share/korca/claude-accounts/') ||
         !wslInfo.linuxPath.endsWith('/auth')
       ) {
-        throw new Error('Managed WSL Claude auth storage is outside Orca account storage.')
+        throw new Error('Managed WSL Claude auth storage is outside Korca account storage.')
       }
       if (process.platform === 'win32') {
         try {
@@ -806,13 +806,13 @@ export class ClaudeAccountService {
                 [
                   'set -euo pipefail',
                   `candidate=${shellQuote(wslInfo.linuxPath)}`,
-                  'managed_root="${HOME%/}/.local/share/orca/claude-accounts"',
+                  'managed_root="${HOME%/}/.local/share/korca/claude-accounts"',
                   'candidate_real=$(readlink -f -- "$candidate")',
                   'managed_root_real=$(readlink -f -- "$managed_root")',
-                  'test -f "$candidate_real/.orca-managed-claude-auth"',
+                  'test -f "$candidate_real/.korca-managed-claude-auth"',
                   expectedAccountId
-                    ? `test "$(cat "$candidate_real/.orca-managed-claude-auth")" = ${shellQuote(expectedAccountId)}`
-                    : 'test -n "$(cat "$candidate_real/.orca-managed-claude-auth")"',
+                    ? `test "$(cat "$candidate_real/.korca-managed-claude-auth")" = ${shellQuote(expectedAccountId)}`
+                    : 'test -n "$(cat "$candidate_real/.korca-managed-claude-auth")"',
                   'case "$candidate_real" in "$managed_root_real"/*/auth) printf "%s\\n" "$candidate_real" ;; *) exit 35 ;; esac'
                 ].join('\n')
               )
@@ -824,16 +824,16 @@ export class ClaudeAccountService {
           }
           return toWindowsWslPath(canonicalLinuxPath, wslInfo.distro)
         } catch (error) {
-          throw new Error('Managed WSL Claude auth storage is outside Orca account storage.', {
+          throw new Error('Managed WSL Claude auth storage is outside Korca account storage.', {
             cause: error
           })
         }
       }
       if (
         !existsSync(candidatePath) ||
-        !existsSync(join(candidatePath, '.orca-managed-claude-auth'))
+        !existsSync(join(candidatePath, '.korca-managed-claude-auth'))
       ) {
-        throw new Error('Managed Claude auth storage is not owned by Orca.')
+        throw new Error('Managed Claude auth storage is not owned by Korca.')
       }
       return candidatePath
     }
@@ -847,7 +847,7 @@ export class ClaudeAccountService {
       adoptLegacyMarker: true
     })
     if (!trustedPath) {
-      throw new Error('Managed Claude auth storage is not owned by Orca.')
+      throw new Error('Managed Claude auth storage is not owned by Korca.')
     }
     return trustedPath
   }

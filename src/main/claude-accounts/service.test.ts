@@ -16,7 +16,7 @@ import {
 
 vi.mock('electron', () => ({
   app: {
-    getPath: () => '/tmp/orca-claude-service-test'
+    getPath: () => '/tmp/korca-claude-service-test'
   }
 }))
 
@@ -136,7 +136,7 @@ describe('ClaudeAccountService credential capture', () => {
   })
 
   it('falls back to captured credentials file on macOS', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'orca-claude-capture-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'korca-claude-capture-'))
     writeFileSync(join(tempDir, '.credentials.json'), '{"token":"file"}\n', 'utf-8')
     vi.mocked(readActiveClaudeKeychainCredentialsStrict)
       .mockResolvedValueOnce(null)
@@ -166,11 +166,11 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('restores previous managed auth when reauth materialization fails', async () => {
     setPlatform('linux')
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const managedAuthPath = join(tempDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(join(managedAuthPath, '.credentials.json'), '{"old":true}\n', 'utf-8')
     writeFileSync(join(managedAuthPath, 'oauth-account.json'), '{"oldOauth":true}\n', 'utf-8')
     let settings = {
@@ -236,11 +236,11 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('restores settings without rematerializing when managed-auth rollback write fails', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const managedAuthPath = join(tempDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(join(managedAuthPath, 'oauth-account.json'), '{"oldOauth":true}\n', 'utf-8')
     vi.mocked(readManagedClaudeKeychainCredentials).mockResolvedValue('{"old":true}\n')
     vi.mocked(writeManagedClaudeKeychainCredentials)
@@ -310,11 +310,11 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('restores oauth metadata when new credential write and credential rollback fail', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const managedAuthPath = join(tempDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(join(managedAuthPath, 'oauth-account.json'), '{"oldOauth":true}\n', 'utf-8')
     vi.mocked(readManagedClaudeKeychainCredentials).mockResolvedValue('{"old":true}\n')
     vi.mocked(writeManagedClaudeKeychainCredentials)
@@ -388,12 +388,12 @@ describe('ClaudeAccountService credential capture', () => {
   it('restores old metadata when rollback restores credentials but oauth restore fails', async () => {
     setPlatform('linux')
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const managedAuthPath = join(tempDir, 'claude-accounts', 'account-1', 'auth')
     const oauthPath = join(managedAuthPath, 'oauth-account.json')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(join(managedAuthPath, '.credentials.json'), '{"old":true}\n', 'utf-8')
     writeFileSync(oauthPath, '{"oldOauth":true}\n', 'utf-8')
     let settings = {
@@ -460,11 +460,11 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('refreshes rate limits without recaching a removed active account', async () => {
     setPlatform('linux')
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const managedAuthPath = join(tempDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(join(managedAuthPath, '.credentials.json'), '{"old":true}\n', 'utf-8')
     let settings = {
       claudeManagedAccounts: [
@@ -518,11 +518,11 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('evicts inactive rate-limit cache after successful reauth', async () => {
     setPlatform('linux')
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const managedAuthPath = join(tempDir, 'claude-accounts', 'account-1', 'auth')
     mkdirSync(managedAuthPath, { recursive: true })
-    writeFileSync(join(managedAuthPath, '.orca-managed-claude-auth'), 'account-1\n', 'utf-8')
+    writeFileSync(join(managedAuthPath, '.korca-managed-claude-auth'), 'account-1\n', 'utf-8')
     writeFileSync(join(managedAuthPath, '.credentials.json'), '{"old":true}\n', 'utf-8')
     writeFileSync(join(managedAuthPath, 'oauth-account.json'), '{"oldOauth":true}\n', 'utf-8')
     let settings = {
@@ -588,7 +588,7 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('selects a WSL account without changing the Windows active account', async () => {
     setPlatform('linux')
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const hostAuthPath = join(tempDir, 'claude-accounts', 'host-account', 'auth')
     const wslAuthPath = join(tempDir, 'claude-accounts', 'wsl-account', 'auth')
@@ -616,7 +616,7 @@ describe('ClaudeAccountService credential capture', () => {
           managedAuthPath: wslAuthPath,
           managedAuthRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxAuthPath: '/home/jin/.local/share/orca/claude-accounts/wsl-account/auth',
+          wslLinuxAuthPath: '/home/jin/.local/share/korca/claude-accounts/wsl-account/auth',
           authMethod: 'subscription-oauth',
           organizationUuid: null,
           organizationName: null,
@@ -675,7 +675,7 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('rejects selecting a WSL account for the Windows target', async () => {
     setPlatform('linux')
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const wslAuthPath = join(tempDir, 'claude-accounts', 'wsl-account', 'auth')
     mkdirSync(wslAuthPath, { recursive: true })
@@ -687,7 +687,7 @@ describe('ClaudeAccountService credential capture', () => {
           managedAuthPath: wslAuthPath,
           managedAuthRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxAuthPath: '/home/jin/.local/share/orca/claude-accounts/wsl-account/auth',
+          wslLinuxAuthPath: '/home/jin/.local/share/korca/claude-accounts/wsl-account/auth',
           authMethod: 'subscription-oauth',
           organizationUuid: null,
           organizationName: null,
@@ -726,13 +726,13 @@ describe('ClaudeAccountService credential capture', () => {
 
   it('removes a WSL account without clearing the Windows active account', async () => {
     setPlatform('linux')
-    tempDir = '/tmp/orca-claude-service-test'
+    tempDir = '/tmp/korca-claude-service-test'
     rmSync(tempDir, { recursive: true, force: true })
     const hostAuthPath = join(tempDir, 'claude-accounts', 'host-account', 'auth')
     const wslAuthPath = join(tempDir, 'claude-accounts', 'wsl-account', 'auth')
     mkdirSync(hostAuthPath, { recursive: true })
     mkdirSync(wslAuthPath, { recursive: true })
-    writeFileSync(join(wslAuthPath, '.orca-managed-claude-auth'), 'wsl-account\n', 'utf-8')
+    writeFileSync(join(wslAuthPath, '.korca-managed-claude-auth'), 'wsl-account\n', 'utf-8')
     let settings = {
       claudeManagedAccounts: [
         {
@@ -755,7 +755,7 @@ describe('ClaudeAccountService credential capture', () => {
           managedAuthPath: wslAuthPath,
           managedAuthRuntime: 'wsl',
           wslDistro: 'Ubuntu',
-          wslLinuxAuthPath: '/home/jin/.local/share/orca/claude-accounts/wsl-account/auth',
+          wslLinuxAuthPath: '/home/jin/.local/share/korca/claude-accounts/wsl-account/auth',
           authMethod: 'subscription-oauth',
           organizationUuid: null,
           organizationName: null,

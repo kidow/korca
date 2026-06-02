@@ -171,7 +171,7 @@ export function DeveloperPermissionsPane(): React.JSX.Element {
   }, [refresh])
 
   // Why: after the user flips a permission in System Settings and switches
-  // back to Orca, the chip should reflect the new status without a manual
+  // back to Korca, the chip should reflect the new status without a manual
   // Refresh click. Tied to window focus rather than a polling interval so
   // we don't keep hammering `systemPreferences` while the pane is idle.
   useEffect(() => {
@@ -217,11 +217,11 @@ export function DeveloperPermissionsPane(): React.JSX.Element {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-sm font-medium">
             <ShieldCheck className="size-4" />
-            터미널 도구는 Orca의 macOS 개인정보 보호 범위를 그대로 사용합니다.
+            터미널 도구는 Korca의 macOS 개인정보 보호 범위를 그대로 사용합니다.
           </div>
           <p className="text-xs text-muted-foreground">
             CLI, 로컬 앱 또는 자동화 도구가 macOS 개인정보 접근을 필요로 할 때 이 컨트롤을
-            사용하세요. Orca는 시작 시 묻지 않습니다.
+            사용하세요. Korca는 시작 시 묻지 않습니다.
           </p>
         </div>
         <Button variant="outline" size="sm" className="gap-1.5" onClick={() => void refresh()}>

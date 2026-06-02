@@ -1,10 +1,10 @@
 /* eslint-disable max-lines -- Why: the WebSocket transport owns connection
    admission, heartbeat, pre-auth timeout, and client-id cleanup together; those
    invariants are easier to audit in one transport boundary. */
-// Why: the WebSocket transport enables mobile clients to connect to the Orca
+// Why: the WebSocket transport enables mobile clients to connect to the Korca
 // runtime over the local network. When TLS cert/key are provided it uses wss://
 // to prevent passive sniffing; otherwise it falls back to plain ws://. Per-device
-// tokens (validated by the message handler in OrcaRuntimeRpcServer) provide auth
+// tokens (validated by the message handler in KorcaRuntimeRpcServer) provide auth
 // regardless of transport encryption.
 import { createServer as createHttpsServer, type Server as HttpsServer } from 'https'
 import { createServer as createHttpServer, type Server as HttpServer } from 'http'
@@ -141,7 +141,7 @@ export class WebSocketTransport implements RpcTransport {
       return
     }
 
-    // Why: when the preferred port is occupied (e.g. another Orca instance is
+    // Why: when the preferred port is occupied (e.g. another Korca instance is
     // already running), fall back to an OS-assigned port so mobile pairing
     // still works. The QR code reads resolvedPort after start, so it will
     // advertise the correct port regardless.
@@ -274,7 +274,7 @@ export class WebSocketTransport implements RpcTransport {
   // Why: WebSocket connections are long-lived (unlike Unix socket which is
   // one-per-request). Multiple requests can be multiplexed on the same
   // connection via the RPC `id` field. The transport delegates all auth
-  // and dispatch logic to the message handler set by OrcaRuntimeRpcServer.
+  // and dispatch logic to the message handler set by KorcaRuntimeRpcServer.
   private handleConnection(ws: WebSocket): void {
     let finalized = false
     const onPong = (): void => {

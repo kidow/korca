@@ -147,7 +147,7 @@ export function registerAutoUpdaterHandlers({
     }
 
     // Why: fetching changelog in the main process avoids CORS issues that
-    // would block a renderer-side fetch to onorca.dev, and ensures the
+    // would block a renderer-side fetch to onkorca.dev, and ensures the
     // card can render immediately without an async loading gap.
     void (async () => {
       const changelog = await fetchChangelog(info.version, app.getVersion()).catch(() => null)

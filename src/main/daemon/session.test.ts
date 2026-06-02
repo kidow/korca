@@ -193,7 +193,7 @@ describe('Session', () => {
       expect(session.shellState).toBe('pending')
 
       session.write('first\n')
-      subprocess.simulateData('\x1b]777;orca-shell-ready\x07')
+      subprocess.simulateData('\x1b]777;korca-shell-ready\x07')
       expect(session.shellState).toBe('ready' satisfies ShellReadyState)
       session.write('second\n')
       expect(subprocess.written).toEqual([])
@@ -216,7 +216,7 @@ describe('Session', () => {
     it('detects marker split across data chunks', () => {
       createSession({ shellReadySupported: true })
 
-      subprocess.simulateData('\x1b]777;orca-sh')
+      subprocess.simulateData('\x1b]777;korca-sh')
       expect(session.shellState).toBe('pending')
 
       subprocess.simulateData('ell-ready\x07')

@@ -121,7 +121,7 @@ import {
   getFeatureTipsAppOpenDecision,
   isCliFeatureTipCompleted
 } from './components/feature-tips/feature-tip-startup-gate'
-import { trackOrcaCliFeatureTipShown } from './components/feature-tips/feature-tip-telemetry'
+import { trackKorcaCliFeatureTipShown } from './components/feature-tips/feature-tip-telemetry'
 import {
   keybindingMatchesAction,
   type KeybindingActionId,
@@ -571,8 +571,8 @@ function App(): React.JSX.Element {
     }
 
     featureTipsPromptedThisSessionRef.current = true
-    if (featureTipsDecision.tipId === 'orca-cli') {
-      trackOrcaCliFeatureTipShown('app_open')
+    if (featureTipsDecision.tipId === 'korca-cli') {
+      trackKorcaCliFeatureTipShown('app_open')
     }
     // Why: once a tip is visible, app quit/crash should not make it reappear
     // on the next launch just because the user never clicked a dismiss button.
@@ -766,7 +766,7 @@ function App(): React.JSX.Element {
         // Why (issue #1158): previously this catch called hydrateWorkspaceSession
         // with empty defaults, which overwrote the in-memory tab map. The
         // debounced session writer then serialized that empty state back to
-        // orca-data.json, silently erasing the user's saved tabs. The fix is
+        // korca-data.json, silently erasing the user's saved tabs. The fix is
         // to leave in-memory state untouched and keep hydrationSucceeded
         // false so the writer stays gated. We still ensure persistedUIReady and
         // workspaceSessionReady flip so the UI can mount without a session.
@@ -1171,7 +1171,7 @@ function App(): React.JSX.Element {
       const notifyTerminalCapture = (actionId: KeybindingActionId): void => {
         if (
           context !== 'terminal' ||
-          (settings?.terminalShortcutPolicy ?? 'orca-first') !== 'orca-first'
+          (settings?.terminalShortcutPolicy ?? 'korca-first') !== 'korca-first'
         ) {
           return
         }
@@ -1440,7 +1440,7 @@ function App(): React.JSX.Element {
           <div className="titlebar-traffic-light-pad" />
         ) : isWindows ? (
           /* Why: on Windows the native title bar is hidden, so we render the
-             Orca logo as a non-interactive identity anchor and a ··· button
+             Korca logo as a non-interactive identity anchor and a ··· button
              that pops up the application menu (the same menu revealed by Alt
              on the default autoHideMenuBar). */
           <>
@@ -1468,8 +1468,8 @@ function App(): React.JSX.Element {
             {settings?.showTitlebarAppName !== false && (
               <ContextMenu>
                 <ContextMenuTrigger asChild>
-                  <div className="titlebar-app-name" aria-label="Orca">
-                    <span className="titlebar-app-name-main">Orca</span>
+                  <div className="titlebar-app-name" aria-label="Korca">
+                    <span className="titlebar-app-name-main">Korca</span>
                   </div>
                 </ContextMenuTrigger>
                   <ContextMenuContent>
@@ -1649,7 +1649,7 @@ function App(): React.JSX.Element {
                     workspaceActive ? (
                       /* Why: left column wraps the sidebar with a titlebar-height
                      header above it. The header holds the same controls
-                     (traffic lights, sidebar toggle, "Orca" title, agent badge)
+                     (traffic lights, sidebar toggle, "Korca" title, agent badge)
                      that the full-width titlebar held while the center and right
                      columns keep their own top strips at the same 36px height.
                      When the sidebar is collapsed, take this header out of flex
@@ -1769,7 +1769,7 @@ function App(): React.JSX.Element {
                           surface="page"
                           resetKey={`${activeView}:${activeWorktreeId ?? 'none'}`}
                           title="이 페이지에 오류가 발생했습니다."
-                          description="페이지를 다시 시도하거나 다른 Orca 화면으로 이동하세요."
+                          description="페이지를 다시 시도하거나 다른 Korca 화면으로 이동하세요."
                         >
                           {activeView === 'settings' ? <Settings /> : null}
                           {activeView === 'skills' ? <SkillsPage /> : null}

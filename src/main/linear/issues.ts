@@ -92,7 +92,7 @@ const LINEAR_ISSUE_NODE_FIELDS = `
 `
 
 const SEARCH_ISSUES_QUERY = `
-  query OrcaLinearIssueSearch($term: String!, $first: Int) {
+  query KorcaLinearIssueSearch($term: String!, $first: Int) {
     searchIssues(term: $term, first: $first) {
       nodes {
         ${LINEAR_ISSUE_NODE_FIELDS}
@@ -102,7 +102,7 @@ const SEARCH_ISSUES_QUERY = `
 `
 
 const ALL_ISSUES_QUERY = `
-  query OrcaLinearIssues($first: Int, $filter: IssueFilter, $orderBy: PaginationOrderBy) {
+  query KorcaLinearIssues($first: Int, $filter: IssueFilter, $orderBy: PaginationOrderBy) {
     issues(first: $first, filter: $filter, orderBy: $orderBy) {
       nodes {
         ${LINEAR_ISSUE_NODE_FIELDS}
@@ -112,7 +112,7 @@ const ALL_ISSUES_QUERY = `
 `
 
 const VIEWER_ASSIGNED_ISSUES_QUERY = `
-  query OrcaLinearViewerAssignedIssues(
+  query KorcaLinearViewerAssignedIssues(
     $first: Int,
     $filter: IssueFilter,
     $orderBy: PaginationOrderBy
@@ -128,7 +128,7 @@ const VIEWER_ASSIGNED_ISSUES_QUERY = `
 `
 
 const VIEWER_CREATED_ISSUES_QUERY = `
-  query OrcaLinearViewerCreatedIssues(
+  query KorcaLinearViewerCreatedIssues(
     $first: Int,
     $filter: IssueFilter,
     $orderBy: PaginationOrderBy

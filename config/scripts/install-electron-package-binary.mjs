@@ -107,7 +107,7 @@ function repairElectronPathFile() {
 
 async function installElectronPackageBinary() {
   const electronDistDir = resolve(electronPackageDir, 'dist')
-  const tempDir = mkdtempSync(resolve(tmpdir(), 'orca-electron-'))
+  const tempDir = mkdtempSync(resolve(tmpdir(), 'korca-electron-'))
   const cacheRoot = join(tempDir, 'cache')
   const extractDir = join(tempDir, 'extract')
 
@@ -183,17 +183,17 @@ function moveExtractedElectronDist(extractDir, electronDistDir) {
 }
 
 function getExtractorCommand(zipPath, extractDir) {
-  if (process.env.ORCA_ELECTRON_PACKAGE_EXTRACTOR) {
+  if (process.env.KORCA_ELECTRON_PACKAGE_EXTRACTOR) {
     return {
       file: process.execPath,
-      args: [process.env.ORCA_ELECTRON_PACKAGE_EXTRACTOR, zipPath, extractDir],
-      label: `node ${process.env.ORCA_ELECTRON_PACKAGE_EXTRACTOR}`
+      args: [process.env.KORCA_ELECTRON_PACKAGE_EXTRACTOR, zipPath, extractDir],
+      label: `node ${process.env.KORCA_ELECTRON_PACKAGE_EXTRACTOR}`
     }
   }
 
   if (osPlatform() === 'win32') {
     return {
-      file: process.env.ORCA_POWERSHELL_BIN || 'powershell',
+      file: process.env.KORCA_POWERSHELL_BIN || 'powershell',
       args: [
         '-NoProfile',
         '-NonInteractive',
@@ -210,7 +210,7 @@ function getExtractorCommand(zipPath, extractDir) {
   }
 
   return {
-    file: process.env.ORCA_UNZIP_BIN || 'unzip',
+    file: process.env.KORCA_UNZIP_BIN || 'unzip',
     args: ['-q', zipPath, '-d', extractDir],
     label: 'unzip'
   }

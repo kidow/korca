@@ -1,5 +1,5 @@
 /**
- * E2E tests for the "Create Workspace" flow in Orca.
+ * E2E tests for the "Create Workspace" flow in Korca.
  *
  * Why: the old 'create-worktree' modal was replaced by the composer modal
  * (`activeModal === 'new-workspace-composer'`) in #710. A prior version of
@@ -20,7 +20,7 @@
  */
 
 import type { ConsoleMessage } from '@stablyai/playwright-test'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import {
   waitForSessionReady,
   waitForActiveWorktree,
@@ -30,20 +30,20 @@ import {
 } from './helpers/store'
 
 test.describe('Create Workspace', () => {
-  test.beforeEach(async ({ orcaPage }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
+  test.beforeEach(async ({ korcaPage }) => {
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
   })
 
-  test('creates a worktree through the composer UI and activates it', async ({ orcaPage }) => {
-    const worktreeIdBefore = await getActiveWorktreeId(orcaPage)
+  test('creates a worktree through the composer UI and activates it', async ({ korcaPage }) => {
+    const worktreeIdBefore = await getActiveWorktreeId(korcaPage)
 
     // Capture render errors for the #1186 guard. React logs "Objects are not
     // valid as a React child" via console.error before throwing the
     // minified-production error #31; capture both paths so the test fails
     // loudly whether the build is dev or prod.
     const pageErrors: Error[] = []
-    orcaPage.on('pageerror', (err) => {
+    korcaPage.on('pageerror', (err) => {
       pageErrors.push(err)
     })
     const consoleErrors: string[] = []
@@ -52,16 +52,16 @@ test.describe('Create Workspace', () => {
         consoleErrors.push(msg.text())
       }
     }
-    orcaPage.on('console', onConsole)
+    korcaPage.on('console', onConsole)
 
     const workspaceName = `e2e-create-${Date.now()}`
 
     try {
       // 1. Open the composer through the visible affordance so the lazy modal
       // mount path stays covered along with the composer body.
-      await orcaPage.getByRole('button', { name: 'New workspace', exact: true }).click()
+      await korcaPage.getByRole('button', { name: 'New workspace', exact: true }).click()
 
-      const dialog = orcaPage.getByRole('dialog', { name: /Create (Workspace|Worktree)/i })
+      const dialog = korcaPage.getByRole('dialog', { name: /Create (Workspace|Worktree)/i })
       await expect(dialog).toBeVisible()
 
       // Wait for the composer to settle. The card fires several async effects
@@ -75,14 +75,14 @@ test.describe('Create Workspace', () => {
       // inside the open modal's React tree — the console/pageerror sweep
       // below is what catches #1186-class regressions now that the
       // StartFromField trigger no longer exists (#1191).
-      await orcaPage.evaluate(async () => {
+      await korcaPage.evaluate(async () => {
         const repoId = Object.values(window.__store!.getState().worktreesByRepo).flat()[0]?.repoId
         if (!repoId) {
           return
         }
         await window.api.repos.getBaseRefDefault({ repoId })
       })
-      await orcaPage.waitForTimeout(100)
+      await korcaPage.waitForTimeout(100)
 
       // 3. Type the workspace name into the unified smart-name input.
       // The composer's default mode is 'smart'; its placeholder advertises
@@ -107,7 +107,7 @@ test.describe('Create Workspace', () => {
 
       // 6. The new worktree must actually exist on disk and in the store.
       await expect
-        .poll(async () => worktreeExists(orcaPage, workspaceName), {
+        .poll(async () => worktreeExists(korcaPage, workspaceName), {
           timeout: 10_000,
           message: `Worktree "${workspaceName}" did not appear in the store`
         })
@@ -118,7 +118,7 @@ test.describe('Create Workspace', () => {
       await expect
         .poll(
           async () => {
-            const id = await getActiveWorktreeId(orcaPage)
+            const id = await getActiveWorktreeId(korcaPage)
             return id !== null && id !== worktreeIdBefore
           },
           { timeout: 10_000, message: 'New worktree did not become the active worktree' }
@@ -128,7 +128,7 @@ test.describe('Create Workspace', () => {
       // 8. A terminal tab must auto-create for the new worktree. This is
       // the downstream signal that `activateAndRevealWorktree` actually
       // fired, not just that the store row exists.
-      await ensureTerminalVisible(orcaPage)
+      await ensureTerminalVisible(korcaPage)
 
       // Final render-error sweep. Any render crash during the flow (whether
       // it tore down the modal or bubbled past it) shows up here.
@@ -140,9 +140,9 @@ test.describe('Create Workspace', () => {
       )
       expect(reactChildErrors, `React render error: ${reactChildErrors.join(', ')}`).toEqual([])
     } finally {
-      orcaPage.off('console', onConsole)
+      korcaPage.off('console', onConsole)
       // Best-effort close if the test failed mid-flow and left the modal open.
-      await orcaPage
+      await korcaPage
         .evaluate(() => {
           window.__store?.getState().closeModal()
         })
@@ -153,9 +153,9 @@ test.describe('Create Workspace', () => {
   })
 
   test('keeps the composer open and preserves inputs when worktree creation fails', async ({
-    orcaPage
+    korcaPage
   }) => {
-    await orcaPage.evaluate(() => {
+    await korcaPage.evaluate(() => {
       const store = window.__store
       if (!store) {
         throw new Error('window.__store is not available')
@@ -178,9 +178,9 @@ test.describe('Create Workspace', () => {
     try {
       const workspaceName = `e2e-create-failure-${Date.now()}`
 
-      await orcaPage.getByRole('button', { name: 'New workspace', exact: true }).click()
+      await korcaPage.getByRole('button', { name: 'New workspace', exact: true }).click()
 
-      const dialog = orcaPage.getByRole('dialog', { name: /Create (Workspace|Worktree)/i })
+      const dialog = korcaPage.getByRole('dialog', { name: /Create (Workspace|Worktree)/i })
       await expect(dialog).toBeVisible()
       await expect(dialog.getByRole('combobox').first()).toBeVisible()
 
@@ -194,13 +194,13 @@ test.describe('Create Workspace', () => {
 
       const alert = dialog.getByRole('alert')
       await expect(alert).toContainText('No base branch found')
-      await expect(alert).toContainText('Orca could not resolve a usable base ref')
+      await expect(alert).toContainText('Korca could not resolve a usable base ref')
       await expect(alert).toContainText('Create an initial commit')
       await expect(dialog).toBeVisible()
       await expect(nameInput).toHaveValue(workspaceName)
       await expect(createButton).toBeEnabled()
     } finally {
-      await orcaPage
+      await korcaPage
         .evaluate(() => {
           ;(
             window as unknown as {
@@ -217,16 +217,16 @@ test.describe('Create Workspace', () => {
 
   test('reuses a resolved pasted GitHub URL when quick create submits', async ({
     electronApp,
-    orcaPage
+    korcaPage
   }) => {
     const title = `E2E smart URL resolution ${Date.now()}`
-    const url = 'https://github.com/stablyai/orca/pull/2049'
+    const url = 'https://github.com/stablyai/korca/pull/2049'
     const titlePattern = new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
 
     try {
-      await orcaPage.getByRole('button', { name: 'New workspace', exact: true }).click()
+      await korcaPage.getByRole('button', { name: 'New workspace', exact: true }).click()
 
-      const dialog = orcaPage.getByRole('dialog', { name: /Create (Workspace|Worktree)/i })
+      const dialog = korcaPage.getByRole('dialog', { name: /Create (Workspace|Worktree)/i })
       await expect(dialog).toBeVisible()
       await expect(dialog.getByRole('combobox').first()).toBeVisible()
 
@@ -295,7 +295,7 @@ test.describe('Create Workspace', () => {
       await createButton.click()
 
       await expect(dialog).toBeHidden({ timeout: 15_000 })
-      await expect(orcaPage.getByRole('option', { name: titlePattern })).toBeVisible({
+      await expect(korcaPage.getByRole('option', { name: titlePattern })).toBeVisible({
         timeout: 10_000
       })
       await expect
@@ -313,7 +313,7 @@ test.describe('Create Workspace', () => {
         )
         .toEqual({ githubLookupCount: 1, resolvePrBaseCount: 0 })
     } finally {
-      await orcaPage
+      await korcaPage
         .evaluate(() => {
           window.__store?.getState().closeModal()
         })

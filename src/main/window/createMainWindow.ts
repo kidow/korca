@@ -119,7 +119,7 @@ type CreateMainWindowOptions = {
     details: Electron.RenderProcessGoneDetails,
     webContentsId: number
   ) => boolean
-  /** Returns true when Orca should reload after an unexpected renderer loss.
+  /** Returns true when Korca should reload after an unexpected renderer loss.
    *  Why: update relaunch and app quit intentionally tear down child
    *  processes; recovering those paths can fight Electron's shutdown. */
   shouldRecoverRenderer?: (
@@ -233,7 +233,7 @@ export function createMainWindow(
     ...(savedBounds ? { x: savedBounds.x, y: savedBounds.y } : {}),
     minWidth: MIN_WIDTH,
     minHeight: MIN_HEIGHT,
-    title: opts?.title ?? 'Orca',
+    title: opts?.title ?? 'Korca',
     show: false,
     // Why: on macOS the menu lives in the system menu bar, so the in-window
     // menu bar is irrelevant. On Windows/Linux we auto-hide so the menu bar
@@ -278,7 +278,7 @@ export function createMainWindow(
     // Why: persistent parked webviews use separate compositor layers, and on
     // recent macOS releases those layers can fail to repaint after occlusion or
     // restore. Disabling main-window throttling and forcing a repaint on
-    // visibility transitions hardens Orca against the same black-surface
+    // visibility transitions hardens Korca against the same black-surface
     // failure mode seen during browser-tab restore and tab switching.
     mainWindow.webContents.setBackgroundThrottling(false)
     mainWindow.on('restore', () => {
@@ -438,10 +438,10 @@ export function createMainWindow(
     // Why: arbitrary sites must stay inside an unprivileged guest surface. We
     // fail closed here so a renderer bug cannot smuggle preload, Node, or a
     // non-browser partition into the guest and widen the app privilege boundary.
-    // The one allowed data URL is Orca's inert blank-tab bootstrap page; deny
+    // The one allowed data URL is Korca's inert blank-tab bootstrap page; deny
     // every other data URL so the renderer cannot inject arbitrary inline HTML.
     // Why: session profiles use per-profile partitions (e.g.
-    // persist:orca-browser-session-<uuid>). The registry is the sole authority
+    // persist:korca-browser-session-<uuid>). The registry is the sole authority
     // for which partitions are valid — renderer-provided strings that are not
     // in the allowlist are rejected.
     if (!normalizedSrc || !browserSessionRegistry.isAllowedPartition(partition)) {
@@ -470,7 +470,7 @@ export function createMainWindow(
   mainWindow.webContents.on('did-attach-webview', (_event, guest) => {
     // Why: popup and navigation policy must attach as soon as Chromium creates
     // the guest webContents. Waiting until renderer-driven registration leaves
-    // a race where target=_blank or early redirects can bypass Orca's intended
+    // a race where target=_blank or early redirects can bypass Korca's intended
     // fallback behavior.
     browserManager.attachGuestPolicies(guest)
   })
@@ -737,7 +737,7 @@ export function createMainWindow(
 
     const capturedTerminalActionId =
       terminalShortcutContext.context === 'terminal' &&
-      terminalShortcutContext.terminalShortcutPolicy === 'orca-first' &&
+      terminalShortcutContext.terminalShortcutPolicy === 'korca-first' &&
       windowShortcutActionCapturesTerminal(action)
         ? getWindowShortcutActionId(action)
         : null
@@ -1036,7 +1036,7 @@ export function createMainWindow(
     // Why: on updater-triggered shutdown, BrowserWindow can emit `closed`
     // after its webContents has already been destroyed. The destroyed
     // webContents owns its listeners, so do not touch `mainWindow.webContents`
-    // here or the quit path can crash before Squirrel.Mac relaunches Orca.
+    // here or the quit path can crash before Squirrel.Mac relaunches Korca.
     app.removeListener('before-quit', freezeBoundsOnQuit)
   })
 

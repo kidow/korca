@@ -305,7 +305,7 @@ describe('DesktopScriptProviderClient', () => {
       ok: true,
       capabilities: {
         platform: 'linux',
-        provider: 'orca-computer-use-linux',
+        provider: 'korca-computer-use-linux',
         providerVersion: '1.0.0',
         protocolVersion: 1,
         supports: {
@@ -534,7 +534,7 @@ function sampleBridgeSnapshot(name: string, value: string) {
 function sampleCapabilities(actions: Partial<Record<string, boolean>> = {}) {
   return {
     platform: 'linux',
-    provider: 'orca-computer-use-linux',
+    provider: 'korca-computer-use-linux',
     providerVersion: '1.0.0',
     protocolVersion: 1,
     supports: {

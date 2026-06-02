@@ -29,7 +29,7 @@ vi.mock('fs', () => ({
 
 vi.mock('electron', () => ({
   app: {
-    getPath: vi.fn(() => '/tmp/orca-user-data')
+    getPath: vi.fn(() => '/tmp/korca-user-data')
   }
 }))
 
@@ -164,7 +164,7 @@ describe('LocalPtyProvider', () => {
       provider.configure({
         buildSpawnEnv: (_id, env) => {
           env.CODEX_HOME = 'C:\\Users\\jin\\.codex'
-          env.ORCA_CODEX_HOME = 'C:\\Users\\jin\\.codex'
+          env.KORCA_CODEX_HOME = 'C:\\Users\\jin\\.codex'
           return env
         }
       })
@@ -178,7 +178,7 @@ describe('LocalPtyProvider', () => {
       const spawnCall = spawnMock.mock.calls.at(-1)!
       expect(spawnCall[0]).toBe('wsl.exe')
       expect(spawnCall[2].env.CODEX_HOME).toBeUndefined()
-      expect(spawnCall[2].env.ORCA_CODEX_HOME).toBeUndefined()
+      expect(spawnCall[2].env.KORCA_CODEX_HOME).toBeUndefined()
     })
 
     it('does not pass a WSL managed Codex home into Windows terminals', async () => {
@@ -186,9 +186,9 @@ describe('LocalPtyProvider', () => {
       provider.configure({
         buildSpawnEnv: (_id, env) => {
           env.CODEX_HOME =
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
-          env.ORCA_CODEX_HOME =
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
+          env.KORCA_CODEX_HOME =
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
           return env
         }
       })
@@ -201,7 +201,7 @@ describe('LocalPtyProvider', () => {
 
       const spawnCall = spawnMock.mock.calls.at(-1)!
       expect(spawnCall[2].env.CODEX_HOME).toBeUndefined()
-      expect(spawnCall[2].env.ORCA_CODEX_HOME).toBeUndefined()
+      expect(spawnCall[2].env.KORCA_CODEX_HOME).toBeUndefined()
     })
 
     it('preserves an explicit Linux Codex home for WSL terminals', async () => {
@@ -230,9 +230,9 @@ describe('LocalPtyProvider', () => {
       provider.configure({
         buildSpawnEnv: (_id, env) => {
           env.CODEX_HOME =
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
-          env.ORCA_CODEX_HOME =
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
+          env.KORCA_CODEX_HOME =
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
           return env
         }
       })
@@ -245,12 +245,12 @@ describe('LocalPtyProvider', () => {
 
       const spawnCall = spawnMock.mock.calls.at(-1)!
       expect(spawnCall[0]).toBe('wsl.exe')
-      expect(spawnCall[2].env.CODEX_HOME).toBe('/home/jin/.local/share/orca/codex-accounts/a/home')
-      expect(spawnCall[2].env.ORCA_CODEX_HOME).toBe(
-        '/home/jin/.local/share/orca/codex-accounts/a/home'
+      expect(spawnCall[2].env.CODEX_HOME).toBe('/home/jin/.local/share/korca/codex-accounts/a/home')
+      expect(spawnCall[2].env.KORCA_CODEX_HOME).toBe(
+        '/home/jin/.local/share/korca/codex-accounts/a/home'
       )
       expect(spawnCall[2].env.WSLENV).toContain('CODEX_HOME')
-      expect(spawnCall[2].env.WSLENV).toContain('ORCA_CODEX_HOME')
+      expect(spawnCall[2].env.WSLENV).toContain('KORCA_CODEX_HOME')
     })
 
     it('does not pass a WSL managed Codex home into a different WSL distro', async () => {
@@ -258,9 +258,9 @@ describe('LocalPtyProvider', () => {
       provider.configure({
         buildSpawnEnv: (_id, env) => {
           env.CODEX_HOME =
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
-          env.ORCA_CODEX_HOME =
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
+          env.KORCA_CODEX_HOME =
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
           return env
         }
       })
@@ -274,7 +274,7 @@ describe('LocalPtyProvider', () => {
       const spawnCall = spawnMock.mock.calls.at(-1)!
       expect(spawnCall[0]).toBe('wsl.exe')
       expect(spawnCall[2].env.CODEX_HOME).toBeUndefined()
-      expect(spawnCall[2].env.ORCA_CODEX_HOME).toBeUndefined()
+      expect(spawnCall[2].env.KORCA_CODEX_HOME).toBeUndefined()
     })
 
     it('uses the preferred WSL distro for Windows cwd WSL terminals', async () => {
@@ -300,13 +300,13 @@ describe('LocalPtyProvider', () => {
       ])
     })
 
-    it('marks Orca terminal handle for WSL import when buildSpawnEnv opts in', async () => {
+    it('marks Korca terminal handle for WSL import when buildSpawnEnv opts in', async () => {
       Object.defineProperty(process, 'platform', { configurable: true, value: 'win32' })
       provider.configure({
         buildSpawnEnv: (_id, env, ctx) => {
-          env.ORCA_TERMINAL_HANDLE = 'term_wsl'
+          env.KORCA_TERMINAL_HANDLE = 'term_wsl'
           if (ctx?.isWsl) {
-            env.WSLENV = 'ORCA_TERMINAL_HANDLE/u'
+            env.WSLENV = 'KORCA_TERMINAL_HANDLE/u'
           }
           return env
         }
@@ -320,19 +320,19 @@ describe('LocalPtyProvider', () => {
 
       const spawnCall = spawnMock.mock.calls.at(-1)!
       expect(spawnCall[0]).toBe('wsl.exe')
-      expect(spawnCall[2].env.ORCA_TERMINAL_HANDLE).toBe('term_wsl')
-      expect(spawnCall[2].env.WSLENV).toBe('ORCA_TERMINAL_HANDLE/u')
+      expect(spawnCall[2].env.KORCA_TERMINAL_HANDLE).toBe('term_wsl')
+      expect(spawnCall[2].env.WSLENV).toBe('KORCA_TERMINAL_HANDLE/u')
     })
 
-    it('does not inherit parent Orca pane identity when caller omits pane env', async () => {
+    it('does not inherit parent Korca pane identity when caller omits pane env', async () => {
       const saved = {
-        ORCA_PANE_KEY: process.env.ORCA_PANE_KEY,
-        ORCA_TAB_ID: process.env.ORCA_TAB_ID,
-        ORCA_WORKTREE_ID: process.env.ORCA_WORKTREE_ID
+        KORCA_PANE_KEY: process.env.KORCA_PANE_KEY,
+        KORCA_TAB_ID: process.env.KORCA_TAB_ID,
+        KORCA_WORKTREE_ID: process.env.KORCA_WORKTREE_ID
       }
-      process.env.ORCA_PANE_KEY = 'parent-tab:parent-leaf'
-      process.env.ORCA_TAB_ID = 'parent-tab'
-      process.env.ORCA_WORKTREE_ID = 'parent-worktree'
+      process.env.KORCA_PANE_KEY = 'parent-tab:parent-leaf'
+      process.env.KORCA_TAB_ID = 'parent-tab'
+      process.env.KORCA_WORKTREE_ID = 'parent-worktree'
 
       try {
         await provider.spawn({ cols: 80, rows: 24 })
@@ -347,29 +347,29 @@ describe('LocalPtyProvider', () => {
       }
 
       const spawnCall = spawnMock.mock.calls.at(-1)!
-      expect(spawnCall[2].env.ORCA_PANE_KEY).toBeUndefined()
-      expect(spawnCall[2].env.ORCA_TAB_ID).toBeUndefined()
-      expect(spawnCall[2].env.ORCA_WORKTREE_ID).toBeUndefined()
+      expect(spawnCall[2].env.KORCA_PANE_KEY).toBeUndefined()
+      expect(spawnCall[2].env.KORCA_TAB_ID).toBeUndefined()
+      expect(spawnCall[2].env.KORCA_WORKTREE_ID).toBeUndefined()
     })
 
-    it('preserves explicit child Orca pane identity over parent env', async () => {
+    it('preserves explicit child Korca pane identity over parent env', async () => {
       const saved = {
-        ORCA_PANE_KEY: process.env.ORCA_PANE_KEY,
-        ORCA_TAB_ID: process.env.ORCA_TAB_ID,
-        ORCA_WORKTREE_ID: process.env.ORCA_WORKTREE_ID
+        KORCA_PANE_KEY: process.env.KORCA_PANE_KEY,
+        KORCA_TAB_ID: process.env.KORCA_TAB_ID,
+        KORCA_WORKTREE_ID: process.env.KORCA_WORKTREE_ID
       }
-      process.env.ORCA_PANE_KEY = 'parent-tab:parent-leaf'
-      process.env.ORCA_TAB_ID = 'parent-tab'
-      process.env.ORCA_WORKTREE_ID = 'parent-worktree'
+      process.env.KORCA_PANE_KEY = 'parent-tab:parent-leaf'
+      process.env.KORCA_TAB_ID = 'parent-tab'
+      process.env.KORCA_WORKTREE_ID = 'parent-worktree'
 
       try {
         await provider.spawn({
           cols: 80,
           rows: 24,
           env: {
-            ORCA_PANE_KEY: 'child-tab:child-leaf',
-            ORCA_TAB_ID: 'child-tab',
-            ORCA_WORKTREE_ID: 'child-worktree'
+            KORCA_PANE_KEY: 'child-tab:child-leaf',
+            KORCA_TAB_ID: 'child-tab',
+            KORCA_WORKTREE_ID: 'child-worktree'
           }
         })
       } finally {
@@ -383,9 +383,9 @@ describe('LocalPtyProvider', () => {
       }
 
       const spawnCall = spawnMock.mock.calls.at(-1)!
-      expect(spawnCall[2].env.ORCA_PANE_KEY).toBe('child-tab:child-leaf')
-      expect(spawnCall[2].env.ORCA_TAB_ID).toBe('child-tab')
-      expect(spawnCall[2].env.ORCA_WORKTREE_ID).toBe('child-worktree')
+      expect(spawnCall[2].env.KORCA_PANE_KEY).toBe('child-tab:child-leaf')
+      expect(spawnCall[2].env.KORCA_TAB_ID).toBe('child-tab')
+      expect(spawnCall[2].env.KORCA_WORKTREE_ID).toBe('child-worktree')
     })
 
     it('combines HOMEDRIVE and HOMEPATH for Windows default cwd', async () => {
@@ -397,7 +397,7 @@ describe('LocalPtyProvider', () => {
       Object.defineProperty(process, 'platform', { value: 'win32' })
       delete process.env.USERPROFILE
       process.env.HOMEDRIVE = 'D:'
-      process.env.HOMEPATH = '\\Users\\orca'
+      process.env.HOMEPATH = '\\Users\\korca'
 
       try {
         await provider.spawn({ cols: 80, rows: 24 })
@@ -425,7 +425,7 @@ describe('LocalPtyProvider', () => {
       expect(spawnMock).toHaveBeenCalledWith(
         expect.any(String),
         expect.any(Array),
-        expect.objectContaining({ cwd: 'D:\\Users\\orca' })
+        expect.objectContaining({ cwd: 'D:\\Users\\korca' })
       )
     })
 

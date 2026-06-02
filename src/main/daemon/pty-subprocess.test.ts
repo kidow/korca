@@ -35,12 +35,12 @@ vi.mock('../providers/local-pty-utils', async (importOriginal) => {
 
 import { createPtySubprocess } from './pty-subprocess'
 
-const ORCA_SHELL_WRAPPER_ENV = [
-  'ORCA_ATTRIBUTION_SHIM_DIR',
-  'ORCA_OPENCODE_CONFIG_DIR',
-  'ORCA_PI_CODING_AGENT_DIR',
-  'ORCA_OMP_CODING_AGENT_DIR',
-  'ORCA_CODEX_HOME'
+const KORCA_SHELL_WRAPPER_ENV = [
+  'KORCA_ATTRIBUTION_SHIM_DIR',
+  'KORCA_OPENCODE_CONFIG_DIR',
+  'KORCA_PI_CODING_AGENT_DIR',
+  'KORCA_OMP_CODING_AGENT_DIR',
+  'KORCA_CODEX_HOME'
 ] as const
 const POWERSHELL_OSC133_COMMAND_ARGS = ['-NoLogo', '-NoExit', '-EncodedCommand', expect.any(String)]
 const ZSH_SHELL_READY_DIR = /shell-ready[\\/]zsh/
@@ -68,7 +68,7 @@ function mockPtyProcess(pid = 12345) {
 }
 
 describe('createPtySubprocess', () => {
-  const savedWrapperEnv: Partial<Record<(typeof ORCA_SHELL_WRAPPER_ENV)[number], string>> = {}
+  const savedWrapperEnv: Partial<Record<(typeof KORCA_SHELL_WRAPPER_ENV)[number], string>> = {}
   let previousUserDataPath: string | undefined
   let userDataPath: string
 
@@ -77,10 +77,10 @@ describe('createPtySubprocess', () => {
     isPwshAvailableMock.mockReset()
     validateWorkingDirectoryMock.mockClear()
     isPwshAvailableMock.mockReturnValue(false)
-    previousUserDataPath = process.env.ORCA_USER_DATA_PATH
+    previousUserDataPath = process.env.KORCA_USER_DATA_PATH
     userDataPath = mkdtempSync(join(tmpdir(), 'daemon-pty-subprocess-test-'))
-    process.env.ORCA_USER_DATA_PATH = userDataPath
-    for (const key of ORCA_SHELL_WRAPPER_ENV) {
+    process.env.KORCA_USER_DATA_PATH = userDataPath
+    for (const key of KORCA_SHELL_WRAPPER_ENV) {
       savedWrapperEnv[key] = process.env[key]
       delete process.env[key]
     }
@@ -88,12 +88,12 @@ describe('createPtySubprocess', () => {
 
   afterEach(() => {
     if (previousUserDataPath === undefined) {
-      delete process.env.ORCA_USER_DATA_PATH
+      delete process.env.KORCA_USER_DATA_PATH
     } else {
-      process.env.ORCA_USER_DATA_PATH = previousUserDataPath
+      process.env.KORCA_USER_DATA_PATH = previousUserDataPath
     }
     rmSync(userDataPath, { recursive: true, force: true })
-    for (const key of ORCA_SHELL_WRAPPER_ENV) {
+    for (const key of KORCA_SHELL_WRAPPER_ENV) {
       if (savedWrapperEnv[key] === undefined) {
         delete process.env[key]
       } else {
@@ -175,17 +175,17 @@ describe('createPtySubprocess', () => {
     expect(handle.getForegroundProcess()).toBeNull()
   })
 
-  it('does not inherit parent Orca pane identity when caller omits pane env', () => {
+  it('does not inherit parent Korca pane identity when caller omits pane env', () => {
     const proc = mockPtyProcess()
     spawnMock.mockReturnValue(proc)
     const saved = {
-      ORCA_PANE_KEY: process.env.ORCA_PANE_KEY,
-      ORCA_TAB_ID: process.env.ORCA_TAB_ID,
-      ORCA_WORKTREE_ID: process.env.ORCA_WORKTREE_ID
+      KORCA_PANE_KEY: process.env.KORCA_PANE_KEY,
+      KORCA_TAB_ID: process.env.KORCA_TAB_ID,
+      KORCA_WORKTREE_ID: process.env.KORCA_WORKTREE_ID
     }
-    process.env.ORCA_PANE_KEY = 'parent-tab:parent-leaf'
-    process.env.ORCA_TAB_ID = 'parent-tab'
-    process.env.ORCA_WORKTREE_ID = 'parent-worktree'
+    process.env.KORCA_PANE_KEY = 'parent-tab:parent-leaf'
+    process.env.KORCA_TAB_ID = 'parent-tab'
+    process.env.KORCA_WORKTREE_ID = 'parent-worktree'
 
     try {
       createPtySubprocess({ sessionId: 'test', cols: 80, rows: 24 })
@@ -200,22 +200,22 @@ describe('createPtySubprocess', () => {
     }
 
     const env = spawnMock.mock.calls.at(-1)?.[2].env
-    expect(env.ORCA_PANE_KEY).toBeUndefined()
-    expect(env.ORCA_TAB_ID).toBeUndefined()
-    expect(env.ORCA_WORKTREE_ID).toBeUndefined()
+    expect(env.KORCA_PANE_KEY).toBeUndefined()
+    expect(env.KORCA_TAB_ID).toBeUndefined()
+    expect(env.KORCA_WORKTREE_ID).toBeUndefined()
   })
 
-  it('preserves explicit child Orca pane identity over parent env', () => {
+  it('preserves explicit child Korca pane identity over parent env', () => {
     const proc = mockPtyProcess()
     spawnMock.mockReturnValue(proc)
     const saved = {
-      ORCA_PANE_KEY: process.env.ORCA_PANE_KEY,
-      ORCA_TAB_ID: process.env.ORCA_TAB_ID,
-      ORCA_WORKTREE_ID: process.env.ORCA_WORKTREE_ID
+      KORCA_PANE_KEY: process.env.KORCA_PANE_KEY,
+      KORCA_TAB_ID: process.env.KORCA_TAB_ID,
+      KORCA_WORKTREE_ID: process.env.KORCA_WORKTREE_ID
     }
-    process.env.ORCA_PANE_KEY = 'parent-tab:parent-leaf'
-    process.env.ORCA_TAB_ID = 'parent-tab'
-    process.env.ORCA_WORKTREE_ID = 'parent-worktree'
+    process.env.KORCA_PANE_KEY = 'parent-tab:parent-leaf'
+    process.env.KORCA_TAB_ID = 'parent-tab'
+    process.env.KORCA_WORKTREE_ID = 'parent-worktree'
 
     try {
       createPtySubprocess({
@@ -223,9 +223,9 @@ describe('createPtySubprocess', () => {
         cols: 80,
         rows: 24,
         env: {
-          ORCA_PANE_KEY: 'child-tab:child-leaf',
-          ORCA_TAB_ID: 'child-tab',
-          ORCA_WORKTREE_ID: 'child-worktree'
+          KORCA_PANE_KEY: 'child-tab:child-leaf',
+          KORCA_TAB_ID: 'child-tab',
+          KORCA_WORKTREE_ID: 'child-worktree'
         }
       })
     } finally {
@@ -239,9 +239,9 @@ describe('createPtySubprocess', () => {
     }
 
     const env = spawnMock.mock.calls.at(-1)?.[2].env
-    expect(env.ORCA_PANE_KEY).toBe('child-tab:child-leaf')
-    expect(env.ORCA_TAB_ID).toBe('child-tab')
-    expect(env.ORCA_WORKTREE_ID).toBe('child-worktree')
+    expect(env.KORCA_PANE_KEY).toBe('child-tab:child-leaf')
+    expect(env.KORCA_TAB_ID).toBe('child-tab')
+    expect(env.KORCA_WORKTREE_ID).toBe('child-worktree')
   })
 
   it('does not inherit ELECTRON_RUN_AS_NODE from the daemon process env', () => {
@@ -269,8 +269,8 @@ describe('createPtySubprocess', () => {
   it('does not inherit parent agent hook endpoint for development hook env', () => {
     const proc = mockPtyProcess()
     spawnMock.mockReturnValue(proc)
-    const previousEndpoint = process.env.ORCA_AGENT_HOOK_ENDPOINT
-    process.env.ORCA_AGENT_HOOK_ENDPOINT = '/tmp/stale-endpoint.env'
+    const previousEndpoint = process.env.KORCA_AGENT_HOOK_ENDPOINT
+    process.env.KORCA_AGENT_HOOK_ENDPOINT = '/tmp/stale-endpoint.env'
 
     try {
       createPtySubprocess({
@@ -278,32 +278,32 @@ describe('createPtySubprocess', () => {
         cols: 80,
         rows: 24,
         env: {
-          ORCA_AGENT_HOOK_ENV: 'development',
-          ORCA_AGENT_HOOK_PORT: '1234',
-          ORCA_AGENT_HOOK_TOKEN: 'token',
-          ORCA_AGENT_HOOK_VERSION: '1'
+          KORCA_AGENT_HOOK_ENV: 'development',
+          KORCA_AGENT_HOOK_PORT: '1234',
+          KORCA_AGENT_HOOK_TOKEN: 'token',
+          KORCA_AGENT_HOOK_VERSION: '1'
         }
       })
     } finally {
       if (previousEndpoint === undefined) {
-        delete process.env.ORCA_AGENT_HOOK_ENDPOINT
+        delete process.env.KORCA_AGENT_HOOK_ENDPOINT
       } else {
-        process.env.ORCA_AGENT_HOOK_ENDPOINT = previousEndpoint
+        process.env.KORCA_AGENT_HOOK_ENDPOINT = previousEndpoint
       }
     }
 
     const env = spawnMock.mock.calls.at(-1)?.[2].env
-    expect(env.ORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
-    expect(env.ORCA_AGENT_HOOK_ENV).toBe('development')
-    expect(env.ORCA_AGENT_HOOK_PORT).toBe('1234')
-    expect(env.ORCA_AGENT_HOOK_TOKEN).toBe('token')
+    expect(env.KORCA_AGENT_HOOK_ENDPOINT).toBeUndefined()
+    expect(env.KORCA_AGENT_HOOK_ENV).toBe('development')
+    expect(env.KORCA_AGENT_HOOK_PORT).toBe('1234')
+    expect(env.KORCA_AGENT_HOOK_TOKEN).toBe('token')
   })
 
   it('preserves explicit development agent hook endpoint files', () => {
     const proc = mockPtyProcess()
     spawnMock.mockReturnValue(proc)
-    const previousEndpoint = process.env.ORCA_AGENT_HOOK_ENDPOINT
-    process.env.ORCA_AGENT_HOOK_ENDPOINT = '/tmp/stale-endpoint.env'
+    const previousEndpoint = process.env.KORCA_AGENT_HOOK_ENDPOINT
+    process.env.KORCA_AGENT_HOOK_ENDPOINT = '/tmp/stale-endpoint.env'
 
     try {
       createPtySubprocess({
@@ -311,26 +311,26 @@ describe('createPtySubprocess', () => {
         cols: 80,
         rows: 24,
         env: {
-          ORCA_AGENT_HOOK_ENV: 'development',
-          ORCA_AGENT_HOOK_PORT: '1234',
-          ORCA_AGENT_HOOK_TOKEN: 'token',
-          ORCA_AGENT_HOOK_VERSION: '1',
-          ORCA_AGENT_HOOK_ENDPOINT: '/tmp/fresh-endpoint.env'
+          KORCA_AGENT_HOOK_ENV: 'development',
+          KORCA_AGENT_HOOK_PORT: '1234',
+          KORCA_AGENT_HOOK_TOKEN: 'token',
+          KORCA_AGENT_HOOK_VERSION: '1',
+          KORCA_AGENT_HOOK_ENDPOINT: '/tmp/fresh-endpoint.env'
         }
       })
     } finally {
       if (previousEndpoint === undefined) {
-        delete process.env.ORCA_AGENT_HOOK_ENDPOINT
+        delete process.env.KORCA_AGENT_HOOK_ENDPOINT
       } else {
-        process.env.ORCA_AGENT_HOOK_ENDPOINT = previousEndpoint
+        process.env.KORCA_AGENT_HOOK_ENDPOINT = previousEndpoint
       }
     }
 
     const env = spawnMock.mock.calls.at(-1)?.[2].env
-    expect(env.ORCA_AGENT_HOOK_ENDPOINT).toBe('/tmp/fresh-endpoint.env')
-    expect(env.ORCA_AGENT_HOOK_ENV).toBe('development')
-    expect(env.ORCA_AGENT_HOOK_PORT).toBe('1234')
-    expect(env.ORCA_AGENT_HOOK_TOKEN).toBe('token')
+    expect(env.KORCA_AGENT_HOOK_ENDPOINT).toBe('/tmp/fresh-endpoint.env')
+    expect(env.KORCA_AGENT_HOOK_ENV).toBe('development')
+    expect(env.KORCA_AGENT_HOOK_PORT).toBe('1234')
+    expect(env.KORCA_AGENT_HOOK_TOKEN).toBe('token')
   })
 
   it('forwards write calls', () => {
@@ -476,7 +476,7 @@ describe('createPtySubprocess', () => {
         rows: 24,
         env: {
           SHELL: '/bin/zsh',
-          ORCA_ATTRIBUTION_SHIM_DIR: '/tmp/orca-terminal-attribution/posix'
+          KORCA_ATTRIBUTION_SHIM_DIR: '/tmp/korca-terminal-attribution/posix'
         }
       })
     } finally {
@@ -488,7 +488,7 @@ describe('createPtySubprocess', () => {
     const lastCall = spawnMock.mock.calls.at(-1)!
     expect(lastCall[1]).toEqual(['-l'])
     expect(lastCall[2].env.ZDOTDIR).toMatch(ZSH_SHELL_READY_DIR)
-    expect(lastCall[2].env.ORCA_SHELL_READY_MARKER).toBe('0')
+    expect(lastCall[2].env.KORCA_SHELL_READY_MARKER).toBe('0')
   })
 
   it('uses shell wrapper when OpenCode config must survive shell startup', () => {
@@ -504,8 +504,8 @@ describe('createPtySubprocess', () => {
         rows: 24,
         env: {
           SHELL: '/bin/zsh',
-          OPENCODE_CONFIG_DIR: '/tmp/orca-opencode-overlay',
-          ORCA_OPENCODE_CONFIG_DIR: '/tmp/orca-opencode-overlay'
+          OPENCODE_CONFIG_DIR: '/tmp/korca-opencode-overlay',
+          KORCA_OPENCODE_CONFIG_DIR: '/tmp/korca-opencode-overlay'
         }
       })
     } finally {
@@ -517,7 +517,7 @@ describe('createPtySubprocess', () => {
     const lastCall = spawnMock.mock.calls.at(-1)!
     expect(lastCall[1]).toEqual(['-l'])
     expect(lastCall[2].env.ZDOTDIR).toMatch(ZSH_SHELL_READY_DIR)
-    expect(lastCall[2].env.ORCA_SHELL_READY_MARKER).toBe('0')
+    expect(lastCall[2].env.KORCA_SHELL_READY_MARKER).toBe('0')
   })
 
   it('uses shell wrapper when Pi config must survive shell startup', () => {
@@ -533,8 +533,8 @@ describe('createPtySubprocess', () => {
         rows: 24,
         env: {
           SHELL: '/bin/zsh',
-          PI_CODING_AGENT_DIR: '/tmp/orca-pi-agent-overlay',
-          ORCA_PI_CODING_AGENT_DIR: '/tmp/orca-pi-agent-overlay'
+          PI_CODING_AGENT_DIR: '/tmp/korca-pi-agent-overlay',
+          KORCA_PI_CODING_AGENT_DIR: '/tmp/korca-pi-agent-overlay'
         }
       })
     } finally {
@@ -546,7 +546,7 @@ describe('createPtySubprocess', () => {
     const lastCall = spawnMock.mock.calls.at(-1)!
     expect(lastCall[1]).toEqual(['-l'])
     expect(lastCall[2].env.ZDOTDIR).toMatch(ZSH_SHELL_READY_DIR)
-    expect(lastCall[2].env.ORCA_SHELL_READY_MARKER).toBe('0')
+    expect(lastCall[2].env.KORCA_SHELL_READY_MARKER).toBe('0')
   })
 
   it('uses shell wrapper when Codex home must survive shell startup', () => {
@@ -562,8 +562,8 @@ describe('createPtySubprocess', () => {
         rows: 24,
         env: {
           SHELL: '/bin/zsh',
-          CODEX_HOME: '/tmp/orca-codex-home',
-          ORCA_CODEX_HOME: '/tmp/orca-codex-home'
+          CODEX_HOME: '/tmp/korca-codex-home',
+          KORCA_CODEX_HOME: '/tmp/korca-codex-home'
         }
       })
     } finally {
@@ -575,7 +575,7 @@ describe('createPtySubprocess', () => {
     const lastCall = spawnMock.mock.calls.at(-1)!
     expect(lastCall[1]).toEqual(['-l'])
     expect(lastCall[2].env.ZDOTDIR).toMatch(ZSH_SHELL_READY_DIR)
-    expect(lastCall[2].env.ORCA_SHELL_READY_MARKER).toBe('0')
+    expect(lastCall[2].env.KORCA_SHELL_READY_MARKER).toBe('0')
   })
 
   it('deletes requested env keys after merging daemon process env', () => {
@@ -615,7 +615,7 @@ describe('createPtySubprocess', () => {
     Object.defineProperty(process, 'platform', { value: 'win32' })
     delete process.env.USERPROFILE
     process.env.HOMEDRIVE = 'D:'
-    process.env.HOMEPATH = '\\Users\\orca'
+    process.env.HOMEPATH = '\\Users\\korca'
 
     try {
       createPtySubprocess({ sessionId: 'test', cols: 80, rows: 24 })
@@ -643,7 +643,7 @@ describe('createPtySubprocess', () => {
     expect(spawnMock).toHaveBeenCalledWith(
       expect.any(String),
       expect.any(Array),
-      expect.objectContaining({ cwd: 'D:\\Users\\orca' })
+      expect.objectContaining({ cwd: 'D:\\Users\\korca' })
     )
   })
 
@@ -833,10 +833,10 @@ describe('createPtySubprocess', () => {
           sessionId: 'test',
           cols: 80,
           rows: 24,
-          cwd: 'C:\\definitely-missing-orca-cwd',
+          cwd: 'C:\\definitely-missing-korca-cwd',
           shellOverride: 'powershell.exe'
         })
-      ).toThrow(/Working directory "C:\\definitely-missing-orca-cwd" does not exist/)
+      ).toThrow(/Working directory "C:\\definitely-missing-korca-cwd" does not exist/)
     } finally {
       if (platform) {
         Object.defineProperty(process, 'platform', platform)
@@ -856,10 +856,10 @@ describe('createPtySubprocess', () => {
           sessionId: 'test',
           cols: 80,
           rows: 24,
-          cwd: 'C:\\definitely-missing-orca-wsl-cwd',
+          cwd: 'C:\\definitely-missing-korca-wsl-cwd',
           shellOverride: 'wsl.exe'
         })
-      ).toThrow(/Working directory "C:\\definitely-missing-orca-wsl-cwd" does not exist/)
+      ).toThrow(/Working directory "C:\\definitely-missing-korca-wsl-cwd" does not exist/)
     } finally {
       if (platform) {
         Object.defineProperty(process, 'platform', platform)
@@ -1027,7 +1027,7 @@ describe('createPtySubprocess', () => {
         cols: 80,
         rows: 24,
         cwd: '\\\\wsl.localhost\\Ubuntu\\home\\jin\\repo',
-        env: { CODEX_HOME: 'C:\\Users\\jin\\.codex', ORCA_CODEX_HOME: 'C:\\Users\\jin\\.codex' }
+        env: { CODEX_HOME: 'C:\\Users\\jin\\.codex', KORCA_CODEX_HOME: 'C:\\Users\\jin\\.codex' }
       })
     } finally {
       if (platform) {
@@ -1048,7 +1048,7 @@ describe('createPtySubprocess', () => {
       expect.objectContaining({
         env: expect.not.objectContaining({
           CODEX_HOME: expect.anything(),
-          ORCA_CODEX_HOME: expect.anything()
+          KORCA_CODEX_HOME: expect.anything()
         })
       })
     )
@@ -1069,9 +1069,9 @@ describe('createPtySubprocess', () => {
         cwd: 'C:\\Users\\jin\\repo',
         env: {
           CODEX_HOME:
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home',
-          ORCA_CODEX_HOME:
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home',
+          KORCA_CODEX_HOME:
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
         }
       })
     } finally {
@@ -1086,7 +1086,7 @@ describe('createPtySubprocess', () => {
       expect.objectContaining({
         env: expect.not.objectContaining({
           CODEX_HOME: expect.anything(),
-          ORCA_CODEX_HOME: expect.anything()
+          KORCA_CODEX_HOME: expect.anything()
         })
       })
     )
@@ -1109,9 +1109,9 @@ describe('createPtySubprocess', () => {
         shellOverride: 'wsl.exe',
         env: {
           CODEX_HOME:
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home',
-          ORCA_CODEX_HOME:
-            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\orca\\codex-accounts\\a\\home'
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home',
+          KORCA_CODEX_HOME:
+            '\\\\wsl.localhost\\Ubuntu\\home\\jin\\.local\\share\\korca\\codex-accounts\\a\\home'
         }
       })
     } finally {
@@ -1139,8 +1139,8 @@ describe('createPtySubprocess', () => {
       ],
       expect.objectContaining({
         env: expect.objectContaining({
-          CODEX_HOME: '/home/jin/.local/share/orca/codex-accounts/a/home',
-          ORCA_CODEX_HOME: '/home/jin/.local/share/orca/codex-accounts/a/home',
+          CODEX_HOME: '/home/jin/.local/share/korca/codex-accounts/a/home',
+          KORCA_CODEX_HOME: '/home/jin/.local/share/korca/codex-accounts/a/home',
           WSLENV: expect.stringContaining('CODEX_HOME')
         })
       })
@@ -1184,7 +1184,7 @@ describe('createPtySubprocess', () => {
     )
   })
 
-  it('marks Orca terminal handles for WSL env import in daemon WSL terminals', () => {
+  it('marks Korca terminal handles for WSL env import in daemon WSL terminals', () => {
     const proc = mockPtyProcess()
     spawnMock.mockReturnValue(proc)
     const platform = Object.getOwnPropertyDescriptor(process, 'platform')
@@ -1198,7 +1198,7 @@ describe('createPtySubprocess', () => {
         rows: 24,
         cwd: '\\\\wsl.localhost\\Ubuntu\\home\\jin\\repo',
         env: {
-          ORCA_TERMINAL_HANDLE: 'term_wsl',
+          KORCA_TERMINAL_HANDLE: 'term_wsl',
           WSLENV: 'FOO/u'
         }
       })
@@ -1213,8 +1213,8 @@ describe('createPtySubprocess', () => {
       expect.any(Array),
       expect.objectContaining({
         env: expect.objectContaining({
-          ORCA_TERMINAL_HANDLE: 'term_wsl',
-          WSLENV: 'FOO/u:ORCA_TERMINAL_HANDLE/u'
+          KORCA_TERMINAL_HANDLE: 'term_wsl',
+          WSLENV: 'FOO/u:KORCA_TERMINAL_HANDLE/u'
         })
       })
     )

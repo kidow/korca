@@ -85,12 +85,12 @@ describe('getWorkItemDetails', () => {
       number: 923,
       title: 'Use upstream issues',
       state: 'open',
-      url: 'https://github.com/stablyai/orca/issues/923',
+      url: 'https://github.com/stablyai/korca/issues/923',
       labels: [],
       updatedAt: '2026-04-01T00:00:00Z',
       author: 'octocat'
     })
-    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockResolvedValueOnce({
       stdout: JSON.stringify({
         data: {
@@ -107,7 +107,7 @@ describe('getWorkItemDetails', () => {
                     databaseId: 7,
                     body: 'first',
                     createdAt: '2026-04-01T00:00:00Z',
-                    url: 'https://github.com/stablyai/orca/issues/923#issuecomment-7',
+                    url: 'https://github.com/stablyai/korca/issues/923#issuecomment-7',
                     author: { login: 'octocat', avatarUrl: 'https://x/y' }
                   }
                 ]
@@ -139,12 +139,12 @@ describe('getWorkItemDetails', () => {
       number: 923,
       title: 'Use upstream issues',
       state: 'open',
-      url: 'https://github.com/stablyai/orca/issues/923',
+      url: 'https://github.com/stablyai/korca/issues/923',
       labels: [],
       updatedAt: '2026-04-01T00:00:00Z',
       author: 'octocat'
     })
-    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'korca' })
     // Collapsed GraphQL throws → fallback path picks up.
     ghExecFileAsyncMock
       .mockRejectedValueOnce(new Error('GraphQL error'))
@@ -163,12 +163,12 @@ describe('getWorkItemDetails', () => {
 
     expect(ghExecFileAsyncMock).toHaveBeenNthCalledWith(
       2,
-      ['api', '--cache', '60s', 'repos/stablyai/orca/issues/923'],
+      ['api', '--cache', '60s', 'repos/stablyai/korca/issues/923'],
       { cwd: '/repo-root' }
     )
     expect(ghExecFileAsyncMock).toHaveBeenNthCalledWith(
       3,
-      ['api', '--cache', '60s', 'repos/stablyai/orca/issues/923/comments?per_page=100'],
+      ['api', '--cache', '60s', 'repos/stablyai/korca/issues/923/comments?per_page=100'],
       { cwd: '/repo-root' }
     )
     expect(details?.body).toBe('Issue body')
@@ -187,12 +187,12 @@ describe('getWorkItemDetails', () => {
       number: 923,
       title: 'Use upstream issues',
       state: 'open',
-      url: 'https://github.com/stablyai/orca/issues/923',
+      url: 'https://github.com/stablyai/korca/issues/923',
       labels: [],
       updatedAt: '2026-04-01T00:00:00Z',
       author: 'octocat'
     })
-    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock
       .mockResolvedValueOnce({ stdout: JSON.stringify({ body: 'Issue body', assignees: [] }) })
       .mockResolvedValueOnce({ stdout: '[]' })
@@ -213,12 +213,12 @@ describe('getWorkItemDetails', () => {
       number: 923,
       title: 'Use upstream issues',
       state: 'open',
-      url: 'https://github.com/stablyai/orca/issues/923',
+      url: 'https://github.com/stablyai/korca/issues/923',
       labels: [],
       updatedAt: '2026-04-01T00:00:00Z',
       author: 'octocat'
     })
-    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'orca' })
+    getIssueOwnerRepoMock.mockResolvedValue({ owner: 'stablyai', repo: 'korca' })
     ghExecFileAsyncMock.mockResolvedValueOnce({
       stdout: JSON.stringify({
         data: {
@@ -234,10 +234,10 @@ describe('getWorkItemDetails', () => {
       })
     })
 
-    const details = await getWorkItemDetails('/home/jinwoo/orca', 923, 'issue', 'openclaw-2')
+    const details = await getWorkItemDetails('/home/jinwoo/korca', 923, 'issue', 'openclaw-2')
 
-    expect(getWorkItemMock).toHaveBeenCalledWith('/home/jinwoo/orca', 923, 'issue', 'openclaw-2')
-    expect(getIssueOwnerRepoMock).toHaveBeenCalledWith('/home/jinwoo/orca', 'openclaw-2')
+    expect(getWorkItemMock).toHaveBeenCalledWith('/home/jinwoo/korca', 923, 'issue', 'openclaw-2')
+    expect(getIssueOwnerRepoMock).toHaveBeenCalledWith('/home/jinwoo/korca', 'openclaw-2')
     expect(ghExecFileAsyncMock.mock.calls[0][1]).toEqual({})
     expect(details?.body).toBe('Remote issue body')
   })

@@ -1,4 +1,4 @@
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import type { ElectronApplication, Page } from '@stablyai/playwright-test'
 import { getRendererTitleLog, installRendererTitleLog } from './helpers/terminal-title-log'
 import {
@@ -140,24 +140,24 @@ async function getRendererOrCachedAgentStatuses(page: Page): Promise<AgentStatus
 
 test.describe('Droid notifications', () => {
   test('Codex hook completion dispatches while its worktree is inactive', async ({
-    orcaPage,
+    korcaPage,
     electronApp
   }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
     await installMainProcessNotificationDispatchSpy(electronApp)
     const endpoint = await readHookEndpoint(electronApp)
 
     // Why: the synthetic hook bypasses the shell startup path; wait for a
     // responsive PTY so the notification liveness gate can observe the turn.
-    const ptyId = await waitForActivePanePtyId(orcaPage)
+    const ptyId = await waitForActivePanePtyId(korcaPage)
     const readyMarker = `__CODEX_HOOK_NOTIFY_READY_${Date.now()}__`
-    await sendToTerminal(orcaPage, ptyId, `printf '${readyMarker}\\n'\r`)
-    await waitForTerminalOutput(orcaPage, readyMarker)
+    await sendToTerminal(korcaPage, ptyId, `printf '${readyMarker}\\n'\r`)
+    await waitForTerminalOutput(korcaPage, readyMarker)
 
-    const { paneKey, worktreeId } = await waitForActivePaneHookDescriptor(orcaPage)
+    const { paneKey, worktreeId } = await waitForActivePaneHookDescriptor(korcaPage)
     const prompt = `codex-hook-notify-${Date.now()}`
     await emitCodexHookStatus(endpoint, {
       paneKey,
@@ -168,7 +168,7 @@ test.describe('Droid notifications', () => {
     await expect
       .poll(
         async () =>
-          (await getRendererOrCachedAgentStatuses(orcaPage)).some(
+          (await getRendererOrCachedAgentStatuses(korcaPage)).some(
             (status) =>
               status.agentType === 'codex' && status.state === 'working' && status.prompt === prompt
           ),
@@ -181,7 +181,7 @@ test.describe('Droid notifications', () => {
       )
       .toBe(true)
 
-    await switchToOtherExistingWorktree(orcaPage)
+    await switchToOtherExistingWorktree(korcaPage)
 
     const finalMessage = `Codex hook completed ${Date.now()}`
     await emitCodexHookStatus(endpoint, {
@@ -194,7 +194,7 @@ test.describe('Droid notifications', () => {
     await expect
       .poll(
         async () =>
-          (await getAgentStatuses(orcaPage)).some(
+          (await getAgentStatuses(korcaPage)).some(
             (status) =>
               status.agentType === 'codex' &&
               status.state === 'done' &&
@@ -232,34 +232,34 @@ test.describe('Droid notifications', () => {
   })
 
   test('recognized agent title completion dispatches one task-complete notification', async ({
-    orcaPage,
+    korcaPage,
     electronApp
   }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
     // Why: contextBridge freezes window.api, so notification invokes must be
     // observed in Electron's main process rather than monkey-patched renderer-side.
     await installMainProcessNotificationDispatchSpy(electronApp)
-    await installRendererTitleLog(orcaPage)
+    await installRendererTitleLog(korcaPage)
 
-    const ptyId = await waitForActivePanePtyId(orcaPage)
+    const ptyId = await waitForActivePanePtyId(korcaPage)
     const marker = `__CODEX_NOTIFY_READY_${Date.now()}__`
-    await sendToTerminal(orcaPage, ptyId, `printf '${marker}\\n'\r`)
-    await waitForTerminalOutput(orcaPage, marker)
+    await sendToTerminal(korcaPage, ptyId, `printf '${marker}\\n'\r`)
+    await waitForTerminalOutput(korcaPage, marker)
 
-    await emitOscTitle(orcaPage, ptyId, 'Codex working')
+    await emitOscTitle(korcaPage, ptyId, 'Codex working')
     await expect
-      .poll(async () => (await getRendererTitleLog(orcaPage)).includes('Codex working'), {
+      .poll(async () => (await getRendererTitleLog(korcaPage)).includes('Codex working'), {
         timeout: 10_000,
         message: 'Codex working title did not reach the renderer before completion'
       })
       .toBe(true)
 
-    await emitOscTitle(orcaPage, ptyId, 'Codex done')
+    await emitOscTitle(korcaPage, ptyId, 'Codex done')
     await expect
-      .poll(async () => (await getRendererTitleLog(orcaPage)).includes('Codex done'), {
+      .poll(async () => (await getRendererTitleLog(korcaPage)).includes('Codex done'), {
         timeout: 10_000,
         message: 'Codex done title did not reach the renderer'
       })
@@ -282,29 +282,29 @@ test.describe('Droid notifications', () => {
   })
 
   test('Factory Droid needs-input native title does not dispatch a task-complete notification', async ({
-    orcaPage,
+    korcaPage,
     electronApp
   }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
-    await waitForActiveTerminalManager(orcaPage, 30_000)
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
+    await waitForActiveTerminalManager(korcaPage, 30_000)
     // Why: contextBridge freezes window.api, so notification invokes must be
     // observed in Electron's main process rather than monkey-patched renderer-side.
     await installMainProcessNotificationDispatchSpy(electronApp)
-    await installRendererTitleLog(orcaPage)
+    await installRendererTitleLog(korcaPage)
 
-    const ptyId = await waitForActivePanePtyId(orcaPage)
+    const ptyId = await waitForActivePanePtyId(korcaPage)
     const marker = `__DROID_NOTIFY_READY_${Date.now()}__`
-    await sendToTerminal(orcaPage, ptyId, `printf '${marker}\\n'\r`)
-    await waitForTerminalOutput(orcaPage, marker)
+    await sendToTerminal(korcaPage, ptyId, `printf '${marker}\\n'\r`)
+    await waitForTerminalOutput(korcaPage, marker)
 
-    await emitOscTitle(orcaPage, ptyId, '⠋ Droid')
-    await emitOscTitle(orcaPage, ptyId, 'Factory Droid needs input')
+    await emitOscTitle(korcaPage, ptyId, '⠋ Droid')
+    await emitOscTitle(korcaPage, ptyId, 'Factory Droid needs input')
 
     await expect
       .poll(
-        async () => (await getRendererTitleLog(orcaPage)).includes('Factory Droid needs input'),
+        async () => (await getRendererTitleLog(korcaPage)).includes('Factory Droid needs input'),
         {
           timeout: 10_000,
           message: 'Factory Droid marker title did not land'
@@ -314,7 +314,7 @@ test.describe('Droid notifications', () => {
 
     // Why: Factory Droid can show this title while Execute is still running
     // (for example `sleep 180`); hook events own Droid status, not this title.
-    await orcaPage.waitForTimeout(500)
+    await korcaPage.waitForTimeout(500)
     const dispatches = await getNotificationDispatches(electronApp)
     expect(dispatches).toEqual([])
   })

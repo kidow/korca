@@ -121,7 +121,7 @@ describe('registerHostedReviewHandlers', () => {
     createHostedReviewMock.mockResolvedValueOnce({
       ok: true,
       number: 42,
-      url: 'https://github.com/acme/orca/pull/42'
+      url: 'https://github.com/acme/korca/pull/42'
     })
 
     registerHostedReviewHandlers(store as never, stats as never)
@@ -154,7 +154,7 @@ describe('registerHostedReviewHandlers', () => {
       expect.objectContaining({
         type: 'pr_created',
         repoId: 'repo-1',
-        meta: { prNumber: 42, prUrl: 'https://github.com/acme/orca/pull/42' }
+        meta: { prNumber: 42, prUrl: 'https://github.com/acme/korca/pull/42' }
       })
     )
   })

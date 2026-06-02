@@ -55,13 +55,13 @@ export function printResult<TResult>(
 export function formatCliError(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error)
   if (error instanceof RuntimeClientError && error.code === 'runtime_unavailable') {
-    return `${message}\nOrca is not running. Run 'orca open' first.`
+    return `${message}\nKorca is not running. Run 'korca open' first.`
   }
   if (
     error instanceof RuntimeRpcFailureError &&
     error.response.error.code === 'runtime_unavailable'
   ) {
-    return `${message}\nOrca is not running. Run 'orca open' first.`
+    return `${message}\nKorca is not running. Run 'korca open' first.`
   }
   if (error instanceof RuntimeRpcFailureError) {
     const data = error.response.error.data
@@ -539,7 +539,7 @@ const COMPUTER_SCREENSHOT_CLEANUP_MARKER = '.last-cleanup'
 
 function computerScreenshotTempDir(): string {
   const outputDir =
-    process.env.ORCA_COMPUTER_SCREENSHOT_TMPDIR || join(tmpdir(), 'orca-computer-use')
+    process.env.KORCA_COMPUTER_SCREENSHOT_TMPDIR || join(tmpdir(), 'korca-computer-use')
   mkdirSync(outputDir, { recursive: true, mode: 0o700 })
   const stat = lstatSync(outputDir)
   if (!stat.isDirectory() || stat.isSymbolicLink()) {
@@ -651,7 +651,7 @@ function formatComputerFollowUpCommand(
   target: ComputerActionFollowUpTarget
 ): string {
   const args = [
-    'orca',
+    'korca',
     'computer',
     'get-app-state',
     '--app',

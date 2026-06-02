@@ -1,5 +1,5 @@
-// Why: relay-side equivalent of Orca's userData-backed plugin overlay system.
-// Orca's local OpenCodeHookService and PiTitlebarExtensionService each
+// Why: relay-side equivalent of Korca's userData-backed plugin overlay system.
+// Korca's local OpenCodeHookService and PiTitlebarExtensionService each
 // materialize a per-PTY overlay and inject OPENCODE_CONFIG_DIR /
 // PI_CODING_AGENT_DIR pointing at it. Those paths describe the local
 // filesystem and would resolve to nothing on a remote box, so when a PTY runs
@@ -7,14 +7,14 @@
 //
 // Plugin source strings ship over the JSON-RPC channel at session-ready
 // (commit #7) — they are NOT bundled with the relay binary because the
-// relay is versioned independently from Orca and the plugin source changes
+// relay is versioned independently from Korca and the plugin source changes
 // frequently as new agent events get added (see docs/design/agent-status-
 // over-ssh.md §4 "Why ship the plugin source over the wire").
 //
 // We deliberately do not reuse OpenCodeHookService / PiTitlebarExtensionService
-// directly: those modules import `electron` and ride on Orca's userData
+// directly: those modules import `electron` and ride on Korca's userData
 // path. The relay's electron-free constraint forces a thin parallel
-// implementation rooted at $HOME/.orca-relay/.
+// implementation rooted at $HOME/.korca-relay/.
 
 import { createHash } from 'crypto'
 import {
@@ -33,14 +33,14 @@ import { mirrorEntry, safeRemoveOverlay } from '../main/pty/overlay-mirror'
 import { mergePiOverlayUiSettings } from '../shared/pi-overlay-ui-settings'
 import type { PiAgentKind } from '../shared/pi-agent-kind'
 
-const RELAY_HOOKS_DIR = '.orca-relay'
+const RELAY_HOOKS_DIR = '.korca-relay'
 const OPENCODE_OVERLAY_SUBDIR = 'opencode-overlays'
 const PI_OVERLAY_SUBDIR_BY_KIND: Record<PiAgentKind, string> = {
   pi: 'pi-overlays',
   omp: 'omp-overlays'
 }
-const OPENCODE_PLUGIN_FILE = 'orca-opencode-status.js'
-const PI_EXTENSION_FILE = 'orca-agent-status.ts'
+const OPENCODE_PLUGIN_FILE = 'korca-opencode-status.js'
+const PI_EXTENSION_FILE = 'korca-agent-status.ts'
 const PI_AGENT_SUBDIR = 'agent'
 const PI_AGENT_SETTINGS_FILE = 'settings.json'
 // Why: source-dir resolution is keyed off the launching agent (Pi or OMP).
@@ -56,7 +56,7 @@ const PI_AGENT_HOME_DIR_NAME: Record<PiAgentKind, string> = {
 
 function safeDirName(input: string): string {
   // Why: paneKey embeds tabId:paneId where tabId may itself contain
-  // filesystem-unsafe characters in some Orca builds. Hash to a fixed-width
+  // filesystem-unsafe characters in some Korca builds. Hash to a fixed-width
   // hex name so any input produces a portable directory name.
   return createHash('sha256').update(input).digest('hex').slice(0, 32)
 }
@@ -66,11 +66,11 @@ function isUsableId(id: string): boolean {
 }
 
 export type PluginSources = {
-  /** Source body of `orca-opencode-status.js` to drop into <overlay>/plugins/. */
+  /** Source body of `korca-opencode-status.js` to drop into <overlay>/plugins/. */
   opencodePluginSource?: string
-  /** Source body of Pi's `orca-agent-status.ts` to drop into <overlay>/extensions/. */
+  /** Source body of Pi's `korca-agent-status.ts` to drop into <overlay>/extensions/. */
   piExtensionSource?: string
-  /** Source body of OMP's `orca-agent-status.ts` to drop into <overlay>/extensions/. */
+  /** Source body of OMP's `korca-agent-status.ts` to drop into <overlay>/extensions/. */
   ompExtensionSource?: string
 }
 
@@ -98,13 +98,13 @@ export class PluginOverlayManager {
     }
   }
 
-  /** Replace the cached source bodies. Called from relay.ts when Orca sends
+  /** Replace the cached source bodies. Called from relay.ts when Korca sends
    *  `agent_hook.installPlugins`. The first install enables the augmenter
-   *  output; subsequent installs (e.g. Orca version upgrade in flight) refresh
+   *  output; subsequent installs (e.g. Korca version upgrade in flight) refresh
    *  the cached source so future spawns see the new strings.
    *  Note: existing per-PTY overlays already on disk keep the previous source
    *  until that PTY exits — a long-running PTY does NOT pick up the new
-   *  source, matching the local-Orca behavior where the plugin file is
+   *  source, matching the local-Korca behavior where the plugin file is
    *  written once at spawn time. */
   setSources(sources: PluginSources): void {
     if (typeof sources.opencodePluginSource === 'string') {
@@ -200,7 +200,7 @@ export class PluginOverlayManager {
           return null
         }
         // Why: OPENCODE_CONFIG_DIR is a single config root. Mirror the user's
-        // remote root into the overlay before adding Orca's plugin so status
+        // remote root into the overlay before adding Korca's plugin so status
         // reporting does not hide their auth, models, keybinds, or plugins.
         this.mirrorOpenCodeConfig(existingConfigDir, dir)
       }
@@ -290,7 +290,7 @@ export class PluginOverlayManager {
    *  Pi-compatible agent's source dir to mirror when `existingAgentDir` is
    *  not supplied - defaults to 'pi' for back-compat with pre-OMP callers.
    *  NEVER fall back across kinds: a missing source dir for the chosen kind
-   *  materializes the overlay from empty (Orca extensions only) rather than
+   *  materializes the overlay from empty (Korca extensions only) rather than
    *  silently mirroring the other agent's state. */
   materializePi(id: string, existingAgentDir?: string, kind: PiAgentKind = 'pi'): string | null {
     const extensionSource = this.getPiExtensionSource(kind)
@@ -302,7 +302,7 @@ export class PluginOverlayManager {
     try {
       // Why: PI_CODING_AGENT_DIR is the whole state root for both Pi and OMP
       // (OMP inherits the env-var name from Pi by design). Mirror the remote
-      // user's default agent dir so Orca's status extension does not hide auth,
+      // user's default agent dir so Korca's status extension does not hide auth,
       // sessions, skills, prompts, themes, or user extensions inside SSH panes.
       safeRemoveOverlay(dir, root)
       mkdirSync(dir, { recursive: true })

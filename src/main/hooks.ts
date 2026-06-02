@@ -10,8 +10,8 @@ import { gitExecFileSync } from './git/runner'
 import { isWslPath, parseWslPath, toWindowsWslPath, toLinuxPath } from './wsl'
 import type {
   HookCommandSourcePolicy,
-  OrcaDefaultTabTemplate,
-  OrcaHooks,
+  KorcaDefaultTabTemplate,
+  KorcaHooks,
   Repo,
   SetupDecision,
   SetupRunPolicy,
@@ -41,7 +41,7 @@ function asTrimmedString(value: unknown): string | undefined {
 
 const DEFAULT_TAB_COLOR_RE = /^#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?$/
 
-function normalizeDefaultTabs(value: unknown): OrcaDefaultTabTemplate[] {
+function normalizeDefaultTabs(value: unknown): KorcaDefaultTabTemplate[] {
   if (!Array.isArray(value)) {
     return []
   }
@@ -65,13 +65,13 @@ function normalizeDefaultTabs(value: unknown): OrcaDefaultTabTemplate[] {
         ...(command ? { command } : {})
       }
     })
-    .filter((entry): entry is OrcaDefaultTabTemplate => entry !== null)
+    .filter((entry): entry is KorcaDefaultTabTemplate => entry !== null)
 }
 
 /**
- * Parse the supported project defaults from `orca.yaml`.
+ * Parse the supported project defaults from `korca.yaml`.
  */
-export function parseOrcaYaml(content: string): OrcaHooks | null {
+export function parseKorcaYaml(content: string): KorcaHooks | null {
   let root: unknown
   try {
     root = parse(content)
@@ -105,49 +105,49 @@ export function parseOrcaYaml(content: string): OrcaHooks | null {
 }
 
 /**
- * Load hooks from orca.yaml in the given repo root.
+ * Load hooks from korca.yaml in the given repo root.
  */
-export function loadHooks(repoPath: string): OrcaHooks | null {
-  const yamlPath = join(repoPath, 'orca.yaml')
+export function loadHooks(repoPath: string): KorcaHooks | null {
+  const yamlPath = join(repoPath, 'korca.yaml')
   if (!existsSync(yamlPath)) {
     return null
   }
 
   try {
     const content = readFileSync(yamlPath, 'utf-8')
-    return parseOrcaYaml(content)
+    return parseKorcaYaml(content)
   } catch {
     return null
   }
 }
 
 /**
- * Check whether an orca.yaml exists for a repo.
+ * Check whether an korca.yaml exists for a repo.
  */
 export function hasHooksFile(repoPath: string): boolean {
-  return existsSync(join(repoPath, 'orca.yaml'))
+  return existsSync(join(repoPath, 'korca.yaml'))
 }
 
-// Why: when a newer Orca release adds a top-level key to `orca.yaml` (like
+// Why: when a newer Korca release adds a top-level key to `korca.yaml` (like
 // `issueCommand` was added here), older versions that don't recognise it will
-// return `null` from `parseOrcaYaml` and show a confusing "could not be parsed"
+// return `null` from `parseKorcaYaml` and show a confusing "could not be parsed"
 // error.  Detecting well-formed but unrecognised keys lets the UI suggest an
 // update instead of implying the file is broken.
-const RECOGNIZED_ORCA_YAML_KEYS = new Set(['scripts', 'issueCommand', 'defaultTabs'])
+const RECOGNIZED_KORCA_YAML_KEYS = new Set(['scripts', 'issueCommand', 'defaultTabs'])
 
 /**
- * Return true when `orca.yaml` contains at least one top-level key that this
- * version of Orca does not handle.
+ * Return true when `korca.yaml` contains at least one top-level key that this
+ * version of Korca does not handle.
  */
-export function hasUnrecognizedOrcaYamlKeys(repoPath: string): boolean {
+export function hasUnrecognizedKorcaYamlKeys(repoPath: string): boolean {
   try {
-    const content = readFileSync(join(repoPath, 'orca.yaml'), 'utf-8')
+    const content = readFileSync(join(repoPath, 'korca.yaml'), 'utf-8')
     return content.split(/\r?\n/).some((line) => {
       // Why: bare `key:` at end-of-line (no trailing space) is valid YAML for
       // a mapping with a block value on the next line. Match both forms so
       // newer keys like `futureFeature:\n  nested` are still detected.
       const m = line.match(/^([A-Za-z][A-Za-z0-9_-]*):(\s|$)/)
-      return m != null && !RECOGNIZED_ORCA_YAML_KEYS.has(m[1])
+      return m != null && !RECOGNIZED_KORCA_YAML_KEYS.has(m[1])
     })
   } catch {
     return false
@@ -155,15 +155,15 @@ export function hasUnrecognizedOrcaYamlKeys(repoPath: string): boolean {
 }
 
 // ─── Issue command files ────────────────────────────────────────────────
-// Why: `orca.yaml` is the tracked, project-wide defaults surface, while
-// `.orca/issue-command` remains the per-user override. Keeping the local file in
-// `.orca/` lets users customize agent automation without editing committed config.
+// Why: `korca.yaml` is the tracked, project-wide defaults surface, while
+// `.korca/issue-command` remains the per-user override. Keeping the local file in
+// `.korca/` lets users customize agent automation without editing committed config.
 
-const ORCA_DIR = '.orca'
+const KORCA_DIR = '.korca'
 const ISSUE_COMMAND_FILENAME = 'issue-command'
 
 export function getIssueCommandFilePath(repoPath: string): string {
-  return join(repoPath, ORCA_DIR, ISSUE_COMMAND_FILENAME)
+  return join(repoPath, KORCA_DIR, ISSUE_COMMAND_FILENAME)
 }
 
 export function getSharedIssueCommand(repoPath: string): string | null {
@@ -207,9 +207,9 @@ export function readIssueCommand(repoPath: string): ResolvedIssueCommand {
 }
 
 /**
- * Write the per-user issue command override to `{repoRoot}/.orca/issue-command`.
- * Creates `.orca/` and ensures it is in `.gitignore` on first write.
- * If content is empty, deletes only the override so the shared `orca.yaml`
+ * Write the per-user issue command override to `{repoRoot}/.korca/issue-command`.
+ * Creates `.korca/` and ensures it is in `.gitignore` on first write.
+ * If content is empty, deletes only the override so the shared `korca.yaml`
  * command becomes effective again.
  */
 export function writeIssueCommand(repoPath: string, content: string): void {
@@ -222,11 +222,11 @@ export function writeIssueCommand(repoPath: string, content: string): void {
       return
     }
 
-    const orcaDir = join(repoPath, ORCA_DIR)
-    if (!existsSync(orcaDir)) {
-      mkdirSync(orcaDir, { recursive: true })
+    const korcaDir = join(repoPath, KORCA_DIR)
+    if (!existsSync(korcaDir)) {
+      mkdirSync(korcaDir, { recursive: true })
     }
-    ensureOrcaDirIgnored(repoPath)
+    ensureKorcaDirIgnored(repoPath)
     writeFileSync(filePath, `${trimmed}\n`, 'utf-8')
   } catch (err) {
     console.error('[hooks] Failed to write issue command:', err)
@@ -237,24 +237,24 @@ export function writeIssueCommand(repoPath: string, content: string): void {
 }
 
 /**
- * Ensure `.orca` is listed in the repo's `.gitignore` so the per-user
+ * Ensure `.korca` is listed in the repo's `.gitignore` so the per-user
  * directory is never accidentally committed.
  */
-function ensureOrcaDirIgnored(repoPath: string): void {
+function ensureKorcaDirIgnored(repoPath: string): void {
   const gitignorePath = join(repoPath, '.gitignore')
   try {
     if (existsSync(gitignorePath)) {
       const content = readFileSync(gitignorePath, 'utf-8')
-      if (/^\.orca\/?$/m.test(content)) {
+      if (/^\.korca\/?$/m.test(content)) {
         return
       }
       const separator = content.endsWith('\n') ? '' : '\n'
-      writeFileSync(gitignorePath, `${content}${separator}.orca\n`, 'utf-8')
+      writeFileSync(gitignorePath, `${content}${separator}.korca\n`, 'utf-8')
     } else {
-      writeFileSync(gitignorePath, '.orca\n', 'utf-8')
+      writeFileSync(gitignorePath, '.korca\n', 'utf-8')
     }
   } catch {
-    console.warn('[hooks] Could not update .gitignore to exclude .orca')
+    console.warn('[hooks] Could not update .gitignore to exclude .korca')
   }
 }
 
@@ -279,8 +279,8 @@ function getEffectiveHookScript(
 
 export function getEffectiveHooksFromConfig(
   repo: Repo,
-  yamlHooks: OrcaHooks | null
-): OrcaHooks | null {
+  yamlHooks: KorcaHooks | null
+): KorcaHooks | null {
   const localSetup = repo.hookSettings?.scripts.setup
   const localArchive = repo.hookSettings?.scripts.archive
   const rawPolicy = repo.hookSettings?.commandSourcePolicy
@@ -297,7 +297,7 @@ export function getEffectiveHooksFromConfig(
     return null
   }
 
-  // Why: committed `orca.yaml` and local Settings commands can intentionally
+  // Why: committed `korca.yaml` and local Settings commands can intentionally
   // coexist, but the source policy defines whether the committed file is an
   // authoritative boundary, local settings are authoritative, or both run.
   return {
@@ -308,7 +308,7 @@ export function getEffectiveHooksFromConfig(
   }
 }
 
-export function getEffectiveHooks(repo: Repo, worktreePath?: string): OrcaHooks | null {
+export function getEffectiveHooks(repo: Repo, worktreePath?: string): KorcaHooks | null {
   const hooksRoot = worktreePath ?? repo.path
   return getEffectiveHooksFromConfig(repo, loadHooks(hooksRoot))
 }
@@ -333,7 +333,7 @@ export function shouldRunSetupForCreate(repo: Repo, decision: SetupDecision = 'i
   return policy === 'run-by-default'
 }
 
-export function getDefaultTabCommandTrustContent(hooks: OrcaHooks | null): string {
+export function getDefaultTabCommandTrustContent(hooks: KorcaHooks | null): string {
   const commands = (hooks?.defaultTabs ?? [])
     .map((tab, index) => {
       const command = tab.command?.trim()
@@ -348,7 +348,7 @@ export function getDefaultTabCommandTrustContent(hooks: OrcaHooks | null): strin
 }
 
 export function getDefaultTabsLaunch(
-  hooks: OrcaHooks | null,
+  hooks: KorcaHooks | null,
   repo: Repo,
   decision: SetupDecision = 'inherit'
 ): WorktreeDefaultTabsLaunch | undefined {
@@ -363,7 +363,7 @@ export function getDefaultTabsLaunch(
       hasLocalScript: Boolean(repo.hookSettings?.scripts.setup?.trim())
     }
   )
-  // Why: default tab commands come from committed `orca.yaml`; a repo set to
+  // Why: default tab commands come from committed `korca.yaml`; a repo set to
   // local-only may still use shared titles/colors, but must not execute them.
   const canRunSharedCommands = sharedCommandPolicy !== 'local-only'
   const runCommands =
@@ -401,9 +401,9 @@ export function getSetupCommandSource(
 
 function getSetupEnvVars(repo: Repo, worktreePath: string): Record<string, string> {
   return {
-    ORCA_ROOT_PATH: repo.path,
-    ORCA_WORKTREE_PATH: worktreePath,
-    ORCA_WORKSPACE_NAME: getRuntimePathBasename(worktreePath),
+    KORCA_ROOT_PATH: repo.path,
+    KORCA_WORKTREE_PATH: worktreePath,
+    KORCA_WORKSPACE_NAME: getRuntimePathBasename(worktreePath),
     // Compat with conductor.json users
     CONDUCTOR_ROOT_PATH: repo.path,
     GHOSTX_ROOT_PATH: repo.path
@@ -485,7 +485,7 @@ function createWorktreeRunnerScript(
   // Why: linked git worktrees use a `.git` file that points at the real gitdir,
   // so writing under `${worktreePath}/.git/...` fails. `git rev-parse --git-path`
   // resolves the actual per-worktree git storage path safely across platforms.
-  const gitRelPath = useWindowsFormat ? `orca/${runnerBaseName}.cmd` : `orca/${runnerBaseName}.sh`
+  const gitRelPath = useWindowsFormat ? `korca/${runnerBaseName}.cmd` : `korca/${runnerBaseName}.sh`
   let runnerScriptPath = getGitPath(worktreePath, gitRelPath)
 
   // Why: for WSL worktrees, getGitPath returns a Linux path (e.g. /home/user/...)
@@ -509,8 +509,8 @@ function createWorktreeRunnerScript(
     chmodSync(runnerScriptPath, 0o755)
   }
 
-  // Why: when the worktree is on WSL, env vars like ORCA_ROOT_PATH and
-  // ORCA_WORKTREE_PATH contain Windows UNC paths. The setup script runs
+  // Why: when the worktree is on WSL, env vars like KORCA_ROOT_PATH and
+  // KORCA_WORKTREE_PATH contain Windows UNC paths. The setup script runs
   // inside WSL bash, so translate them to Linux paths.
   if (wslWorktree) {
     for (const key of Object.keys(envVars)) {
@@ -547,8 +547,8 @@ export function runHook(
     const escapedCwd = wslInfo.linuxPath.replace(/'/g, "'\\''")
     const escapedScript = script.replace(/'/g, "'\\''")
     const bashCmd = `cd '${escapedCwd}' && ${escapedScript}`
-    // Why: translate ORCA_ROOT_PATH / ORCA_WORKTREE_PATH to Linux paths so
-    // hook scripts that reference $ORCA_WORKTREE_PATH get usable paths
+    // Why: translate KORCA_ROOT_PATH / KORCA_WORKTREE_PATH to Linux paths so
+    // hook scripts that reference $KORCA_WORKTREE_PATH get usable paths
     // inside WSL, not Windows UNC paths.
     const envVars = getSetupEnvVars(repo, cwd)
     const wslEnv: Record<string, string> = {}

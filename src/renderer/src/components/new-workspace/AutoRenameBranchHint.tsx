@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 /**
  * Gear affordance on the workspace Name label row. Its popover explains that a
- * blank name lets Orca auto-rename the branch from the work, and lets the user
+ * blank name lets Korca auto-rename the branch from the work, and lets the user
  * flip the `autoRenameBranchFromWork` setting inline without leaving the
  * composer. Only relevant for git repos, where a branch exists to rename.
  */
@@ -69,7 +69,7 @@ export default function AutoRenameBranchHint(): React.JSX.Element {
               </button>
             </div>
             <p className="text-xs text-muted-foreground">
-              When you leave the name blank, Orca renames the branch to match the work once an agent
+              When you leave the name blank, Korca renames the branch to match the work once an agent
               starts.
             </p>
           </div>

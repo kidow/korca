@@ -2,7 +2,7 @@ import { registerAppHandlers } from './app'
 import { registerCliHandlers } from './cli'
 import { registerPreflightHandlers } from './preflight'
 import type { Store } from '../persistence'
-import type { OrcaRuntimeService } from '../runtime/orca-runtime'
+import type { KorcaRuntimeService } from '../runtime/korca-runtime'
 import type { StatsCollector } from '../stats/collector'
 import { registerFilesystemHandlers } from './filesystem'
 import type { CommitMessageAgentEnvironmentResolvers } from '../text-generation/commit-message-agent-environment'
@@ -69,7 +69,7 @@ type CoreHandlerLifecycleOptions = {
 
 export function registerCoreHandlers(
   store: Store,
-  runtime: OrcaRuntimeService,
+  runtime: KorcaRuntimeService,
   stats: StatsCollector,
   claudeUsage: ClaudeUsageStore,
   codexUsage: CodexUsageStore,

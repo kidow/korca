@@ -6,7 +6,7 @@ import type { SessionState, ShellReadyState, TerminalSnapshot } from './types'
 
 const SHELL_READY_TIMEOUT_MS = 15_000
 const KILL_TIMEOUT_MS = 5_000
-const SHELL_READY_MARKER = '\x1b]777;orca-shell-ready\x07'
+const SHELL_READY_MARKER = '\x1b]777;korca-shell-ready\x07'
 
 export type SubprocessHandle = {
   pid: number

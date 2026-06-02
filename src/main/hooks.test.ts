@@ -2,7 +2,7 @@
 import type { Repo } from '../shared/types'
 
 import { describe, expect, it, vi } from 'vitest'
-import { getDefaultTabsLaunch, parseOrcaYaml } from './hooks'
+import { getDefaultTabsLaunch, parseKorcaYaml } from './hooks'
 
 // Mock fs and path used by loadHooks
 vi.mock('fs', () => ({
@@ -27,10 +27,10 @@ vi.mock('child_process', () => ({
   spawn: vi.fn()
 }))
 
-describe('parseOrcaYaml', () => {
+describe('parseKorcaYaml', () => {
   it('parses YAML with setup script only', () => {
     const yaml = `scripts:\n  setup: |\n    echo "setting up"\n    npm install\n`
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {
         setup: 'echo "setting up"\nnpm install'
@@ -40,7 +40,7 @@ describe('parseOrcaYaml', () => {
 
   it('parses YAML with archive script only', () => {
     const yaml = `scripts:\n  archive: |\n    echo "archiving"\n`
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {
         archive: 'echo "archiving"'
@@ -58,7 +58,7 @@ describe('parseOrcaYaml', () => {
       '    echo "archive"',
       '    rm -rf node_modules'
     ].join('\n')
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {
         setup: 'echo "setup"\nnpm install',
@@ -69,12 +69,12 @@ describe('parseOrcaYaml', () => {
 
   it('returns null when there is no scripts block', () => {
     const yaml = `other:\n  key: value\n`
-    expect(parseOrcaYaml(yaml)).toBeNull()
+    expect(parseKorcaYaml(yaml)).toBeNull()
   })
 
   it('parses YAML with inline scalar scripts', () => {
     const yaml = `scripts:\n  setup: npm install\n  archive: sleep 5\n`
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {
         setup: 'npm install',
@@ -85,12 +85,12 @@ describe('parseOrcaYaml', () => {
 
   it('returns null when scripts block has no setup or archive', () => {
     const yaml = `scripts:\n  unknown: |\n    echo "nope"\n`
-    expect(parseOrcaYaml(yaml)).toBeNull()
+    expect(parseKorcaYaml(yaml)).toBeNull()
   })
 
   it('handles multiline block scalar scripts', () => {
     const yaml = ['scripts:', '  setup: |', '    line1', '    line2', '    line3'].join('\n')
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {
         setup: 'line1\nline2\nline3'
@@ -100,7 +100,7 @@ describe('parseOrcaYaml', () => {
 
   it('stops parsing when it hits another top-level key', () => {
     const yaml = ['scripts:', '  setup: |', '    echo "setup"', 'other:', '  key: value'].join('\n')
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {
         setup: 'echo "setup"'
@@ -109,7 +109,7 @@ describe('parseOrcaYaml', () => {
   })
 
   it('returns null for empty string', () => {
-    expect(parseOrcaYaml('')).toBeNull()
+    expect(parseKorcaYaml('')).toBeNull()
   })
 
   it('parses a top-level issueCommand block scalar', () => {
@@ -118,7 +118,7 @@ describe('parseOrcaYaml', () => {
       '  claude -p "Read issue #{{issue}}"',
       '  codex exec "Review docs/design-{{issue}}.md"'
     ].join('\n')
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {},
       issueCommand:
@@ -134,7 +134,7 @@ describe('parseOrcaYaml', () => {
       'issueCommand: |',
       '  claude -p "Read issue #{{issue}}"'
     ].join('\n')
-    const result = parseOrcaYaml(yaml)
+    const result = parseKorcaYaml(yaml)
     expect(result).toEqual({
       scripts: {
         setup: 'pnpm install'
@@ -143,7 +143,7 @@ describe('parseOrcaYaml', () => {
     })
   })
 
-  it('parses default terminal tabs from orca.yaml', () => {
+  it('parses default terminal tabs from korca.yaml', () => {
     const yaml = [
       'defaultTabs:',
       '  - title: Claude',
@@ -155,7 +155,7 @@ describe('parseOrcaYaml', () => {
       '  - title: Notes'
     ].join('\n')
 
-    expect(parseOrcaYaml(yaml)).toEqual({
+    expect(parseKorcaYaml(yaml)).toEqual({
       scripts: {},
       defaultTabs: [
         { title: 'Claude', color: '#f97316', command: 'claude' },
@@ -175,28 +175,28 @@ describe('parseOrcaYaml', () => {
       '  - title: ""'
     ].join('\n')
 
-    expect(parseOrcaYaml(yaml)).toEqual({
+    expect(parseKorcaYaml(yaml)).toEqual({
       scripts: {},
       defaultTabs: [{ title: 'Server', command: 'pnpm dev' }]
     })
   })
 })
 
-describe('hasUnrecognizedOrcaYamlKeys', () => {
+describe('hasUnrecognizedKorcaYamlKeys', () => {
   it('returns true when the file contains only keys this version does not handle', async () => {
     const fs = await import('fs')
     vi.mocked(fs.readFileSync).mockReturnValue('futureFeature: |\n  some config\n')
 
-    const { hasUnrecognizedOrcaYamlKeys } = await import('./hooks')
-    expect(hasUnrecognizedOrcaYamlKeys('/test/repo')).toBe(true)
+    const { hasUnrecognizedKorcaYamlKeys } = await import('./hooks')
+    expect(hasUnrecognizedKorcaYamlKeys('/test/repo')).toBe(true)
   })
 
   it('returns true when an unknown key has no trailing space (block-value form)', async () => {
     const fs = await import('fs')
     vi.mocked(fs.readFileSync).mockReturnValue('futureFeature:\n  nested: value\n')
 
-    const { hasUnrecognizedOrcaYamlKeys } = await import('./hooks')
-    expect(hasUnrecognizedOrcaYamlKeys('/test/repo')).toBe(true)
+    const { hasUnrecognizedKorcaYamlKeys } = await import('./hooks')
+    expect(hasUnrecognizedKorcaYamlKeys('/test/repo')).toBe(true)
   })
 
   it('returns true when the file mixes recognised and unrecognised keys', async () => {
@@ -205,8 +205,8 @@ describe('hasUnrecognizedOrcaYamlKeys', () => {
       'scripts:\n  setup: |\n    pnpm install\nnewFeature: enabled\n'
     )
 
-    const { hasUnrecognizedOrcaYamlKeys } = await import('./hooks')
-    expect(hasUnrecognizedOrcaYamlKeys('/test/repo')).toBe(true)
+    const { hasUnrecognizedKorcaYamlKeys } = await import('./hooks')
+    expect(hasUnrecognizedKorcaYamlKeys('/test/repo')).toBe(true)
   })
 
   it('returns false when the file contains only recognised keys', async () => {
@@ -223,16 +223,16 @@ describe('hasUnrecognizedOrcaYamlKeys', () => {
       ].join('\n')
     )
 
-    const { hasUnrecognizedOrcaYamlKeys } = await import('./hooks')
-    expect(hasUnrecognizedOrcaYamlKeys('/test/repo')).toBe(false)
+    const { hasUnrecognizedKorcaYamlKeys } = await import('./hooks')
+    expect(hasUnrecognizedKorcaYamlKeys('/test/repo')).toBe(false)
   })
 
   it('returns false when the file is empty or has no top-level keys', async () => {
     const fs = await import('fs')
     vi.mocked(fs.readFileSync).mockReturnValue('# just a comment\n')
 
-    const { hasUnrecognizedOrcaYamlKeys } = await import('./hooks')
-    expect(hasUnrecognizedOrcaYamlKeys('/test/repo')).toBe(false)
+    const { hasUnrecognizedKorcaYamlKeys } = await import('./hooks')
+    expect(hasUnrecognizedKorcaYamlKeys('/test/repo')).toBe(false)
   })
 
   it('returns false when the file cannot be read', async () => {
@@ -241,22 +241,22 @@ describe('hasUnrecognizedOrcaYamlKeys', () => {
       throw new Error('ENOENT')
     })
 
-    const { hasUnrecognizedOrcaYamlKeys } = await import('./hooks')
-    expect(hasUnrecognizedOrcaYamlKeys('/test/repo')).toBe(false)
+    const { hasUnrecognizedKorcaYamlKeys } = await import('./hooks')
+    expect(hasUnrecognizedKorcaYamlKeys('/test/repo')).toBe(false)
   })
 })
 
 describe('readIssueCommand', () => {
-  it('prefers the local override over the shared orca.yaml command', async () => {
+  it('prefers the local override over the shared korca.yaml command', async () => {
     const fs = await import('fs')
     vi.mocked(fs.existsSync).mockImplementation(
-      (path) => path === '/test/repo/.orca/issue-command' || path === '/test/repo/orca.yaml'
+      (path) => path === '/test/repo/.korca/issue-command' || path === '/test/repo/korca.yaml'
     )
     vi.mocked(fs.readFileSync).mockImplementation((path) => {
-      if (path === '/test/repo/.orca/issue-command') {
+      if (path === '/test/repo/.korca/issue-command') {
         return 'local command\n'
       }
-      if (path === '/test/repo/orca.yaml') {
+      if (path === '/test/repo/korca.yaml') {
         return 'issueCommand: |\n  shared command\n'
       }
       return ''
@@ -267,16 +267,16 @@ describe('readIssueCommand', () => {
       localContent: 'local command',
       sharedContent: 'shared command',
       effectiveContent: 'local command',
-      localFilePath: '/test/repo/.orca/issue-command',
+      localFilePath: '/test/repo/.korca/issue-command',
       source: 'local'
     })
   })
 
-  it('falls back to the shared orca.yaml command when no local override exists', async () => {
+  it('falls back to the shared korca.yaml command when no local override exists', async () => {
     const fs = await import('fs')
-    vi.mocked(fs.existsSync).mockImplementation((path) => path === '/test/repo/orca.yaml')
+    vi.mocked(fs.existsSync).mockImplementation((path) => path === '/test/repo/korca.yaml')
     vi.mocked(fs.readFileSync).mockImplementation((path) => {
-      if (path === '/test/repo/orca.yaml') {
+      if (path === '/test/repo/korca.yaml') {
         return 'issueCommand: |\n  shared command\n'
       }
       return ''
@@ -287,17 +287,17 @@ describe('readIssueCommand', () => {
       localContent: null,
       sharedContent: 'shared command',
       effectiveContent: 'shared command',
-      localFilePath: '/test/repo/.orca/issue-command',
+      localFilePath: '/test/repo/.korca/issue-command',
       source: 'shared'
     })
   })
 })
 
 describe('writeIssueCommand', () => {
-  it('writes only the local override file and keeps .orca ignored locally', async () => {
+  it('writes only the local override file and keeps .korca ignored locally', async () => {
     const fs = await import('fs')
     vi.mocked(fs.existsSync).mockImplementation(
-      (path) => path === '/test/repo/.gitignore' || path === '/test/repo/.orca'
+      (path) => path === '/test/repo/.gitignore' || path === '/test/repo/.korca'
     )
     vi.mocked(fs.readFileSync).mockImplementation((path) => {
       if (path === '/test/repo/.gitignore') {
@@ -311,11 +311,11 @@ describe('writeIssueCommand', () => {
 
     expect(vi.mocked(fs.writeFileSync)).toHaveBeenCalledWith(
       '/test/repo/.gitignore',
-      'node_modules/\n.orca\n',
+      'node_modules/\n.korca\n',
       'utf-8'
     )
     expect(vi.mocked(fs.writeFileSync)).toHaveBeenCalledWith(
-      '/test/repo/.orca/issue-command',
+      '/test/repo/.korca/issue-command',
       'local command\n',
       'utf-8'
     )
@@ -326,7 +326,7 @@ describe('writeIssueCommand', () => {
     const { writeIssueCommand } = await import('./hooks')
     writeIssueCommand('/test/repo', '   ')
 
-    expect(vi.mocked(fs.rmSync)).toHaveBeenCalledWith('/test/repo/.orca/issue-command', {
+    expect(vi.mocked(fs.rmSync)).toHaveBeenCalledWith('/test/repo/.korca/issue-command', {
       force: true
     })
   })
@@ -349,7 +349,7 @@ describe('getEffectiveHooks', () => {
       hookSettings
     }) as unknown as Repo
 
-  it('uses hooks from orca.yaml when present', async () => {
+  it('uses hooks from korca.yaml when present', async () => {
     const fs = await import('fs')
     vi.mocked(fs.existsSync).mockReturnValue(true)
     vi.mocked(fs.readFileSync).mockReturnValue('scripts:\n  setup: |\n    echo "yaml setup"\n')
@@ -366,16 +366,16 @@ describe('getEffectiveHooks', () => {
     })
   })
 
-  it("loads setup hooks from the target worktree's orca.yaml when a worktree path is provided", async () => {
+  it("loads setup hooks from the target worktree's korca.yaml when a worktree path is provided", async () => {
     const fs = await import('fs')
     vi.mocked(fs.existsSync).mockImplementation(
-      (path) => path === '/test/repo/orca.yaml' || path === '/test/worktree/orca.yaml'
+      (path) => path === '/test/repo/korca.yaml' || path === '/test/worktree/korca.yaml'
     )
     vi.mocked(fs.readFileSync).mockImplementation((path) => {
-      if (path === '/test/repo/orca.yaml') {
+      if (path === '/test/repo/korca.yaml') {
         return 'scripts:\n  setup: |\n    echo old-version\n'
       }
-      if (path === '/test/worktree/orca.yaml') {
+      if (path === '/test/worktree/korca.yaml') {
         return 'scripts:\n  setup: |\n    echo new-version\n'
       }
       return ''
@@ -485,7 +485,7 @@ describe('getEffectiveHooks', () => {
     })
   })
 
-  it('uses local settings by default even when orca.yaml defines only one command', async () => {
+  it('uses local settings by default even when korca.yaml defines only one command', async () => {
     const fs = await import('fs')
     vi.mocked(fs.existsSync).mockReturnValue(true)
     vi.mocked(fs.readFileSync).mockReturnValue('scripts:\n  archive: |\n    echo "yaml archive"\n')
@@ -547,7 +547,7 @@ describe('getEffectiveHooks', () => {
     })
   })
 
-  it('treats legacy shared-first policy as orca.yaml only', async () => {
+  it('treats legacy shared-first policy as korca.yaml only', async () => {
     const fs = await import('fs')
     vi.mocked(fs.existsSync).mockReturnValue(true)
     vi.mocked(fs.readFileSync).mockReturnValue('scripts:\n  archive: |\n    echo "yaml archive"\n')
@@ -753,10 +753,10 @@ describe('runHook', () => {
       expect(options).toEqual(
         expect.objectContaining({
           env: expect.objectContaining({
-            ORCA_ROOT_PATH: '/mnt/c/Users/jinwo/git/orca',
-            ORCA_WORKTREE_PATH: '/home/jin/feature',
-            CONDUCTOR_ROOT_PATH: '/mnt/c/Users/jinwo/git/orca',
-            GHOSTX_ROOT_PATH: '/mnt/c/Users/jinwo/git/orca'
+            KORCA_ROOT_PATH: '/mnt/c/Users/jinwo/git/korca',
+            KORCA_WORKTREE_PATH: '/home/jin/feature',
+            CONDUCTOR_ROOT_PATH: '/mnt/c/Users/jinwo/git/korca',
+            GHOSTX_ROOT_PATH: '/mnt/c/Users/jinwo/git/korca'
           })
         })
       )
@@ -777,7 +777,7 @@ describe('runHook', () => {
       const { runHook } = await import('./hooks')
       const result = await runHook('setup', '\\\\wsl.localhost\\Ubuntu\\home\\jin\\feature', {
         ...makeRepo(),
-        path: 'C:\\Users\\jinwo\\git\\orca'
+        path: 'C:\\Users\\jinwo\\git\\korca'
       })
 
       expect(result).toEqual({ success: true, output: '' })
@@ -817,7 +817,7 @@ describe('runHook', () => {
       const { runHook } = await import('./hooks')
       const promise = runHook('setup', '\\\\wsl.localhost\\Ubuntu\\home\\jin\\feature', {
         ...makeRepo(),
-        path: 'C:\\Users\\jinwo\\git\\orca'
+        path: 'C:\\Users\\jinwo\\git\\korca'
       })
       let settled = false
       void promise.finally(() => {

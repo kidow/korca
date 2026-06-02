@@ -196,7 +196,7 @@ describe('createMainWindow', () => {
     expect(openExternalMock).toHaveBeenCalledTimes(4)
 
     const allowBlankEvent = { preventDefault: vi.fn() }
-    const allowBlankPrefs = { partition: 'persist:orca-browser' }
+    const allowBlankPrefs = { partition: 'persist:korca-browser' }
     windowHandlers['will-attach-webview'](
       allowBlankEvent as never,
       allowBlankPrefs as never,
@@ -207,7 +207,7 @@ describe('createMainWindow', () => {
     const denyInlineHtmlEvent = { preventDefault: vi.fn() }
     windowHandlers['will-attach-webview'](
       denyInlineHtmlEvent as never,
-      { partition: 'persist:orca-browser' } as never,
+      { partition: 'persist:korca-browser' } as never,
       { src: 'data:text/html,<script>alert(1)</script>' } as never
     )
     expect(denyInlineHtmlEvent.preventDefault).toHaveBeenCalledTimes(1)
@@ -815,7 +815,7 @@ describe('createMainWindow', () => {
     expect(webContents.send).not.toHaveBeenCalled()
   })
 
-  it('notifies before Orca-first captures a risky terminal-focused shortcut', () => {
+  it('notifies before Korca-first captures a risky terminal-focused shortcut', () => {
     const windowHandlers: Record<string, (...args: any[]) => void> = {}
     const webContents = {
       on: vi.fn((event, handler) => {
@@ -849,7 +849,7 @@ describe('createMainWindow', () => {
 
     createMainWindow({
       getUI: () => ({}),
-      getSettings: () => ({ terminalShortcutPolicy: 'orca-first' })
+      getSettings: () => ({ terminalShortcutPolicy: 'korca-first' })
     } as never)
 
     const setFocusedListener = vi

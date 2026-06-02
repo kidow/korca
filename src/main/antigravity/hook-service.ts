@@ -23,7 +23,7 @@ import {
   writeManagedScriptRemote
 } from '../agent-hooks/installer-utils-remote'
 
-const ANTIGRAVITY_HOOK_BUNDLE_NAME = 'orca-status'
+const ANTIGRAVITY_HOOK_BUNDLE_NAME = 'korca-status'
 
 const ANTIGRAVITY_EVENTS = [
   {
@@ -38,7 +38,7 @@ const ANTIGRAVITY_EVENTS = [
   },
   { eventName: 'Stop', schema: 'direct', windowsWrapperFileName: 'antigravity-stop.cmd' },
   // Why: Antigravity requires PreToolUse hooks to make permission decisions.
-  // Orca's hook is observational, so installing there can block user tools.
+  // Korca's hook is observational, so installing there can block user tools.
   {
     eventName: 'PostToolUse',
     schema: 'tool',
@@ -76,7 +76,7 @@ function getManagedCommand(scriptPath: string, event: AntigravityEvent): string 
   if (process.platform === 'win32') {
     return getWindowsWrapperScriptPath(event)
   }
-  return wrapPosixHookCommand(scriptPath, { ORCA_ANTIGRAVITY_EVENT: event.eventName })
+  return wrapPosixHookCommand(scriptPath, { KORCA_ANTIGRAVITY_EVENT: event.eventName })
 }
 
 function getManagedScript(target: 'local' | 'posix' = 'local'): string {
@@ -84,15 +84,15 @@ function getManagedScript(target: 'local' | 'posix' = 'local'): string {
     return [
       '@echo off',
       'setlocal',
-      'if /I "%ORCA_ANTIGRAVITY_EVENT%"=="Stop" (',
+      'if /I "%KORCA_ANTIGRAVITY_EVENT%"=="Stop" (',
       '  echo {"decision":""}',
       ') else (',
       '  echo {}',
       ')',
-      'if defined ORCA_AGENT_HOOK_ENDPOINT if exist "%ORCA_AGENT_HOOK_ENDPOINT%" call "%ORCA_AGENT_HOOK_ENDPOINT%" 2>nul',
-      'if "%ORCA_AGENT_HOOK_PORT%"=="" exit /b 0',
-      'if "%ORCA_AGENT_HOOK_TOKEN%"=="" exit /b 0',
-      'if "%ORCA_PANE_KEY%"=="" exit /b 0',
+      'if defined KORCA_AGENT_HOOK_ENDPOINT if exist "%KORCA_AGENT_HOOK_ENDPOINT%" call "%KORCA_AGENT_HOOK_ENDPOINT%" 2>nul',
+      'if "%KORCA_AGENT_HOOK_PORT%"=="" exit /b 0',
+      'if "%KORCA_AGENT_HOOK_TOKEN%"=="" exit /b 0',
+      'if "%KORCA_PANE_KEY%"=="" exit /b 0',
       buildWindowsAntigravityHookPostCommand(),
       'exit /b 0',
       ''
@@ -101,7 +101,7 @@ function getManagedScript(target: 'local' | 'posix' = 'local'): string {
 
   return [
     '#!/bin/sh',
-    'case "$ORCA_ANTIGRAVITY_EVENT" in',
+    'case "$KORCA_ANTIGRAVITY_EVENT" in',
     '  Stop)',
     '    printf \'{"decision":""}\\n\'',
     '    ;;',
@@ -112,29 +112,29 @@ function getManagedScript(target: 'local' | 'posix' = 'local'): string {
     '    printf "{}\\n"',
     '    ;;',
     'esac',
-    'if [ -n "$ORCA_AGENT_HOOK_ENDPOINT" ] && [ -r "$ORCA_AGENT_HOOK_ENDPOINT" ]; then',
-    '  . "$ORCA_AGENT_HOOK_ENDPOINT" 2>/dev/null || :',
+    'if [ -n "$KORCA_AGENT_HOOK_ENDPOINT" ] && [ -r "$KORCA_AGENT_HOOK_ENDPOINT" ]; then',
+    '  . "$KORCA_AGENT_HOOK_ENDPOINT" 2>/dev/null || :',
     'fi',
-    'if [ -z "$ORCA_AGENT_HOOK_PORT" ] || [ -z "$ORCA_AGENT_HOOK_TOKEN" ] || [ -z "$ORCA_PANE_KEY" ]; then',
+    'if [ -z "$KORCA_AGENT_HOOK_PORT" ] || [ -z "$KORCA_AGENT_HOOK_TOKEN" ] || [ -z "$KORCA_PANE_KEY" ]; then',
     '  exit 0',
     'fi',
     'payload=$(cat)',
     'if [ -z "$payload" ]; then',
     // Why: some Antigravity hook events can arrive without stdin. Still post
-    // the event name so Orca shows a status row instead of silently dropping it.
+    // the event name so Korca shows a status row instead of silently dropping it.
     "  payload='{}'",
     'fi',
     // Timeout caps best-effort hook posts if the local listener stalls.
-    'curl -sS -X POST "http://127.0.0.1:${ORCA_AGENT_HOOK_PORT}/hook/antigravity" \\',
+    'curl -sS -X POST "http://127.0.0.1:${KORCA_AGENT_HOOK_PORT}/hook/antigravity" \\',
     '  --connect-timeout 0.5 --max-time 1.5 \\',
     '  -H "Content-Type: application/x-www-form-urlencoded" \\',
-    '  -H "X-Orca-Agent-Hook-Token: ${ORCA_AGENT_HOOK_TOKEN}" \\',
-    '  --data-urlencode "paneKey=${ORCA_PANE_KEY}" \\',
-    '  --data-urlencode "tabId=${ORCA_TAB_ID}" \\',
-    '  --data-urlencode "worktreeId=${ORCA_WORKTREE_ID}" \\',
-    '  --data-urlencode "env=${ORCA_AGENT_HOOK_ENV}" \\',
-    '  --data-urlencode "version=${ORCA_AGENT_HOOK_VERSION}" \\',
-    '  --data-urlencode "hook_event_name=${ORCA_ANTIGRAVITY_EVENT}" \\',
+    '  -H "X-Korca-Agent-Hook-Token: ${KORCA_AGENT_HOOK_TOKEN}" \\',
+    '  --data-urlencode "paneKey=${KORCA_PANE_KEY}" \\',
+    '  --data-urlencode "tabId=${KORCA_TAB_ID}" \\',
+    '  --data-urlencode "worktreeId=${KORCA_WORKTREE_ID}" \\',
+    '  --data-urlencode "env=${KORCA_AGENT_HOOK_ENV}" \\',
+    '  --data-urlencode "version=${KORCA_AGENT_HOOK_VERSION}" \\',
+    '  --data-urlencode "hook_event_name=${KORCA_ANTIGRAVITY_EVENT}" \\',
     '  --data-urlencode "payload=${payload}" >/dev/null 2>&1 || true',
     'exit 0',
     ''
@@ -145,13 +145,13 @@ function getWindowsWrapperScript(eventName: string): string {
   return [
     '@echo off',
     'setlocal',
-    `set "ORCA_ANTIGRAVITY_EVENT=${eventName}"`,
-    'set "ORCA_ANTIGRAVITY_CORE=%~dp0antigravity-hook.cmd"',
-    'if exist "%ORCA_ANTIGRAVITY_CORE%" (',
-    '  call "%ORCA_ANTIGRAVITY_CORE%"',
+    `set "KORCA_ANTIGRAVITY_EVENT=${eventName}"`,
+    'set "KORCA_ANTIGRAVITY_CORE=%~dp0antigravity-hook.cmd"',
+    'if exist "%KORCA_ANTIGRAVITY_CORE%" (',
+    '  call "%KORCA_ANTIGRAVITY_CORE%"',
     '  exit /b 0',
     ')',
-    'if /I "%ORCA_ANTIGRAVITY_EVENT%"=="Stop" (',
+    'if /I "%KORCA_ANTIGRAVITY_EVENT%"=="Stop" (',
     '  echo {"decision":""}',
     ') else (',
     '  echo {}',
@@ -164,7 +164,7 @@ function getWindowsWrapperScript(eventName: string): string {
 function buildWindowsAntigravityHookPostCommand(): string {
   // Why: Antigravity hooks are best-effort status updates; do not let a stalled
   // local listener hold the agent process open.
-  return `powershell -NoProfile -ExecutionPolicy Bypass -Command "$utf8=[System.Text.UTF8Encoding]::new($false); [Console]::InputEncoding=$utf8; [Console]::OutputEncoding=$utf8; $inputData=[Console]::In.ReadToEnd(); try { $payload=if ([string]::IsNullOrWhiteSpace($inputData)) { @{} } else { $inputData | ConvertFrom-Json }; $body=@{ paneKey=$env:ORCA_PANE_KEY; tabId=$env:ORCA_TAB_ID; worktreeId=$env:ORCA_WORKTREE_ID; env=$env:ORCA_AGENT_HOOK_ENV; version=$env:ORCA_AGENT_HOOK_VERSION; hook_event_name=$env:ORCA_ANTIGRAVITY_EVENT; payload=$payload } | ConvertTo-Json -Depth 100 -Compress; $bodyBytes=$utf8.GetBytes($body); Invoke-WebRequest -UseBasicParsing -Method Post -Uri ('http://127.0.0.1:' + $env:ORCA_AGENT_HOOK_PORT + '/hook/antigravity') -ContentType 'application/json; charset=utf-8' -Headers @{ 'X-Orca-Agent-Hook-Token'=$env:ORCA_AGENT_HOOK_TOKEN } -Body $bodyBytes -TimeoutSec 2 | Out-Null } catch {}"`
+  return `powershell -NoProfile -ExecutionPolicy Bypass -Command "$utf8=[System.Text.UTF8Encoding]::new($false); [Console]::InputEncoding=$utf8; [Console]::OutputEncoding=$utf8; $inputData=[Console]::In.ReadToEnd(); try { $payload=if ([string]::IsNullOrWhiteSpace($inputData)) { @{} } else { $inputData | ConvertFrom-Json }; $body=@{ paneKey=$env:KORCA_PANE_KEY; tabId=$env:KORCA_TAB_ID; worktreeId=$env:KORCA_WORKTREE_ID; env=$env:KORCA_AGENT_HOOK_ENV; version=$env:KORCA_AGENT_HOOK_VERSION; hook_event_name=$env:KORCA_ANTIGRAVITY_EVENT; payload=$payload } | ConvertTo-Json -Depth 100 -Compress; $bodyBytes=$utf8.GetBytes($body); Invoke-WebRequest -UseBasicParsing -Method Post -Uri ('http://127.0.0.1:' + $env:KORCA_AGENT_HOOK_PORT + '/hook/antigravity') -ContentType 'application/json; charset=utf-8' -Headers @{ 'X-Korca-Agent-Hook-Token'=$env:KORCA_AGENT_HOOK_TOKEN } -Body $bodyBytes -TimeoutSec 2 | Out-Null } catch {}"`
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -374,7 +374,7 @@ export class AntigravityHookService {
   async installRemote(sftp: SFTPWrapper, remoteHome: string): Promise<AgentHookInstallStatus> {
     const home = remoteHome.replace(/\/$/, '')
     const remoteConfigPath = `${home}/.gemini/config/hooks.json`
-    const remoteScriptPath = `${home}/.orca/agent-hooks/antigravity-hook.sh`
+    const remoteScriptPath = `${home}/.korca/agent-hooks/antigravity-hook.sh`
     try {
       const config = await readHooksJsonRemote(sftp, remoteConfigPath)
       if (!config) {
@@ -390,7 +390,7 @@ export class AntigravityHookService {
       buildInstalledConfig(
         config,
         (event) =>
-          wrapPosixHookCommand(remoteScriptPath, { ORCA_ANTIGRAVITY_EVENT: event.eventName }),
+          wrapPosixHookCommand(remoteScriptPath, { KORCA_ANTIGRAVITY_EVENT: event.eventName }),
         createAntigravityManagedCommandMatcher()
       )
       await writeManagedScriptRemote(sftp, remoteScriptPath, getManagedScript('posix'))

@@ -29,11 +29,11 @@ export function HeroIntro({ onStart }: { onStart: () => void }): React.JSX.Eleme
   return (
     <div className="mp-intro-shell">
       <div className="mp-eyebrow-row">
-        <span className="mp-eyebrow">Orca 모바일</span>
+        <span className="mp-eyebrow">Korca 모바일</span>
       </div>
       <h1 className="mp-h1">작업공간을 손안에서 바로.</h1>
       <p className="mp-lead">
-        휴대폰에서 Orca를 제어하세요. 자리를 비운 동안에도 에이전트를 확인하고, 변경 사항을 검토하고, 작업을 시작할 수 있습니다.
+        휴대폰에서 Korca를 제어하세요. 자리를 비운 동안에도 에이전트를 확인하고, 변경 사항을 검토하고, 작업을 시작할 수 있습니다.
       </p>
       <div className="mp-platform-badges" aria-label="지원하는 모바일 플랫폼">
         <span className="mp-platform-label">지원 플랫폼</span>
@@ -76,13 +76,13 @@ export function HeroPaired({
   return (
     <div>
       <div className="mp-eyebrow-row">
-        <span className="mp-eyebrow">Orca 모바일</span>
+        <span className="mp-eyebrow">Korca 모바일</span>
       </div>
       <h1 className="mp-h1">
         {devices.length === 1 ? '휴대폰이 페어링되었습니다.' : '휴대폰들이 페어링되었습니다.'}
       </h1>
       <p className="mp-lead-sm">
-        Orca 모바일을 열어 작업을 이어가거나 다른 기기를 페어링하세요.
+        Korca 모바일을 열어 작업을 이어가거나 다른 기기를 페어링하세요.
       </p>
       <ul className="mp-paired-list">
         {devices.map((device) => {
@@ -182,7 +182,7 @@ export function HeroFlow({
               </div>
               <h2 className="mp-h2">앱을 받으세요.</h2>
               <p className="mp-lead-sm">
-                휴대폰으로 QR을 스캔하거나 설치 링크를 열어 Orca 모바일을 받으세요.
+                휴대폰으로 QR을 스캔하거나 설치 링크를 열어 Korca 모바일을 받으세요.
               </p>
               <div className="mp-tab-toggle">
                 <button
@@ -229,7 +229,7 @@ export function HeroFlow({
               </div>
               <h2 className="mp-h2">이 {getDeviceLabel()}를 페어링하세요.</h2>
               <p className="mp-lead-sm">
-                Orca 모바일을 열고 <strong>데스크톱 페어링</strong>을 누른 뒤 코드를 스캔하세요.
+                Korca 모바일을 열고 <strong>데스크톱 페어링</strong>을 누른 뒤 코드를 스캔하세요.
               </p>
 
               <div className="mp-network-row">

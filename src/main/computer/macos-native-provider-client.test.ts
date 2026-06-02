@@ -73,7 +73,7 @@ describe('MacOSNativeProviderClient', () => {
     sockets.length = 0
     mkdtempSyncMock.mockImplementation((prefix: string) => `${prefix}${sockets.length}`)
     resolveMacOSComputerUseExecutablePathMock.mockReturnValue(
-      '/Applications/Orca Computer Use.app/Contents/MacOS/orca-computer-use-macos'
+      '/Applications/Korca Computer Use.app/Contents/MacOS/korca-computer-use-macos'
     )
     spawnMock.mockReturnValue({ unref: vi.fn() })
     connectMacOSProviderSocketMock.mockImplementation(async () => {
@@ -186,7 +186,7 @@ describe('MacOSNativeProviderClient', () => {
     await expect(client.capabilities()).rejects.toThrow('socket did not open')
 
     expect(providerKill).toHaveBeenCalledWith('SIGTERM')
-    expect(rmSyncMock).toHaveBeenCalledWith(expect.stringContaining('orca-computer-use-'), {
+    expect(rmSyncMock).toHaveBeenCalledWith(expect.stringContaining('korca-computer-use-'), {
       recursive: true,
       force: true
     })

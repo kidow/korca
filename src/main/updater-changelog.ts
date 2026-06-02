@@ -10,7 +10,7 @@ type ChangelogEntry = {
   releaseNotesUrl: string
 }
 
-const CHANGELOG_URL = 'https://onorca.dev/changelog'
+const CHANGELOG_URL = 'https://onkorca.dev/changelog'
 
 function isValidEntry(entry: ChangelogEntry): boolean {
   return (
@@ -46,7 +46,7 @@ export async function fetchChangelog(
   const timeout = setTimeout(() => controller.abort(), 5000)
 
   try {
-    const res = await net.fetch('https://onorca.dev/whats-new/changelog.json', {
+    const res = await net.fetch('https://onkorca.dev/whats-new/changelog.json', {
       signal: controller.signal
     })
     if (!res.ok) {

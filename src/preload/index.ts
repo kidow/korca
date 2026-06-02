@@ -132,18 +132,18 @@ import type {
 } from '../shared/automations-types'
 import type { KeybindingActionId, KeybindingFileSnapshot } from '../shared/keybindings'
 import {
-  ORCA_EDITOR_SAVE_DIRTY_FILES_EVENT,
+  KORCA_EDITOR_SAVE_DIRTY_FILES_EVENT,
   type EditorSaveDirtyFilesDetail
 } from '../shared/editor-save-events'
 import {
-  ORCA_APP_RESTART_ABORTED_EVENT,
-  ORCA_APP_RESTART_STARTED_EVENT,
-  ORCA_UPDATER_QUIT_AND_INSTALL_ABORTED_EVENT,
-  ORCA_UPDATER_QUIT_AND_INSTALL_STARTED_EVENT
+  KORCA_APP_RESTART_ABORTED_EVENT,
+  KORCA_APP_RESTART_STARTED_EVENT,
+  KORCA_UPDATER_QUIT_AND_INSTALL_ABORTED_EVENT,
+  KORCA_UPDATER_QUIT_AND_INSTALL_STARTED_EVENT
 } from '../shared/updater-renderer-events'
 import {
   NATIVE_FILE_DROP_TARGET,
-  ORCA_INTERNAL_FILE_DRAG_TYPE,
+  KORCA_INTERNAL_FILE_DRAG_TYPE,
   hasNativeFileDragTypes,
   resolveNativeFileDropPath,
   type NativeDropResolution,
@@ -178,7 +178,7 @@ function requestDirtyEditorFileSave(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     let claimed = false
     window.dispatchEvent(
-      new CustomEvent<EditorSaveDirtyFilesDetail>(ORCA_EDITOR_SAVE_DIRTY_FILES_EVENT, {
+      new CustomEvent<EditorSaveDirtyFilesDetail>(KORCA_EDITOR_SAVE_DIRTY_FILES_EVENT, {
         detail: {
           claim: () => {
             claimed = true
@@ -331,7 +331,7 @@ document.addEventListener(
   'drop',
   (e) => {
     // Let in-app drags (e.g. file explorer → terminal) through to React handlers
-    if (e.dataTransfer?.types.includes(ORCA_INTERNAL_FILE_DRAG_TYPE)) {
+    if (e.dataTransfer?.types.includes(KORCA_INTERNAL_FILE_DRAG_TYPE)) {
       return
     }
 
@@ -398,15 +398,15 @@ const api = {
     relaunch: (): Promise<void> => ipcRenderer.invoke('app:relaunch'),
     restart: async (): Promise<void> => {
       await prepareRendererForAppRestart({
-        startedEventName: ORCA_APP_RESTART_STARTED_EVENT,
-        abortedEventName: ORCA_APP_RESTART_ABORTED_EVENT,
+        startedEventName: KORCA_APP_RESTART_STARTED_EVENT,
+        abortedEventName: KORCA_APP_RESTART_ABORTED_EVENT,
         continueOnSaveFailure: false,
         saveFailureLogPrefix: '[app-restart] Saving dirty files before restart failed:'
       })
       try {
         return await ipcRenderer.invoke('app:restart')
       } catch (error) {
-        window.dispatchEvent(new Event(ORCA_APP_RESTART_ABORTED_EVENT))
+        window.dispatchEvent(new Event(KORCA_APP_RESTART_ABORTED_EVENT))
         throw error
       }
     },
@@ -1094,9 +1094,9 @@ const api = {
       return () => ipcRenderer.removeListener('gh:workItemMutated', listener)
     },
 
-    checkOrcaStarred: (): Promise<boolean | null> => ipcRenderer.invoke('gh:checkOrcaStarred'),
-    starOrca: (source: AppStarSource): Promise<boolean> =>
-      ipcRenderer.invoke('gh:starOrca', source),
+    checkKorcaStarred: (): Promise<boolean | null> => ipcRenderer.invoke('gh:checkKorcaStarred'),
+    starKorca: (source: AppStarSource): Promise<boolean> =>
+      ipcRenderer.invoke('gh:starKorca', source),
 
     // Why: rate_limit is exempt from rate-limit accounting, but we still pass
     // `force` through so callers can bust the 30s in-process cache after a
@@ -1839,15 +1839,15 @@ const api = {
       return () => ipcRenderer.removeListener('browser:pane-focus', listener)
     },
 
-    onOpenLinkInOrcaTab: (
+    onOpenLinkInKorcaTab: (
       callback: (event: { browserPageId: string; url: string }) => void
     ): (() => void) => {
       const listener = (
         _event: Electron.IpcRendererEvent,
         data: { browserPageId: string; url: string }
       ) => callback(data)
-      ipcRenderer.on('browser:open-link-in-orca-tab', listener)
-      return () => ipcRenderer.removeListener('browser:open-link-in-orca-tab', listener)
+      ipcRenderer.on('browser:open-link-in-korca-tab', listener)
+      return () => ipcRenderer.removeListener('browser:open-link-in-korca-tab', listener)
     },
 
     acceptDownload: (args: {
@@ -2014,8 +2014,8 @@ const api = {
       // fails; otherwise a downloaded update can get stuck behind hidden editor
       // state. Manual app restart uses the same prep but aborts on save failure.
       await prepareRendererForAppRestart({
-        startedEventName: ORCA_UPDATER_QUIT_AND_INSTALL_STARTED_EVENT,
-        abortedEventName: ORCA_UPDATER_QUIT_AND_INSTALL_ABORTED_EVENT,
+        startedEventName: KORCA_UPDATER_QUIT_AND_INSTALL_STARTED_EVENT,
+        abortedEventName: KORCA_UPDATER_QUIT_AND_INSTALL_ABORTED_EVENT,
         continueOnSaveFailure: true,
         saveFailureLogPrefix:
           '[updater] Saving dirty files before quit failed; proceeding with install anyway:'
@@ -2023,7 +2023,7 @@ const api = {
       try {
         return await ipcRenderer.invoke('updater:quitAndInstall')
       } catch (error) {
-        window.dispatchEvent(new Event(ORCA_UPDATER_QUIT_AND_INSTALL_ABORTED_EVENT))
+        window.dispatchEvent(new Event(KORCA_UPDATER_QUIT_AND_INSTALL_ABORTED_EVENT))
         throw error
       }
     },

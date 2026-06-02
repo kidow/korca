@@ -1,11 +1,11 @@
 <h1 align="center">
-  <a href="https://onOrca.dev"><img src="resources/build/icon.png" alt="Orca" width="64" valign="middle" /></a> Orca
+  <a href="https://onKorca.dev"><img src="resources/build/icon.png" alt="Korca" width="64" valign="middle" /></a> Korca
 </h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue?style=for-the-badge" alt="Supported Platforms" />
   <a href="https://discord.gg/fzjDKHxv8Q"><img src="https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
-  <a href="https://x.com/orca_build"><img src="https://img.shields.io/badge/%E2%80%8E-Follow_@orca__build-000000?style=for-the-badge&logo=x&logoColor=white" alt="Follow on X" /></a>
+  <a href="https://x.com/korca_build"><img src="https://img.shields.io/badge/%E2%80%8E-Follow_@korca__build-000000?style=for-the-badge&logo=x&logoColor=white" alt="Follow on X" /></a>
 </p>
 
 <p align="center">
@@ -22,11 +22,11 @@
   <a href="#install"><strong>Download 🐋</strong></a>
 </p>
 
-![Orca worktree IDE demo showing Claude Code, Codex, and OpenCode running in parallel across isolated git worktrees](docs/assets/file-drag.gif)
+![Korca worktree IDE demo showing Claude Code, Codex, and OpenCode running in parallel across isolated git worktrees](docs/assets/file-drag.gif)
 
 ## Supported Agents
 
-Orca supports any CLI agent (_not just this list_).
+Korca supports any CLI agent (_not just this list_).
 
 <p>
   <a href="https://docs.anthropic.com/claude/docs/claude-code"><kbd><img src="docs/assets/claude-logo.svg" width="16" valign="middle" /> Claude Code</kbd></a> &nbsp;
@@ -66,9 +66,9 @@ Orca supports any CLI agent (_not just this list_).
 - **No login required** — Bring your own Claude Code, OpenClaude, Codex, Grok, or Antigravity subscription.
 - **Worktree-native** — Every feature gets its own worktree. No stashing, no branch juggling. Spin up and switch instantly.
 - **Multi-agent terminals** — Run multiple AI agents side-by-side in tabs and panes. See which ones are active at a glance.
-- **Built-in source control** — Review AI-generated diffs, make quick edits, and commit without leaving Orca.
+- **Built-in source control** — Review AI-generated diffs, make quick edits, and commit without leaving Korca.
 - **GitHub integration** — PRs, issues, and Actions checks linked to each worktree automatically.
-- **SSH support** — Connect to remote machines and run agents on them directly from Orca.
+- **SSH support** — Connect to remote machines and run agents on them directly from Korca.
 - **Notifications** — Know when an agent finishes or needs attention. Mark threads unread to come back later.
 
 ---
@@ -77,25 +77,25 @@ Orca supports any CLI agent (_not just this list_).
 
 ### Mac, Linux, Windows
 
-- **[Download from onOrca.dev](https://onOrca.dev)**
-- Or via **[GitHub Releases page](https://github.com/stablyai/orca/releases/latest)**
+- **[Download from onKorca.dev](https://onKorca.dev)**
+- Or via **[GitHub Releases page](https://github.com/stablyai/korca/releases/latest)**
 
 _Alternatively, install from a package manager:_
 
 ### macOS (Homebrew)
 
 ```bash
-brew install --cask stablyai/orca/orca
+brew install --cask stablyai/korca/korca
 ```
 
 ### Arch Linux (AUR)
 
 ```bash
 # Precompiled binary
-yay -S stably-orca-bin
+yay -S stably-korca-bin
 
 # Build from GitHub source
-yay -S stably-orca-git
+yay -S stably-korca-git
 ```
 
 ---
@@ -105,11 +105,11 @@ yay -S stably-orca-git
 Control your agents from your phone.
 
 <p align="center">
-  <picture><source srcset="docs/assets/feature-wall/mobile-companion-app-showcase.gif" type="image/gif"><img src="docs/assets/feature-wall/mobile-companion-app-showcase.jpg" alt="Orca desktop with the mobile companion app" width="720" /></picture>
+  <picture><source srcset="docs/assets/feature-wall/mobile-companion-app-showcase.gif" type="image/gif"><img src="docs/assets/feature-wall/mobile-companion-app-showcase.jpg" alt="Korca desktop with the mobile companion app" width="720" /></picture>
 </p>
 
-- **iOS:** [Download from App Store](https://apps.apple.com/us/app/orca-ide/id6766130217)
-- **Android:** [Download APK from GitHub Releases](https://github.com/stablyai/orca/releases/download/mobile-v0.0.10/app-release.apk)
+- **iOS:** [Download from App Store](https://apps.apple.com/us/app/korca-ide/id6766130217)
+- **Android:** [Download APK from GitHub Releases](https://github.com/stablyai/korca/releases/download/mobile-v0.0.10/app-release.apk)
 
 ---
 
@@ -118,19 +118,19 @@ Control your agents from your phone.
 Click any tile to explore the workflow.
 
 <p align="center">
-  <a href="https://www.onorca.dev/docs/model/worktrees"><kbd><strong>Parallel Worktrees</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/parallel-worktrees.gif" type="image/gif"><img src="docs/assets/feature-wall/parallel-worktrees.jpg" alt="Parallel worktree orchestration" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/terminal"><kbd><strong>Terminal Splits</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/terminal-splits.gif" type="image/gif"><img src="docs/assets/feature-wall/terminal-splits.jpg" alt="Ghostty-class terminal splits" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/browser/design-mode"><kbd><strong>Design Mode</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/design-mode.gif" type="image/gif"><img src="docs/assets/feature-wall/design-mode.jpg" alt="Embedded browser and Design Mode" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/review/linear"><kbd><strong>GitHub &amp; Linear, Native</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/github-linear.gif" type="image/gif"><img src="docs/assets/feature-wall/github-linear.jpg" alt="GitHub and Linear task workflows in Orca" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/agents/supported"><kbd><strong>Every CLI Agent</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/cli-agents.gif" type="image/gif"><img src="docs/assets/feature-wall/cli-agents.jpg" alt="Works with every CLI agent" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/ssh"><kbd><strong>SSH Worktrees</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/ssh-worktrees.gif" type="image/gif"><img src="docs/assets/feature-wall/ssh-worktrees.jpg" alt="Remote worktrees over SSH" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/editing/file-explorer"><kbd><strong>Drag Files to Agents</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/file-drag.gif" type="image/gif"><img src="docs/assets/feature-wall/file-drag.jpg" alt="Drag files and images into an agent prompt" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/review/annotate-ai-diff"><kbd><strong>Annotate AI Diffs</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/annotate-diff.gif" type="image/gif"><img src="docs/assets/feature-wall/annotate-diff.jpg" alt="Annotate AI-generated diffs" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/cli/overview"><kbd><strong>Orca CLI</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/orca-cli.gif" type="image/gif"><img src="docs/assets/feature-wall/orca-cli.jpg" alt="Script Orca from the CLI" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/settings"><kbd><strong>Native Search</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/keyboard-native.gif" type="image/gif"><img src="docs/assets/feature-wall/keyboard-native.jpg" alt="Native search across Orca workflows" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/agents/usage-tracking"><kbd><strong>Account Switcher &amp; Usage Tracking</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/codex-accounts.gif" type="image/gif"><img src="docs/assets/feature-wall/codex-accounts.jpg" alt="Account switching and usage tracking" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/editing/markdown"><kbd><strong>Rich Repo Previews</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/markdown-editor.gif" type="image/gif"><img src="docs/assets/feature-wall/markdown-editor.jpg" alt="Markdown, images, PDFs, and repo document previews" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/model/tabs-panes-splits"><kbd><strong>Split Anything</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/split-screen.gif" type="image/gif"><img src="docs/assets/feature-wall/split-screen.jpg" alt="Split panes for agents, terminals, browsers, and files" width="390" /></picture><br/></kbd></a>
+  <a href="https://www.onkorca.dev/docs/model/worktrees"><kbd><strong>Parallel Worktrees</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/parallel-worktrees.gif" type="image/gif"><img src="docs/assets/feature-wall/parallel-worktrees.jpg" alt="Parallel worktree orchestration" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/terminal"><kbd><strong>Terminal Splits</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/terminal-splits.gif" type="image/gif"><img src="docs/assets/feature-wall/terminal-splits.jpg" alt="Ghostty-class terminal splits" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/browser/design-mode"><kbd><strong>Design Mode</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/design-mode.gif" type="image/gif"><img src="docs/assets/feature-wall/design-mode.jpg" alt="Embedded browser and Design Mode" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/review/linear"><kbd><strong>GitHub &amp; Linear, Native</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/github-linear.gif" type="image/gif"><img src="docs/assets/feature-wall/github-linear.jpg" alt="GitHub and Linear task workflows in Korca" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/agents/supported"><kbd><strong>Every CLI Agent</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/cli-agents.gif" type="image/gif"><img src="docs/assets/feature-wall/cli-agents.jpg" alt="Works with every CLI agent" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/ssh"><kbd><strong>SSH Worktrees</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/ssh-worktrees.gif" type="image/gif"><img src="docs/assets/feature-wall/ssh-worktrees.jpg" alt="Remote worktrees over SSH" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/editing/file-explorer"><kbd><strong>Drag Files to Agents</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/file-drag.gif" type="image/gif"><img src="docs/assets/feature-wall/file-drag.jpg" alt="Drag files and images into an agent prompt" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/review/annotate-ai-diff"><kbd><strong>Annotate AI Diffs</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/annotate-diff.gif" type="image/gif"><img src="docs/assets/feature-wall/annotate-diff.jpg" alt="Annotate AI-generated diffs" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/cli/overview"><kbd><strong>Korca CLI</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/korca-cli.gif" type="image/gif"><img src="docs/assets/feature-wall/korca-cli.jpg" alt="Script Korca from the CLI" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/settings"><kbd><strong>Native Search</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/keyboard-native.gif" type="image/gif"><img src="docs/assets/feature-wall/keyboard-native.jpg" alt="Native search across Korca workflows" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/agents/usage-tracking"><kbd><strong>Account Switcher &amp; Usage Tracking</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/codex-accounts.gif" type="image/gif"><img src="docs/assets/feature-wall/codex-accounts.jpg" alt="Account switching and usage tracking" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/editing/markdown"><kbd><strong>Rich Repo Previews</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/markdown-editor.gif" type="image/gif"><img src="docs/assets/feature-wall/markdown-editor.jpg" alt="Markdown, images, PDFs, and repo document previews" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/model/tabs-panes-splits"><kbd><strong>Split Anything</strong><br/><br/><picture><source srcset="docs/assets/feature-wall/split-screen.gif" type="image/gif"><img src="docs/assets/feature-wall/split-screen.jpg" alt="Split panes for agents, terminals, browsers, and files" width="390" /></picture><br/></kbd></a>
 </p>
 
 ---
@@ -138,9 +138,9 @@ Click any tile to explore the workflow.
 ## Community &amp; Support
 
 - **Discord:** Join the community on **[Discord](https://discord.gg/fzjDKHxv8Q)**.
-- **Twitter / X:** Follow **[@orca_build](https://x.com/orca_build)** for updates and announcements.
-- **Feedback &amp; Ideas:** We ship fast. Missing something? [Request a new feature](https://github.com/stablyai/orca/issues).
-- **Privacy:** See the [privacy & telemetry docs](https://www.onorca.dev/docs/telemetry) for what anonymous usage data Orca collects and how to opt out.
+- **Twitter / X:** Follow **[@korca_build](https://x.com/korca_build)** for updates and announcements.
+- **Feedback &amp; Ideas:** We ship fast. Missing something? [Request a new feature](https://github.com/stablyai/korca/issues).
+- **Privacy:** See the [privacy & telemetry docs](https://www.onkorca.dev/docs/telemetry) for what anonymous usage data Korca collects and how to opt out.
 - **Show Support:** Star this repo to follow along with our daily ships.
 
 ---

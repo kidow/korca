@@ -28,7 +28,7 @@ function installModuleMocks(
   const sessionFromPartitionMock = vi.fn((partition: string) => ({
     partition,
     setUserAgent: vi.fn(),
-    getUserAgent: vi.fn(() => 'Mozilla/5.0 Electron/31 Orca'),
+    getUserAgent: vi.fn(() => 'Mozilla/5.0 Electron/31 Korca'),
     setPermissionRequestHandler: vi.fn(),
     setPermissionCheckHandler: vi.fn(),
     setDisplayMediaRequestHandler: vi.fn(),
@@ -131,7 +131,7 @@ describe('BrowserSessionRegistry persistence', () => {
     const written = JSON.parse(fsState.files.get(META_PATH) ?? '{}')
     expect(written.pendingCookieDbPath).toBeNull()
     expect(written.pendingCookieImports).toEqual({})
-    expect(fsState.present.has('/user-data/Partitions/orca-browser/Cookies')).toBe(true)
+    expect(fsState.present.has('/user-data/Partitions/korca-browser/Cookies')).toBe(true)
   })
 
   it('merges partition-keyed pending entries without clobbering unrelated entries', async () => {
@@ -148,22 +148,22 @@ describe('BrowserSessionRegistry persistence', () => {
     installModuleMocks(fsState)
     const { browserSessionRegistry } = await import('./browser-session-registry')
 
-    browserSessionRegistry.setPendingCookieImport('persist:orca-browser', '/staged/default')
+    browserSessionRegistry.setPendingCookieImport('persist:korca-browser', '/staged/default')
     browserSessionRegistry.setPendingCookieImport(
-      'persist:orca-browser-session-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+      'persist:korca-browser-session-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
       '/staged/imported'
     )
 
     const written = JSON.parse(fsState.files.get(META_PATH) ?? '{}')
     expect(written.pendingCookieDbPath).toBe('/staged/default')
     expect(written.pendingCookieImports).toEqual({
-      'persist:orca-browser': '/staged/default',
-      'persist:orca-browser-session-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa': '/staged/imported'
+      'persist:korca-browser': '/staged/default',
+      'persist:korca-browser-session-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa': '/staged/imported'
     })
   })
 
   it('restores persisted UA for non-default partitions', async () => {
-    const importedPartition = 'persist:orca-browser-session-11111111-1111-4111-8111-111111111111'
+    const importedPartition = 'persist:korca-browser-session-11111111-1111-4111-8111-111111111111'
     const importedUa = 'Mozilla/5.0 Chrome/120.0.0.0 Safari/537.36'
     const defaultUa = 'Mozilla/5.0 Chrome/119.0.0.0 Safari/537.36'
     const fsState = createFsState()
@@ -171,7 +171,7 @@ describe('BrowserSessionRegistry persistence', () => {
       defaultSource: null,
       userAgent: defaultUa,
       userAgentByPartition: {
-        'persist:orca-browser': defaultUa,
+        'persist:korca-browser': defaultUa,
         [importedPartition]: importedUa
       },
       pendingCookieDbPath: null,
@@ -211,7 +211,7 @@ describe('BrowserSessionRegistry persistence', () => {
   })
 
   it('keeps failed partition replay pending and removes unrelated missing entries', async () => {
-    const importedPartition = 'persist:orca-browser-session-22222222-2222-4222-8222-222222222222'
+    const importedPartition = 'persist:korca-browser-session-22222222-2222-4222-8222-222222222222'
     const fsState = createFsState()
     seedMeta(fsState, {
       defaultSource: null,
@@ -220,7 +220,7 @@ describe('BrowserSessionRegistry persistence', () => {
       pendingCookieDbPath: null,
       pendingCookieImports: {
         [importedPartition]: '/staged/imported',
-        'persist:orca-browser': '/staged/missing'
+        'persist:korca-browser': '/staged/missing'
       },
       profiles: [
         {

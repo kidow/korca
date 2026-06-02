@@ -2,8 +2,8 @@ import { lstat, readFile } from 'fs/promises'
 import { homedir } from 'os'
 import { posix, win32 } from 'path'
 import { isWindowsAbsolutePathLike } from '../shared/cross-platform-path'
-import type { GitWorktreeInfo, OrcaWorkspaceLayout, Repo, WorktreeMeta } from '../shared/types'
-import { matchesStrongOrcaCreatePath } from '../shared/worktree-ownership'
+import type { GitWorktreeInfo, KorcaWorkspaceLayout, Repo, WorktreeMeta } from '../shared/types'
+import { matchesStrongKorcaCreatePath } from '../shared/worktree-ownership'
 import { areWorktreePathsEqual } from './ipc/worktree-logic'
 import {
   gitFileProvesOrphanedWorktreeDirectory,
@@ -13,21 +13,21 @@ import {
 
 type PathOps = typeof posix
 
-const ORCA_CREATION_SOURCES = new Set<NonNullable<WorktreeMeta['orcaCreationSource']>>([
+const KORCA_CREATION_SOURCES = new Set<NonNullable<WorktreeMeta['korcaCreationSource']>>([
   'desktop',
   'runtime',
   'cli',
   'ssh'
 ])
-const ORCA_OWNED_PROVENANCE_META_KEYS = [
-  'orcaCreatedAt',
-  'orcaCreationSource',
-  'orcaCreationWorkspaceLayout'
+const KORCA_OWNED_PROVENANCE_META_KEYS = [
+  'korcaCreatedAt',
+  'korcaCreationSource',
+  'korcaCreationWorkspaceLayout'
 ] as const
-type UnregisteredOrcaCleanupMeta = Pick<
+type UnregisteredKorcaCleanupMeta = Pick<
   WorktreeMeta,
-  | 'orcaCreatedAt'
-  | 'orcaCreationSource'
+  | 'korcaCreatedAt'
+  | 'korcaCreationSource'
   | 'createdAt'
   | 'createdWithAgent'
   | 'pushTarget'
@@ -151,37 +151,37 @@ export async function canSafelyRemoveOrphanedWorktreeDirectory(
   })
 }
 
-export function canCleanupUnregisteredOrcaWorktreeDirectory(args: {
-  meta: UnregisteredOrcaCleanupMeta | null | undefined
+export function canCleanupUnregisteredKorcaWorktreeDirectory(args: {
+  meta: UnregisteredKorcaCleanupMeta | null | undefined
   worktreePath: string
   repo: Pick<Repo, 'path'>
-  knownOrcaLayouts: readonly OrcaWorkspaceLayout[]
+  knownKorcaLayouts: readonly KorcaWorkspaceLayout[]
 }): boolean {
-  if (hasCurrentOrcaCreationProvenance(args.meta)) {
+  if (hasCurrentKorcaCreationProvenance(args.meta)) {
     return true
   }
 
-  if (hasLegacyOrcaCreationEvidence(args.meta)) {
+  if (hasLegacyKorcaCreationEvidence(args.meta)) {
     return true
   }
 
-  // Why: profiles created before explicit provenance can still contain Orca
+  // Why: profiles created before explicit provenance can still contain Korca
   // workspaces at the repo-specific workspaceDir/<repo>/<name> path shape.
-  return matchesStrongOrcaCreatePath(args.worktreePath, args.knownOrcaLayouts, args.repo)
+  return matchesStrongKorcaCreatePath(args.worktreePath, args.knownKorcaLayouts, args.repo)
 }
 
-function hasCurrentOrcaCreationProvenance(
-  meta: Pick<WorktreeMeta, 'orcaCreatedAt' | 'orcaCreationSource'> | null | undefined
+function hasCurrentKorcaCreationProvenance(
+  meta: Pick<WorktreeMeta, 'korcaCreatedAt' | 'korcaCreationSource'> | null | undefined
 ): boolean {
   return (
-    typeof meta?.orcaCreatedAt === 'number' &&
-    !!meta.orcaCreationSource &&
-    ORCA_CREATION_SOURCES.has(meta.orcaCreationSource)
+    typeof meta?.korcaCreatedAt === 'number' &&
+    !!meta.korcaCreationSource &&
+    KORCA_CREATION_SOURCES.has(meta.korcaCreationSource)
   )
 }
 
-function hasLegacyOrcaCreationEvidence(
-  meta: UnregisteredOrcaCleanupMeta | null | undefined
+function hasLegacyKorcaCreationEvidence(
+  meta: UnregisteredKorcaCleanupMeta | null | undefined
 ): boolean {
   return Boolean(
     meta?.createdAt ||
@@ -193,11 +193,11 @@ function hasLegacyOrcaCreationEvidence(
   )
 }
 
-export function stripOrcaProvenanceMetaUpdates(
+export function stripKorcaProvenanceMetaUpdates(
   updates: Partial<WorktreeMeta> | null | undefined
 ): Partial<WorktreeMeta> {
   const sanitized = { ...updates }
-  for (const key of ORCA_OWNED_PROVENANCE_META_KEYS) {
+  for (const key of KORCA_OWNED_PROVENANCE_META_KEYS) {
     delete sanitized[key]
   }
   return sanitized

@@ -168,9 +168,9 @@ export function LinearRow(props: { compact?: boolean } = {}): React.JSX.Element 
 
 const CAPABILITIES = [
   'GitHub 이슈나 풀 리퀘스트에서 워크스페이스를 시작하고 제목과 문맥을 미리 채웁니다',
-  'Orca를 떠나지 않고 Tasks 보기에서 GitHub 이슈와 풀 리퀘스트를 봅니다',
+  'Korca를 떠나지 않고 Tasks 보기에서 GitHub 이슈와 풀 리퀘스트를 봅니다',
   '모든 워크트리에서 이슈 상태, 리뷰 상태, CI 체크를 확인합니다',
-  'Orca를 떠나지 않고 풀 리퀘스트를 읽고, 댓글을 달고, 병합합니다'
+  'Korca를 떠나지 않고 풀 리퀘스트를 읽고, 댓글을 달고, 병합합니다'
 ] as const
 
 export function IntegrationsStep(): React.JSX.Element {

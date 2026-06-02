@@ -26,7 +26,7 @@ const checks = [
       '-c',
       [
         'import importlib.util',
-        'spec=importlib.util.spec_from_file_location("orca_linux","native/computer-use-linux/runtime.py")',
+        'spec=importlib.util.spec_from_file_location("korca_linux","native/computer-use-linux/runtime.py")',
         'module=importlib.util.module_from_spec(spec)',
         'spec.loader.exec_module(module)',
         'print("import-ok")'
@@ -115,7 +115,7 @@ function verifyMacOSHelperApp() {
     'computer-use-macos',
     '.build',
     'release',
-    'Orca Computer Use.app'
+    'Korca Computer Use.app'
   )
   if (!existsSync(appPath)) {
     console.error(
@@ -127,7 +127,7 @@ function verifyMacOSHelperApp() {
 }
 
 function verifyWindowsProviderHandshake() {
-  const dir = mkdtempSync(join(tmpdir(), 'orca-computer-use-verify-'))
+  const dir = mkdtempSync(join(tmpdir(), 'korca-computer-use-verify-'))
   const operationPath = join(dir, 'operation.json')
   try {
     writeFileSync(operationPath, JSON.stringify({ tool: 'handshake' }), { mode: 0o600 })

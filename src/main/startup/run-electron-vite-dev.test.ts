@@ -40,7 +40,7 @@ async function waitFor(predicate: () => boolean, timeoutMs = 5000): Promise<void
 function devWrapperTestEnv(extra: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   const env = { ...process.env }
   for (const key of Object.keys(env)) {
-    if (key.startsWith('ORCA_DEV_')) {
+    if (key.startsWith('KORCA_DEV_')) {
       delete env[key]
     }
   }
@@ -66,7 +66,7 @@ describe('run-electron-vite-dev', () => {
   it.skipIf(process.platform === 'win32')(
     'kills the descendant process tree on SIGINT',
     async () => {
-      const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-wrapper-'))
+      const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-wrapper-'))
       const pidFile = join(tempDir, 'grandchild.pid')
       const wrapperPath = resolve('config/scripts/run-electron-vite-dev.mjs')
       const fakeCliPath = resolve('src/main/startup/__fixtures__/fake-electron-vite-dev-cli.mjs')
@@ -74,11 +74,11 @@ describe('run-electron-vite-dev', () => {
       const wrapper = spawn(process.execPath, [wrapperPath], {
         cwd: resolve('.'),
         env: devWrapperTestEnv({
-          ORCA_ELECTRON_VITE_CLI: fakeCliPath,
-          ORCA_SKIP_DEV_CLI_PREPARE: '1',
-          ORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
-          ORCA_SKIP_DEV_WEB_PREPARE: '1',
-          ORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile
+          KORCA_ELECTRON_VITE_CLI: fakeCliPath,
+          KORCA_SKIP_DEV_CLI_PREPARE: '1',
+          KORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
+          KORCA_SKIP_DEV_WEB_PREPARE: '1',
+          KORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile
         }),
         stdio: 'ignore'
       })
@@ -116,7 +116,7 @@ describe('run-electron-vite-dev', () => {
   )
 
   it('forwards dev instance identity to electron-vite', async () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-wrapper-'))
+    const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-wrapper-'))
     const pidFile = join(tempDir, 'grandchild.pid')
     const envFile = join(tempDir, 'env.json')
     const wrapperPath = resolve('config/scripts/run-electron-vite-dev.mjs')
@@ -125,14 +125,14 @@ describe('run-electron-vite-dev', () => {
     const wrapper = spawn(process.execPath, [wrapperPath, '--remote-debugging-port=9444'], {
       cwd: resolve('.'),
       env: devWrapperTestEnv({
-        ORCA_ELECTRON_VITE_CLI: fakeCliPath,
-        ORCA_SKIP_DEV_CLI_PREPARE: '1',
-        ORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
-        ORCA_SKIP_DEV_WEB_PREPARE: '1',
-        ORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
-        ORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
-        ORCA_DEV_BRANCH: 'feature/billing-shell',
-        ORCA_DEV_WORKTREE_NAME: 'payment-ui'
+        KORCA_ELECTRON_VITE_CLI: fakeCliPath,
+        KORCA_SKIP_DEV_CLI_PREPARE: '1',
+        KORCA_SKIP_DEV_ELECTRON_APP_PREPARE: '1',
+        KORCA_SKIP_DEV_WEB_PREPARE: '1',
+        KORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
+        KORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
+        KORCA_DEV_BRANCH: 'feature/billing-shell',
+        KORCA_DEV_WORKTREE_NAME: 'payment-ui'
       }),
       stdio: 'ignore'
     })
@@ -170,7 +170,7 @@ describe('run-electron-vite-dev', () => {
     expect(envSnapshot.worktreeName).toBe('payment-ui')
     expect(envSnapshot.repoRoot).toBe(resolve('.'))
     expect(envSnapshot.badgeLabel).toBeNull()
-    expect(envSnapshot.dockTitle).toBe('Orca: feature/billing-shell')
+    expect(envSnapshot.dockTitle).toBe('Korca: feature/billing-shell')
     expect(envSnapshot.stableName).toBeNull()
     expect(envSnapshot.electronExecPath).toBeNull()
 
@@ -178,7 +178,7 @@ describe('run-electron-vite-dev', () => {
   })
 
   it('consumes the stable-name flag before forwarding args to electron-vite', async () => {
-    const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-wrapper-'))
+    const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-wrapper-'))
     const pidFile = join(tempDir, 'grandchild.pid')
     const envFile = join(tempDir, 'env.json')
     const wrapperPath = resolve('config/scripts/run-electron-vite-dev.mjs')
@@ -190,13 +190,13 @@ describe('run-electron-vite-dev', () => {
       {
         cwd: resolve('.'),
         env: devWrapperTestEnv({
-          ORCA_ELECTRON_VITE_CLI: fakeCliPath,
-          ORCA_SKIP_DEV_CLI_PREPARE: '1',
-          ORCA_SKIP_DEV_WEB_PREPARE: '1',
-          ORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
-          ORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
-          ORCA_DEV_BRANCH: 'feature/stable-name',
-          ORCA_DEV_WORKTREE_NAME: 'stable-ui'
+          KORCA_ELECTRON_VITE_CLI: fakeCliPath,
+          KORCA_SKIP_DEV_CLI_PREPARE: '1',
+          KORCA_SKIP_DEV_WEB_PREPARE: '1',
+          KORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
+          KORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
+          KORCA_DEV_BRANCH: 'feature/stable-name',
+          KORCA_DEV_WORKTREE_NAME: 'stable-ui'
         }),
         stdio: 'ignore'
       }
@@ -234,15 +234,15 @@ describe('run-electron-vite-dev', () => {
   it.skipIf(process.platform !== 'darwin')(
     'rebuilds the copied Electron app when Chromium resources are missing',
     async () => {
-      const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-wrapper-'))
+      const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-wrapper-'))
       const wrapperPath = resolve('config/scripts/run-electron-vite-dev.mjs')
       const fakeCliPath = resolve('src/main/startup/__fixtures__/fake-electron-vite-dev-cli.mjs')
       const baseEnv = devWrapperTestEnv({
-        ORCA_ELECTRON_VITE_CLI: fakeCliPath,
-        ORCA_SKIP_DEV_CLI_PREPARE: '1',
-        ORCA_SKIP_DEV_WEB_PREPARE: '1',
-        ORCA_DEV_BRANCH: 'feature/rebuild-electron-app',
-        ORCA_DEV_WORKTREE_NAME: 'electron-app-rebuild'
+        KORCA_ELECTRON_VITE_CLI: fakeCliPath,
+        KORCA_SKIP_DEV_CLI_PREPARE: '1',
+        KORCA_SKIP_DEV_WEB_PREPARE: '1',
+        KORCA_DEV_BRANCH: 'feature/rebuild-electron-app',
+        KORCA_DEV_WORKTREE_NAME: 'electron-app-rebuild'
       })
 
       async function runWrapper(runId: string): Promise<{ electronExecPath: string }> {
@@ -252,8 +252,8 @@ describe('run-electron-vite-dev', () => {
           cwd: resolve('.'),
           env: {
             ...baseEnv,
-            ORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
-            ORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile
+            KORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
+            KORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile
           },
           stdio: 'ignore'
         })
@@ -315,7 +315,7 @@ describe('run-electron-vite-dev', () => {
   it.skipIf(process.platform !== 'darwin')(
     'preserves relative Electron framework symlinks in the copied mac dev app',
     async () => {
-      const tempDir = mkdtempSync(join(tmpdir(), 'orca-dev-wrapper-'))
+      const tempDir = mkdtempSync(join(tmpdir(), 'korca-dev-wrapper-'))
       const pidFile = join(tempDir, 'grandchild.pid')
       const envFile = join(tempDir, 'env.json')
       const wrapperPath = resolve('config/scripts/run-electron-vite-dev.mjs')
@@ -324,13 +324,13 @@ describe('run-electron-vite-dev', () => {
       const wrapper = spawn(process.execPath, [wrapperPath, '--remote-debugging-port=9448'], {
         cwd: resolve('.'),
         env: devWrapperTestEnv({
-          ORCA_ELECTRON_VITE_CLI: fakeCliPath,
-          ORCA_SKIP_DEV_CLI_PREPARE: '1',
-          ORCA_SKIP_DEV_WEB_PREPARE: '1',
-          ORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
-          ORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
-          ORCA_DEV_BRANCH: 'feature/framework-symlinks',
-          ORCA_DEV_WORKTREE_NAME: 'symlink-ui'
+          KORCA_ELECTRON_VITE_CLI: fakeCliPath,
+          KORCA_SKIP_DEV_CLI_PREPARE: '1',
+          KORCA_SKIP_DEV_WEB_PREPARE: '1',
+          KORCA_DEV_WRAPPER_TEST_PID_FILE: pidFile,
+          KORCA_DEV_WRAPPER_TEST_ENV_FILE: envFile,
+          KORCA_DEV_BRANCH: 'feature/framework-symlinks',
+          KORCA_DEV_WORKTREE_NAME: 'symlink-ui'
         }),
         stdio: 'ignore'
       })

@@ -1,5 +1,5 @@
 import type { ElectronApplication, Page, TestInfo } from '@stablyai/playwright-test'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import { ensureTerminalVisible, waitForSessionReady, waitForActiveWorktree } from './helpers/store'
 import { waitForActivePanePtyId, waitForActiveTerminalManager } from './helpers/terminal'
 
@@ -17,21 +17,21 @@ import { waitForActivePanePtyId, waitForActiveTerminalManager } from './helpers/
 test.describe.configure({ mode: 'serial' })
 
 test('mobile subscribe mounts overlay; collapse → chip; Take back dismisses', async ({
-  orcaPage,
+  korcaPage,
   electronApp
 }, testInfo) => {
-  await waitForSessionReady(orcaPage)
-  await waitForActiveWorktree(orcaPage)
-  await ensureTerminalVisible(orcaPage)
-  await waitForActiveTerminalManager(orcaPage)
-  const ptyId = await waitForActivePanePtyId(orcaPage)
+  await waitForSessionReady(korcaPage)
+  await waitForActiveWorktree(korcaPage)
+  await ensureTerminalVisible(korcaPage)
+  await waitForActiveTerminalManager(korcaPage)
+  const ptyId = await waitForActivePanePtyId(korcaPage)
   await installRestoreTerminalFitRecorder(electronApp)
 
-  const overlay = orcaPage.locator('.mobile-driver-banner')
+  const overlay = korcaPage.locator('.mobile-driver-banner')
   await expect(overlay).toHaveCount(0)
 
   // Fire the IPC events main emits when a mobile client subscribes in 'auto'
-  // mode (handleMobileSubscribe in src/main/runtime/orca-runtime.ts). The
+  // mode (handleMobileSubscribe in src/main/runtime/korca-runtime.ts). The
   // renderer's listener calls setFitOverride + setDriverForPty, the banner
   // observes the change, and MobileDriverOverlay mounts in loud mode.
   await sendMobileSubscribeIpc(electronApp, { ptyId, cols: 45, rows: 20 })
@@ -39,14 +39,14 @@ test('mobile subscribe mounts overlay; collapse → chip; Take back dismisses', 
   await expect(overlay).toBeVisible({ timeout: 15_000 })
   await expect(overlay).toContainText(/mobile is driving this terminal/i)
   await expect(overlay).toContainText(/your keyboard is paused/i)
-  await expectExpandedOverlayLeavesPaneReadable(orcaPage, ptyId)
+  await expectExpandedOverlayLeavesPaneReadable(korcaPage, ptyId)
 
   const takeBack = overlay.getByRole('button', { name: /take back/i })
   const collapse = overlay.getByRole('button', { name: /^collapse$/i })
   await expect(takeBack).toBeVisible()
   await expect(collapse).toBeVisible()
 
-  await captureAttachment(orcaPage, testInfo, 'overlay-loud.png')
+  await captureAttachment(korcaPage, testInfo, 'overlay-loud.png')
 
   // Click Collapse → loud overlay swaps to the corner chip while the lock stays
   // engaged. The user can keep watching live mobile output while the chip
@@ -55,13 +55,13 @@ test('mobile subscribe mounts overlay; collapse → chip; Take back dismisses', 
   await expect(overlay).toContainText(/mobile driving/i)
   await expect(overlay.getByRole('button', { name: /take back/i })).toBeVisible()
   await expect(overlay).not.toContainText(/your keyboard is paused/i)
-  await expectChipIsCompactInPane(orcaPage, ptyId)
+  await expectChipIsCompactInPane(korcaPage, ptyId)
 
-  await captureAttachment(orcaPage, testInfo, 'overlay-collapsed.png')
+  await captureAttachment(korcaPage, testInfo, 'overlay-collapsed.png')
 
   await overlay.getByRole('button', { name: /mobile driving/i }).click()
   await expect(overlay).toContainText(/your keyboard is paused/i)
-  await expectExpandedOverlayLeavesPaneReadable(orcaPage, ptyId)
+  await expectExpandedOverlayLeavesPaneReadable(korcaPage, ptyId)
 
   await collapse.click()
   await expect(overlay).not.toContainText(/your keyboard is paused/i)
@@ -77,17 +77,17 @@ test('mobile subscribe mounts overlay; collapse → chip; Take back dismisses', 
 })
 
 test('held phone-fit state mounts restore overlay without collapse', async ({
-  orcaPage,
+  korcaPage,
   electronApp
 }, testInfo) => {
-  await waitForSessionReady(orcaPage)
-  await waitForActiveWorktree(orcaPage)
-  await ensureTerminalVisible(orcaPage)
-  await waitForActiveTerminalManager(orcaPage)
-  const ptyId = await waitForActivePanePtyId(orcaPage)
+  await waitForSessionReady(korcaPage)
+  await waitForActiveWorktree(korcaPage)
+  await ensureTerminalVisible(korcaPage)
+  await waitForActiveTerminalManager(korcaPage)
+  const ptyId = await waitForActivePanePtyId(korcaPage)
   await installRestoreTerminalFitRecorder(electronApp)
 
-  const overlay = orcaPage.locator('.mobile-driver-banner')
+  const overlay = korcaPage.locator('.mobile-driver-banner')
   await expect(overlay).toHaveCount(0)
 
   // Held-fit is the post-mobile-disconnect state: the phone-fit override remains
@@ -101,9 +101,9 @@ test('held phone-fit state mounts restore overlay without collapse', async ({
   await expect(overlay.getByRole('button', { name: /restore desktop size/i })).toBeVisible()
   await expect(overlay.getByRole('button', { name: /^collapse$/i })).toHaveCount(0)
   await expect(overlay.getByRole('button', { name: /take back/i })).toHaveCount(0)
-  await expectExpandedOverlayLeavesPaneReadable(orcaPage, ptyId)
+  await expectExpandedOverlayLeavesPaneReadable(korcaPage, ptyId)
 
-  await captureAttachment(orcaPage, testInfo, 'overlay-held-fit.png')
+  await captureAttachment(korcaPage, testInfo, 'overlay-held-fit.png')
 
   await overlay.getByRole('button', { name: /restore desktop size/i }).click()
   await expectRestoreTerminalFitCalls(electronApp, [ptyId])

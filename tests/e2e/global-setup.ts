@@ -17,7 +17,7 @@ import path from 'path'
 import os from 'os'
 
 /** Temp file where the test repo path is stored for the fixture to read. */
-export const TEST_REPO_PATH_FILE = path.join(os.tmpdir(), 'orca-e2e-test-repo-path.txt')
+export const TEST_REPO_PATH_FILE = path.join(os.tmpdir(), 'korca-e2e-test-repo-path.txt')
 const ELECTRON_E2E_BUILD_TIMEOUT_MS = 300_000
 
 export default function globalSetup(): void {
@@ -41,8 +41,8 @@ export default function globalSetup(): void {
     })
     console.log('[e2e] Build complete.')
   }
-  if (process.env.ORCA_E2E_SSH_LOCALHOST === '1') {
-    // Why: the localhost SSH spec deploys Orca's relay from out/relay. The
+  if (process.env.KORCA_E2E_SSH_LOCALHOST === '1') {
+    // Why: the localhost SSH spec deploys Korca's relay from out/relay. The
     // normal Electron E2E build does not produce that bundle, so build it only
     // for the explicit local-machine SSH run.
     console.log('[e2e] Building SSH relay bundle for localhost SSH E2E...')
@@ -56,7 +56,7 @@ export default function globalSetup(): void {
   // ── 2. Create a seeded test git repo ───────────────────────────────
   // Why: each test run gets its own git repo so the suite is fully
   // idempotent. No test depends on whatever repos the user has open.
-  const testRepoDir = mkdtempSync(path.join(os.tmpdir(), 'orca-e2e-repo-'))
+  const testRepoDir = mkdtempSync(path.join(os.tmpdir(), 'korca-e2e-repo-'))
 
   execSync('git init', { cwd: testRepoDir, stdio: 'pipe' })
   execSync('git config user.email "e2e@test.local"', { cwd: testRepoDir, stdio: 'pipe' })
@@ -65,12 +65,12 @@ export default function globalSetup(): void {
   // Seed test data files
   writeFileSync(
     path.join(testRepoDir, 'README.md'),
-    '# Orca E2E Test Repo\n\nThis repo was created automatically for Playwright tests.\n'
+    '# Korca E2E Test Repo\n\nThis repo was created automatically for Playwright tests.\n'
   )
   writeFileSync(path.join(testRepoDir, 'CLAUDE.md'), '# CLAUDE.md\n\nTest instructions for E2E.\n')
   writeFileSync(
     path.join(testRepoDir, 'package.json'),
-    `${JSON.stringify({ name: 'orca-e2e-test', version: '0.0.0', private: true }, null, 2)}\n`
+    `${JSON.stringify({ name: 'korca-e2e-test', version: '0.0.0', private: true }, null, 2)}\n`
   )
   writeFileSync(path.join(testRepoDir, '.gitignore'), 'node_modules/\n')
   mkdirSync(path.join(testRepoDir, 'src'), { recursive: true })
@@ -82,7 +82,7 @@ export default function globalSetup(): void {
   // Why: several tests verify worktree-switching behavior (terminal content
   // retention, browser tab retention). They need at least 2 worktrees.
   // Creating one here makes those tests run instead of being skipped.
-  const worktreeDir = path.join(testRepoDir, '..', `orca-e2e-worktree-${randomUUID()}`)
+  const worktreeDir = path.join(testRepoDir, '..', `korca-e2e-worktree-${randomUUID()}`)
   execSync(`git worktree add "${worktreeDir}" -b e2e-secondary`, {
     cwd: testRepoDir,
     stdio: 'pipe'

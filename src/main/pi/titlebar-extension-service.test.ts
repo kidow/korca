@@ -16,7 +16,7 @@ import { createHash } from 'crypto'
 
 // The service calls app.getPath('userData') for its overlay root. Point that
 // at a real tmp dir so we can exercise the filesystem behavior end-to-end.
-const userDataDir = mkdtempSync(join(tmpdir(), 'orca-pi-test-userdata-'))
+const userDataDir = mkdtempSync(join(tmpdir(), 'korca-pi-test-userdata-'))
 
 // Why: getDefaultPiAgentDir() inside titlebar-extension-service reads
 // homedir() from 'os'. To exercise the ~/.omp/agent fallback branch we
@@ -61,7 +61,7 @@ describe('PiTitlebarExtensionService', () => {
   let piHome: string
 
   beforeEach(() => {
-    piHome = mkdtempSync(join(tmpdir(), 'orca-pi-test-pihome-'))
+    piHome = mkdtempSync(join(tmpdir(), 'korca-pi-test-pihome-'))
     // Seed a realistic Pi agent dir with skills, extensions, auth, sessions.
     mkdirSync(join(piHome, 'skills', 'my-skill', 'nested'), { recursive: true })
     writeFileSync(join(piHome, 'skills', 'my-skill', 'SKILL.md'), 'critical user skill')
@@ -119,16 +119,16 @@ describe('PiTitlebarExtensionService', () => {
     const env = svc.buildPtyEnv('pty-1', piHome, 'pi')
 
     expect(env.PI_CODING_AGENT_DIR).toBe(overlayPath('pi', 'pty-1'))
-    // Orca's titlebar extension is added alongside user extensions, not replacing them.
+    // Korca's titlebar extension is added alongside user extensions, not replacing them.
     const overlayExtensions = readdirSync(join(env.PI_CODING_AGENT_DIR!, 'extensions')).sort()
     expect(overlayExtensions).toEqual([
-      'orca-agent-status.ts',
-      'orca-prefill.ts',
-      'orca-titlebar-spinner.ts',
+      'korca-agent-status.ts',
+      'korca-prefill.ts',
+      'korca-titlebar-spinner.ts',
       'user-ext'
     ])
     const statusExtensionSource = readFileSync(
-      join(env.PI_CODING_AGENT_DIR!, 'extensions', 'orca-agent-status.ts'),
+      join(env.PI_CODING_AGENT_DIR!, 'extensions', 'korca-agent-status.ts'),
       'utf-8'
     )
     expect(statusExtensionSource).toContain('/hook/pi')
@@ -177,7 +177,7 @@ describe('PiTitlebarExtensionService', () => {
   it.skipIf(process.platform === 'win32')(
     'safely handles a pre-existing stale overlay with dangling symlinks',
     () => {
-      // Why: simulate an overlay that was left behind by a prior Orca session,
+      // Why: simulate an overlay that was left behind by a prior Korca session,
       // where the original Pi home it mirrored has since moved. The teardown
       // should unlink the dangling symlinks in place without trying to follow them.
       const legacyOverlayDir = legacyOverlayPath('pi', 'pty-4')
@@ -197,7 +197,7 @@ describe('PiTitlebarExtensionService', () => {
     }
   )
 
-  // Why: per-agent overlay source dir. Orca's user picks Pi or OMP per
+  // Why: per-agent overlay source dir. Korca's user picks Pi or OMP per
   // launch (the agent kind isn't a global install-time choice), so each
   // build's source dir MUST be resolved from the agent kind, not from a
   // disk-presence check that silently shadows the other agent's user
@@ -212,7 +212,7 @@ describe('PiTitlebarExtensionService', () => {
     }
 
     it('launching pi with both ~/.pi/agent and ~/.omp/agent present mirrors ~/.pi/agent', () => {
-      const fakeHome = mkdtempSync(join(tmpdir(), 'orca-pi-both-'))
+      const fakeHome = mkdtempSync(join(tmpdir(), 'korca-pi-both-'))
       seedAgentDir(fakeHome, '.pi', 'pi')
       seedAgentDir(fakeHome, '.omp', 'omp')
 
@@ -241,7 +241,7 @@ describe('PiTitlebarExtensionService', () => {
     })
 
     it('launching omp with both ~/.pi/agent and ~/.omp/agent present mirrors ~/.omp/agent into omp-agent-overlays', () => {
-      const fakeHome = mkdtempSync(join(tmpdir(), 'orca-omp-both-'))
+      const fakeHome = mkdtempSync(join(tmpdir(), 'korca-omp-both-'))
       seedAgentDir(fakeHome, '.pi', 'pi')
       seedAgentDir(fakeHome, '.omp', 'omp')
 
@@ -266,7 +266,7 @@ describe('PiTitlebarExtensionService', () => {
         expect(overlayExtensions).not.toContain('pi-ext')
         expect(
           readFileSync(
-            join(env.PI_CODING_AGENT_DIR!, 'extensions', 'orca-agent-status.ts'),
+            join(env.PI_CODING_AGENT_DIR!, 'extensions', 'korca-agent-status.ts'),
             'utf-8'
           )
         ).toContain('/hook/omp')
@@ -284,9 +284,9 @@ describe('PiTitlebarExtensionService', () => {
 
     it('launching omp when only ~/.pi/agent exists does NOT mirror Pi state', () => {
       // Why: missing source dir for the resolved kind must materialize the
-      // overlay from empty (Orca extensions only) — never cross-pollinate
+      // overlay from empty (Korca extensions only) — never cross-pollinate
       // from the other agent's dir.
-      const fakeHome = mkdtempSync(join(tmpdir(), 'orca-omp-only-pi-'))
+      const fakeHome = mkdtempSync(join(tmpdir(), 'korca-omp-only-pi-'))
       seedAgentDir(fakeHome, '.pi', 'pi')
       expect(existsSync(join(fakeHome, '.omp'))).toBe(false)
 
@@ -299,13 +299,13 @@ describe('PiTitlebarExtensionService', () => {
         // The Pi-only home must NOT leak into the OMP overlay; the auth
         // token from ~/.pi/agent/auth.json must be absent.
         expect(existsSync(join(env.PI_CODING_AGENT_DIR!, 'auth.json'))).toBe(false)
-        // Only Orca's bundled extensions are present — no user extensions
+        // Only Korca's bundled extensions are present — no user extensions
         // from the other agent's dir.
         const overlayExtensions = readdirSync(join(env.PI_CODING_AGENT_DIR!, 'extensions')).sort()
         expect(overlayExtensions).toEqual([
-          'orca-agent-status.ts',
-          'orca-prefill.ts',
-          'orca-titlebar-spinner.ts'
+          'korca-agent-status.ts',
+          'korca-prefill.ts',
+          'korca-titlebar-spinner.ts'
         ])
         expect(
           JSON.parse(readFileSync(join(env.PI_CODING_AGENT_DIR!, 'settings.json'), 'utf-8'))

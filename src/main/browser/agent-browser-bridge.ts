@@ -203,7 +203,7 @@ function isTabClosedTransportError(message: string): boolean {
 }
 
 function pageUnavailableMessageForSession(sessionName: string): string {
-  const prefix = 'orca-tab-'
+  const prefix = 'korca-tab-'
   const browserPageId = sessionName.startsWith(prefix) ? sessionName.slice(prefix.length) : null
   return browserPageId
     ? `Browser page ${browserPageId} is no longer available`
@@ -514,7 +514,7 @@ export class AgentBrowserBridge {
       this.activeWebContentsId = nextWorktreeActiveWebContentsId
     }
     if (browserPageId) {
-      const sessionName = `orca-tab-${browserPageId}`
+      const sessionName = `korca-tab-${browserPageId}`
       await this.destroySession(sessionName)
       this.pendingInterceptRestore.delete(sessionName)
     }
@@ -528,7 +528,7 @@ export class AgentBrowserBridge {
   ): Promise<void> {
     // Why: Electron process swaps give same browserPageId but new webContentsId.
     // Old proxy's webContents is destroyed, so destroy session and let next command recreate.
-    const sessionName = `orca-tab-${browserPageId}`
+    const sessionName = `korca-tab-${browserPageId}`
     const session = this.sessions.get(sessionName)
     const oldWebContentsId = previousWebContentsId ?? session?.webContentsId
     const owningWorktreeId = this.browserManager.getWorktreeIdForTab(browserPageId)
@@ -1373,7 +1373,7 @@ export class AgentBrowserBridge {
         args.push('--state', normalizedState)
       }
       // Why: agent-browser's selector wait surface does not support `--state visible`
-      // or a documented per-command `--timeout`. Orca normalizes "visible" back
+      // or a documented per-command `--timeout`. Korca normalizes "visible" back
       // to the default selector wait semantics and enforces the requested timeout
       // at the bridge layer so missing selectors fail as browser_timeout instead
       // of hanging until the generic runtime RPC timeout fires.
@@ -1552,7 +1552,7 @@ export class AgentBrowserBridge {
       }
 
       // Why: agent-browser only supports width/height/scale for `set viewport`;
-      // it has no `mobile` flag. Orca's CLI exposes `--mobile`, so apply the
+      // it has no `mobile` flag. Korca's CLI exposes `--mobile`, so apply the
       // emulation directly through CDP to keep the public CLI contract honest.
       await dbg.sendCommand('Emulation.setDeviceMetricsOverride', {
         width,
@@ -1715,7 +1715,7 @@ export class AgentBrowserBridge {
   async exec(command: string, worktreeId?: string, browserPageId?: string): Promise<unknown> {
     return this.enqueueTargetedCommand(worktreeId, browserPageId, async (sessionName) => {
       // Why: strip target/session flags from raw passthrough commands so a
-      // caller cannot override Orca's selected browser page or CDP proxy.
+      // caller cannot override Korca's selected browser page or CDP proxy.
       const args = stripAgentBrowserTargetArgs(parseShellArgs(command.trim()))
       return await this.execAgentBrowser(sessionName, args)
     })
@@ -1753,7 +1753,7 @@ export class AgentBrowserBridge {
     options: EnqueueTargetedCommandOptions = {}
   ): Promise<T> {
     const target = this.resolveCommandTarget(worktreeId, browserPageId)
-    const sessionName = `orca-tab-${target.browserPageId}`
+    const sessionName = `korca-tab-${target.browserPageId}`
 
     if (options.ensureSession !== false) {
       await this.ensureSession(sessionName, target.browserPageId, target.webContentsId)
@@ -1946,7 +1946,7 @@ export class AgentBrowserBridge {
       }
 
       // Why: agent-browser's daemon persists session state (including the CDP port)
-      // across Orca restarts. A stale session ignores --cdp (already initialized) and
+      // across Korca restarts. A stale session ignores --cdp (already initialized) and
       // connects to the dead port. Must await close so the daemon forgets the session
       // before we pass --cdp with the new port.
       await this.closeStaleAgentBrowserSession(sessionName)

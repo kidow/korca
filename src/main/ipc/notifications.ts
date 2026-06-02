@@ -20,7 +20,7 @@ import type {
   NotificationSoundDataResult
 } from '../../shared/types'
 import { getRepoIdFromWorktreeId } from '../../shared/worktree-id'
-import type { OrcaRuntimeService } from '../runtime/orca-runtime'
+import type { KorcaRuntimeService } from '../runtime/korca-runtime'
 import { buildNotificationOptions } from './notification-options'
 import { parsePaneKey } from '../../shared/stable-pane-id'
 
@@ -29,7 +29,7 @@ const MAX_RECENT_NOTIFICATION_KEYS = 50
 const NOTIFICATION_DISPLAY_CONFIRMATION_TIMEOUT_MS = 2500
 const NOTIFICATION_RELEASE_FALLBACK_MS = 5 * 60 * 1000
 const MAX_NOTIFICATION_SOUND_BYTES = 10 * 1024 * 1024
-const MACOS_PACKAGED_BUNDLE_ID = 'com.stablyai.orca'
+const MACOS_PACKAGED_BUNDLE_ID = 'com.stablyai.korca'
 const MACOS_NOTIFICATION_SETTINGS_URL =
   'x-apple.systempreferences:com.apple.Notifications-Settings.extension'
 const NOTIFICATION_SOUND_MIME_BY_EXTENSION: ReadonlyMap<string, string> = new Map([
@@ -92,7 +92,7 @@ function retainNotificationUntilRelease(
 }
 
 function getMacNotificationSettingsUrl(): string {
-  const bundleId = process.env.ORCA_DEV_MACOS_BUNDLE_ID ?? MACOS_PACKAGED_BUNDLE_ID
+  const bundleId = process.env.KORCA_DEV_MACOS_BUNDLE_ID ?? MACOS_PACKAGED_BUNDLE_ID
   return `${MACOS_NOTIFICATION_SETTINGS_URL}?id=${encodeURIComponent(bundleId)}`
 }
 
@@ -196,7 +196,7 @@ function pruneRecentNotifications(recentNotifications: Map<string, number>, now:
   }
 }
 
-export function registerNotificationHandlers(store: Store, runtime?: OrcaRuntimeService): void {
+export function registerNotificationHandlers(store: Store, runtime?: KorcaRuntimeService): void {
   const recentNotifications = new Map<string, number>()
 
   ipcMain.removeHandler('notifications:openSystemSettings')
@@ -295,7 +295,7 @@ export function registerNotificationHandlers(store: Store, runtime?: OrcaRuntime
       if (getEffectiveNotificationSoundId(settings) !== 'system') {
         notificationOptions.silent = true
       } else if (process.platform === 'darwin') {
-        // Why: macOS treats an unset notification sound as silent. When Orca is
+        // Why: macOS treats an unset notification sound as silent. When Korca is
         // using the OS sound, ask Electron for the default notification sound.
         notificationOptions.sound = 'default'
       }
@@ -325,7 +325,7 @@ export function registerNotificationHandlers(store: Store, runtime?: OrcaRuntime
       }
       notification.on('failed', failedHandler)
 
-      // Why: clicking a notification should bring Orca to the foreground and
+      // Why: clicking a notification should bring Korca to the foreground and
       // switch to the worktree/pane that triggered it. Worktree activation owns
       // repo/sidebar state; the optional focusTerminal follow-up uses the stable
       // pane leaf id so split-pane notifications land on the exact pane.
@@ -461,8 +461,8 @@ export function triggerStartupNotificationRegistration(store: Store): void {
   store.updateUI({ notificationPermissionRequested: true })
 
   const notification = new Notification({
-    title: 'Orca is ready to notify you',
-    body: 'Allow notifications so Orca can alert you when agents finish or terminals need attention.'
+    title: 'Korca is ready to notify you',
+    body: 'Allow notifications so Korca can alert you when agents finish or terminals need attention.'
   })
 
   // Why: prevent GC from collecting the notification (and its click handler)
@@ -498,7 +498,7 @@ export function triggerStartupNotificationRegistration(store: Store): void {
   }
 
   // Why: clicking the startup notification should take the user to macOS
-  // Notification Settings so they can verify/enable notifications for Orca.
+  // Notification Settings so they can verify/enable notifications for Korca.
   // Without this, the notification reads like an actionable prompt ("Allow
   // notifications…") but clicking it does nothing, which is confusing.
   function onClick(): void {

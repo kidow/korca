@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { getDefaultUIState } from '../../../../shared/constants'
 import type { PersistedUIState } from '../../../../shared/types'
-import type { OrcaRuntimeService } from '../../orca-runtime'
+import type { KorcaRuntimeService } from '../../korca-runtime'
 import type { RpcRequest } from '../core'
 import { RpcDispatcher } from '../dispatcher'
 import { CLIENT_UI_METHODS } from './client-ui'
@@ -31,7 +31,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       getClientSettings: vi.fn(() => settings)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(makeRequest('settings.get'))
@@ -62,7 +62,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       updateClientSettings: vi.fn(() => settings)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -100,7 +100,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       getUIState: vi.fn(() => ui)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(makeRequest('ui.get'))
@@ -120,7 +120,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       updateUIState: vi.fn(() => updated)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -173,7 +173,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       updateUIState: vi.fn(() => updated)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const payload = {
@@ -217,7 +217,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       recordFeatureInteraction: vi.fn(() => updated)
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(makeRequest('ui.recordFeatureInteraction', 'tasks'))
@@ -230,7 +230,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       updateUIState: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -245,7 +245,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       updateUIState: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -264,7 +264,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       updateUIState: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(
@@ -279,7 +279,7 @@ describe('client UI RPC methods', () => {
     const runtime = {
       getRuntimeId: () => 'test-runtime',
       recordFeatureInteraction: vi.fn()
-    } as unknown as OrcaRuntimeService
+    } as unknown as KorcaRuntimeService
     const dispatcher = new RpcDispatcher({ runtime, methods: CLIENT_UI_METHODS })
 
     const response = await dispatcher.dispatch(

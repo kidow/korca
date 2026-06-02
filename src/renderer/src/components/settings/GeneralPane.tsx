@@ -296,7 +296,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
 
   useEffect(() => {
     let cancelled = false
-    void window.api.gh.checkOrcaStarred().then((result) => {
+    void window.api.gh.checkKorcaStarred().then((result) => {
       if (cancelled) {
         return
       }
@@ -316,7 +316,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
       return
     }
     setStarState('starring')
-    const ok = await window.api.gh.starOrca('settings')
+    const ok = await window.api.gh.starKorca('settings')
     if (!ok) {
       if (mountedRef.current) {
         setStarState('error')
@@ -690,7 +690,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
 
         <SearchableSetting
           title="HTTP 프록시"
-          description="Orca 네트워크 요청과 로컬 터미널 하위 프로세스에 사용할 프록시 URL입니다."
+          description="Korca 네트워크 요청과 로컬 터미널 하위 프로세스에 사용할 프록시 URL입니다."
           keywords={['proxy', 'http_proxy', 'https_proxy', 'network', 'dock', 'launchpad']}
           className="space-y-3"
         >
@@ -765,7 +765,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
       <section key="editor" className="space-y-4">
         <SettingsSubsectionHeader
           title="편집기"
-          description="Orca가 파일 편집 내용을 저장하는 방식을 설정합니다."
+          description="Korca가 파일 편집 내용을 저장하는 방식을 설정합니다."
         />
 
         <SearchableSetting
@@ -783,14 +783,14 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
 
         <SearchableSetting
           title="자동 저장 지연"
-          description="마지막 편집 후 자동 저장까지 Orca가 기다리는 시간입니다."
+          description="마지막 편집 후 자동 저장까지 Korca가 기다리는 시간입니다."
           keywords={['autosave', 'delay', 'milliseconds']}
           className="flex items-center justify-between gap-4 py-2"
         >
           <div className="min-w-0 flex-1 space-y-0.5">
             <Label>자동 저장 지연</Label>
             <p className="text-xs text-muted-foreground">
-              마지막 편집 후 자동 저장까지 Orca가 기다리는 시간입니다. 첫 실행 기본값은{' '}
+              마지막 편집 후 자동 저장까지 Korca가 기다리는 시간입니다. 첫 실행 기본값은{' '}
               {DEFAULT_EDITOR_AUTO_SAVE_DELAY_MS}ms입니다.
             </p>
           </div>
@@ -976,7 +976,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
 
         <SearchableSetting
           title="업데이트 확인"
-          description="앱 업데이트를 확인하고 더 새로운 Orca 버전을 설치합니다."
+          description="앱 업데이트를 확인하고 더 새로운 Korca 버전을 설치합니다."
           keywords={['update', 'version', 'release notes', 'download']}
           className="space-y-3"
         >
@@ -1037,7 +1037,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                 <a
                   href={
                     updateStatus.releaseUrl ??
-                    `https://github.com/stablyai/orca/releases/tag/v${updateStatus.version}`
+                    `https://github.com/stablyai/korca/releases/tag/v${updateStatus.version}`
                   }
                   target="_blank"
                   rel="noopener noreferrer"
@@ -1056,7 +1056,7 @@ export function GeneralPane({ settings, updateSettings }: GeneralPaneProps): Rea
                 <a
                   href={
                     updateStatus.releaseUrl ??
-                    `https://github.com/stablyai/orca/releases/tag/v${updateStatus.version}`
+                    `https://github.com/stablyai/korca/releases/tag/v${updateStatus.version}`
                   }
                   target="_blank"
                   rel="noopener noreferrer"
@@ -1134,7 +1134,7 @@ function SupportSection({
         <div className="space-y-8">
           {hasPrecedingSections ? <Separator /> : null}
           <div className="space-y-4">
-            <SettingsSubsectionHeader title="Orca 지원" />
+            <SettingsSubsectionHeader title="Korca 지원" />
             {state === 'loading' ? <SupportRowSkeleton /> : null}
             {state !== 'loading' && state !== 'hidden' ? (
               <SupportRow state={state} onStarClick={onStarClick} />
@@ -1163,19 +1163,19 @@ function SupportRow({
   onStarClick: () => void | Promise<void>
 }): React.JSX.Element {
   // Why: the left-hand label is the setting's identity and must not change
-  // when the user clicks — the row should still read "Star Orca on GitHub"
+  // when the user clicks — the row should still read "Star Korca on GitHub"
   // afterwards. The right-hand control is what changes: before starring it
   // is a button; after a successful star we swap in a small inline "Thanks"
   // confirmation so the row keeps the same shape without showing a stale,
   // disabled button.
   return (
     <SearchableSetting
-      title="GitHub에서 Orca 별점 주기"
+      title="GitHub에서 Korca 별점 주기"
       description="gh CLI를 통해 GitHub 별점으로 프로젝트를 지원합니다."
       keywords={['star', 'github', 'support', 'feedback', 'like']}
       className="flex items-center justify-between gap-4 py-2"
     >
-      <Label>GitHub에서 Orca 별점 주기</Label>
+      <Label>GitHub에서 Korca 별점 주기</Label>
       {state === 'starred' ? (
         <SupportRowThanks />
       ) : (

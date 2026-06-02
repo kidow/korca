@@ -8,7 +8,7 @@ describe('writeFileAtomically', () => {
   let dir: string
 
   function setup(): string {
-    dir = mkdtempSync(join(tmpdir(), 'orca-fs-utils-'))
+    dir = mkdtempSync(join(tmpdir(), 'korca-fs-utils-'))
     return dir
   }
 

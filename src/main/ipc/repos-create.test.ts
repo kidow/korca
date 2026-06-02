@@ -1,5 +1,5 @@
 /**
- * Unit tests for repos:create (orca#763).
+ * Unit tests for repos:create (korca#763).
  *
  * Pins the invariants that matter here:
  *   - Name validation catches empty/slash/./.. before any fs I/O.

@@ -2,31 +2,31 @@
 
 ## Problem
 
-Orca stopped launching Codex from the user's global `~/.codex` because global hook and config mutations were intrusive. The current Orca-owned host runtime home is shared across accounts:
+Korca stopped launching Codex from the user's global `~/.codex` because global hook and config mutations were intrusive. The current Korca-owned host runtime home is shared across accounts:
 
 - [src/main/codex-accounts/runtime-home-service.ts](../src/main/codex-accounts/runtime-home-service.ts:105) prepares launch and rate-limit homes.
 - [src/main/codex-accounts/runtime-home-service.ts](../src/main/codex-accounts/runtime-home-service.ts:146) materializes the active account by writing `auth.json` into the shared runtime home.
 - [src/main/ipc/pty.ts](../src/main/ipc/pty.ts:608) injects the selected `CODEX_HOME` into new PTYs.
 - [src/renderer/src/lib/codex-session-restart.ts](../src/renderer/src/lib/codex-session-restart.ts:24) marks only currently foreground Codex processes for restart after account switches.
 
-PR #1629 fixed stored credential clobbering by verifying identity before read-back. That prevents Account A tokens from being saved into Account B's managed account. It does not remove the live-process race where Account A can still write the shared runtime `auth.json` after the user selects Account B, and a later launch can observe Account A before Orca re-syncs.
+PR #1629 fixed stored credential clobbering by verifying identity before read-back. That prevents Account A tokens from being saved into Account B's managed account. It does not remove the live-process race where Account A can still write the shared runtime `auth.json` after the user selects Account B, and a later launch can observe Account A before Korca re-syncs.
 
 ## Goal
 
 Account switching should switch only Codex identity. Config, `/model`, `/fast`, hooks, sessions, skills, plugins, prompts, themes, and usage history should behave like one shared Codex environment.
 
-Implementation should isolate only `auth.json` by selected account while preserving one shared Orca Codex environment for every other file Codex needs.
+Implementation should isolate only `auth.json` by selected account while preserving one shared Korca Codex environment for every other file Codex needs.
 
 ## Core Invariants
 
-- Native `~/.codex` is user-owned. Orca may read/copy from it, but Orca-owned hooks and runtime config live in Orca userData.
-- `codex-runtime-home/home` is the single shared Orca Codex environment.
+- Native `~/.codex` is user-owned. Korca may read/copy from it, but Korca-owned hooks and runtime config live in Korca userData.
+- `codex-runtime-home/home` is the single shared Korca Codex environment.
 - Host launch homes may contain a real selected `auth.json`. Known shared Codex entries resolve to the shared environment or are reconciled back into it before another selected launch home is prepared.
 - Account switching cannot mutate the process environment of already-open PTYs. Existing host PTYs that were opened under the old account are stale until restarted, even if no Codex process is currently foregrounded.
 
 ## Non-goals
 
-- Do not return to mutating the user's global `~/.codex` for Orca hooks or runtime config.
+- Do not return to mutating the user's global `~/.codex` for Korca hooks or runtime config.
 - Do not make account switching fork user preferences or session history by account.
 - Do not remove the existing #1629 read-back guard; it is still needed for token refresh persistence.
 - Do not redesign SSH remote Codex home handling in this change. SSH still uses the remote user's Codex home and remote hook install flow.
@@ -52,15 +52,15 @@ Implementation should isolate only `auth.json` by selected account while preserv
 
 4. Link non-auth launch-home entries to the shared environment.
 
-   The launch home exposes Orca's known shared Codex entries except `auth.json` and Orca metadata by symlink/junction where possible. This includes `config.toml`, `hooks.json`, `history.jsonl`, `sessions`, and resource entries (`skills`, `plugins`, `plugin-state`, `profile-v2`, `themes`, `prompts`).
+   The launch home exposes Korca's known shared Codex entries except `auth.json` and Korca metadata by symlink/junction where possible. This includes `config.toml`, `hooks.json`, `history.jsonl`, `sessions`, and resource entries (`skills`, `plugins`, `plugin-state`, `profile-v2`, `themes`, `prompts`).
 
    Mutable directories (`sessions`, `plugin-state`, `profile-v2`) require real directory links/junctions. Plain copy fallback is not behavior-preserving because it forks session/state by account.
 
-   Mutable files (`config.toml`, `history.jsonl`, and `profile-v2` when file-shaped) should use real symlinks where possible. On Windows filesystems that reject file symlinks, Orca may use an owned fallback copy only if it reconciles launch-home mutations back into the shared environment before preparing any launch home. This covers both direct writes and atomic rename over a symlink.
+   Mutable files (`config.toml`, `history.jsonl`, and `profile-v2` when file-shaped) should use real symlinks where possible. On Windows filesystems that reject file symlinks, Korca may use an owned fallback copy only if it reconciles launch-home mutations back into the shared environment before preparing any launch home. This covers both direct writes and atomic rename over a symlink.
 
-   `hooks.json` is stricter: if file linking fails, Orca does not silently copy it into the launch home. A copied hook file can change the trusted hook path, which is worse than a missing hook because it can look enabled while Codex rejects it.
+   `hooks.json` is stricter: if file linking fails, Korca does not silently copy it into the launch home. A copied hook file can change the trusted hook path, which is worse than a missing hook because it can look enabled while Codex rejects it.
 
-   Read-mostly resource entries may use marker-owned copy fallback when links fail. Markers must let Orca refresh/remove only entries it created.
+   Read-mostly resource entries may use marker-owned copy fallback when links fail. Markers must let Korca refresh/remove only entries it created.
 
 5. Do not launch new host Codex sessions from the shared environment home.
 
@@ -68,7 +68,7 @@ Implementation should isolate only `auth.json` by selected account while preserv
 
 6. Keep session and usage aggregation shared.
 
-   Because `sessions` in launch homes links to the shared environment, Codex writes one shared session tree. Existing usage scanning can continue to read `getOrcaManagedCodexHomePath()/sessions`.
+   Because `sessions` in launch homes links to the shared environment, Codex writes one shared session tree. Existing usage scanning can continue to read `getKorcaManagedCodexHomePath()/sessions`.
 
 7. Handle Windows and macOS explicitly.
 
@@ -80,7 +80,7 @@ Implementation should isolate only `auth.json` by selected account while preserv
 
 9. Clean up launch-home credentials.
 
-   Every launch home has a `.orca-managed-launch-home` marker. Removing a managed account removes that account's marked host launch home after containment verification. System logout removes only the system launch home's `auth.json`.
+   Every launch home has a `.korca-managed-launch-home` marker. Removing a managed account removes that account's marked host launch home after containment verification. System logout removes only the system launch home's `auth.json`.
 
 ## Data Flow
 
@@ -95,7 +95,7 @@ Implementation should isolate only `auth.json` by selected account while preserv
   - Host target calls `prepareForCodexLaunch()`.
   - Shared environment home is synced.
   - Selected launch home is materialized.
-  - `CODEX_HOME` and `ORCA_CODEX_HOME` point to selected launch home.
+  - `CODEX_HOME` and `KORCA_CODEX_HOME` point to selected launch home.
 
 - Old live Codex process:
   - Continues writing whichever home it launched from.
@@ -111,10 +111,10 @@ Implementation should isolate only `auth.json` by selected account while preserv
 native ~/.codex
   user resources/config source only
 
-Orca/codex-runtime-home/home
+Korca/codex-runtime-home/home
   shared config.toml, hooks.json, sessions, resources
 
-Orca/codex-runtime-home/launch/host/account-a/home
+Korca/codex-runtime-home/launch/host/account-a/home
   auth.json          real file for account A
   config.toml        link/copy to shared home
   hooks.json         link to shared home when supported
@@ -129,11 +129,11 @@ Orca/codex-runtime-home/launch/host/account-a/home
 - Two managed accounts have ambiguous identity fields.
 - Managed account auth is missing or corrupt.
 - System default logout removes `~/.codex/auth.json`.
-- System default auth refreshes outside Orca.
+- System default auth refreshes outside Korca.
 - Symlink creation fails on Windows for file links.
 - A shared config/resource entry is deleted after a launch-home link or fallback copy exists.
 - Launch-home fallback copy exists but the user edited it manually.
-- Codex creates a new top-level file in a launch home that Orca does not know is shared state.
+- Codex creates a new top-level file in a launch home that Korca does not know is shared state.
 - Daemon reattach points at an old PTY with old `CODEX_HOME`.
 - Idle shell opened as Account A later runs Codex after switching to Account B.
 - WSL shell launched from Windows must not receive a host launch-home path.
@@ -156,7 +156,7 @@ Orca/codex-runtime-home/launch/host/account-a/home
 - Unit: WSL target behavior and Windows WSL path stripping remain unchanged.
 - Typecheck: `pnpm run tc:node`, `pnpm run tc:cli`, `pnpm run tc:web`.
 - Lint: `pnpm run lint`.
-- Electron validation: launch Orca dev on Windows, create fake managed Codex account state through IPC/store where possible, create a terminal, verify visible terminal exists, and verify backing PTY env/session points at a selected launch home. Capture account settings/status bar and terminal screenshots. On macOS, validate through CI/subagent or targeted path/link tests where local hardware is unavailable.
+- Electron validation: launch Korca dev on Windows, create fake managed Codex account state through IPC/store where possible, create a terminal, verify visible terminal exists, and verify backing PTY env/session points at a selected launch home. Capture account settings/status bar and terminal screenshots. On macOS, validate through CI/subagent or targeted path/link tests where local hardware is unavailable.
 
 ## UI Quality Bar
 
@@ -204,5 +204,5 @@ No intentional UI change. Existing account switcher and terminal restart prompt 
   - A pre-change live Codex process launched from the old shared home can still mutate the old shared `auth.json`; fresh launches should no longer consume it.
   - A pre-switch idle shell cannot have its process environment changed; it must be restarted or marked stale.
   - Same-distro WSL launch homes remain out of scope for this host-focused change.
-  - Unknown Codex-created top-level launch-home files are not adopted into shared state until Orca explicitly classifies them. This avoids crashing or copying locked live sqlite files, but it means "everything except auth" is guaranteed only for the known shared entries above.
+  - Unknown Codex-created top-level launch-home files are not adopted into shared state until Korca explicitly classifies them. This avoids crashing or copying locked live sqlite files, but it means "everything except auth" is guaranteed only for the known shared entries above.
   - If Codex stores account-sensitive data outside `auth.json`, sharing sessions/state may need a later narrower exception.

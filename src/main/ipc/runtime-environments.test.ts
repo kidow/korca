@@ -72,7 +72,7 @@ describe('registerRuntimeEnvironmentHandlers', () => {
   let userDataPath: string
 
   beforeEach(() => {
-    userDataPath = mkdtempSync(join(tmpdir(), 'orca-runtime-env-ipc-'))
+    userDataPath = mkdtempSync(join(tmpdir(), 'korca-runtime-env-ipc-'))
     getPathMock.mockReset()
     getPathMock.mockReturnValue(userDataPath)
     handleMock.mockReset()

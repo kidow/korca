@@ -14,7 +14,7 @@ import AddRepoDialog from './AddRepoDialog'
 import AddProjectFromFolderDialog from './AddProjectFromFolderDialog'
 import ProjectAddedDialog from './ProjectAddedDialog'
 import WorktreeVisibilityDialog from './WorktreeVisibilityDialog'
-import OrcaYamlTrustDialog from './OrcaYamlTrustDialog'
+import KorcaYamlTrustDialog from './KorcaYamlTrustDialog'
 import type { VirtualizedScrollAnchor } from '@/hooks/useVirtualizedScrollAnchor'
 import { cn } from '@/lib/utils'
 import { FolderPlus, Loader2 } from 'lucide-react'
@@ -125,7 +125,7 @@ function Sidebar({
       <AddProjectFromFolderDialog />
       <ProjectAddedDialog />
       <WorktreeVisibilityDialog />
-      <OrcaYamlTrustDialog />
+      <KorcaYamlTrustDialog />
     </TooltipProvider>
   )
 }

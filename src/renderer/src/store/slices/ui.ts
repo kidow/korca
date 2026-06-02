@@ -10,7 +10,7 @@ import type {
   CustomPet,
   GitHubWorkItem,
   LinearIssue,
-  PersistedTrustedOrcaHooks,
+  PersistedTrustedKorcaHooks,
   PersistedUIState,
   StatusBarItem,
   TaskProvider,
@@ -58,7 +58,7 @@ import {
   normalizeWorkspaceStatuses
 } from '../../../../shared/workspace-statuses'
 import { normalizeKagiSessionLink } from '../../../../shared/browser-url'
-import type { OrcaHookScriptKind } from '../../lib/orca-hook-trust'
+import type { KorcaHookScriptKind } from '../../lib/korca-hook-trust'
 import {
   filterSetupScriptPromptDismissalsToValidRepos,
   getSetupScriptPromptDismissalKey
@@ -224,11 +224,11 @@ const VALID_LINEAR_MODES = new Set<NonNullable<TaskResumeState['linearMode']>>([
   'views'
 ])
 
-function filterTrustedOrcaHooksToValidRepos(
-  trust: PersistedTrustedOrcaHooks,
+function filterTrustedKorcaHooksToValidRepos(
+  trust: PersistedTrustedKorcaHooks,
   validRepoIds: Set<string>
-): PersistedTrustedOrcaHooks {
-  const next: PersistedTrustedOrcaHooks = {}
+): PersistedTrustedKorcaHooks {
+  const next: PersistedTrustedKorcaHooks = {}
   for (const [repoId, entry] of Object.entries(trust)) {
     if (validRepoIds.has(repoId)) {
       next[repoId] = entry
@@ -585,7 +585,7 @@ export type UISlice = {
     | 'feature-wall'
     | 'feature-tips'
     | 'new-workspace-composer'
-    | 'confirm-orca-yaml-hooks'
+    | 'confirm-korca-yaml-hooks'
   modalData: Record<string, unknown>
   openModal: (modal: UISlice['activeModal'], data?: Record<string, unknown>) => void
   closeModal: () => void
@@ -593,14 +593,14 @@ export type UISlice = {
   markFeatureTipsSeen: (ids: FeatureTipId[]) => void
   featureInteractions: FeatureInteractionState
   recordFeatureInteraction: (id: FeatureInteractionId) => void
-  trustedOrcaHooks: PersistedTrustedOrcaHooks
-  markOrcaHookScriptConfirmed: (
+  trustedKorcaHooks: PersistedTrustedKorcaHooks
+  markKorcaHookScriptConfirmed: (
     repoId: string,
-    kind: OrcaHookScriptKind,
+    kind: KorcaHookScriptKind,
     contentHash: string
   ) => void
-  markOrcaHookRepoAlwaysTrusted: (repoId: string) => void
-  clearOrcaHookTrustForRepo: (repoId: string) => void
+  markKorcaHookRepoAlwaysTrusted: (repoId: string) => void
+  clearKorcaHookTrustForRepo: (repoId: string) => void
   setupScriptPromptDismissedRepoIds: string[]
   dismissSetupScriptPrompt: (repoId: string) => void
   groupBy: 'none' | 'workspace-status' | 'repo' | 'pr-status'
@@ -1186,10 +1186,10 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
       }
       return { featureInteractions: next }
     }),
-  trustedOrcaHooks: {},
-  markOrcaHookScriptConfirmed: (repoId, kind, contentHash) =>
+  trustedKorcaHooks: {},
+  markKorcaHookScriptConfirmed: (repoId, kind, contentHash) =>
     set((s) => {
-      const existing = s.trustedOrcaHooks[repoId]
+      const existing = s.trustedKorcaHooks[repoId]
       const currentEntry = existing?.[kind]
       if (currentEntry?.contentHash === contentHash) {
         return s
@@ -1198,35 +1198,35 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
         ...existing,
         [kind]: { contentHash, approvedAt: Date.now() }
       }
-      const next = { ...s.trustedOrcaHooks, [repoId]: nextRepo }
-      window.api.ui.set({ trustedOrcaHooks: next }).catch(console.error)
-      return { trustedOrcaHooks: next }
+      const next = { ...s.trustedKorcaHooks, [repoId]: nextRepo }
+      window.api.ui.set({ trustedKorcaHooks: next }).catch(console.error)
+      return { trustedKorcaHooks: next }
     }),
-  markOrcaHookRepoAlwaysTrusted: (repoId) =>
+  markKorcaHookRepoAlwaysTrusted: (repoId) =>
     set((s) => {
-      const existing = s.trustedOrcaHooks[repoId]
+      const existing = s.trustedKorcaHooks[repoId]
       if (existing?.all) {
         return s
       }
       const next = {
-        ...s.trustedOrcaHooks,
+        ...s.trustedKorcaHooks,
         [repoId]: {
           ...existing,
           all: { approvedAt: Date.now() }
         }
       }
-      window.api.ui.set({ trustedOrcaHooks: next }).catch(console.error)
-      return { trustedOrcaHooks: next }
+      window.api.ui.set({ trustedKorcaHooks: next }).catch(console.error)
+      return { trustedKorcaHooks: next }
     }),
-  clearOrcaHookTrustForRepo: (repoId) =>
+  clearKorcaHookTrustForRepo: (repoId) =>
     set((s) => {
-      if (!(repoId in s.trustedOrcaHooks)) {
+      if (!(repoId in s.trustedKorcaHooks)) {
         return s
       }
-      const next = { ...s.trustedOrcaHooks }
+      const next = { ...s.trustedKorcaHooks }
       delete next[repoId]
-      window.api.ui.set({ trustedOrcaHooks: next }).catch(console.error)
-      return { trustedOrcaHooks: next }
+      window.api.ui.set({ trustedKorcaHooks: next }).catch(console.error)
+      return { trustedKorcaHooks: next }
     }),
   setupScriptPromptDismissedRepoIds: [],
   dismissSetupScriptPrompt: (repoId) =>
@@ -1552,8 +1552,8 @@ export const createUISlice: StateCreator<AppState, [], [], UISlice> = (set, get)
         taskResumeState: sanitizeTaskResumeState(ui.taskResumeState),
         featureTipsSeenIds: normalizeFeatureTipIds(ui.featureTipsSeenIds),
         featureInteractions: normalizeFeatureInteractions(ui.featureInteractions),
-        trustedOrcaHooks: filterTrustedOrcaHooksToValidRepos(
-          ui.trustedOrcaHooks ?? {},
+        trustedKorcaHooks: filterTrustedKorcaHooksToValidRepos(
+          ui.trustedKorcaHooks ?? {},
           validRepoIds
         ),
         setupScriptPromptDismissedRepoIds: filterSetupScriptPromptDismissalsToValidRepos(

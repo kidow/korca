@@ -2395,7 +2395,7 @@ export default function SessionScreen() {
   useEffect(() => {
     if (hostId && worktreeId) {
       void AsyncStorage.setItem(
-        'orca:last-visited-worktree',
+        'korca:last-visited-worktree',
         JSON.stringify({ hostId, worktreeId })
       )
     }

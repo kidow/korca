@@ -112,8 +112,8 @@ export function LinearApiKeyDialog({
   const resolvedDescription =
     description ??
     (workspace
-      ? `${workspace.organizationName}의 Personal API 키를 붙여넣으세요. 이 작업공간이 이미 연결되어 있으면 Orca가 저장된 키를 바꿉니다.`
-      : 'Orca가 사용할 Linear 작업공간의 Personal API 키를 붙여넣으세요. 해당 작업공간이 이미 연결되어 있으면 Orca가 저장된 키를 바꿉니다.')
+      ? `${workspace.organizationName}의 Personal API 키를 붙여넣으세요. 이 작업공간이 이미 연결되어 있으면 Korca가 저장된 키를 바꿉니다.`
+      : 'Korca가 사용할 Linear 작업공간의 Personal API 키를 붙여넣으세요. 해당 작업공간이 이미 연결되어 있으면 Korca가 저장된 키를 바꿉니다.')
   const storageCopy =
     runtimeTarget.kind === 'environment'
       ? '이 키는 활성 원격 런타임에 저장됩니다.'
@@ -172,7 +172,7 @@ export function LinearApiKeyDialog({
                 : null}
             </p>
             <p>
-              Orca가 해당 작업공간에서 계정이 접근할 수 있는 모든 팀을 보여줘야 한다면 전체 접근을 권장합니다. 제한된 키는 허용된 팀만 노출하며, 비공개 팀은 키 소유자에게 접근 권한이 있어야 합니다.
+              Korca가 해당 작업공간에서 계정이 접근할 수 있는 모든 팀을 보여줘야 한다면 전체 접근을 권장합니다. 제한된 키는 허용된 팀만 노출하며, 비공개 팀은 키 소유자에게 접근 권한이 있어야 합니다.
             </p>
             <p>
               멤버 API 키가 차단되어 있다면 작업공간 관리자에게 workspace API 설정에서 허용해 달라고 요청하세요.

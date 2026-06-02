@@ -1,18 +1,18 @@
-// Optional OTLP/HTTP traces exporter, gated on `ORCA_OTLP_TRACES_URL`.
+// Optional OTLP/HTTP traces exporter, gated on `KORCA_OTLP_TRACES_URL`.
 //
-// Mode 2 in telemetry-error-tracking.md — the user (or an Orca dogfooder)
+// Mode 2 in telemetry-error-tracking.md — the user (or an Korca dogfooder)
 // stands up a local Grafana LGTM stack with `docker run grafana/otel-lgtm`
 // and points the app at it via env vars:
 //
-//   ORCA_OTLP_TRACES_URL=http://localhost:4318/v1/traces
-//   ORCA_OTLP_METRICS_URL=http://localhost:4318/v1/metrics    (reserved for v2)
-//   ORCA_OTLP_SERVICE_NAME=orca-desktop-myname
+//   KORCA_OTLP_TRACES_URL=http://localhost:4318/v1/traces
+//   KORCA_OTLP_METRICS_URL=http://localhost:4318/v1/metrics    (reserved for v2)
+//   KORCA_OTLP_SERVICE_NAME=korca-desktop-myname
 //
-// Important per the spec: "no Orca-operated OTLP endpoint." This exporter
+// Important per the spec: "no Korca-operated OTLP endpoint." This exporter
 // is only ever pointed at a user-controlled URL — the README's privacy
 // section can truthfully say we do not run an OTLP ingest.
 //
-// Spec calls for "Effect's first-party OtlpTracer.make"; Orca does not have
+// Spec calls for "Effect's first-party OtlpTracer.make"; Korca does not have
 // Effect in the dependency tree, so we ship a minimal OTLP/HTTP-JSON
 // implementation here. The wire format is the OTLP/HTTP JSON encoding of
 // the OpenTelemetry trace ProtoBuf — well-documented, accepted by Grafana
@@ -58,11 +58,11 @@ type InternalSpan = {
  * not invoking it when consent disallows network paths.
  */
 export function createOtlpExporterFromEnv(): OtlpExporter | null {
-  const tracesUrl = process.env.ORCA_OTLP_TRACES_URL
+  const tracesUrl = process.env.KORCA_OTLP_TRACES_URL
   if (!tracesUrl || tracesUrl.length === 0) {
     return null
   }
-  const serviceName = process.env.ORCA_OTLP_SERVICE_NAME ?? 'orca-desktop'
+  const serviceName = process.env.KORCA_OTLP_SERVICE_NAME ?? 'korca-desktop'
   return createOtlpExporter({ tracesUrl, serviceName })
 }
 
@@ -267,7 +267,7 @@ function encodeOtlpPayload(serviceName: string, spans: RedactableSpan[]): OtlpPa
         },
         scopeSpans: [
           {
-            scope: { name: 'orca-observability' },
+            scope: { name: 'korca-observability' },
             spans: spans.map((s) => {
               // STATUS_CODE: UNSET=0, OK=1, ERROR=2 — Failure → ERROR, the
               // others map to UNSET so receivers default-render as "no

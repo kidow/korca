@@ -40,7 +40,7 @@ import {
 } from '../git-bash'
 import { WINDOWS_GIT_BASH_SHELL } from '../../shared/windows-terminal-shell'
 
-const PANE_IDENTITY_ENV_KEYS = ['ORCA_PANE_KEY', 'ORCA_TAB_ID', 'ORCA_WORKTREE_ID'] as const
+const PANE_IDENTITY_ENV_KEYS = ['KORCA_PANE_KEY', 'KORCA_TAB_ID', 'KORCA_WORKTREE_ID'] as const
 
 let ptyCounter = 0
 const ptyProcesses = new Map<string, pty.IPty>()
@@ -287,22 +287,22 @@ export class LocalPtyProvider implements IPtyProvider {
       ...args.env,
       TERM: 'xterm-256color',
       COLORTERM: 'truecolor',
-      TERM_PROGRAM: 'Orca',
+      TERM_PROGRAM: 'Korca',
       // Why: TUIs feature-gate on TERM_PROGRAM_VERSION (Neovim's termcap
-      // autodetection, bat/delta paging hints). Sourced from ORCA_APP_VERSION
+      // autodetection, bat/delta paging hints). Sourced from KORCA_APP_VERSION
       // which main/index.ts seeds from app.getVersion() at startup; the
       // fallback keeps tests and non-Electron runs working.
-      TERM_PROGRAM_VERSION: process.env.ORCA_APP_VERSION ?? '0.0.0-dev',
+      TERM_PROGRAM_VERSION: process.env.KORCA_APP_VERSION ?? '0.0.0-dev',
       // Why: opt tools (Claude Code, ls --hyperlink, etc.) into emitting OSC 8
       // hyperlinks. The `supports-hyperlinks` npm package gates on a hard-coded
       // TERM_PROGRAM allowlist (iTerm.app / WezTerm / vscode) and returns false
-      // for TERM_PROGRAM=Orca, so callers drop OSC 8 output entirely and emit
-      // bare text instead. xterm.js in Orca parses OSC 8 and the pane's
+      // for TERM_PROGRAM=Korca, so callers drop OSC 8 output entirely and emit
+      // bare text instead. xterm.js in Korca parses OSC 8 and the pane's
       // linkHandler routes clicks, so forcing the advertisement is safe and
       // restores clickable refs like `owner/repo#123` / `PR#123`.
       FORCE_HYPERLINK: '1'
     } as Record<string, string>
-    // Why: Orca can be launched from an Orca terminal while developing. Pane
+    // Why: Korca can be launched from an Korca terminal while developing. Pane
     // identity belongs to the child PTY, not the parent shell that spawned app.
     removeUnspecifiedPaneIdentityEnv(spawnEnv, args.env)
     removeInheritedNoColor(spawnEnv)
@@ -343,12 +343,12 @@ export class LocalPtyProvider implements IPtyProvider {
         if (codexHomeWslInfo) {
           if (launchWslDistro && launchWslDistro !== codexHomeWslInfo.distro) {
             delete finalEnv.CODEX_HOME
-            delete finalEnv.ORCA_CODEX_HOME
+            delete finalEnv.KORCA_CODEX_HOME
           } else {
             finalEnv.CODEX_HOME = codexHomeWslInfo.linuxPath
-            finalEnv.ORCA_CODEX_HOME = codexHomeWslInfo.linuxPath
+            finalEnv.KORCA_CODEX_HOME = codexHomeWslInfo.linuxPath
             // Why: wsl.exe only imports non-default env vars named in WSLENV.
-            addWslEnvKeys(finalEnv, ['CODEX_HOME', 'ORCA_CODEX_HOME'])
+            addWslEnvKeys(finalEnv, ['CODEX_HOME', 'KORCA_CODEX_HOME'])
             if (!launchWslDistro) {
               const resolved = resolveWindowsShellLaunchArgs(shellPath, cwd, defaultCwd, {
                 distro: codexHomeWslInfo.distro
@@ -359,12 +359,12 @@ export class LocalPtyProvider implements IPtyProvider {
             }
           }
         } else if (isHostCodexHomeForWsl(finalEnv.CODEX_HOME)) {
-          // Why: Orca's selected Codex runtime home is host-local. WSL Codex
+          // Why: Korca's selected Codex runtime home is host-local. WSL Codex
           // must use its Linux-side ~/.codex instead of a Windows path.
           delete finalEnv.CODEX_HOME
-          delete finalEnv.ORCA_CODEX_HOME
+          delete finalEnv.KORCA_CODEX_HOME
         } else if (finalEnv.CODEX_HOME) {
-          addWslEnvKeys(finalEnv, ['CODEX_HOME', 'ORCA_CODEX_HOME'])
+          addWslEnvKeys(finalEnv, ['CODEX_HOME', 'KORCA_CODEX_HOME'])
         }
         if (finalEnv.CLAUDE_CONFIG_DIR) {
           // Why: managed WSL Claude accounts pass a Linux CLAUDE_CONFIG_DIR
@@ -373,21 +373,21 @@ export class LocalPtyProvider implements IPtyProvider {
         }
       } else if (codexHomeWslInfo || isWslCodexHomeForHost(finalEnv.CODEX_HOME)) {
         // Why: WSL-managed Codex homes are Linux paths. Windows Codex cannot use
-        // them. ORCA_CODEX_HOME must go too because shell-ready scripts restore
+        // them. KORCA_CODEX_HOME must go too because shell-ready scripts restore
         // CODEX_HOME from it after user profiles run.
         delete finalEnv.CODEX_HOME
-        delete finalEnv.ORCA_CODEX_HOME
+        delete finalEnv.KORCA_CODEX_HOME
       }
     }
     if (!wslInfo && process.platform !== 'win32') {
-      // Why: any Orca-injected overlay env that user rc files can clobber
+      // Why: any Korca-injected overlay env that user rc files can clobber
       // needs the wrapper so the post-rc restore line runs.
       const needsNoMarkerWrapper =
-        finalEnv.ORCA_ATTRIBUTION_SHIM_DIR ||
-        finalEnv.ORCA_OPENCODE_CONFIG_DIR ||
-        finalEnv.ORCA_PI_CODING_AGENT_DIR ||
-        finalEnv.ORCA_OMP_CODING_AGENT_DIR ||
-        finalEnv.ORCA_CODEX_HOME
+        finalEnv.KORCA_ATTRIBUTION_SHIM_DIR ||
+        finalEnv.KORCA_OPENCODE_CONFIG_DIR ||
+        finalEnv.KORCA_PI_CODING_AGENT_DIR ||
+        finalEnv.KORCA_OMP_CODING_AGENT_DIR ||
+        finalEnv.KORCA_CODEX_HOME
       getFallbackShellReadyConfig = args.command
         ? (shell) => getShellReadyLaunchConfig(shell)
         : needsNoMarkerWrapper

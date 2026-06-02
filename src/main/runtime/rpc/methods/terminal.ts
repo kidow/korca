@@ -2,7 +2,7 @@
 import { z } from 'zod'
 import { defineMethod, defineStreamingMethod, type RpcAnyMethod } from '../core'
 import { OptionalFiniteNumber, OptionalString, requiredString } from '../schemas'
-import type { DriverState, OrcaRuntimeService } from '../../orca-runtime'
+import type { DriverState, KorcaRuntimeService } from '../../korca-runtime'
 import {
   TerminalStreamOpcode,
   decodeTerminalStreamJson,
@@ -127,7 +127,7 @@ function createTerminalOutputBatcher(onFlush: (data: string) => void): {
 }
 
 function isTerminalInputLockedForClient(
-  runtime: OrcaRuntimeService,
+  runtime: KorcaRuntimeService,
   ptyId: string,
   client: TerminalViewportClient | undefined
 ): boolean {
@@ -217,7 +217,7 @@ function sendSnapshotFrames(
 }
 
 async function serializeBudgetedMobileSnapshot(
-  runtime: OrcaRuntimeService,
+  runtime: KorcaRuntimeService,
   ptyId: string,
   isMobile: boolean
 ): Promise<SerializedSnapshot> {
@@ -245,7 +245,7 @@ async function serializeBudgetedMobileSnapshot(
 }
 
 async function updateViewportForClient(
-  runtime: OrcaRuntimeService,
+  runtime: KorcaRuntimeService,
   ptyId: string,
   client: TerminalViewportClient,
   viewport: { cols: number; rows: number },

@@ -325,9 +325,9 @@ export function IntegrationsPane(): React.JSX.Element {
             {bitbucketStatus === 'not-configured' ? (
               <>
                 <p className="text-xs text-muted-foreground">
-                  Set <span className="font-mono text-[11px]">ORCA_BITBUCKET_EMAIL</span> and{' '}
-                  <span className="font-mono text-[11px]">ORCA_BITBUCKET_API_TOKEN</span>, or set{' '}
-                  <span className="font-mono text-[11px]">ORCA_BITBUCKET_ACCESS_TOKEN</span>.
+                  Set <span className="font-mono text-[11px]">KORCA_BITBUCKET_EMAIL</span> and{' '}
+                  <span className="font-mono text-[11px]">KORCA_BITBUCKET_API_TOKEN</span>, or set{' '}
+                  <span className="font-mono text-[11px]">KORCA_BITBUCKET_ACCESS_TOKEN</span>.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -351,7 +351,7 @@ export function IntegrationsPane(): React.JSX.Element {
               <>
                 <p className="text-xs text-muted-foreground">
                   Bitbucket 자격 증명은 설정되어 있지만 인증할 수 없습니다. 토큰과 저장소
-                  권한을 확인하고, 환경 변수를 바꿨다면 Orca를 다시 시작하세요.
+                  권한을 확인하고, 환경 변수를 바꿨다면 Korca를 다시 시작하세요.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -410,9 +410,9 @@ export function IntegrationsPane(): React.JSX.Element {
             {azureDevOpsStatus === 'not-configured' ? (
               <>
                 <p className="text-xs text-muted-foreground">
-                  <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_TOKEN</span>을 설정하거나{' '}
-                  <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_ACCESS_TOKEN</span>을
-                  설정하세요. <span className="font-mono text-[11px]">ORCA_AZURE_DEVOPS_API_BASE_URL</span>은 Orca가 git 원격에서 API 기본 URL을 추론할 수 없을 때만 설정하세요.
+                  <span className="font-mono text-[11px]">KORCA_AZURE_DEVOPS_TOKEN</span>을 설정하거나{' '}
+                  <span className="font-mono text-[11px]">KORCA_AZURE_DEVOPS_ACCESS_TOKEN</span>을
+                  설정하세요. <span className="font-mono text-[11px]">KORCA_AZURE_DEVOPS_API_BASE_URL</span>은 Korca가 git 원격에서 API 기본 URL을 추론할 수 없을 때만 설정하세요.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -436,7 +436,7 @@ export function IntegrationsPane(): React.JSX.Element {
               <>
                 <p className="text-xs text-muted-foreground">
                   Azure DevOps 자격 증명은 설정되어 있지만 인증할 수 없습니다. 토큰, API 기본
-                  URL, 저장소 권한을 확인하고, 환경 변수를 바꿨다면 Orca를 다시 시작하세요.
+                  URL, 저장소 권한을 확인하고, 환경 변수를 바꿨다면 Korca를 다시 시작하세요.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -496,10 +496,10 @@ export function IntegrationsPane(): React.JSX.Element {
               <>
                 <p className="text-xs text-muted-foreground">
                   Public repositories are detected from their git remote. Set{' '}
-                  <span className="font-mono text-[11px]">ORCA_GITEA_TOKEN</span> for private
+                  <span className="font-mono text-[11px]">KORCA_GITEA_TOKEN</span> for private
                   repositories, and set{' '}
-                  <span className="font-mono text-[11px]">ORCA_GITEA_API_BASE_URL</span> only when
-                  Orca cannot derive the API URL from the remote.
+                  <span className="font-mono text-[11px]">KORCA_GITEA_API_BASE_URL</span> only when
+                  Korca cannot derive the API URL from the remote.
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -521,7 +521,7 @@ export function IntegrationsPane(): React.JSX.Element {
               <>
                 <p className="text-xs text-muted-foreground">
                   Gitea credentials are configured but could not authenticate. Check the token, API
-                  base URL, and repository permissions, then restart Orca if environment variables
+                  base URL, and repository permissions, then restart Korca if environment variables
                   changed.
                 </p>
                 <div className="flex items-center gap-2">

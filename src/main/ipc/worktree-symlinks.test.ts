@@ -22,7 +22,7 @@ describe('createWorktreeSymlinks', () => {
   let error: ReturnType<typeof vi.spyOn>
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), 'orca-symlinks-'))
+    root = mkdtempSync(join(tmpdir(), 'korca-symlinks-'))
     primary = join(root, 'primary')
     worktree = join(root, 'worktree')
     mkdirSync(primary, { recursive: true })
@@ -169,7 +169,7 @@ describe('removeWorktreeSymlinks', () => {
   let error: ReturnType<typeof vi.spyOn>
 
   beforeEach(() => {
-    root = mkdtempSync(join(tmpdir(), 'orca-unlink-'))
+    root = mkdtempSync(join(tmpdir(), 'korca-unlink-'))
     primary = join(root, 'primary')
     worktree = join(root, 'worktree')
     mkdirSync(primary, { recursive: true })

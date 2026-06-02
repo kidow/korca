@@ -4,14 +4,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const {
   callMock,
-  serveOrcaAppMock,
+  serveKorcaAppMock,
   getDefaultUserDataPathMock,
   addEnvironmentFromPairingCodeMock,
   listEnvironmentsMock
 } = vi.hoisted(() => ({
   callMock: vi.fn(),
-  serveOrcaAppMock: vi.fn(),
-  getDefaultUserDataPathMock: vi.fn(() => '/tmp/orca-user-data'),
+  serveKorcaAppMock: vi.fn(),
+  getDefaultUserDataPathMock: vi.fn(() => '/tmp/korca-user-data'),
   addEnvironmentFromPairingCodeMock: vi.fn(),
   listEnvironmentsMock: vi.fn()
 }))
@@ -21,7 +21,7 @@ vi.mock('./runtime-client', () => {
     readonly isRemote: boolean
     call = callMock
     getCliStatus = vi.fn()
-    openOrca = vi.fn()
+    openKorca = vi.fn()
 
     constructor(
       _userDataPath?: string,
@@ -31,10 +31,10 @@ vi.mock('./runtime-client', () => {
     ) {
       const effectivePairingCode =
         remotePairingCode === undefined
-          ? (process.env.ORCA_PAIRING_CODE ?? process.env.ORCA_REMOTE_PAIRING)
+          ? (process.env.KORCA_PAIRING_CODE ?? process.env.KORCA_REMOTE_PAIRING)
           : remotePairingCode
       const effectiveEnvironment =
-        environmentSelector === undefined ? process.env.ORCA_ENVIRONMENT : environmentSelector
+        environmentSelector === undefined ? process.env.KORCA_ENVIRONMENT : environmentSelector
       if (effectivePairingCode && effectiveEnvironment) {
         throw new RuntimeClientError(
           'invalid_argument',
@@ -67,7 +67,7 @@ vi.mock('./runtime-client', () => {
     RuntimeClient,
     RuntimeClientError,
     RuntimeRpcFailureError,
-    serveOrcaApp: serveOrcaAppMock,
+    serveKorcaApp: serveKorcaAppMock,
     getDefaultUserDataPath: getDefaultUserDataPathMock
   }
 })
@@ -113,18 +113,18 @@ describe('COMMAND_SPECS collision check', () => {
   })
 })
 
-describe('orca cli worktree awareness', () => {
-  const originalTerminalHandle = process.env.ORCA_TERMINAL_HANDLE
-  const originalUserDataPath = process.env.ORCA_USER_DATA_PATH
-  const originalPairingCode = process.env.ORCA_PAIRING_CODE
-  const originalRemotePairing = process.env.ORCA_REMOTE_PAIRING
-  const originalEnvironment = process.env.ORCA_ENVIRONMENT
+describe('korca cli worktree awareness', () => {
+  const originalTerminalHandle = process.env.KORCA_TERMINAL_HANDLE
+  const originalUserDataPath = process.env.KORCA_USER_DATA_PATH
+  const originalPairingCode = process.env.KORCA_PAIRING_CODE
+  const originalRemotePairing = process.env.KORCA_REMOTE_PAIRING
+  const originalEnvironment = process.env.KORCA_ENVIRONMENT
 
   beforeEach(() => {
     callMock.mockReset()
-    delete process.env.ORCA_TERMINAL_HANDLE
-    delete process.env.ORCA_USER_DATA_PATH
-    serveOrcaAppMock.mockReset()
+    delete process.env.KORCA_TERMINAL_HANDLE
+    delete process.env.KORCA_USER_DATA_PATH
+    serveKorcaAppMock.mockReset()
     getDefaultUserDataPathMock.mockClear()
     addEnvironmentFromPairingCodeMock.mockReset()
     listEnvironmentsMock.mockReset()
@@ -153,29 +153,29 @@ describe('orca cli worktree awareness', () => {
   afterEach(() => {
     vi.restoreAllMocks()
     if (originalTerminalHandle === undefined) {
-      delete process.env.ORCA_TERMINAL_HANDLE
+      delete process.env.KORCA_TERMINAL_HANDLE
     } else {
-      process.env.ORCA_TERMINAL_HANDLE = originalTerminalHandle
+      process.env.KORCA_TERMINAL_HANDLE = originalTerminalHandle
     }
     if (originalUserDataPath === undefined) {
-      delete process.env.ORCA_USER_DATA_PATH
+      delete process.env.KORCA_USER_DATA_PATH
     } else {
-      process.env.ORCA_USER_DATA_PATH = originalUserDataPath
+      process.env.KORCA_USER_DATA_PATH = originalUserDataPath
     }
     if (originalPairingCode === undefined) {
-      delete process.env.ORCA_PAIRING_CODE
+      delete process.env.KORCA_PAIRING_CODE
     } else {
-      process.env.ORCA_PAIRING_CODE = originalPairingCode
+      process.env.KORCA_PAIRING_CODE = originalPairingCode
     }
     if (originalRemotePairing === undefined) {
-      delete process.env.ORCA_REMOTE_PAIRING
+      delete process.env.KORCA_REMOTE_PAIRING
     } else {
-      process.env.ORCA_REMOTE_PAIRING = originalRemotePairing
+      process.env.KORCA_REMOTE_PAIRING = originalRemotePairing
     }
     if (originalEnvironment === undefined) {
-      delete process.env.ORCA_ENVIRONMENT
+      delete process.env.KORCA_ENVIRONMENT
     } else {
-      process.env.ORCA_ENVIRONMENT = originalEnvironment
+      process.env.KORCA_ENVIRONMENT = originalEnvironment
     }
   })
 
@@ -694,7 +694,7 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('passes caller terminal handle through worktree.create with cwd fallback', async () => {
-    process.env.ORCA_TERMINAL_HANDLE = 'term_parent'
+    process.env.KORCA_TERMINAL_HANDLE = 'term_parent'
     queueFixtures(
       callMock,
       worktreeListFixture([buildWorktree('/tmp/repo', 'main', 'abc', 'repo-1')]),
@@ -729,15 +729,15 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('starts a foreground headless server through `serve`', async () => {
-    serveOrcaAppMock.mockResolvedValue(0)
-    process.env.ORCA_ENVIRONMENT = 'stale-env'
+    serveKorcaAppMock.mockResolvedValue(0)
+    process.env.KORCA_ENVIRONMENT = 'stale-env'
 
     await main(
       ['serve', '--json', '--port', '6768', '--pairing-address', '100.64.1.20', '--no-pairing'],
       '/tmp/repo'
     )
 
-    expect(serveOrcaAppMock).toHaveBeenCalledWith({
+    expect(serveKorcaAppMock).toHaveBeenCalledWith({
       json: true,
       port: '6768',
       pairingAddress: '100.64.1.20',
@@ -747,14 +747,14 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('starts a foreground headless server with mobile pairing enabled', async () => {
-    serveOrcaAppMock.mockResolvedValue(0)
+    serveKorcaAppMock.mockResolvedValue(0)
 
     await main(
       ['serve', '--pairing-address', '100.64.1.20', '--mobile-pairing', '--json'],
       '/tmp/repo'
     )
 
-    expect(serveOrcaAppMock).toHaveBeenCalledWith({
+    expect(serveKorcaAppMock).toHaveBeenCalledWith({
       json: true,
       port: null,
       pairingAddress: '100.64.1.20',
@@ -770,7 +770,7 @@ describe('orca cli worktree awareness', () => {
 
     await main(['serve', '--mobile-pairing', '--no-pairing', '--json'], '/tmp/repo')
 
-    expect(serveOrcaAppMock).not.toHaveBeenCalled()
+    expect(serveKorcaAppMock).not.toHaveBeenCalled()
     expect([...logSpy.mock.calls, ...errSpy.mock.calls].flat().join('\n')).toContain(
       'Use either --mobile-pairing or --no-pairing, not both.'
     )
@@ -786,7 +786,7 @@ describe('orca cli worktree awareness', () => {
 
     await main(['serve', '--port', 'not-a-port', '--json'], '/tmp/repo')
 
-    expect(serveOrcaAppMock).not.toHaveBeenCalled()
+    expect(serveKorcaAppMock).not.toHaveBeenCalled()
     expect([...logSpy.mock.calls, ...errSpy.mock.calls].flat().join('\n')).toContain(
       'Invalid --port value: not-a-port'
     )
@@ -802,7 +802,7 @@ describe('orca cli worktree awareness', () => {
 
     await main(['serve', '--port', '--json'], '/tmp/repo')
 
-    expect(serveOrcaAppMock).not.toHaveBeenCalled()
+    expect(serveKorcaAppMock).not.toHaveBeenCalled()
     expect([...logSpy.mock.calls, ...errSpy.mock.calls].flat().join('\n')).toContain(
       'Missing value for --port.'
     )
@@ -811,31 +811,31 @@ describe('orca cli worktree awareness', () => {
     process.exitCode = priorExitCode
   })
 
-  it('lists saved environments even when ORCA_ENVIRONMENT is set', async () => {
-    process.env.ORCA_ENVIRONMENT = 'stale-env'
+  it('lists saved environments even when KORCA_ENVIRONMENT is set', async () => {
+    process.env.KORCA_ENVIRONMENT = 'stale-env'
     listEnvironmentsMock.mockReturnValue([addEnvironmentFromPairingCodeMock()])
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
 
     await main(['environment', 'list', '--json'], '/tmp/repo')
 
-    expect(listEnvironmentsMock).toHaveBeenCalledWith('/tmp/orca-user-data')
+    expect(listEnvironmentsMock).toHaveBeenCalledWith('/tmp/korca-user-data')
     expect(callMock).not.toHaveBeenCalled()
     expect(logSpy.mock.calls[0]?.[0]).not.toContain('token')
     expect(logSpy.mock.calls[0]?.[0]).not.toContain('publicKeyB64')
   })
 
-  it('adds saved environments even when ORCA_ENVIRONMENT is set', async () => {
-    process.env.ORCA_ENVIRONMENT = 'stale-env'
+  it('adds saved environments even when KORCA_ENVIRONMENT is set', async () => {
+    process.env.KORCA_ENVIRONMENT = 'stale-env'
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
 
     await main(
-      ['environment', 'add', '--name', 'desk', '--pairing-code', 'orca://pair#abc', '--json'],
+      ['environment', 'add', '--name', 'desk', '--pairing-code', 'korca://pair#abc', '--json'],
       '/tmp/repo'
     )
 
-    expect(addEnvironmentFromPairingCodeMock).toHaveBeenCalledWith('/tmp/orca-user-data', {
+    expect(addEnvironmentFromPairingCodeMock).toHaveBeenCalledWith('/tmp/korca-user-data', {
       name: 'desk',
-      pairingCode: 'orca://pair#abc'
+      pairingCode: 'korca://pair#abc'
     })
     expect(callMock).not.toHaveBeenCalled()
     expect(logSpy.mock.calls[0]?.[0]).not.toContain('token')
@@ -887,7 +887,7 @@ describe('orca cli worktree awareness', () => {
       okFixture('req_repo_add', {
         repo: {
           id: 'repo-1',
-          path: '/srv/orca/web',
+          path: '/srv/korca/web',
           displayName: 'web'
         }
       })
@@ -895,12 +895,12 @@ describe('orca cli worktree awareness', () => {
     vi.spyOn(console, 'log').mockImplementation(() => {})
 
     await main(
-      ['repo', 'add', '--path', '/srv/orca/web', '--pairing-code', 'remote-runtime', '--json'],
+      ['repo', 'add', '--path', '/srv/korca/web', '--pairing-code', 'remote-runtime', '--json'],
       '/tmp/repo'
     )
 
     expect(callMock).toHaveBeenCalledWith('repo.add', {
-      path: '/srv/orca/web'
+      path: '/srv/korca/web'
     })
   })
 
@@ -1350,7 +1350,7 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('formats group orchestration sends in text mode', async () => {
-    process.env.ORCA_TERMINAL_HANDLE = 'term_sender'
+    process.env.KORCA_TERMINAL_HANDLE = 'term_sender'
     callMock.mockResolvedValueOnce({
       id: 'req_send',
       ok: true,
@@ -1429,7 +1429,7 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('rejects unknown task-update status with an enum-aware error', async () => {
-    process.env.ORCA_TERMINAL_HANDLE = 'term_coord'
+    process.env.KORCA_TERMINAL_HANDLE = 'term_coord'
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const priorExitCode = process.exitCode
@@ -1454,7 +1454,7 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('passes the caller terminal handle through orchestration task-create', async () => {
-    process.env.ORCA_TERMINAL_HANDLE = 'term_creator'
+    process.env.KORCA_TERMINAL_HANDLE = 'term_creator'
     callMock.mockResolvedValueOnce({
       id: 'req_task_create',
       ok: true,
@@ -1478,8 +1478,8 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('passes dev mode to injected orchestration dispatches', async () => {
-    process.env.ORCA_TERMINAL_HANDLE = 'term_sender'
-    process.env.ORCA_USER_DATA_PATH = '/tmp/orca-dev'
+    process.env.KORCA_TERMINAL_HANDLE = 'term_sender'
+    process.env.KORCA_USER_DATA_PATH = '/tmp/korca-dev'
     callMock.mockResolvedValueOnce({
       id: 'req_dispatch',
       ok: true,
@@ -1547,7 +1547,7 @@ describe('orca cli worktree awareness', () => {
       okFixture('req_terminal_create', {
         terminal: {
           handle: 'term_1',
-          worktreeId: 'repo-1::/srv/orca/feature',
+          worktreeId: 'repo-1::/srv/korca/feature',
           title: 'Server terminal'
         }
       })
@@ -1559,7 +1559,7 @@ describe('orca cli worktree awareness', () => {
         'terminal',
         'create',
         '--worktree',
-        'id:repo-1::/srv/orca/feature',
+        'id:repo-1::/srv/korca/feature',
         '--pairing-code',
         'remote-runtime',
         '--json'
@@ -1568,7 +1568,7 @@ describe('orca cli worktree awareness', () => {
     )
 
     expect(callMock).toHaveBeenCalledWith('terminal.create', {
-      worktree: 'id:repo-1::/srv/orca/feature',
+      worktree: 'id:repo-1::/srv/korca/feature',
       command: undefined,
       title: undefined,
       focus: false
@@ -1576,7 +1576,7 @@ describe('orca cli worktree awareness', () => {
   })
 
   it('exits nonzero when terminal wait returns an unsatisfied blocked result', async () => {
-    process.env.ORCA_TERMINAL_HANDLE = 'term_worker'
+    process.env.KORCA_TERMINAL_HANDLE = 'term_worker'
     callMock.mockResolvedValueOnce({
       id: 'req_terminal_wait',
       ok: true,
@@ -1622,7 +1622,7 @@ describe('orca cli worktree awareness', () => {
       okFixture('req_terminal_create', {
         terminal: {
           handle: 'term_1',
-          worktreeId: 'repo-1::/srv/orca/feature',
+          worktreeId: 'repo-1::/srv/korca/feature',
           title: 'Codex'
         }
       })
@@ -1634,7 +1634,7 @@ describe('orca cli worktree awareness', () => {
         'terminal',
         'create',
         '--worktree',
-        'id:repo-1::/srv/orca/feature',
+        'id:repo-1::/srv/korca/feature',
         '--command',
         'codex',
         '--title',
@@ -1647,7 +1647,7 @@ describe('orca cli worktree awareness', () => {
     )
 
     expect(callMock).toHaveBeenCalledWith('terminal.create', {
-      worktree: 'id:repo-1::/srv/orca/feature',
+      worktree: 'id:repo-1::/srv/korca/feature',
       command: 'codex',
       title: 'Codex',
       focus: false
@@ -1664,7 +1664,7 @@ describe('orca cli worktree awareness', () => {
           url: 'https://example.com',
           title: 'Example',
           active: true,
-          worktreeId: 'repo-1::/srv/orca/feature'
+          worktreeId: 'repo-1::/srv/korca/feature'
         }
       })
     )

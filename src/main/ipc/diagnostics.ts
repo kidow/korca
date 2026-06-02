@@ -57,23 +57,23 @@ const pendingBundles = new Map<string, PendingBundle>()
 // at which point the upload path returns a clear "endpoint not configured"
 // error rather than POSTing to a placeholder.
 //
-// The dev escape hatch is `ORCA_DIAGNOSTICS_TOKEN_URL` — set this env var
+// The dev escape hatch is `KORCA_DIAGNOSTICS_TOKEN_URL` — set this env var
 // to point at a local server during development. Mirrors the
-// `ORCA_OTLP_TRACES_URL` env-var pattern for OTLP.
+// `KORCA_OTLP_TRACES_URL` env-var pattern for OTLP.
 function resolveBuildTokenEndpoint(): string | null {
   const endpoint =
-    typeof ORCA_DIAGNOSTICS_TOKEN_URL !== 'undefined'
-      ? ORCA_DIAGNOSTICS_TOKEN_URL
-      : ((globalThis as { ORCA_DIAGNOSTICS_TOKEN_URL?: string | null })
-          .ORCA_DIAGNOSTICS_TOKEN_URL ?? null)
+    typeof KORCA_DIAGNOSTICS_TOKEN_URL !== 'undefined'
+      ? KORCA_DIAGNOSTICS_TOKEN_URL
+      : ((globalThis as { KORCA_DIAGNOSTICS_TOKEN_URL?: string | null })
+          .KORCA_DIAGNOSTICS_TOKEN_URL ?? null)
   return typeof endpoint === 'string' && endpoint.length > 0 ? endpoint : null
 }
 
 function resolveBuildIdentity(): 'stable' | 'rc' | null {
   const ident =
-    typeof ORCA_BUILD_IDENTITY !== 'undefined'
-      ? ORCA_BUILD_IDENTITY
-      : ((globalThis as { ORCA_BUILD_IDENTITY?: 'stable' | 'rc' | null }).ORCA_BUILD_IDENTITY ??
+    typeof KORCA_BUILD_IDENTITY !== 'undefined'
+      ? KORCA_BUILD_IDENTITY
+      : ((globalThis as { KORCA_BUILD_IDENTITY?: 'stable' | 'rc' | null }).KORCA_BUILD_IDENTITY ??
         null)
   return ident === 'stable' || ident === 'rc' ? ident : null
 }
@@ -81,20 +81,20 @@ function resolveBuildIdentity(): 'stable' | 'rc' | null {
 function resolveTokenEndpoint(): string | null {
   const buildEndpoint = resolveBuildTokenEndpoint()
   // Official builds must stay pinned to the CI-substituted endpoint; the
-  // upload confirmation says "Orca support", so env cannot redirect it.
+  // upload confirmation says "Korca support", so env cannot redirect it.
   if (resolveBuildIdentity()) {
     return buildEndpoint
   }
   // Env wins only for dev / unofficial builds so contributors can point a
   // local packaged app at staging without re-running a release pipeline.
-  const fromEnv = process.env.ORCA_DIAGNOSTICS_TOKEN_URL
+  const fromEnv = process.env.KORCA_DIAGNOSTICS_TOKEN_URL
   if (fromEnv && fromEnv.length > 0) {
     return fromEnv
   }
   return buildEndpoint
 }
 
-function resolveOrcaChannel(): 'stable' | 'rc' | 'dev' {
+function resolveKorcaChannel(): 'stable' | 'rc' | 'dev' {
   const ident = resolveBuildIdentity()
   if (ident === 'stable' || ident === 'rc') {
     return ident
@@ -214,7 +214,7 @@ function getPreviewDirectory(): string {
   } catch {
     base = tmpdir()
   }
-  return join(base, 'orca-diagnostic-bundle-previews')
+  return join(base, 'korca-diagnostic-bundle-previews')
 }
 
 function writeBundlePreviewFile(bundle: CollectedBundle): string {
@@ -252,7 +252,7 @@ async function confirmBundleUpload(bundle: CollectedBundle): Promise<void> {
     defaultId: 1,
     cancelId: 1,
     title: 'Upload diagnostic bundle?',
-    message: 'Upload diagnostic bundle to Orca support?',
+    message: 'Upload diagnostic bundle to Korca support?',
     detail: `Bundle ${bundle.bundleSubmissionId}\n${bundle.spanCount} span(s), ${Math.round(
       bundle.bytes / 1024
     )} KB\n\nThe exact redacted NDJSON preview was opened before this upload confirmation.`
@@ -307,7 +307,7 @@ export function registerDiagnosticsHandlers(): void {
         platform: osPlatform(),
         arch: osArch(),
         osRelease: osRelease(),
-        orcaChannel: resolveOrcaChannel(),
+        korcaChannel: resolveKorcaChannel(),
         ...(lookbackMinutes !== undefined ? { lookbackMinutes } : {})
       })
       rememberBundle(bundle)

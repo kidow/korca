@@ -26,7 +26,7 @@ export function UpdateStatusSegment({
       return {
         icon: <Download className="size-3 text-muted-foreground" />,
         label: `${pct}%`,
-        tooltip: `Orca v${status.version} 다운로드 중… ${pct}%`,
+        tooltip: `Korca v${status.version} 다운로드 중… ${pct}%`,
         ariaLabel: `업데이트 다운로드 중, ${pct}퍼센트. 눌러서 펼치기.`
       }
     }
@@ -34,7 +34,7 @@ export function UpdateStatusSegment({
       return {
         icon: <CheckCircle2 className="size-3 text-emerald-500" />,
         label: '업데이트 준비됨',
-        tooltip: `Orca v${status.version} 설치 준비 완료`,
+        tooltip: `Korca v${status.version} 설치 준비 완료`,
         ariaLabel: '업데이트 설치 준비 완료. 눌러서 펼치기.'
       }
     }

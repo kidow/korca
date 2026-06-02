@@ -78,7 +78,7 @@ export class HeadlessEmulator {
     // cursor position, and paste mode); a daemon-side reply would be a
     // double-reply with wrong values. OSC 11 was the visible casualty:
     // Claude Code's /theme auto always saw the emulator's default-black
-    // background regardless of Orca's configured terminal theme.
+    // background regardless of Korca's configured terminal theme.
   }
 
   write(data: string): Promise<void> {

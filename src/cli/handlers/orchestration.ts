@@ -20,7 +20,7 @@ const DEFAULT_HEARTBEAT_INTERVAL_MS = 15_000
 // should never set this — there is no surface documentation. A bogus value
 // falls back to the default rather than disabling the heartbeat.
 function resolveHeartbeatIntervalMs(): number {
-  const raw = process.env.ORCA_HEARTBEAT_INTERVAL_MS
+  const raw = process.env.KORCA_HEARTBEAT_INTERVAL_MS
   if (!raw) {
     return DEFAULT_HEARTBEAT_INTERVAL_MS
   }
@@ -82,7 +82,7 @@ async function resolveOrchestrationTerminalHandle(
   if (explicit) {
     return explicit
   }
-  const envHandle = process.env.ORCA_TERMINAL_HANDLE
+  const envHandle = process.env.KORCA_TERMINAL_HANDLE
   if (envHandle && envHandle.length > 0) {
     return envHandle
   }
@@ -90,7 +90,7 @@ async function resolveOrchestrationTerminalHandle(
 }
 
 function isDevCliInvocation(): boolean {
-  return process.env.ORCA_USER_DATA_PATH?.includes('orca-dev') ?? false
+  return process.env.KORCA_USER_DATA_PATH?.includes('korca-dev') ?? false
 }
 
 function getOptionalPositiveIntegerValueFlag(
@@ -229,9 +229,9 @@ export const ORCHESTRATION_HANDLERS: Record<string, CommandHandler> = {
 
   'orchestration task-create': async ({ flags, client, json }) => {
     const callerTerminalHandle =
-      typeof process.env.ORCA_TERMINAL_HANDLE === 'string' &&
-      process.env.ORCA_TERMINAL_HANDLE.length > 0
-        ? process.env.ORCA_TERMINAL_HANDLE
+      typeof process.env.KORCA_TERMINAL_HANDLE === 'string' &&
+      process.env.KORCA_TERMINAL_HANDLE.length > 0
+        ? process.env.KORCA_TERMINAL_HANDLE
         : undefined
     const result = await client.call<{ task: { id: string; status: string } }>(
       'orchestration.taskCreate',
@@ -349,7 +349,7 @@ export const ORCHESTRATION_HANDLERS: Record<string, CommandHandler> = {
     )
     // Why: deliberate bypass of `printResult`. `--json` on `ask` emits a
     // single-line bare JSON object (no RPC envelope, no multi-line pretty-
-    // print) so workers can pipe `orca orchestration ask … --json | jq -r
+    // print) so workers can pipe `korca orchestration ask … --json | jq -r
     // .answer` without reaching into a `result` envelope. This diverges from
     // every other orchestration verb; called out in the commit message and
     // guarded by a unit test in orchestration.test.ts.

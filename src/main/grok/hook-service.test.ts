@@ -21,7 +21,7 @@ describe('GrokHookService', () => {
   let homeDir: string
 
   beforeEach(() => {
-    homeDir = mkdtempSync(join(tmpdir(), 'orca-grok-home-'))
+    homeDir = mkdtempSync(join(tmpdir(), 'korca-grok-home-'))
     homedirMock.mockReturnValue(homeDir)
   })
 
@@ -34,11 +34,11 @@ describe('GrokHookService', () => {
     const status = new GrokHookService().install()
 
     expect(status.state).toBe('installed')
-    expect(status.configPath).toBe(join(homeDir, '.grok', 'hooks', 'orca-status.json'))
+    expect(status.configPath).toBe(join(homeDir, '.grok', 'hooks', 'korca-status.json'))
     expect(status.managedHooksPresent).toBe(true)
 
     const config = JSON.parse(
-      readFileSync(join(homeDir, '.grok', 'hooks', 'orca-status.json'), 'utf8')
+      readFileSync(join(homeDir, '.grok', 'hooks', 'korca-status.json'), 'utf8')
     ) as {
       hooks: Record<string, { matcher?: string; hooks: { command: string }[] }[]>
     }
@@ -58,15 +58,15 @@ describe('GrokHookService', () => {
     expect(config.hooks.PostToolUseFailure[0].matcher).toBe('*')
     expect(config.hooks.Notification[0].matcher).toBeUndefined()
     expect(config.hooks.PreToolUse[0].hooks[0].command).toContain('grok-hook')
-    expect(config.hooks.PreToolUse[0].hooks[0].command).toContain(join(homeDir, '.orca'))
+    expect(config.hooks.PreToolUse[0].hooks[0].command).toContain(join(homeDir, '.korca'))
 
-    const script = readFileSync(join(homeDir, '.orca', 'agent-hooks', 'grok-hook.sh'), 'utf8')
+    const script = readFileSync(join(homeDir, '.korca', 'agent-hooks', 'grok-hook.sh'), 'utf8')
     expect(script).toContain('/hook/grok')
     expect(script).toContain('payload=$(cat)')
   })
 
-  it('preserves user-authored hook entries in the Orca Grok config file', () => {
-    const configPath = join(homeDir, '.grok', 'hooks', 'orca-status.json')
+  it('preserves user-authored hook entries in the Korca Grok config file', () => {
+    const configPath = join(homeDir, '.grok', 'hooks', 'korca-status.json')
     mkdirSync(dirname(configPath), { recursive: true })
     writeFileSync(
       configPath,

@@ -71,14 +71,14 @@ function getSystemNotificationSettingsCopy(
   if (platform === 'darwin') {
     return {
       failureTitle: 'macOS가 알림을 표시하지 않았습니다',
-      failureDescription: '시스템 설정에서 Orca의 알림 허용을 켜세요.'
+      failureDescription: '시스템 설정에서 Korca의 알림 허용을 켜세요.'
     }
   }
 
   if (platform === 'win32') {
     return {
       failureTitle: 'Windows가 알림을 표시하지 않았습니다',
-      failureDescription: 'Windows 설정에서 Orca의 알림을 켜세요.'
+      failureDescription: 'Windows 설정에서 Korca의 알림을 켜세요.'
     }
   }
 
@@ -119,7 +119,7 @@ export async function sendNotificationSettingsTestNotification(
       // Why: Electron's native 'show' event can fire even when macOS silently
       // drops the banner because the per-app Allow notifications switch is off.
       toast.message('테스트 알림을 요청했습니다', {
-        description: 'macOS 배너가 보이지 않으면 시스템 설정에서 Orca의 알림 허용을 켜세요.',
+        description: 'macOS 배너가 보이지 않으면 시스템 설정에서 Korca의 알림 허용을 켜세요.',
         action: {
           label: '설정 열기',
           onClick: () => {
@@ -147,7 +147,7 @@ export async function sendNotificationSettingsTestNotification(
       })
     } else {
       toast.error('시스템이 알림을 표시하지 않았습니다', {
-        description: 'Orca의 데스크톱 알림 설정을 확인하세요.'
+        description: 'Korca의 데스크톱 알림 설정을 확인하세요.'
       })
     }
     return
@@ -314,7 +314,7 @@ export function NotificationsPane({
             <Label>알림음</Label>
           </div>
           <p className="text-xs text-muted-foreground">
-            데스크톱 알림이 도착했을 때 Orca가 재생할 알림음을 고르세요.
+            데스크톱 알림이 도착했을 때 Korca가 재생할 알림음을 고르세요.
           </p>
         </div>
         <Select

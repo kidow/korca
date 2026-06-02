@@ -87,7 +87,7 @@ describe('registerNotificationHandlers', () => {
   beforeEach(() => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-03-28T16:00:00Z'))
-    tempDir = mkdtempSync(join(tmpdir(), 'orca-notification-test-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'korca-notification-test-'))
     removeHandlerMock.mockReset()
     handleMock.mockReset()
     notificationCtorMock.mockClear()
@@ -177,9 +177,9 @@ describe('registerNotificationHandlers', () => {
 
   it('opens the current macOS app notification settings entry', () => {
     const originalPlatform = process.platform
-    const originalBundleId = process.env.ORCA_DEV_MACOS_BUNDLE_ID
+    const originalBundleId = process.env.KORCA_DEV_MACOS_BUNDLE_ID
     Object.defineProperty(process, 'platform', { value: 'darwin', configurable: true })
-    process.env.ORCA_DEV_MACOS_BUNDLE_ID = 'com.stablyai.orca.dev.fb5a47066f08'
+    process.env.KORCA_DEV_MACOS_BUNDLE_ID = 'com.stablyai.korca.dev.fb5a47066f08'
     try {
       registerNotificationHandlers({
         getSettings: () => ({
@@ -196,14 +196,14 @@ describe('registerNotificationHandlers', () => {
       handler({})
 
       expect(shellOpenExternalMock).toHaveBeenCalledWith(
-        'x-apple.systempreferences:com.apple.Notifications-Settings.extension?id=com.stablyai.orca.dev.fb5a47066f08'
+        'x-apple.systempreferences:com.apple.Notifications-Settings.extension?id=com.stablyai.korca.dev.fb5a47066f08'
       )
     } finally {
       Object.defineProperty(process, 'platform', { value: originalPlatform, configurable: true })
       if (originalBundleId === undefined) {
-        delete process.env.ORCA_DEV_MACOS_BUNDLE_ID
+        delete process.env.KORCA_DEV_MACOS_BUNDLE_ID
       } else {
-        process.env.ORCA_DEV_MACOS_BUNDLE_ID = originalBundleId
+        process.env.KORCA_DEV_MACOS_BUNDLE_ID = originalBundleId
       }
     }
   })
@@ -252,7 +252,7 @@ describe('registerNotificationHandlers', () => {
     expect(notificationCtorMock).not.toHaveBeenCalled()
   })
 
-  it('suppresses active-worktree notifications while Orca is focused', () => {
+  it('suppresses active-worktree notifications while Korca is focused', () => {
     getAllWindowsMock.mockReturnValue([
       {
         isDestroyed: () => false,
@@ -293,12 +293,12 @@ describe('registerNotificationHandlers', () => {
 
     const handler = getDispatchHandler()
     expect(
-      handler({}, { source: 'agent-task-complete', repoLabel: 'orca', worktreeLabel: 'feat/notis' })
+      handler({}, { source: 'agent-task-complete', repoLabel: 'korca', worktreeLabel: 'feat/notis' })
     ).toEqual({ delivered: true })
     expect(notificationCtorMock).toHaveBeenCalledWith(
       expectedNativeNotificationOptions({
         title: 'Task complete in feat/notis',
-        body: 'orca'
+        body: 'korca'
       })
     )
     expect(notificationShowMock).toHaveBeenCalledTimes(1)
@@ -323,8 +323,8 @@ describe('registerNotificationHandlers', () => {
       const handler = getDispatchHandler()
       expect(handler({}, { source: 'test' })).toEqual({ delivered: true })
       expect(notificationCtorMock).toHaveBeenCalledWith({
-        title: 'Orca notifications are on',
-        body: 'This is a test notification from Orca.',
+        title: 'Korca notifications are on',
+        body: 'This is a test notification from Korca.',
         sound: 'default'
       })
     } finally {
@@ -351,8 +351,8 @@ describe('registerNotificationHandlers', () => {
       const handler = getDispatchHandler()
       expect(handler({}, { source: 'test' })).toEqual({ delivered: true })
       expect(notificationCtorMock).toHaveBeenCalledWith({
-        title: 'Orca notifications are on',
-        body: 'This is a test notification from Orca.',
+        title: 'Korca notifications are on',
+        body: 'This is a test notification from Korca.',
         silent: true
       })
     } finally {
@@ -486,7 +486,7 @@ describe('registerNotificationHandlers', () => {
           source: 'agent-task-complete',
           worktreeId: 'repo::wt1',
           worktreeLabel: 'feat/notis',
-          repoLabel: 'orca',
+          repoLabel: 'korca',
           terminalTitle: '* Claude done',
           agentType: 'codex',
           agentState: 'done',
@@ -524,7 +524,7 @@ describe('registerNotificationHandlers', () => {
           source: 'agent-task-complete',
           worktreeId: 'repo::wt1',
           worktreeLabel: 'feat/notis',
-          repoLabel: 'orca',
+          repoLabel: 'korca',
           hasMultipleActiveRepos: true,
           agentType: 'codex',
           agentState: 'done',
@@ -535,7 +535,7 @@ describe('registerNotificationHandlers', () => {
 
     expect(notificationCtorMock).toHaveBeenCalledWith(
       expectedNativeNotificationOptions({
-        title: 'orca / feat/notis - Codex finished',
+        title: 'korca / feat/notis - Codex finished',
         body: 'Updated the notification body.'
       })
     )
@@ -911,8 +911,8 @@ describe('registerNotificationHandlers', () => {
     const handler = getDispatchHandler()
     expect(handler({}, { source: 'test' })).toEqual({ delivered: true })
     expect(notificationCtorMock).toHaveBeenCalledWith({
-      title: 'Orca notifications are on',
-      body: 'This is a test notification from Orca.',
+      title: 'Korca notifications are on',
+      body: 'This is a test notification from Korca.',
       silent: true
     })
   })
@@ -1210,8 +1210,8 @@ describe('triggerStartupNotificationRegistration', () => {
 
     expect(store.updateUI).toHaveBeenCalledWith({ notificationPermissionRequested: true })
     expect(notificationCtorMock).toHaveBeenCalledWith({
-      title: 'Orca is ready to notify you',
-      body: 'Allow notifications so Orca can alert you when agents finish or terminals need attention.'
+      title: 'Korca is ready to notify you',
+      body: 'Allow notifications so Korca can alert you when agents finish or terminals need attention.'
     })
     expect(notificationShowMock).toHaveBeenCalledTimes(1)
   })

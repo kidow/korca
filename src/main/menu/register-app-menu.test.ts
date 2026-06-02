@@ -15,7 +15,7 @@ vi.mock('electron', () => ({
     setApplicationMenu: setApplicationMenuMock
   },
   app: {
-    name: 'Orca'
+    name: 'Korca'
   }
 }))
 
@@ -144,7 +144,7 @@ describe('registerAppMenu', () => {
     // Why: Check for Updates lives under the app-name menu on macOS and
     // under Help on Windows/Linux. The click behavior must be identical
     // either way.
-    const parentLabel = isMac ? 'Orca' : 'Help'
+    const parentLabel = isMac ? 'Korca' : 'Help'
     const item = getSubmenu(getTemplate(), parentLabel).find(
       (entry) => entry.label === 'Check for Updates...'
     )
@@ -181,10 +181,10 @@ describe('registerAppMenu', () => {
     registerAppMenu(buildMenuOptions())
 
     const template = getTemplate()
-    // Why: no redundant app-named "Orca" menu should exist on non-mac — the
+    // Why: no redundant app-named "Korca" menu should exist on non-mac — the
     // app-menu contents (Settings, Exit, Check for Updates, About) have been
     // redistributed so users see them in File / Help instead.
-    expect(template.find((item) => item.label === 'Orca')).toBeUndefined()
+    expect(template.find((item) => item.label === 'Korca')).toBeUndefined()
 
     const fileLabels = getSubmenu(template, 'File').map((item) => item.label)
     expect(fileLabels).toEqual(
@@ -197,7 +197,7 @@ describe('registerAppMenu', () => {
 
     const helpLabels = getSubmenu(template, 'Help').map((item) => item.label)
     expect(helpLabels).toEqual(
-      expect.arrayContaining(['Report Crash...', 'Explore Orca', 'Check for Updates...'])
+      expect.arrayContaining(['Report Crash...', 'Explore Korca', 'Check for Updates...'])
     )
   })
 
@@ -205,7 +205,7 @@ describe('registerAppMenu', () => {
     registerAppMenu(buildMenuOptions())
 
     const template = getTemplate()
-    const appSubmenu = getSubmenu(template, 'Orca')
+    const appSubmenu = getSubmenu(template, 'Korca')
     const appLabels = appSubmenu.map((item) => item.label)
     expect(appLabels).toEqual(
       expect.arrayContaining(['Check for Updates...', `Settings\t${isMac ? '⌘,' : 'Ctrl+,'}`])
@@ -216,7 +216,7 @@ describe('registerAppMenu', () => {
     expect(fileLabels).not.toContain(`Settings\t${isMac ? '⌘,' : 'Ctrl+,'}`)
     expect(fileLabels).not.toContain('Exit')
     const helpLabels = getSubmenu(template, 'Help').map((item) => item.label)
-    expect(helpLabels).toEqual(['Report Crash...', undefined, 'Explore Orca'])
+    expect(helpLabels).toEqual(['Report Crash...', undefined, 'Explore Korca'])
   })
 
   it('routes Feature tour through its callback', () => {
@@ -224,7 +224,7 @@ describe('registerAppMenu', () => {
     registerAppMenu(options)
 
     const featureTourItem = getSubmenu(getTemplate(), 'Help').find(
-      (entry) => entry.label === 'Explore Orca'
+      (entry) => entry.label === 'Explore Korca'
     )
     expect(featureTourItem?.accelerator).toBeUndefined()
 
@@ -270,7 +270,7 @@ describe('registerAppMenu', () => {
     expect(tasksItem?.type).toBe('checkbox')
     expect(tasksItem?.checked).toBe(false)
 
-    const mobileItem = appearanceSubmenu.find((item) => item.label === 'Show Orca Mobile Button')
+    const mobileItem = appearanceSubmenu.find((item) => item.label === 'Show Korca Mobile Button')
     expect(mobileItem?.type).toBe('checkbox')
     expect(mobileItem?.checked).toBe(true)
 
@@ -293,7 +293,7 @@ describe('registerAppMenu', () => {
       .find((item) => item.label === 'Show Tasks Button')
       ?.click?.({} as never, {} as never, {} as never)
     appearanceSubmenu
-      .find((item) => item.label === 'Show Orca Mobile Button')
+      .find((item) => item.label === 'Show Korca Mobile Button')
       ?.click?.({} as never, {} as never, {} as never)
     appearanceSubmenu
       .find((item) => item.label === 'Show Titlebar App Name')

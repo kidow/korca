@@ -11,7 +11,7 @@ const { httpsGetMock } = vi.hoisted(() => ({
 
 vi.mock('electron', () => ({
   app: {
-    getPath: () => '/tmp/orca-speech-models-test'
+    getPath: () => '/tmp/korca-speech-models-test'
   }
 }))
 
@@ -37,7 +37,7 @@ describe('ModelManager stream cleanup', () => {
   })
 
   it('removes response progress listeners after a model download finishes', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'orca-model-manager-'))
+    const dir = mkdtempSync(join(tmpdir(), 'korca-model-manager-'))
     try {
       const response = new PassThrough() as PassThrough & {
         statusCode: number

@@ -6,7 +6,7 @@ import { join } from 'path'
 import nacl from 'tweetnacl'
 import { hardenExistingSecureFile, writeSecureJsonFile } from '../../shared/secure-file'
 
-const KEYPAIR_FILENAME = 'orca-e2ee-keypair.json'
+const KEYPAIR_FILENAME = 'korca-e2ee-keypair.json'
 const KEYPAIR_VERSION = 1
 const MAX_KEYPAIR_FILE_BYTES = 8 * 1024
 

@@ -9,17 +9,17 @@ vi.mock('child_process', () => ({
   spawn: spawnMock
 }))
 
-import { serveOrcaApp } from './launch'
+import { serveKorcaApp } from './launch'
 
-describe('serveOrcaApp', () => {
+describe('serveKorcaApp', () => {
   beforeEach(() => {
     spawnMock.mockReset()
-    process.env.ORCA_APP_EXECUTABLE = '/Applications/Orca.app/Contents/MacOS/Orca'
+    process.env.KORCA_APP_EXECUTABLE = '/Applications/Korca.app/Contents/MacOS/Korca'
   })
 
   afterEach(() => {
-    delete process.env.ORCA_APP_EXECUTABLE
-    delete process.env.ORCA_APP_EXECUTABLE_NEEDS_APP_ROOT
+    delete process.env.KORCA_APP_EXECUTABLE
+    delete process.env.KORCA_APP_EXECUTABLE_NEEDS_APP_ROOT
   })
 
   it('pins the Electron child cwd to the app root instead of the caller cwd', async () => {
@@ -36,10 +36,10 @@ describe('serveOrcaApp', () => {
     }
     spawnMock.mockReturnValue(child)
 
-    await expect(serveOrcaApp({ json: true })).resolves.toBe(0)
+    await expect(serveKorcaApp({ json: true })).resolves.toBe(0)
 
     expect(spawnMock).toHaveBeenCalledWith(
-      '/Applications/Orca.app/Contents/MacOS/Orca',
+      '/Applications/Korca.app/Contents/MacOS/Korca',
       ['--serve', '--serve-json'],
       expect.objectContaining({
         cwd: resolve(__dirname, '../../..')
@@ -62,7 +62,7 @@ describe('serveOrcaApp', () => {
     spawnMock.mockReturnValue(child)
 
     await expect(
-      serveOrcaApp({
+      serveKorcaApp({
         json: true,
         port: '6768',
         pairingAddress: '100.64.1.20',
@@ -71,7 +71,7 @@ describe('serveOrcaApp', () => {
     ).resolves.toBe(0)
 
     expect(spawnMock).toHaveBeenCalledWith(
-      '/Applications/Orca.app/Contents/MacOS/Orca',
+      '/Applications/Korca.app/Contents/MacOS/Korca',
       [
         '--serve',
         '--serve-json',
@@ -88,8 +88,8 @@ describe('serveOrcaApp', () => {
   })
 
   it('passes the app root before serve flags for dev Electron executables', async () => {
-    process.env.ORCA_APP_EXECUTABLE = '/repo/node_modules/.bin/electron'
-    process.env.ORCA_APP_EXECUTABLE_NEEDS_APP_ROOT = '1'
+    process.env.KORCA_APP_EXECUTABLE = '/repo/node_modules/.bin/electron'
+    process.env.KORCA_APP_EXECUTABLE_NEEDS_APP_ROOT = '1'
     const child = {
       kill: vi.fn(),
       once: vi.fn(
@@ -103,7 +103,7 @@ describe('serveOrcaApp', () => {
     }
     spawnMock.mockReturnValue(child)
 
-    await expect(serveOrcaApp({ json: true, port: '6768' })).resolves.toBe(0)
+    await expect(serveKorcaApp({ json: true, port: '6768' })).resolves.toBe(0)
 
     expect(spawnMock).toHaveBeenCalledWith(
       '/repo/node_modules/.bin/electron',
@@ -117,7 +117,7 @@ describe('serveOrcaApp', () => {
   it('uses a shell when a Windows npm command shim is the Electron executable', async () => {
     const platformDescriptor = Object.getOwnPropertyDescriptor(process, 'platform')
     Object.defineProperty(process, 'platform', { value: 'win32' })
-    process.env.ORCA_APP_EXECUTABLE = 'C:\\repo\\node_modules\\.bin\\electron.cmd'
+    process.env.KORCA_APP_EXECUTABLE = 'C:\\repo\\node_modules\\.bin\\electron.cmd'
     const child = {
       kill: vi.fn(),
       once: vi.fn(
@@ -132,7 +132,7 @@ describe('serveOrcaApp', () => {
     spawnMock.mockReturnValue(child)
 
     try {
-      await expect(serveOrcaApp({ json: true })).resolves.toBe(0)
+      await expect(serveKorcaApp({ json: true })).resolves.toBe(0)
       expect(spawnMock).toHaveBeenCalledWith(
         'C:\\repo\\node_modules\\.bin\\electron.cmd',
         ['--serve', '--serve-json'],

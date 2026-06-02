@@ -669,7 +669,7 @@ export function buildMobileRichMarkdownEditorHtml(): string {
         }
       });
 
-      window.__orcaRichMarkdown = {
+      window.__korcaRichMarkdown = {
         setMarkdown: setMarkdown,
         setEditable: setEditable,
         runCommand: runCommand,

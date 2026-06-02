@@ -135,9 +135,9 @@ export function GitPane({
           <Label>Refresh Local Base Ref</Label>
           <p className="text-xs text-muted-foreground">
             Turn this on if you or AI tools use commands like <code>git diff main...HEAD</code>.
-            Orca first refreshes the remote base, then safely fast-forwards the matching local{' '}
+            Korca first refreshes the remote base, then safely fast-forwards the matching local{' '}
             <code>main</code> or <code>master</code> so those commands do not compare against stale
-            history. Orca skips the update if the local branch is dirty or diverged.
+            history. Korca skips the update if the local branch is dirty or diverged.
           </p>
         </div>
         <button
@@ -205,21 +205,21 @@ export function GitPane({
       </SearchableSetting>
     ) : null,
     matchesSettingsSearch(searchQuery, {
-      title: 'Orca Attribution',
-      description: 'Add Orca attribution to commits, PRs, and issues.',
-      keywords: ['github', 'gh', 'pr', 'issue', 'co-author', 'coauthored', 'attribution', 'orca']
+      title: 'Korca Attribution',
+      description: 'Add Korca attribution to commits, PRs, and issues.',
+      keywords: ['github', 'gh', 'pr', 'issue', 'co-author', 'coauthored', 'attribution', 'korca']
     }) ? (
       <SearchableSetting
         key="github-attribution"
-        title="Orca Attribution"
-        description="Add Orca attribution to commits, PRs, and issues."
-        keywords={['github', 'gh', 'pr', 'issue', 'co-author', 'coauthored', 'attribution', 'orca']}
+        title="Korca Attribution"
+        description="Add Korca attribution to commits, PRs, and issues."
+        keywords={['github', 'gh', 'pr', 'issue', 'co-author', 'coauthored', 'attribution', 'korca']}
         className="flex items-center justify-between gap-4 py-2"
       >
         <div className="space-y-0.5">
-          <Label>Orca Attribution</Label>
+          <Label>Korca Attribution</Label>
           <p className="text-xs text-muted-foreground">
-            Add Orca attribution to commits, PRs, and issues.
+            Add Korca attribution to commits, PRs, and issues.
           </p>
         </div>
         <button

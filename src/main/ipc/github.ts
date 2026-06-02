@@ -45,8 +45,8 @@ import {
   rerunPRChecks,
   requestPRReviewers,
   removePRReviewers,
-  checkOrcaStarred,
-  starOrca
+  checkKorcaStarred,
+  starKorca
 } from '../github/client'
 import {
   clearVisiblePRRefreshWindow,
@@ -193,7 +193,7 @@ export function registerGitHubHandlers(store: Store, stats: StatsCollector): voi
       )
       // Emit pr_created when a PR is first detected for a branch.
       // Why here: the renderer polls gh:prForBranch to check PR status per worktree.
-      // This captures PRs opened from any workflow (Orca UI, gh CLI, github.com).
+      // This captures PRs opened from any workflow (Korca UI, gh CLI, github.com).
       if (pr && !stats.hasCountedPR(pr.url)) {
         stats.record({
           type: 'pr_created',
@@ -902,16 +902,16 @@ export function registerGitHubHandlers(store: Store, stats: StatsCollector): voi
     return listAssignableUsers(repo.path, repo.issueSourcePreference, repoConnectionId(repo))
   })
 
-  // Star operations target the Orca repo itself — no repoPath validation needed
+  // Star operations target the Korca repo itself — no repoPath validation needed
   ipcMain.handle('gh:viewer', () => getAuthenticatedViewer())
-  ipcMain.handle('gh:checkOrcaStarred', () => checkOrcaStarred())
-  ipcMain.handle('gh:starOrca', async (_event, source: unknown) => {
+  ipcMain.handle('gh:checkKorcaStarred', () => checkKorcaStarred())
+  ipcMain.handle('gh:starKorca', async (_event, source: unknown) => {
     const sourceParse = appStarSourceSchema.safeParse(source)
-    const starred = await starOrca()
+    const starred = await starKorca()
     if (starred && sourceParse.success) {
       // Why: this main-owned event bypasses renderer telemetry IPC, so cohort
       // context must be attached here on the successful star path.
-      track('app_starred_orca', {
+      track('app_starred_korca', {
         source: sourceParse.data,
         ...getCohortAtEmit()
       })

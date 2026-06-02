@@ -3,11 +3,11 @@ import { parseMobileMarkdown } from './mobile-markdown-parser'
 
 describe('parseMobileMarkdown', () => {
   it('parses GFM tables into table blocks', () => {
-    expect(parseMobileMarkdown('| Name | State |\n| --- | --- |\n| Orca | Open |')).toEqual([
+    expect(parseMobileMarkdown('| Name | State |\n| --- | --- |\n| Korca | Open |')).toEqual([
       {
         type: 'table',
         headers: ['Name', 'State'],
-        rows: [['Orca', 'Open']]
+        rows: [['Korca', 'Open']]
       }
     ])
   })

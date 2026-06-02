@@ -29,15 +29,15 @@ describe('resolveWindowsShellLaunchArgs', () => {
     const command = Buffer.from(result.shellArgs[3] ?? '', 'base64').toString('utf16le')
     const outputEncodingIndex = command.indexOf('[Console]::OutputEncoding')
     const opencodeRestoreIndex = command.indexOf(
-      '$env:OPENCODE_CONFIG_DIR = $env:ORCA_OPENCODE_CONFIG_DIR'
+      '$env:OPENCODE_CONFIG_DIR = $env:KORCA_OPENCODE_CONFIG_DIR'
     )
     const piRestoreIndex = command.indexOf(
-      '$env:PI_CODING_AGENT_DIR = $env:ORCA_PI_CODING_AGENT_DIR'
+      '$env:PI_CODING_AGENT_DIR = $env:KORCA_PI_CODING_AGENT_DIR'
     )
     const ompRestoreIndex = command.indexOf(
-      '$env:PI_CODING_AGENT_DIR = $env:ORCA_OMP_CODING_AGENT_DIR'
+      '$env:PI_CODING_AGENT_DIR = $env:KORCA_OMP_CODING_AGENT_DIR'
     )
-    const codexRestoreIndex = command.indexOf('$env:CODEX_HOME = $env:ORCA_CODEX_HOME')
+    const codexRestoreIndex = command.indexOf('$env:CODEX_HOME = $env:KORCA_CODEX_HOME')
     const promptIndex = command.indexOf('function Global:prompt')
 
     expect(command).not.toContain('$PROFILE')

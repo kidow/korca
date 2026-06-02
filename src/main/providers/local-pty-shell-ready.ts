@@ -4,7 +4,7 @@
 /**
  * Shell-ready startup command support for local PTYs.
  *
- * Why: when Orca needs to inject a startup command (e.g. issue command runner),
+ * Why: when Korca needs to inject a startup command (e.g. issue command runner),
  * it must wait until the shell has fully initialized before writing. This module
  * provides shell wrapper rcfiles that emit an OSC 777 marker after startup,
  * and a data scanner that detects that marker so the command can be written at
@@ -26,8 +26,8 @@ import { getZshEnvTemplate } from '../shell-templates'
 let didEnsureShellReadyWrappers = false
 
 const STARTUP_COMMAND_READY_MAX_WAIT_MS = 1500
-const SHELL_READY_MARKER = '\x1b]777;orca-shell-ready'
-const SHELL_READY_MARKER_ESCAPED = '\\033]777;orca-shell-ready\\007'
+const SHELL_READY_MARKER = '\x1b]777;korca-shell-ready'
+const SHELL_READY_MARKER_ESCAPED = '\\033]777;korca-shell-ready\\007'
 
 // ── OSC 777 shell-ready scanner ─────────────────────────────────────
 
@@ -79,7 +79,7 @@ export function scanForShellReady(
 // ── Shell wrapper files ─────────────────────────────────────────────
 
 function getShellReadyWrapperRoot(): string {
-  const userDataPath = app?.getPath?.('userData') ?? process.env.ORCA_USER_DATA_PATH ?? tmpdir()
+  const userDataPath = app?.getPath?.('userData') ?? process.env.KORCA_USER_DATA_PATH ?? tmpdir()
   return `${userDataPath}/shell-ready`
 }
 
@@ -98,15 +98,15 @@ function shellReadyWrappersExist(): boolean {
 }
 
 // Why: if our own process inherited ZDOTDIR from a parent shell that was
-// itself an Orca PTY (e.g. the user launched `pn dev` from a terminal inside
-// a running Orca), that ZDOTDIR points at an Orca shell-ready wrapper dir.
-// Propagating it as the new PTY's ORCA_ORIG_ZDOTDIR makes the wrapper's
-// `source "$ORCA_ORIG_ZDOTDIR/.zshenv"` line source itself recursively —
+// itself an Korca PTY (e.g. the user launched `pn dev` from a terminal inside
+// a running Korca), that ZDOTDIR points at an Korca shell-ready wrapper dir.
+// Propagating it as the new PTY's KORCA_ORIG_ZDOTDIR makes the wrapper's
+// `source "$KORCA_ORIG_ZDOTDIR/.zshenv"` line source itself recursively —
 // zsh gives "job table full or recursion limit exceeded" and the shell
 // never reaches a usable prompt.
 //
-// Any path component ending in `/shell-ready/zsh` is an Orca wrapper dir
-// (regardless of whether it came from this app's userData, a packaged Orca,
+// Any path component ending in `/shell-ready/zsh` is an Korca wrapper dir
+// (regardless of whether it came from this app's userData, a packaged Korca,
 // or a different dev build). Treat it as if ZDOTDIR were unset so the caller
 // falls back to HOME for the user's real config root.
 function normalizeOriginalZdotdirCandidate(value: string | undefined): string | null {
@@ -128,7 +128,7 @@ function normalizeOriginalZdotdirCandidate(value: string | undefined): string | 
 function resolveOriginalZdotdir(): string {
   return (
     normalizeOriginalZdotdirCandidate(process.env.ZDOTDIR) ||
-    normalizeOriginalZdotdirCandidate(process.env.ORCA_ORIG_ZDOTDIR) ||
+    normalizeOriginalZdotdirCandidate(process.env.KORCA_ORIG_ZDOTDIR) ||
     process.env.HOME ||
     ''
   )
@@ -139,7 +139,7 @@ function resolveOriginalZshenvSourceDir(): string {
 }
 
 export function getBashShellReadyRcfileContent(): string {
-  return `# Orca bash shell-ready wrapper
+  return `# Korca bash shell-ready wrapper
 [[ -f /etc/profile ]] && source /etc/profile
 if [[ -f "$HOME/.bash_profile" ]]; then
   source "$HOME/.bash_profile"
@@ -150,155 +150,155 @@ elif [[ -f "$HOME/.profile" ]]; then
 fi
 # Why: preserve bash's normal login-shell contract. Many users already source
 # ~/.bashrc from ~/.bash_profile; forcing ~/.bashrc again here would duplicate
-# PATH edits, hooks, and prompt init in Orca startup-command shells.
-__orca_restore_attribution_path() {
-  [[ -n "\${ORCA_ATTRIBUTION_SHIM_DIR:-}" ]] || return 0
+# PATH edits, hooks, and prompt init in Korca startup-command shells.
+__korca_restore_attribution_path() {
+  [[ -n "\${KORCA_ATTRIBUTION_SHIM_DIR:-}" ]] || return 0
   case "$PATH" in
-    "\${ORCA_ATTRIBUTION_SHIM_DIR}"|"\${ORCA_ATTRIBUTION_SHIM_DIR}:"*) return 0 ;;
+    "\${KORCA_ATTRIBUTION_SHIM_DIR}"|"\${KORCA_ATTRIBUTION_SHIM_DIR}:"*) return 0 ;;
   esac
-  export PATH="\${ORCA_ATTRIBUTION_SHIM_DIR}:$PATH"
+  export PATH="\${KORCA_ATTRIBUTION_SHIM_DIR}:$PATH"
 }
-__orca_restore_attribution_path
-# Why: user startup files may set the default OpenCode config after Orca's
+__korca_restore_attribution_path
+# Why: user startup files may set the default OpenCode config after Korca's
 # spawn env; restore the PTY-scoped overlay before the first prompt.
-[[ -n "\${ORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="\${ORCA_OPENCODE_CONFIG_DIR}"
+[[ -n "\${KORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="\${KORCA_OPENCODE_CONFIG_DIR}"
 # Why: bare shells carry both Pi and OMP shadows so a later typed OMP can
 # switch on demand. Keep Pi as the shell default unless this PTY is OMP-only.
-[[ -n "\${ORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${ORCA_PI_CODING_AGENT_DIR}"
-if [[ -z "\${ORCA_PI_CODING_AGENT_DIR:-}" && -n "\${ORCA_OMP_CODING_AGENT_DIR:-}" ]]; then
-  export PI_CODING_AGENT_DIR="\${ORCA_OMP_CODING_AGENT_DIR}"
+[[ -n "\${KORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${KORCA_PI_CODING_AGENT_DIR}"
+if [[ -z "\${KORCA_PI_CODING_AGENT_DIR:-}" && -n "\${KORCA_OMP_CODING_AGENT_DIR:-}" ]]; then
+  export PI_CODING_AGENT_DIR="\${KORCA_OMP_CODING_AGENT_DIR}"
 fi
 ${getPosixOmpShellWrapper()}
-# Why: Codex must keep using Orca's runtime CODEX_HOME after profile scripts.
-[[ -n "\${ORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="\${ORCA_CODEX_HOME}"
+# Why: Codex must keep using Korca's runtime CODEX_HOME after profile scripts.
+[[ -n "\${KORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="\${KORCA_CODEX_HOME}"
 # Why: emit OSC 133 C/D so terminal-command-lifecycle can drop stale agent
 # status when the foreground command (e.g. an interrupted Claude/Codex CLI)
 # exits — mirrors the zsh wrapper. Without this, bash users (default on most
 # Linux distros) keep a stuck 'working' spinner for up to 30 min after the
 # CLI exits without sending a Stop/SessionEnd hook.
-__orca_osc133_precmd() {
+__korca_osc133_precmd() {
   local exit_code=$?
-  __orca_in_prompt_command=1
-  if [[ -n "\${__orca_in_command:-}" ]]; then
+  __korca_in_prompt_command=1
+  if [[ -n "\${__korca_in_command:-}" ]]; then
     printf "\\033]133;D;%s\\007" "$exit_code"
-    unset __orca_in_command
+    unset __korca_in_command
   fi
   printf "\\033]133;A\\007"
 }
-__orca_osc133_prompt_done() {
-  unset __orca_in_prompt_command
+__korca_osc133_prompt_done() {
+  unset __korca_in_prompt_command
 }
-__orca_run_user_debug_trap() {
-  if [[ -n "\${__orca_user_debug_trap:-}" ]]; then
-    eval "$__orca_user_debug_trap" || true
+__korca_run_user_debug_trap() {
+  if [[ -n "\${__korca_user_debug_trap:-}" ]]; then
+    eval "$__korca_user_debug_trap" || true
   fi
 }
-__orca_osc133_preexec() {
-  __orca_run_user_debug_trap
-  [[ -z "\${__orca_in_prompt_command:-}" ]] || return
+__korca_osc133_preexec() {
+  __korca_run_user_debug_trap
+  [[ -z "\${__korca_in_prompt_command:-}" ]] || return
   # Why: bash DEBUG fires for every simple command, including PROMPT_COMMAND
   # bodies. Skip our own prompt-time helpers so they don't mark the shell as
   # "in command" before the prompt has even drawn.
   case "$BASH_COMMAND" in
-    *__orca_osc133_precmd*|*__orca_osc133_prompt_done*|*__orca_prompt_mark*) return ;;
+    *__korca_osc133_precmd*|*__korca_osc133_prompt_done*|*__korca_prompt_mark*) return ;;
   esac
   printf "\\033]133;C\\007"
-  __orca_in_command=1
+  __korca_in_command=1
 }
 # Why: prepend so we capture $? before the user's PROMPT_COMMAND chain mutates it.
-__orca_normalize_prompt_command() {
-  local __orca_joined="" __orca_prompt_part
+__korca_normalize_prompt_command() {
+  local __korca_joined="" __korca_prompt_part
   if [[ "$(declare -p PROMPT_COMMAND 2>/dev/null)" == "declare -a"* ]]; then
-    for __orca_prompt_part in "\${PROMPT_COMMAND[@]}"; do
-      [[ -n "$__orca_prompt_part" ]] || continue
-      if [[ -n "$__orca_joined" ]]; then
-        __orca_joined="$__orca_joined;$__orca_prompt_part"
+    for __korca_prompt_part in "\${PROMPT_COMMAND[@]}"; do
+      [[ -n "$__korca_prompt_part" ]] || continue
+      if [[ -n "$__korca_joined" ]]; then
+        __korca_joined="$__korca_joined;$__korca_prompt_part"
       else
-        __orca_joined="$__orca_prompt_part"
+        __korca_joined="$__korca_prompt_part"
       fi
     done
-    PROMPT_COMMAND="$__orca_joined"
+    PROMPT_COMMAND="$__korca_joined"
   fi
 }
-__orca_prepend_prompt_command() {
-  __orca_normalize_prompt_command
-  PROMPT_COMMAND="__orca_osc133_precmd\${PROMPT_COMMAND:+;\${PROMPT_COMMAND}}"
+__korca_prepend_prompt_command() {
+  __korca_normalize_prompt_command
+  PROMPT_COMMAND="__korca_osc133_precmd\${PROMPT_COMMAND:+;\${PROMPT_COMMAND}}"
 }
-__orca_append_prompt_command() {
+__korca_append_prompt_command() {
   local command="$1"
-  __orca_normalize_prompt_command
+  __korca_normalize_prompt_command
   if [[ -n "\${PROMPT_COMMAND:-}" ]]; then
     PROMPT_COMMAND="\${PROMPT_COMMAND};$command"
   else
     PROMPT_COMMAND="$command"
   fi
 }
-__orca_prepend_prompt_command
+__korca_prepend_prompt_command
 # Why: append the marker through PROMPT_COMMAND so it fires after the login
 # startup files have rebuilt the prompt, without re-running user rc files.
-if [[ "\${ORCA_SHELL_READY_MARKER:-0}" == "1" ]]; then
-  __orca_prompt_mark() {
+if [[ "\${KORCA_SHELL_READY_MARKER:-0}" == "1" ]]; then
+  __korca_prompt_mark() {
     printf "${SHELL_READY_MARKER_ESCAPED}"
   }
-  __orca_append_prompt_command "__orca_prompt_mark"
+  __korca_append_prompt_command "__korca_prompt_mark"
 fi
-__orca_append_prompt_command "__orca_osc133_prompt_done"
-__orca_debug_trap_spec="$(trap -p DEBUG)"
-if [[ -n "$__orca_debug_trap_spec" ]]; then
-  __orca_debug_trap_command="\${__orca_debug_trap_spec#trap -- }"
-  __orca_debug_trap_command="\${__orca_debug_trap_command% DEBUG}"
-  eval "__orca_user_debug_trap=$__orca_debug_trap_command"
+__korca_append_prompt_command "__korca_osc133_prompt_done"
+__korca_debug_trap_spec="$(trap -p DEBUG)"
+if [[ -n "$__korca_debug_trap_spec" ]]; then
+  __korca_debug_trap_command="\${__korca_debug_trap_spec#trap -- }"
+  __korca_debug_trap_command="\${__korca_debug_trap_command% DEBUG}"
+  eval "__korca_user_debug_trap=$__korca_debug_trap_command"
 fi
-unset __orca_debug_trap_spec __orca_debug_trap_command
-unset -f __orca_normalize_prompt_command __orca_prepend_prompt_command __orca_append_prompt_command
+unset __korca_debug_trap_spec __korca_debug_trap_command
+unset -f __korca_normalize_prompt_command __korca_prepend_prompt_command __korca_append_prompt_command
 # Why: arm DEBUG after wrapper setup; otherwise bash treats our own rcfile
 # commands as a foreground command and emits a fake C/D before the first prompt.
-trap '__orca_osc133_preexec' DEBUG
+trap '__korca_osc133_preexec' DEBUG
 `
 }
 
 export function getZshShellReadyRcfileContent(): string {
-  return `# Orca zsh shell-ready wrapper
-_orca_home="\${ORCA_ORIG_ZDOTDIR:-$HOME}"
-if [[ "$_orca_home" != "$ZDOTDIR" && -o interactive && -f "$_orca_home/.zshrc" ]]; then
-  source "$_orca_home/.zshrc"
+  return `# Korca zsh shell-ready wrapper
+_korca_home="\${KORCA_ORIG_ZDOTDIR:-$HOME}"
+if [[ "$_korca_home" != "$ZDOTDIR" && -o interactive && -f "$_korca_home/.zshrc" ]]; then
+  source "$_korca_home/.zshrc"
 fi
-__orca_restore_attribution_path() {
-  [[ -n "\${ORCA_ATTRIBUTION_SHIM_DIR:-}" ]] || return 0
+__korca_restore_attribution_path() {
+  [[ -n "\${KORCA_ATTRIBUTION_SHIM_DIR:-}" ]] || return 0
   case "$PATH" in
-    "\${ORCA_ATTRIBUTION_SHIM_DIR}"|"\${ORCA_ATTRIBUTION_SHIM_DIR}:"*) return 0 ;;
+    "\${KORCA_ATTRIBUTION_SHIM_DIR}"|"\${KORCA_ATTRIBUTION_SHIM_DIR}:"*) return 0 ;;
   esac
-  export PATH="\${ORCA_ATTRIBUTION_SHIM_DIR}:$PATH"
+  export PATH="\${KORCA_ATTRIBUTION_SHIM_DIR}:$PATH"
 }
-[[ ! -o login ]] && __orca_restore_attribution_path
+[[ ! -o login ]] && __korca_restore_attribution_path
 if [[ ! -o login ]]; then
   # Why: ~/.zshrc can export the user's default OpenCode config after spawn.
-  [[ -n "\${ORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="\${ORCA_OPENCODE_CONFIG_DIR}"
+  [[ -n "\${KORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="\${KORCA_OPENCODE_CONFIG_DIR}"
   # Why: bare shells carry both Pi and OMP shadows; keep Pi as the default and
   # let the OMP wrapper switch to OMP only for that command.
-  [[ -n "\${ORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${ORCA_PI_CODING_AGENT_DIR}"
-  if [[ -z "\${ORCA_PI_CODING_AGENT_DIR:-}" && -n "\${ORCA_OMP_CODING_AGENT_DIR:-}" ]]; then
-    export PI_CODING_AGENT_DIR="\${ORCA_OMP_CODING_AGENT_DIR}"
+  [[ -n "\${KORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${KORCA_PI_CODING_AGENT_DIR}"
+  if [[ -z "\${KORCA_PI_CODING_AGENT_DIR:-}" && -n "\${KORCA_OMP_CODING_AGENT_DIR:-}" ]]; then
+    export PI_CODING_AGENT_DIR="\${KORCA_OMP_CODING_AGENT_DIR}"
   fi
   ${getPosixOmpShellWrapper()}
-  # Why: Codex must keep using Orca's runtime CODEX_HOME after rc files.
-  [[ -n "\${ORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="\${ORCA_CODEX_HOME}"
+  # Why: Codex must keep using Korca's runtime CODEX_HOME after rc files.
+  [[ -n "\${KORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="\${KORCA_CODEX_HOME}"
 fi
-__orca_osc133_precmd() {
+__korca_osc133_precmd() {
   local exit_code=$?
-  if [[ -n "\${__orca_in_command:-}" ]]; then
+  if [[ -n "\${__korca_in_command:-}" ]]; then
     printf "\\033]133;D;%s\\007" "$exit_code"
-    unset __orca_in_command
+    unset __korca_in_command
   fi
   printf "\\033]133;A\\007"
 }
-__orca_osc133_preexec() {
+__korca_osc133_preexec() {
   printf "\\033]133;C\\007"
-  __orca_in_command=1
+  __korca_in_command=1
 }
-# Why: prepend so Orca captures $? before user prompt hooks can overwrite it.
-precmd_functions=(__orca_osc133_precmd \${precmd_functions[@]})
-preexec_functions=(__orca_osc133_preexec \${preexec_functions[@]})
+# Why: prepend so Korca captures $? before user prompt hooks can overwrite it.
+precmd_functions=(__korca_osc133_precmd \${precmd_functions[@]})
+preexec_functions=(__korca_osc133_preexec \${preexec_functions[@]})
 `
 }
 
@@ -316,47 +316,47 @@ function ensureShellReadyWrappers(): void {
   const bashDir = `${root}/bash`
 
   const zshEnv = getZshEnvTemplate(zshDir)
-  const zshProfile = `# Orca zsh shell-ready wrapper
-_orca_home="\${ORCA_ORIG_ZDOTDIR:-$HOME}"
-case "\${_orca_home%/}" in
-  */shell-ready/zsh) _orca_home="$HOME" ;;
+  const zshProfile = `# Korca zsh shell-ready wrapper
+_korca_home="\${KORCA_ORIG_ZDOTDIR:-$HOME}"
+case "\${_korca_home%/}" in
+  */shell-ready/zsh) _korca_home="$HOME" ;;
 esac
-[[ -f "$_orca_home/.zprofile" ]] && source "$_orca_home/.zprofile"
+[[ -f "$_korca_home/.zprofile" ]] && source "$_korca_home/.zprofile"
 `
   const zshRc = getZshShellReadyRcfileContent()
-  const zshLogin = `# Orca zsh shell-ready wrapper
-_orca_home="\${ORCA_ORIG_ZDOTDIR:-$HOME}"
-case "\${_orca_home%/}" in
-  */shell-ready/zsh) _orca_home="$HOME" ;;
+  const zshLogin = `# Korca zsh shell-ready wrapper
+_korca_home="\${KORCA_ORIG_ZDOTDIR:-$HOME}"
+case "\${_korca_home%/}" in
+  */shell-ready/zsh) _korca_home="$HOME" ;;
 esac
-if [[ -o interactive && -f "$_orca_home/.zlogin" ]]; then
-  source "$_orca_home/.zlogin"
+if [[ -o interactive && -f "$_korca_home/.zlogin" ]]; then
+  source "$_korca_home/.zlogin"
 fi
-__orca_restore_attribution_path() {
-  [[ -n "\${ORCA_ATTRIBUTION_SHIM_DIR:-}" ]] || return 0
+__korca_restore_attribution_path() {
+  [[ -n "\${KORCA_ATTRIBUTION_SHIM_DIR:-}" ]] || return 0
   case "$PATH" in
-    "\${ORCA_ATTRIBUTION_SHIM_DIR}"|"\${ORCA_ATTRIBUTION_SHIM_DIR}:"*) return 0 ;;
+    "\${KORCA_ATTRIBUTION_SHIM_DIR}"|"\${KORCA_ATTRIBUTION_SHIM_DIR}:"*) return 0 ;;
   esac
-  export PATH="\${ORCA_ATTRIBUTION_SHIM_DIR}:$PATH"
+  export PATH="\${KORCA_ATTRIBUTION_SHIM_DIR}:$PATH"
 }
-__orca_restore_attribution_path
+__korca_restore_attribution_path
 # Why: .zlogin is the final login startup file before the prompt is shown.
-[[ -n "\${ORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="\${ORCA_OPENCODE_CONFIG_DIR}"
-[[ -n "\${ORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${ORCA_PI_CODING_AGENT_DIR}"
-if [[ -z "\${ORCA_PI_CODING_AGENT_DIR:-}" && -n "\${ORCA_OMP_CODING_AGENT_DIR:-}" ]]; then
-  export PI_CODING_AGENT_DIR="\${ORCA_OMP_CODING_AGENT_DIR}"
+[[ -n "\${KORCA_OPENCODE_CONFIG_DIR:-}" ]] && export OPENCODE_CONFIG_DIR="\${KORCA_OPENCODE_CONFIG_DIR}"
+[[ -n "\${KORCA_PI_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${KORCA_PI_CODING_AGENT_DIR}"
+if [[ -z "\${KORCA_PI_CODING_AGENT_DIR:-}" && -n "\${KORCA_OMP_CODING_AGENT_DIR:-}" ]]; then
+  export PI_CODING_AGENT_DIR="\${KORCA_OMP_CODING_AGENT_DIR}"
 fi
 ${getPosixOmpShellWrapper()}
-[[ -n "\${ORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="\${ORCA_CODEX_HOME}"
+[[ -n "\${KORCA_CODEX_HOME:-}" ]] && export CODEX_HOME="\${KORCA_CODEX_HOME}"
 # Why: zsh precmd runs before the prompt is drawn and before zle owns input,
 # which can double-echo startup commands. line-init fires when zle is ready.
-if [[ "\${ORCA_SHELL_READY_MARKER:-0}" == "1" ]]; then
-  __orca_prompt_mark() {
+if [[ "\${KORCA_SHELL_READY_MARKER:-0}" == "1" ]]; then
+  __korca_prompt_mark() {
     printf "${SHELL_READY_MARKER_ESCAPED}"
   }
   autoload -Uz add-zle-hook-widget
-  zle -N __orca_prompt_mark
-  add-zle-hook-widget line-init __orca_prompt_mark
+  zle -N __korca_prompt_mark
+  add-zle-hook-widget line-init __korca_prompt_mark
 fi
 `
   const bashRc = getBashShellReadyRcfileContent()
@@ -411,10 +411,10 @@ function getWrappedShellLaunchConfig(
     return {
       args: ['-l'],
       env: {
-        ORCA_ORIG_ZDOTDIR: resolveOriginalZdotdir(),
-        ORCA_ZSHENV_SOURCE_DIR: resolveOriginalZshenvSourceDir(),
+        KORCA_ORIG_ZDOTDIR: resolveOriginalZdotdir(),
+        KORCA_ZSHENV_SOURCE_DIR: resolveOriginalZshenvSourceDir(),
         ZDOTDIR: `${getShellReadyWrapperRoot()}/zsh`,
-        ORCA_SHELL_READY_MARKER: options.emitReadyMarker ? '1' : '0'
+        KORCA_SHELL_READY_MARKER: options.emitReadyMarker ? '1' : '0'
       },
       supportsReadyMarker: options.emitReadyMarker
     }
@@ -425,7 +425,7 @@ function getWrappedShellLaunchConfig(
     return {
       args: ['--rcfile', `${getShellReadyWrapperRoot()}/bash/rcfile`],
       env: {
-        ORCA_SHELL_READY_MARKER: options.emitReadyMarker ? '1' : '0'
+        KORCA_SHELL_READY_MARKER: options.emitReadyMarker ? '1' : '0'
       },
       supportsReadyMarker: options.emitReadyMarker
     }
@@ -492,13 +492,13 @@ export function writeStartupCommandWhenShellReady(
       clearTimeout(postReadyTimer)
       postReadyTimer = null
     }
-    // Why: run startup commands inside the same interactive shell Orca keeps
+    // Why: run startup commands inside the same interactive shell Korca keeps
     // open for the pane. Spawning `shell -c <command>; exec shell -l` would
     // avoid the race, but it would also replace the session after the agent
     // exits and break "stay in this terminal" workflows.
     // Why CR on Windows: PowerShell's PSReadLine and cmd.exe submit the line
     // on CR (`\r`) — a bare LF leaves the command typed at the prompt but
-    // unsubmitted, forcing the user to press Enter after Orca launches the
+    // unsubmitted, forcing the user to press Enter after Korca launches the
     // agent or setup script. POSIX shells (bash/zsh) treat either CR or LF as
     // Enter under ICRNL, so CR works there too, but this code path is reached
     // on Windows as well as POSIX via writeStartupCommandWhenShellReady.

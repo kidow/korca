@@ -26,7 +26,7 @@ const {
   createSetupRunnerScriptMock,
   getEffectiveHooksFromConfigMock,
   getDefaultTabsLaunchMock,
-  parseOrcaYamlMock,
+  parseKorcaYamlMock,
   shouldRunSetupForCreateMock,
   buildPosixRunnerScriptMock,
   buildWindowsRunnerScriptMock,
@@ -73,7 +73,7 @@ const {
   createSetupRunnerScriptMock: vi.fn(),
   getEffectiveHooksFromConfigMock: vi.fn(),
   getDefaultTabsLaunchMock: vi.fn(),
-  parseOrcaYamlMock: vi.fn(),
+  parseKorcaYamlMock: vi.fn(),
   shouldRunSetupForCreateMock: vi.fn(),
   buildPosixRunnerScriptMock: vi.fn(),
   buildWindowsRunnerScriptMock: vi.fn(),
@@ -157,7 +157,7 @@ vi.mock('../hooks', () => ({
   getDefaultTabsLaunch: getDefaultTabsLaunchMock,
   getSetupRunnerEnvVars: getSetupRunnerEnvVarsMock,
   loadHooks: loadHooksMock,
-  parseOrcaYaml: parseOrcaYamlMock,
+  parseKorcaYaml: parseKorcaYamlMock,
   runHook: runHookMock,
   hasHooksFile: hasHooksFileMock,
   shouldRunSetupForCreate: shouldRunSetupForCreateMock
@@ -262,7 +262,7 @@ describe('registerWorktreeHandlers', () => {
       getEffectiveHooksMock,
       getEffectiveHooksFromConfigMock,
       getDefaultTabsLaunchMock,
-      parseOrcaYamlMock,
+      parseKorcaYamlMock,
       createIssueCommandRunnerScriptMock,
       createSetupRunnerScriptMock,
       buildPosixRunnerScriptMock,
@@ -346,7 +346,7 @@ describe('registerWorktreeHandlers', () => {
     getEffectiveHooksMock.mockReturnValue(null)
     getEffectiveHooksFromConfigMock.mockImplementation(() => getEffectiveHooksMock())
     getDefaultTabsLaunchMock.mockReturnValue(undefined)
-    parseOrcaYamlMock.mockReturnValue(null)
+    parseKorcaYamlMock.mockReturnValue(null)
     shouldRunSetupForCreateMock.mockReturnValue(false)
     buildPosixRunnerScriptMock.mockImplementation(
       (script: string) => `#!/usr/bin/env bash\nset -e\n${script.replace(/\r\n/g, '\n')}\n`
@@ -354,25 +354,25 @@ describe('registerWorktreeHandlers', () => {
     buildWindowsRunnerScriptMock.mockImplementation((script: string) => script)
     getSetupRunnerEnvVarsMock.mockImplementation(
       (repoArg: { path: string }, worktreePath: string) => ({
-        ORCA_ROOT_PATH: repoArg.path,
-        ORCA_WORKTREE_PATH: worktreePath,
-        ORCA_WORKSPACE_NAME: worktreePath.split('/').at(-1) ?? '',
+        KORCA_ROOT_PATH: repoArg.path,
+        KORCA_WORKTREE_PATH: worktreePath,
+        KORCA_WORKSPACE_NAME: worktreePath.split('/').at(-1) ?? '',
         CONDUCTOR_ROOT_PATH: repoArg.path,
         GHOSTX_ROOT_PATH: repoArg.path
       })
     )
     createSetupRunnerScriptMock.mockReturnValue({
-      runnerScriptPath: '/workspace/repo/.git/orca/setup-runner.sh',
+      runnerScriptPath: '/workspace/repo/.git/korca/setup-runner.sh',
       envVars: {
-        ORCA_ROOT_PATH: '/workspace/repo',
-        ORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
+        KORCA_ROOT_PATH: '/workspace/repo',
+        KORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
       }
     })
     createIssueCommandRunnerScriptMock.mockReturnValue({
-      runnerScriptPath: '/workspace/repo/.git/orca/issue-command-runner.sh',
+      runnerScriptPath: '/workspace/repo/.git/korca/issue-command-runner.sh',
       envVars: {
-        ORCA_ROOT_PATH: '/workspace/repo',
-        ORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
+        KORCA_ROOT_PATH: '/workspace/repo',
+        KORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
       }
     })
     computeWorktreePathMock.mockImplementation(
@@ -492,7 +492,7 @@ describe('registerWorktreeHandlers', () => {
     }
   }
 
-  it('strips Orca provenance fields from renderer metadata updates', () => {
+  it('strips Korca provenance fields from renderer metadata updates', () => {
     store.setWorktreeMeta.mockImplementation((_worktreeId, meta) => meta)
 
     const result = handlers['worktrees:updateMeta'](null, {
@@ -500,9 +500,9 @@ describe('registerWorktreeHandlers', () => {
       updates: {
         comment: 'keep me',
         isPinned: true,
-        orcaCreatedAt: 123,
-        orcaCreationSource: 'desktop',
-        orcaCreationWorkspaceLayout: { path: '/workspace', nestWorkspaces: false }
+        korcaCreatedAt: 123,
+        korcaCreationSource: 'desktop',
+        korcaCreationWorkspaceLayout: { path: '/workspace', nestWorkspaces: false }
       }
     })
 
@@ -588,7 +588,7 @@ describe('registerWorktreeHandlers', () => {
     expect(store.setWorktreeMeta).toHaveBeenCalledWith(
       'repo-1::../worktrees/feature',
       expect.objectContaining({
-        orcaCreationWorkspaceLayout: { path: '../worktrees', nestWorkspaces: false }
+        korcaCreationWorkspaceLayout: { path: '../worktrees', nestWorkspaces: false }
       })
     )
   })
@@ -1145,21 +1145,21 @@ describe('registerWorktreeHandlers', () => {
       repoId: 'repo-1',
       name: 'improve-dashboard',
       pushTarget: {
-        remoteName: 'pr-prateek-orca',
+        remoteName: 'pr-prateek-korca',
         branchName: 'prateek/fix-sidebar-agents-toggle',
-        remoteUrl: 'git@github.com:prateek/orca.git'
+        remoteUrl: 'git@github.com:prateek/korca.git'
       }
     })
 
     expect(gitExecFileAsyncMock).toHaveBeenCalledWith(
-      ['remote', 'add', 'pr-prateek-orca', 'git@github.com:prateek/orca.git'],
+      ['remote', 'add', 'pr-prateek-korca', 'git@github.com:prateek/korca.git'],
       { cwd: '/workspace/repo' }
     )
     expect(gitExecFileAsyncMock).toHaveBeenCalledWith(
       [
         'fetch',
-        'pr-prateek-orca',
-        '+refs/heads/prateek/fix-sidebar-agents-toggle:refs/remotes/pr-prateek-orca/prateek/fix-sidebar-agents-toggle'
+        'pr-prateek-korca',
+        '+refs/heads/prateek/fix-sidebar-agents-toggle:refs/remotes/pr-prateek-korca/prateek/fix-sidebar-agents-toggle'
       ],
       { cwd: '/workspace/repo' }
     )
@@ -1167,7 +1167,7 @@ describe('registerWorktreeHandlers', () => {
       [
         'branch',
         '--set-upstream-to',
-        'pr-prateek-orca/prateek/fix-sidebar-agents-toggle',
+        'pr-prateek-korca/prateek/fix-sidebar-agents-toggle',
         'improve-dashboard'
       ],
       { cwd: '/workspace/improve-dashboard' }
@@ -1176,16 +1176,16 @@ describe('registerWorktreeHandlers', () => {
       'repo-1::/workspace/improve-dashboard',
       expect.objectContaining({
         pushTarget: expect.objectContaining({
-          remoteName: 'pr-prateek-orca',
+          remoteName: 'pr-prateek-korca',
           branchName: 'prateek/fix-sidebar-agents-toggle',
-          remoteUrl: 'git@github.com:prateek/orca.git',
+          remoteUrl: 'git@github.com:prateek/korca.git',
           remoteCreated: true
         })
       })
     )
   })
 
-  it('keeps the Orca-created marker when a new worktree reuses an Orca-created fork remote', async () => {
+  it('keeps the Korca-created marker when a new worktree reuses an Korca-created fork remote', async () => {
     listWorktreesMock.mockResolvedValue([
       {
         path: '/workspace/improve-dashboard',
@@ -1196,9 +1196,9 @@ describe('registerWorktreeHandlers', () => {
       }
     ])
     const existingPushTarget = {
-      remoteName: 'pr-contributor-orca',
+      remoteName: 'pr-contributor-korca',
       branchName: 'contributor/previous-fix',
-      remoteUrl: 'https://github.com/contributor/orca.git',
+      remoteUrl: 'https://github.com/contributor/korca.git',
       remoteCreated: true
     }
     store.getAllWorktreeMeta.mockReturnValue({
@@ -1207,10 +1207,10 @@ describe('registerWorktreeHandlers', () => {
     store.setWorktreeMeta.mockImplementation((_worktreeId, meta) => meta)
     gitExecFileAsyncMock.mockImplementation(async (args: string[]) => {
       if (args[0] === 'remote' && args.length === 1) {
-        return { stdout: 'pr-contributor-orca\n', stderr: '' }
+        return { stdout: 'pr-contributor-korca\n', stderr: '' }
       }
       if (args[0] === 'remote' && args[1] === 'get-url') {
-        return { stdout: 'https://github.com/contributor/orca.git\n', stderr: '' }
+        return { stdout: 'https://github.com/contributor/korca.git\n', stderr: '' }
       }
       return { stdout: '', stderr: '' }
     })
@@ -1219,9 +1219,9 @@ describe('registerWorktreeHandlers', () => {
       repoId: 'repo-1',
       name: 'improve-dashboard',
       pushTarget: {
-        remoteName: 'pr-contributor-orca',
+        remoteName: 'pr-contributor-korca',
         branchName: 'contributor/new-fix',
-        remoteUrl: 'https://github.com/contributor/orca.git'
+        remoteUrl: 'https://github.com/contributor/korca.git'
       }
     })
 
@@ -1233,9 +1233,9 @@ describe('registerWorktreeHandlers', () => {
       'repo-1::/workspace/improve-dashboard',
       expect.objectContaining({
         pushTarget: expect.objectContaining({
-          remoteName: 'pr-contributor-orca',
+          remoteName: 'pr-contributor-korca',
           branchName: 'contributor/new-fix',
-          remoteUrl: 'https://github.com/contributor/orca.git',
+          remoteUrl: 'https://github.com/contributor/korca.git',
           remoteCreated: true
         })
       })
@@ -1244,9 +1244,9 @@ describe('registerWorktreeHandlers', () => {
 
   it('returns the PR head push target when resolving a fork PR base', async () => {
     getPullRequestPushTargetMock.mockResolvedValue({
-      remoteName: 'pr-prateek-orca',
+      remoteName: 'pr-prateek-korca',
       branchName: 'prateek/fix-sidebar-agents-toggle',
-      remoteUrl: 'git@github.com:prateek/orca.git'
+      remoteUrl: 'git@github.com:prateek/korca.git'
     })
     gitExecFileAsyncMock.mockImplementation(async (args: string[]) => {
       if (args[0] === 'rev-parse') {
@@ -1268,9 +1268,9 @@ describe('registerWorktreeHandlers', () => {
     expect(result).toEqual({
       baseBranch: 'abc123',
       pushTarget: {
-        remoteName: 'pr-prateek-orca',
+        remoteName: 'pr-prateek-korca',
         branchName: 'prateek/fix-sidebar-agents-toggle',
-        remoteUrl: 'git@github.com:prateek/orca.git'
+        remoteUrl: 'git@github.com:prateek/korca.git'
       }
     })
   })
@@ -1576,7 +1576,7 @@ describe('registerWorktreeHandlers', () => {
     )
   })
 
-  it('reads remote orca.yaml and returns a setup launch payload during SSH create', async () => {
+  it('reads remote korca.yaml and returns a setup launch payload during SSH create', async () => {
     const repo = {
       id: 'repo-ssh',
       path: '/remote/repo',
@@ -1593,7 +1593,7 @@ describe('registerWorktreeHandlers', () => {
         }
         if (args[0] === 'rev-parse') {
           return {
-            stdout: '/remote/repo/.git/worktrees/improve-dashboard/orca/setup-runner.sh\n',
+            stdout: '/remote/repo/.git/worktrees/improve-dashboard/korca/setup-runner.sh\n',
             stderr: ''
           }
         }
@@ -1629,7 +1629,7 @@ describe('registerWorktreeHandlers', () => {
     getSshFilesystemProviderMock.mockReturnValue(fsProvider)
     getActiveMultiplexerMock.mockReturnValue(mux)
     store.setWorktreeMeta.mockImplementation((_worktreeId, meta) => meta)
-    parseOrcaYamlMock.mockReturnValue({ scripts: { setup: 'pnpm install' } })
+    parseKorcaYamlMock.mockReturnValue({ scripts: { setup: 'pnpm install' } })
     getEffectiveHooksFromConfigMock.mockReturnValue({ scripts: { setup: 'pnpm install' } })
     shouldRunSetupForCreateMock.mockReturnValue(true)
 
@@ -1639,26 +1639,26 @@ describe('registerWorktreeHandlers', () => {
       setupDecision: 'run'
     })
 
-    expect(fsProvider.readFile).toHaveBeenCalledWith('/remote/repo/orca.yaml')
-    expect(fsProvider.readFile).toHaveBeenCalledWith('/remote/improve-dashboard/orca.yaml')
+    expect(fsProvider.readFile).toHaveBeenCalledWith('/remote/repo/korca.yaml')
+    expect(fsProvider.readFile).toHaveBeenCalledWith('/remote/improve-dashboard/korca.yaml')
     expect(provider.exec).toHaveBeenCalledWith(
-      ['rev-parse', '--git-path', 'orca/setup-runner.sh'],
+      ['rev-parse', '--git-path', 'korca/setup-runner.sh'],
       '/remote/improve-dashboard'
     )
     expect(fsProvider.createDir).toHaveBeenCalledWith(
-      '/remote/repo/.git/worktrees/improve-dashboard/orca'
+      '/remote/repo/.git/worktrees/improve-dashboard/korca'
     )
     expect(fsProvider.writeFile).toHaveBeenCalledWith(
-      '/remote/repo/.git/worktrees/improve-dashboard/orca/setup-runner.sh',
+      '/remote/repo/.git/worktrees/improve-dashboard/korca/setup-runner.sh',
       '#!/usr/bin/env bash\nset -e\npnpm install\n'
     )
     expect(result).toEqual(
       expect.objectContaining({
         setup: {
-          runnerScriptPath: '/remote/repo/.git/worktrees/improve-dashboard/orca/setup-runner.sh',
+          runnerScriptPath: '/remote/repo/.git/worktrees/improve-dashboard/korca/setup-runner.sh',
           envVars: expect.objectContaining({
-            ORCA_ROOT_PATH: '/remote/repo',
-            ORCA_WORKTREE_PATH: '/remote/improve-dashboard'
+            KORCA_ROOT_PATH: '/remote/repo',
+            KORCA_WORKTREE_PATH: '/remote/improve-dashboard'
           })
         }
       })
@@ -2579,10 +2579,10 @@ describe('registerWorktreeHandlers', () => {
       'codex exec "long command"'
     )
     expect(result).toEqual({
-      runnerScriptPath: '/workspace/repo/.git/orca/issue-command-runner.sh',
+      runnerScriptPath: '/workspace/repo/.git/korca/issue-command-runner.sh',
       envVars: {
-        ORCA_ROOT_PATH: '/workspace/repo',
-        ORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
+        KORCA_ROOT_PATH: '/workspace/repo',
+        KORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
       }
     })
   })
@@ -3262,10 +3262,10 @@ describe('registerWorktreeHandlers', () => {
         branch: 'improve-dashboard'
       }),
       setup: {
-        runnerScriptPath: '/workspace/repo/.git/orca/setup-runner.sh',
+        runnerScriptPath: '/workspace/repo/.git/korca/setup-runner.sh',
         envVars: {
-          ORCA_ROOT_PATH: '/workspace/repo',
-          ORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
+          KORCA_ROOT_PATH: '/workspace/repo',
+          KORCA_WORKTREE_PATH: '/workspace/improve-dashboard'
         }
       }
     })
@@ -3278,7 +3278,7 @@ describe('registerWorktreeHandlers', () => {
     )
   })
 
-  it('launches setup even when primary and worktree orca.yaml scripts diverge', async () => {
+  it('launches setup even when primary and worktree korca.yaml scripts diverge', async () => {
     // Why: regression for a silent skip introduced by the #1280 content-equality
     // gate. Benign divergence (whitespace, comments, or any setup edit that
     // landed on the base branch but not yet in the primary checkout) must not
@@ -3310,7 +3310,7 @@ describe('registerWorktreeHandlers', () => {
     expect(result).toEqual(
       expect.objectContaining({
         setup: expect.objectContaining({
-          runnerScriptPath: '/workspace/repo/.git/orca/setup-runner.sh'
+          runnerScriptPath: '/workspace/repo/.git/korca/setup-runner.sh'
         })
       })
     )
@@ -3692,7 +3692,7 @@ describe('registerWorktreeHandlers', () => {
       worktreeId: 'repo-ssh::/remote/feature-wt'
     })
 
-    expect(fsProvider.readFile).toHaveBeenCalledWith('/remote/repo/orca.yaml')
+    expect(fsProvider.readFile).toHaveBeenCalledWith('/remote/repo/korca.yaml')
     expect(provider.execNonInteractive).toHaveBeenCalledWith(
       '/bin/bash',
       ['-lc', 'echo archived'],
@@ -3700,8 +3700,8 @@ describe('registerWorktreeHandlers', () => {
       120_000,
       undefined,
       expect.objectContaining({
-        ORCA_ROOT_PATH: '/remote/repo',
-        ORCA_WORKTREE_PATH: '/remote/feature-wt'
+        KORCA_ROOT_PATH: '/remote/repo',
+        KORCA_WORKTREE_PATH: '/remote/feature-wt'
       })
     )
     expect(provider.removeWorktree).toHaveBeenCalledWith('/remote/feature-wt', undefined)
@@ -4002,7 +4002,7 @@ describe('registerWorktreeHandlers', () => {
       worktreeId: 'repo-ssh::C:\\remote\\feature-wt'
     })
 
-    expect(fsProvider.readFile).toHaveBeenCalledWith('C:\\remote\\repo\\orca.yaml')
+    expect(fsProvider.readFile).toHaveBeenCalledWith('C:\\remote\\repo\\korca.yaml')
     expect(provider.execNonInteractive).toHaveBeenCalledWith(
       'cmd.exe',
       ['/d', '/s', '/c', 'echo archived'],
@@ -4010,8 +4010,8 @@ describe('registerWorktreeHandlers', () => {
       120_000,
       undefined,
       expect.objectContaining({
-        ORCA_ROOT_PATH: 'C:\\remote\\repo',
-        ORCA_WORKTREE_PATH: 'C:\\remote\\feature-wt'
+        KORCA_ROOT_PATH: 'C:\\remote\\repo',
+        KORCA_WORKTREE_PATH: 'C:\\remote\\feature-wt'
       })
     )
   })
@@ -4128,13 +4128,13 @@ describe('registerWorktreeHandlers', () => {
     expect(forceDeleteLocalBranchMock).not.toHaveBeenCalled()
   })
 
-  it('removes an unused Orca-created fork remote after deleting its worktree', async () => {
+  it('removes an unused Korca-created fork remote after deleting its worktree', async () => {
     mockKnownFeatureWorktree()
     removeWorktreeMock.mockResolvedValue(undefined)
     const pushTarget = {
-      remoteName: 'pr-contributor-orca',
+      remoteName: 'pr-contributor-korca',
       branchName: 'feature/from-fork',
-      remoteUrl: 'https://github.com/contributor/orca.git',
+      remoteUrl: 'https://github.com/contributor/korca.git',
       remoteCreated: true
     }
     store.getWorktreeMeta.mockReturnValue(makeWorktreeMeta({ pushTarget }))
@@ -4146,7 +4146,7 @@ describe('registerWorktreeHandlers', () => {
         throw new Error('no branch config')
       }
       if (args[0] === 'remote' && args[1] === 'get-url') {
-        return { stdout: 'https://github.com/contributor/orca.git\n', stderr: '' }
+        return { stdout: 'https://github.com/contributor/korca.git\n', stderr: '' }
       }
       return { stdout: '', stderr: '' }
     })
@@ -4155,18 +4155,18 @@ describe('registerWorktreeHandlers', () => {
       worktreeId: 'repo-1::/workspace/feature-wt'
     })
 
-    expect(gitExecFileAsyncMock).toHaveBeenCalledWith(['remote', 'remove', 'pr-contributor-orca'], {
+    expect(gitExecFileAsyncMock).toHaveBeenCalledWith(['remote', 'remove', 'pr-contributor-korca'], {
       cwd: '/workspace/repo'
     })
   })
 
-  it('keeps an Orca-created fork remote while another worktree still uses it', async () => {
+  it('keeps an Korca-created fork remote while another worktree still uses it', async () => {
     mockKnownFeatureWorktree()
     removeWorktreeMock.mockResolvedValue(undefined)
     const pushTarget = {
-      remoteName: 'pr-contributor-orca',
+      remoteName: 'pr-contributor-korca',
       branchName: 'feature/from-fork',
-      remoteUrl: 'https://github.com/contributor/orca.git',
+      remoteUrl: 'https://github.com/contributor/korca.git',
       remoteCreated: true
     }
     store.getWorktreeMeta.mockReturnValue(makeWorktreeMeta({ pushTarget }))
@@ -4185,7 +4185,7 @@ describe('registerWorktreeHandlers', () => {
     })
 
     expect(gitExecFileAsyncMock).not.toHaveBeenCalledWith(
-      ['remote', 'remove', 'pr-contributor-orca'],
+      ['remote', 'remove', 'pr-contributor-korca'],
       expect.any(Object)
     )
   })
@@ -4194,9 +4194,9 @@ describe('registerWorktreeHandlers', () => {
     mockKnownFeatureWorktree()
     removeWorktreeMock.mockResolvedValue(undefined)
     const pushTarget = {
-      remoteName: 'pr-contributor-orca',
+      remoteName: 'pr-contributor-korca',
       branchName: 'feature/from-fork',
-      remoteUrl: 'https://github.com/contributor/orca.git',
+      remoteUrl: 'https://github.com/contributor/korca.git',
       remoteCreated: true
     }
     store.getWorktreeMeta.mockReturnValue(makeWorktreeMeta({ pushTarget }))
@@ -4214,7 +4214,7 @@ describe('registerWorktreeHandlers', () => {
         throw new Error('no branch config')
       }
       if (args[0] === 'remote' && args[1] === 'get-url') {
-        return { stdout: 'https://github.com/contributor/orca.git\n', stderr: '' }
+        return { stdout: 'https://github.com/contributor/korca.git\n', stderr: '' }
       }
       return { stdout: '', stderr: '' }
     })
@@ -4223,7 +4223,7 @@ describe('registerWorktreeHandlers', () => {
       worktreeId: 'repo-1::/workspace/feature-wt'
     })
 
-    expect(gitExecFileAsyncMock).toHaveBeenCalledWith(['remote', 'remove', 'pr-contributor-orca'], {
+    expect(gitExecFileAsyncMock).toHaveBeenCalledWith(['remote', 'remove', 'pr-contributor-korca'], {
       cwd: '/workspace/repo'
     })
   })
@@ -4294,8 +4294,8 @@ describe('registerWorktreeHandlers', () => {
     })
   })
 
-  it('force-removes a legacy Orca-created orphaned worktree directory after Git tracking is gone', async () => {
-    const parentDir = await mkdtemp(join(tmpdir(), 'orca-ipc-orphan-'))
+  it('force-removes a legacy Korca-created orphaned worktree directory after Git tracking is gone', async () => {
+    const parentDir = await mkdtemp(join(tmpdir(), 'korca-ipc-orphan-'))
     const repoPath = join(parentDir, 'repo')
     const orphanPath = join(parentDir, 'orphan')
     const adminWorktreePath = join(repoPath, '.git', 'worktrees', 'orphan')
@@ -4336,8 +4336,8 @@ describe('registerWorktreeHandlers', () => {
     }
   })
 
-  it('prompts for force before removing an Orca-created orphaned worktree directory', async () => {
-    const parentDir = await mkdtemp(join(tmpdir(), 'orca-ipc-orphan-'))
+  it('prompts for force before removing an Korca-created orphaned worktree directory', async () => {
+    const parentDir = await mkdtemp(join(tmpdir(), 'korca-ipc-orphan-'))
     const repoPath = join(parentDir, 'repo')
     const orphanPath = join(parentDir, 'orphan')
     const adminWorktreePath = join(repoPath, '.git', 'worktrees', 'orphan')
@@ -4355,7 +4355,7 @@ describe('registerWorktreeHandlers', () => {
     })
     mockKnownFeatureWorktree(join(parentDir, 'real-feature'), repoPath)
     store.getWorktreeMeta.mockReturnValue(
-      makeWorktreeMeta({ orcaCreatedAt: Date.now(), orcaCreationSource: 'runtime' })
+      makeWorktreeMeta({ korcaCreatedAt: Date.now(), korcaCreationSource: 'runtime' })
     )
 
     try {
@@ -4374,7 +4374,7 @@ describe('registerWorktreeHandlers', () => {
   })
 
   it('does not inspect or delete a local path when SSH orphan cleanup has no filesystem provider', async () => {
-    const localPath = await mkdtemp(join(tmpdir(), 'orca-ipc-ssh-missing-fs-'))
+    const localPath = await mkdtemp(join(tmpdir(), 'korca-ipc-ssh-missing-fs-'))
     const repo = {
       id: 'repo-ssh-missing-fs',
       path: '/remote/repo',
@@ -4397,7 +4397,7 @@ describe('registerWorktreeHandlers', () => {
     }
     store.getRepo.mockReturnValue(repo)
     store.getWorktreeMeta.mockReturnValue(
-      makeWorktreeMeta({ orcaCreatedAt: Date.now(), orcaCreationSource: 'ssh' })
+      makeWorktreeMeta({ korcaCreatedAt: Date.now(), korcaCreationSource: 'ssh' })
     )
     getSshGitProviderMock.mockReturnValue(provider)
     getSshFilesystemProviderMock.mockReturnValue(undefined)
@@ -4448,7 +4448,7 @@ describe('registerWorktreeHandlers', () => {
     }
     store.getRepo.mockReturnValue(repo)
     store.getWorktreeMeta.mockReturnValue(
-      makeWorktreeMeta({ orcaCreatedAt: Date.now(), orcaCreationSource: 'ssh' })
+      makeWorktreeMeta({ korcaCreatedAt: Date.now(), korcaCreationSource: 'ssh' })
     )
     getSshGitProviderMock.mockReturnValue(provider)
     getSshFilesystemProviderMock.mockReturnValue(fsProvider)
@@ -4744,7 +4744,7 @@ describe('registerWorktreeHandlers', () => {
     }
     const fsProvider = {
       readFile: vi.fn(async (filePath: string) => {
-        if (filePath.endsWith('/.orca/issue-command')) {
+        if (filePath.endsWith('/.korca/issue-command')) {
           return { content: 'local command\n', isBinary: false }
         }
         throw new Error('shared read failed')
@@ -4788,7 +4788,7 @@ describe('registerWorktreeHandlers', () => {
     await expect(
       handlers['hooks:writeIssueCommand'](null, {
         repoId: 'repo-ssh',
-        content: 'orca issue command'
+        content: 'korca issue command'
       })
     ).rejects.toThrow('ssh read failed')
 
@@ -4817,14 +4817,14 @@ describe('registerWorktreeHandlers', () => {
 
     await handlers['hooks:writeIssueCommand'](null, {
       repoId: 'repo-ssh',
-      content: 'orca issue command'
+      content: 'korca issue command'
     })
 
-    expect(fsProvider.writeFile).toHaveBeenNthCalledWith(1, '/remote/repo/.gitignore', '.orca\n')
+    expect(fsProvider.writeFile).toHaveBeenNthCalledWith(1, '/remote/repo/.gitignore', '.korca\n')
     expect(fsProvider.writeFile).toHaveBeenNthCalledWith(
       2,
-      '/remote/repo/.orca/issue-command',
-      'orca issue command\n'
+      '/remote/repo/.korca/issue-command',
+      'korca issue command\n'
     )
   })
 
@@ -4844,7 +4844,7 @@ describe('registerWorktreeHandlers', () => {
     await expect(
       handlers['hooks:writeIssueCommand'](null, {
         repoId: 'repo-ssh',
-        content: 'orca issue command'
+        content: 'korca issue command'
       })
     ).rejects.toThrow('Remote filesystem unavailable')
   })

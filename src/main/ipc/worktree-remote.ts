@@ -28,8 +28,8 @@ import { validateGitPushTarget } from '../git/push-target-validation'
 import { assertGitPushTargetShape } from '../../shared/git-push-target-validation'
 import { gitExecFileAsync } from '../git/runner'
 import { parseGitHubOwnerRepo } from '../github/gh-utils'
-import type { OrcaRuntimeService } from '../runtime/orca-runtime'
-import type { RemoteFetchResult, RemoteTrackingBase } from '../runtime/orca-runtime'
+import type { KorcaRuntimeService } from '../runtime/korca-runtime'
+import type { RemoteFetchResult, RemoteTrackingBase } from '../runtime/korca-runtime'
 import {
   buildPosixRunnerScript,
   buildWindowsRunnerScript,
@@ -39,7 +39,7 @@ import {
   getEffectiveHooksFromConfig,
   getSetupRunnerEnvVars,
   loadHooks,
-  parseOrcaYaml,
+  parseKorcaYaml,
   shouldRunSetupForCreate
 } from '../hooks'
 import { requireSshGitProvider } from '../providers/ssh-git-dispatch'
@@ -174,7 +174,7 @@ async function getOrStartSshWorktreeCreateFetch(
       return
     }
     await fetch()
-    // Why: SSH creation has no OrcaRuntimeService instance to share, but
+    // Why: SSH creation has no KorcaRuntimeService instance to share, but
     // repeated creates on the same target should still reuse recent fetches.
     rememberSshWorktreeCreateFetchCompletedAt(key)
   }).finally(() => {
@@ -533,7 +533,7 @@ export async function prepareWorktreePushTarget(
     const existingRemote = await findRemoteForUrl(repoPath, target.remoteUrl)
     if (existingRemote) {
       remoteName = existingRemote
-      // Why: if a later PR worktree reuses an Orca-created fork remote, it
+      // Why: if a later PR worktree reuses an Korca-created fork remote, it
       // must inherit ownership so deleting the final user can remove it.
       remoteCreated = store
         ? isPushTargetRemoteCreatedByKnownWorktree(
@@ -799,7 +799,7 @@ async function prepareWorktreePushTargetSsh(
     const existingRemote = await findRemoteForUrlSsh(provider, repoPath, target.remoteUrl)
     if (existingRemote) {
       remoteName = existingRemote
-      // Why: if a later PR worktree reuses an Orca-created fork remote, it
+      // Why: if a later PR worktree reuses an Korca-created fork remote, it
       // must inherit ownership so deleting the final user can remove it.
       remoteCreated = store
         ? isPushTargetRemoteCreatedByKnownWorktree(
@@ -867,16 +867,16 @@ async function readRemoteEffectiveHooks(
   fsProvider: IFilesystemProvider,
   hooksRootPath: string
 ): Promise<ReturnType<typeof getEffectiveHooksFromConfig>> {
-  return getEffectiveHooksFromConfig(repo, await readRemoteOrcaYaml(fsProvider, hooksRootPath))
+  return getEffectiveHooksFromConfig(repo, await readRemoteKorcaYaml(fsProvider, hooksRootPath))
 }
 
-async function readRemoteOrcaYaml(
+async function readRemoteKorcaYaml(
   fsProvider: IFilesystemProvider,
   hooksRootPath: string
-): Promise<ReturnType<typeof parseOrcaYaml>> {
+): Promise<ReturnType<typeof parseKorcaYaml>> {
   try {
-    const result = await fsProvider.readFile(joinWorktreeRelativePath(hooksRootPath, 'orca.yaml'))
-    return result.isBinary ? null : parseOrcaYaml(result.content)
+    const result = await fsProvider.readFile(joinWorktreeRelativePath(hooksRootPath, 'korca.yaml'))
+    return result.isBinary ? null : parseKorcaYaml(result.content)
   } catch {
     return null
   }
@@ -890,7 +890,7 @@ async function createRemoteSetupRunnerScript(
   fsProvider: IFilesystemProvider
 ): Promise<CreateWorktreeResult['setup']> {
   const useWindowsFormat = isWindowsAbsolutePathLike(worktreePath)
-  const runnerRelativePath = useWindowsFormat ? 'orca/setup-runner.cmd' : 'orca/setup-runner.sh'
+  const runnerRelativePath = useWindowsFormat ? 'korca/setup-runner.cmd' : 'korca/setup-runner.sh'
   const { stdout } = await gitProvider.exec(
     ['rev-parse', '--git-path', runnerRelativePath],
     worktreePath
@@ -1362,9 +1362,9 @@ export async function createRemoteWorktree(
     // max(lastActivityAt, createdAt + GRACE_MS) to keep it on top until the
     // window elapses. See smart-sort.ts `CREATE_GRACE_MS`.
     createdAt: now,
-    orcaCreatedAt: now,
-    orcaCreationSource: 'ssh',
-    orcaCreationWorkspaceLayout: getWorktreeCreationLayout(repo, settings),
+    korcaCreatedAt: now,
+    korcaCreationSource: 'ssh',
+    korcaCreationWorkspaceLayout: getWorktreeCreationLayout(repo, settings),
     baseRef: baseBranch,
     ...(checkoutExistingBranch ? { preserveBranchOnDelete: true } : {}),
     ...(configuredPushTarget ? { pushTarget: configuredPushTarget } : {}),
@@ -1401,7 +1401,7 @@ export async function createRemoteWorktree(
   let setup: CreateWorktreeResult['setup']
   let defaultTabs: CreateWorktreeResult['defaultTabs']
   if (fsProvider) {
-    const yamlHooks = await readRemoteOrcaYaml(fsProvider, created.path)
+    const yamlHooks = await readRemoteKorcaYaml(fsProvider, created.path)
     const hooks = getEffectiveHooksFromConfig(repo, yamlHooks)
     try {
       defaultTabs = getDefaultTabsLaunch(yamlHooks, repo, args.setupDecision)
@@ -1454,7 +1454,7 @@ export async function createLocalWorktree(
   repo: Repo,
   store: Store,
   mainWindow: BrowserWindow,
-  runtime?: OrcaRuntimeService
+  runtime?: KorcaRuntimeService
 ): Promise<CreateWorktreeResult> {
   const settings = store.getSettings()
   const worktreePathSettings = getWorktreePathSettings(repo, settings)
@@ -1782,9 +1782,9 @@ export async function createLocalWorktree(
     // See createRemoteWorktree above: createdAt protects the newly-created
     // worktree from ambient PTY bumps in other worktrees for CREATE_GRACE_MS.
     createdAt: now,
-    orcaCreatedAt: now,
-    orcaCreationSource: 'desktop',
-    orcaCreationWorkspaceLayout: getWorktreeCreationLayout(repo, settings),
+    korcaCreatedAt: now,
+    korcaCreationSource: 'desktop',
+    korcaCreationWorkspaceLayout: getWorktreeCreationLayout(repo, settings),
     baseRef: baseBranch,
     ...(checkoutExistingBranch ? { preserveBranchOnDelete: true } : {}),
     ...(configuredPushTarget ? { pushTarget: configuredPushTarget } : {}),
@@ -1827,7 +1827,7 @@ export async function createLocalWorktree(
     await createWorktreeSymlinks(repo.path, created.path, repo.symlinkPaths)
   }
 
-  // Why: the worktree's own `orca.yaml` (at the tip of the base branch) is
+  // Why: the worktree's own `korca.yaml` (at the tip of the base branch) is
   // authoritative for what runs post-creation. The repo-level trust already
   // granted by the user in the pre-create flow covers execution of that
   // script; we intentionally do not re-gate on content equality with the

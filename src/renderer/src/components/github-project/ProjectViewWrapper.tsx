@@ -60,7 +60,7 @@ import {
 
 type Props = Record<string, never>
 
-const ORCA_FEATURE_REQUEST_URL = 'https://github.com/stablyai/orca/issues/new'
+const KORCA_FEATURE_REQUEST_URL = 'https://github.com/stablyai/korca/issues/new'
 
 function listProjectViewsForRuntime(
   settings: Parameters<typeof getActiveRuntimeTarget>[0],
@@ -358,8 +358,8 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
   // ── Row action state ────────────────────────────────────────────────
   // Why: when a row matches a registered repo, we open the full
   // `GitHubItemDialog` in repo-backed mode; when it doesn't, we open the
-  // simplified slug-mode dialog. `repoNotInOrca` drives the fallback modal
-  // from the design doc's `repo-not-in-orca` interaction state.
+  // simplified slug-mode dialog. `repoNotInKorca` drives the fallback modal
+  // from the design doc's `repo-not-in-korca` interaction state.
   const [dialogRepoItem, setDialogRepoItem] = useState<{
     workItem: GitHubWorkItem
     repoPath: string
@@ -367,13 +367,13 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
     origin: GitHubItemDialogProjectOrigin
   } | null>(null)
   // Why: the slug dialog is only opened for rows whose repo isn't registered
-  // in Orca (matched repos go through the full GitHubItemDialog above), so
-  // there's no `matchedRepo` to track here. The repo-not-in-orca modal —
+  // in Korca (matched repos go through the full GitHubItemDialog above), so
+  // there's no `matchedRepo` to track here. The repo-not-in-korca modal —
   // owned by this parent, not the slug dialog — handles "Start work".
   const [slugDialog, setSlugDialog] = useState<{
     origin: GitHubItemDialogProjectOrigin
   } | null>(null)
-  const [repoNotInOrca, setRepoNotInOrca] = useState<{
+  const [repoNotInKorca, setRepoNotInKorca] = useState<{
     owner: string
     repo: string
     url: string | null
@@ -383,14 +383,14 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
   const resolvedDialogRepoItem = resolveRepoBackedProjectDialogState(dialogRepoItem, liveRepoIds)
   if (resolvedDialogRepoItem !== dialogRepoItem) {
     // Why: repo-backed Project dialogs cannot edit after their repo leaves
-    // Orca; clear them before the modal tree receives stale repo ids.
+    // Korca; clear them before the modal tree receives stale repo ids.
     setDialogRepoItem(resolvedDialogRepoItem)
   }
 
   const resolvedMissingRepoDialogs = resolveMissingRepoProjectDialogState({
     slugIndexReady,
     slugDialog,
-    repoNotInOrca,
+    repoNotInKorca,
     lookupSlug
   })
   if (resolvedMissingRepoDialogs.slugDialog !== slugDialog) {
@@ -398,8 +398,8 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
     // use the full repo-backed dialog instead of the slug fallback.
     setSlugDialog(resolvedMissingRepoDialogs.slugDialog)
   }
-  if (resolvedMissingRepoDialogs.repoNotInOrca !== repoNotInOrca) {
-    setRepoNotInOrca(resolvedMissingRepoDialogs.repoNotInOrca)
+  if (resolvedMissingRepoDialogs.repoNotInKorca !== repoNotInKorca) {
+    setRepoNotInKorca(resolvedMissingRepoDialogs.repoNotInKorca)
   }
 
   const buildWorkItem = useCallback(
@@ -502,7 +502,7 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
       const matches = lookupSlug(`${origin.owner}/${origin.repo}`)
       const matched = matches.length === 1 ? matches[0] : null
       if (!matched) {
-        setRepoNotInOrca({
+        setRepoNotInKorca({
           owner: origin.owner,
           repo: origin.repo,
           url: row.content.url ?? null
@@ -792,9 +792,9 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
         onClose={() => setDialogRepoItem(null)}
       />
 
-      {/* Slug-only simplified dialog for rows whose repo isn't added to Orca.
+      {/* Slug-only simplified dialog for rows whose repo isn't added to Korca.
           Why: no Start-work affordance lives inside the slug dialog — the
-          parent's `handleStartWork`/`repoNotInOrca` modal owns that flow, so
+          parent's `handleStartWork`/`repoNotInKorca` modal owns that flow, so
           having a duplicate (always-disabled or always-routing-to-fallback)
           button here would only confuse the user. */}
       <ProjectItemSlugDialog
@@ -802,32 +802,32 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
         onClose={() => setSlugDialog(null)}
       />
 
-      {/* repo-not-in-orca prompt: see design doc Interaction States. */}
+      {/* repo-not-in-korca prompt: see design doc Interaction States. */}
       <Dialog
-        open={resolvedMissingRepoDialogs.repoNotInOrca !== null}
-        onOpenChange={(open) => !open && setRepoNotInOrca(null)}
+        open={resolvedMissingRepoDialogs.repoNotInKorca !== null}
+        onOpenChange={(open) => !open && setRepoNotInKorca(null)}
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Repository not in Orca</DialogTitle>
+            <DialogTitle>Repository not in Korca</DialogTitle>
             <DialogDescription>
-              {resolvedMissingRepoDialogs.repoNotInOrca
-                ? `${resolvedMissingRepoDialogs.repoNotInOrca.owner}/${resolvedMissingRepoDialogs.repoNotInOrca.repo} isn't added to Orca. Add it to start work, or open in GitHub.`
+              {resolvedMissingRepoDialogs.repoNotInKorca
+                ? `${resolvedMissingRepoDialogs.repoNotInKorca.owner}/${resolvedMissingRepoDialogs.repoNotInKorca.repo} isn't added to Korca. Add it to start work, or open in GitHub.`
                 : null}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:justify-end">
-            <Button variant="ghost" onClick={() => setRepoNotInOrca(null)}>
+            <Button variant="ghost" onClick={() => setRepoNotInKorca(null)}>
               Cancel
             </Button>
-            {resolvedMissingRepoDialogs.repoNotInOrca?.url ? (
+            {resolvedMissingRepoDialogs.repoNotInKorca?.url ? (
               <Button
                 variant="outline"
                 onClick={() => {
-                  if (resolvedMissingRepoDialogs.repoNotInOrca?.url) {
-                    void window.api.shell.openUrl(resolvedMissingRepoDialogs.repoNotInOrca.url)
+                  if (resolvedMissingRepoDialogs.repoNotInKorca?.url) {
+                    void window.api.shell.openUrl(resolvedMissingRepoDialogs.repoNotInKorca.url)
                   }
-                  setRepoNotInOrca(null)
+                  setRepoNotInKorca(null)
                 }}
               >
                 Open in GitHub
@@ -840,7 +840,7 @@ export default function ProjectViewWrapper(_props: Props = {} as Props): React.J
                 // from a row click is out of v1 scope (design doc §Row
                 // actions). Close the modal regardless so the user isn't
                 // trapped if they cancel the picker.
-                setRepoNotInOrca(null)
+                setRepoNotInKorca(null)
                 await addRepoFromStore()
               }}
             >
@@ -1004,7 +1004,7 @@ function ViewTabStrip({
             title={
               supported
                 ? v.name
-                : `${v.name} — Orca doesn't support ${layoutLabel} project views yet. File a feature request at ${ORCA_FEATURE_REQUEST_URL}.`
+                : `${v.name} — Korca doesn't support ${layoutLabel} project views yet. File a feature request at ${KORCA_FEATURE_REQUEST_URL}.`
             }
             className={cn(
               'inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-t-md border-x border-t px-3 py-1.5 text-xs',
@@ -1022,13 +1022,13 @@ function ViewTabStrip({
         if (supported) {
           return tab
         }
-        const unsupportedMessage = `Orca doesn't support ${layoutLabel} project views yet.`
+        const unsupportedMessage = `Korca doesn't support ${layoutLabel} project views yet.`
         return (
           <HoverCard key={v.id} openDelay={200} closeDelay={100}>
             <HoverCardTrigger asChild>
               <span
                 tabIndex={0}
-                aria-label={`${v.name}. ${unsupportedMessage} File a feature request at ${ORCA_FEATURE_REQUEST_URL}.`}
+                aria-label={`${v.name}. ${unsupportedMessage} File a feature request at ${KORCA_FEATURE_REQUEST_URL}.`}
                 className="inline-flex shrink-0 cursor-not-allowed rounded-t-md outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
               >
                 {tab}
@@ -1037,13 +1037,13 @@ function ViewTabStrip({
             <HoverCardContent side="bottom" align="start" sideOffset={8} className="w-72 p-3">
               <div className="space-y-2">
                 <p className="text-xs leading-5 text-muted-foreground">
-                  {unsupportedMessage} Switch to a Table view to work with this project in Orca.
+                  {unsupportedMessage} Switch to a Table view to work with this project in Korca.
                 </p>
                 <Button
                   type="button"
                   size="xs"
                   variant="outline"
-                  onClick={() => void window.api.shell.openUrl(ORCA_FEATURE_REQUEST_URL)}
+                  onClick={() => void window.api.shell.openUrl(KORCA_FEATURE_REQUEST_URL)}
                 >
                   File feature request
                   <ExternalLink className="size-3" />
@@ -1083,9 +1083,9 @@ function ErrorState({
   }
   const copy =
     error.type === 'too_large'
-      ? `This view has ${totalCount ?? 'many'} items — too large to render in Orca. Narrow the view's filter on GitHub.`
+      ? `This view has ${totalCount ?? 'many'} items — too large to render in Korca. Narrow the view's filter on GitHub.`
       : error.type === 'unsupported_layout'
-        ? 'Orca only renders table views yet. This is a Board or Roadmap view.'
+        ? 'Korca only renders table views yet. This is a Board or Roadmap view.'
         : error.type === 'not_found'
           ? 'Could not find this project or view.'
           : error.type === 'schema_drift'

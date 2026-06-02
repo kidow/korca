@@ -3,7 +3,7 @@ import { mkdirSync, rmSync, writeFileSync } from 'fs'
 import { mkdtemp } from 'fs/promises'
 import os from 'os'
 import path from 'path'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import { waitForSessionReady } from './helpers/store'
 import type { ElectronApplication } from '@stablyai/playwright-test'
 
@@ -27,7 +27,7 @@ async function createNestedRepoFixture(): Promise<{
   projectPaths: string[]
   groupName: string
 }> {
-  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'orca-e2e-folder-setup-'))
+  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'korca-e2e-folder-setup-'))
   tempRoots.push(parentPath)
   const repoNames = ['api-service', 'web-client']
   const projectPaths = repoNames.map((name) => path.join(parentPath, name))
@@ -49,7 +49,7 @@ async function createLargeNestedRepoFixture(): Promise<{
   groupName: string
   selectedProjectPaths: string[]
 }> {
-  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'orca-e2e-large-folder-setup-'))
+  const parentPath = await mkdtemp(path.join(os.tmpdir(), 'korca-e2e-large-folder-setup-'))
   tempRoots.push(parentPath)
   const nestedParent = path.join(
     parentPath,
@@ -96,21 +96,21 @@ async function chooseFolderInNativeDialog(
 test.describe('Folder setup', () => {
   test('imports nested repositories from the add-project dialog as a project group', async ({
     electronApp,
-    orcaPage
+    korcaPage
   }) => {
-    await waitForSessionReady(orcaPage)
+    await waitForSessionReady(korcaPage)
     const fixture = await createNestedRepoFixture()
     await chooseFolderInNativeDialog(electronApp, fixture.parentPath)
 
-    await orcaPage
+    await korcaPage
       .getByRole('button', { name: /Add Project/i })
       .first()
       .click()
-    const dialog = orcaPage.getByRole('dialog', { name: /Add a project/i })
+    const dialog = korcaPage.getByRole('dialog', { name: /Add a project/i })
     await expect(dialog).toBeVisible()
     await dialog.getByRole('button', { name: /Browse folder/i }).click()
 
-    const importDialog = orcaPage.getByRole('dialog', { name: /Import as project group/i })
+    const importDialog = korcaPage.getByRole('dialog', { name: /Import as project group/i })
     await expect(
       importDialog.getByRole('heading', { name: /Import as project group/i })
     ).toBeVisible()
@@ -124,7 +124,7 @@ test.describe('Folder setup', () => {
     await expect
       .poll(
         () =>
-          orcaPage.evaluate(async (args) => {
+          korcaPage.evaluate(async (args) => {
             const state = window.__store?.getState()
             if (!state) {
               return null
@@ -154,31 +154,31 @@ test.describe('Folder setup', () => {
         projectGroupOrders: [0, 1]
       })
 
-    await orcaPage.evaluate(() => {
+    await korcaPage.evaluate(() => {
       const state = window.__store?.getState()
       state?.closeModal()
       state?.setGroupBy('repo')
     })
-    await expect(orcaPage.getByText(fixture.groupName)).toBeVisible()
+    await expect(korcaPage.getByText(fixture.groupName)).toBeVisible()
   })
 
   test('imports a small selection from a large nested folder without modal overflow', async ({
     electronApp,
-    orcaPage
+    korcaPage
   }) => {
-    await waitForSessionReady(orcaPage)
+    await waitForSessionReady(korcaPage)
     const fixture = await createLargeNestedRepoFixture()
     await chooseFolderInNativeDialog(electronApp, fixture.parentPath)
 
-    await orcaPage
+    await korcaPage
       .getByRole('button', { name: /Add Project/i })
       .first()
       .click()
-    const dialog = orcaPage.getByRole('dialog', { name: /Add a project/i })
+    const dialog = korcaPage.getByRole('dialog', { name: /Add a project/i })
     await expect(dialog).toBeVisible()
     await dialog.getByRole('button', { name: /Browse folder/i }).click()
 
-    const importDialog = orcaPage.getByRole('dialog', { name: /Import as project group/i })
+    const importDialog = korcaPage.getByRole('dialog', { name: /Import as project group/i })
     await expect(importDialog.getByText('Found 87 git repositories in this folder.')).toBeVisible()
     await expect
       .poll(async () =>
@@ -209,7 +209,7 @@ test.describe('Folder setup', () => {
     await expect
       .poll(
         () =>
-          orcaPage.evaluate(async (args) => {
+          korcaPage.evaluate(async (args) => {
             const state = window.__store?.getState()
             if (!state) {
               return null

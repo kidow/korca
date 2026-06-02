@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Orca Linux computer-use bridge.
+"""Korca Linux computer-use bridge.
 
-The Node sidecar owns Orca's public API. This process is intentionally a small
+The Node sidecar owns Korca's public API. This process is intentionally a small
 AT-SPI adapter: read one JSON operation file, execute it in the user's desktop
 session, and print one JSON response.
 """
@@ -567,7 +567,7 @@ def handshake_response():
     has_screenshot = Gdk is not None and GdkPixbuf is not None and not is_wayland
     return {
         "platform": "linux",
-        "provider": "orca-computer-use-linux",
+        "provider": "korca-computer-use-linux",
         "providerVersion": "1.0.0",
         "protocolVersion": 1,
         "supports": {

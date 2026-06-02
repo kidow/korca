@@ -1,5 +1,5 @@
 import type { Page } from '@stablyai/playwright-test'
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import { waitForActiveWorktree, waitForSessionReady } from './helpers/store'
 import {
   markWorkspaceTerminalSlept,
@@ -15,15 +15,15 @@ function worktreeOption(page: Page, worktreeId: string) {
 test.describe('Worktree Lineage', () => {
   test.describe.configure({ mode: 'serial' })
 
-  test.beforeEach(async ({ orcaPage }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
+  test.beforeEach(async ({ korcaPage }) => {
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
   })
 
-  test('renders existing child lineage in the sidebar', async ({ orcaPage }) => {
-    const { parentId, childId } = await seedLineageScenario(orcaPage)
-    const parentRow = worktreeOption(orcaPage, parentId)
-    const childRow = worktreeOption(orcaPage, childId)
+  test('renders existing child lineage in the sidebar', async ({ korcaPage }) => {
+    const { parentId, childId } = await seedLineageScenario(korcaPage)
+    const parentRow = worktreeOption(korcaPage, parentId)
+    const childRow = worktreeOption(korcaPage, childId)
 
     await expect(parentRow).toBeVisible()
     await parentRow.click()
@@ -34,7 +34,7 @@ test.describe('Worktree Lineage', () => {
     await expect(childToggle).toBeVisible({ timeout: 10_000 })
     await expect(childRow).toBeVisible()
 
-    const positions = await orcaPage.evaluate(
+    const positions = await korcaPage.evaluate(
       ({ parentId, childId }) => {
         const parent = document.getElementById(
           `worktree-list-option-${encodeURIComponent(parentId)}`
@@ -58,7 +58,7 @@ test.describe('Worktree Lineage', () => {
     await expect(childRow).toBeHidden()
 
     await parentRow.getByRole('button', { name: 'Show 1 child workspace' }).click()
-    await orcaPage.evaluate(async (childId) => {
+    await korcaPage.evaluate(async (childId) => {
       const store = window.__store
       if (!store) {
         throw new Error('window.__store is not available')
@@ -71,7 +71,7 @@ test.describe('Worktree Lineage', () => {
     await expect
       .poll(
         () =>
-          orcaPage.evaluate((childId) => {
+          korcaPage.evaluate((childId) => {
             const store = window.__store
             return Boolean(store?.getState().worktreeLineageById[childId])
           }, childId),
@@ -85,11 +85,11 @@ test.describe('Worktree Lineage', () => {
   })
 
   test('injects filtered parents structurally without showing a parent badge', async ({
-    orcaPage
+    korcaPage
   }) => {
-    const { parentId, childId } = await seedLineageScenario(orcaPage)
+    const { parentId, childId } = await seedLineageScenario(korcaPage)
 
-    await orcaPage.evaluate(
+    await korcaPage.evaluate(
       ({ parentId, childId }) => {
         const store = window.__store
         if (!store) {
@@ -119,14 +119,14 @@ test.describe('Worktree Lineage', () => {
       { parentId, childId }
     )
 
-    const parentRow = worktreeOption(orcaPage, parentId)
-    const childRow = worktreeOption(orcaPage, childId)
+    const parentRow = worktreeOption(korcaPage, parentId)
+    const childRow = worktreeOption(korcaPage, childId)
 
     await expect(parentRow).toBeVisible()
     await expect(childRow).toBeVisible()
     await expect(childRow).not.toContainText(/\bfrom\b/)
 
-    const positions = await orcaPage.evaluate(
+    const positions = await korcaPage.evaluate(
       ({ parentId, childId }) => {
         const parent = document.getElementById(
           `worktree-list-option-${encodeURIComponent(parentId)}`
@@ -147,47 +147,47 @@ test.describe('Worktree Lineage', () => {
   })
 
   test('updates nested child preview status when the child terminal sleeps', async ({
-    orcaPage
+    korcaPage
   }) => {
-    const { parentId, childId } = await seedLineageScenario(orcaPage)
-    const parentRow = worktreeOption(orcaPage, parentId)
-    const childRow = worktreeOption(orcaPage, childId)
+    const { parentId, childId } = await seedLineageScenario(korcaPage)
+    const parentRow = worktreeOption(korcaPage, parentId)
+    const childRow = worktreeOption(korcaPage, childId)
 
     await expect(parentRow).toBeVisible()
     await expect(childRow).toBeVisible()
 
-    const childTabId = await seedWorkspaceLiveTerminal(orcaPage, childId)
+    const childTabId = await seedWorkspaceLiveTerminal(korcaPage, childId)
     await expect(childRow).toContainText('Active')
     await childRow.click({ button: 'right' })
-    await expect(orcaPage.getByRole('menuitem', { name: 'Sleep' })).not.toHaveAttribute(
+    await expect(korcaPage.getByRole('menuitem', { name: 'Sleep' })).not.toHaveAttribute(
       'data-disabled',
       ''
     )
-    await orcaPage.keyboard.press('Escape')
+    await korcaPage.keyboard.press('Escape')
 
-    await markWorkspaceTerminalSlept(orcaPage, { worktreeId: childId, tabId: childTabId })
+    await markWorkspaceTerminalSlept(korcaPage, { worktreeId: childId, tabId: childTabId })
     await expect(childRow).toContainText('Inactive')
     await childRow.click({ button: 'right' })
-    await expect(orcaPage.getByRole('menuitem', { name: 'Sleep' })).toHaveAttribute(
+    await expect(korcaPage.getByRole('menuitem', { name: 'Sleep' })).toHaveAttribute(
       'data-disabled',
       ''
     )
-    await orcaPage.keyboard.press('Escape')
+    await korcaPage.keyboard.press('Escape')
   })
 
   test('shows parent and child agent rows while the parent workspace is active', async ({
-    orcaPage
+    korcaPage
   }) => {
-    const { parentId, childId } = await seedLineageScenario(orcaPage)
-    const parentRow = worktreeOption(orcaPage, parentId)
-    const childRow = worktreeOption(orcaPage, childId)
+    const { parentId, childId } = await seedLineageScenario(korcaPage)
+    const parentRow = worktreeOption(korcaPage, parentId)
+    const childRow = worktreeOption(korcaPage, childId)
 
     await parentRow.click()
     await expect(parentRow).toHaveAttribute('aria-current', 'page')
     await expect(childRow).toBeVisible()
 
-    const parentAgentPrompt = await seedWorkspaceAgentStatus(orcaPage, parentId, 'PARENT')
-    const childAgentPrompt = await seedWorkspaceAgentStatus(orcaPage, childId, 'CHILD')
+    const parentAgentPrompt = await seedWorkspaceAgentStatus(korcaPage, parentId, 'PARENT')
+    const childAgentPrompt = await seedWorkspaceAgentStatus(korcaPage, childId, 'CHILD')
 
     await expect(
       parentRow.getByRole('treeitem').filter({ hasText: parentAgentPrompt })

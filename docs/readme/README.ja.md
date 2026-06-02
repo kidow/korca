@@ -1,11 +1,11 @@
 <h1 align="center">
-  <a href="https://onOrca.dev"><img src="../../resources/build/icon.png" alt="Orca" width="64" valign="middle" /></a> Orca
+  <a href="https://onKorca.dev"><img src="../../resources/build/icon.png" alt="Korca" width="64" valign="middle" /></a> Korca
 </h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-blue?style=for-the-badge" alt="対応プラットフォーム" />
   <a href="https://discord.gg/fzjDKHxv8Q"><img src="https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
-  <a href="https://x.com/orca_build"><img src="https://img.shields.io/badge/%E2%80%8E-Follow_@orca__build-000000?style=for-the-badge&logo=x&logoColor=white" alt="X でフォロー" /></a>
+  <a href="https://x.com/korca_build"><img src="https://img.shields.io/badge/%E2%80%8E-Follow_@korca__build-000000?style=for-the-badge&logo=x&logoColor=white" alt="X でフォロー" /></a>
 </p>
 
 <p align="center">
@@ -23,12 +23,12 @@
 </p>
 
 <p align="center">
-  <img src="../assets/file-drag.gif" alt="Orca Screenshot" width="800" />
+  <img src="../assets/file-drag.gif" alt="Korca Screenshot" width="800" />
 </p>
 
 ## 対応するエージェント
 
-Orca は任意の CLI エージェントに対応しています（_このリストに限定されません_）。
+Korca は任意の CLI エージェントに対応しています（_このリストに限定されません_）。
 
 <p>
   <a href="https://docs.anthropic.com/claude/docs/claude-code"><kbd><img src="../assets/claude-logo.svg" width="16" valign="middle" /> Claude Code</kbd></a> &nbsp;
@@ -68,9 +68,9 @@ Orca は任意の CLI エージェントに対応しています（_このリス
 - **ログイン不要** — お持ちの Claude Code、OpenClaude、Codex、Grok、Antigravity サブスクリプションをそのまま利用できます。
 - **ワークツリーネイティブ** — 各機能は専用のワークツリーで開発できます。スタッシュやブランチ切り替えに悩まず、すぐに作成して切り替えられます。
 - **マルチエージェントターミナル** — 複数の AI エージェントをタブやペインで並行実行できます。どれがアクティブかを一目で確認できます。
-- **組み込みソース管理** — AI が生成した Diff を確認し、すばやく編集して、Orca から離れずにコミットできます。
+- **組み込みソース管理** — AI が生成した Diff を確認し、すばやく編集して、Korca から離れずにコミットできます。
 - **GitHub 連携** — PR、Issue、Actions チェックが各ワークツリーに自動で紐づきます。
-- **SSH サポート** — リモートマシンに接続し、Orca から直接エージェントを実行できます。
+- **SSH サポート** — リモートマシンに接続し、Korca から直接エージェントを実行できます。
 - **通知** — エージェントが完了したときや注意が必要なときに通知します。スレッドを未読にして後で戻ることもできます。
 
 ---
@@ -79,25 +79,25 @@ Orca は任意の CLI エージェントに対応しています（_このリス
 
 ### Mac, Linux, Windows
 
-- **[onOrca.dev からダウンロード](https://onOrca.dev)**
-- または **[GitHub Releases ページ](https://github.com/stablyai/orca/releases/latest)** から入手
+- **[onKorca.dev からダウンロード](https://onKorca.dev)**
+- または **[GitHub Releases ページ](https://github.com/stablyai/korca/releases/latest)** から入手
 
 _パッケージマネージャーからもインストールできます:_
 
 ### macOS (Homebrew)
 
 ```bash
-brew install --cask stablyai/orca/orca
+brew install --cask stablyai/korca/korca
 ```
 
 ### Arch Linux (AUR)
 
 ```bash
 # ビルド済みバイナリ
-yay -S stably-orca-bin
+yay -S stably-korca-bin
 
 # GitHub ソースからビルド
-yay -S stably-orca-git
+yay -S stably-korca-git
 ```
 
 ---
@@ -107,11 +107,11 @@ yay -S stably-orca-git
 スマートフォンからエージェントを操作できます。
 
 <p align="center">
-  <picture><source srcset="../assets/feature-wall/mobile-companion-app-showcase.gif" type="image/gif"><img src="../assets/feature-wall/mobile-companion-app-showcase.jpg" alt="Orca デスクトップとモバイル companion アプリ" width="720" /></picture>
+  <picture><source srcset="../assets/feature-wall/mobile-companion-app-showcase.gif" type="image/gif"><img src="../assets/feature-wall/mobile-companion-app-showcase.jpg" alt="Korca デスクトップとモバイル companion アプリ" width="720" /></picture>
 </p>
 
-- **iOS:** [App Store からダウンロード](https://apps.apple.com/us/app/orca-ide/id6766130217)
-- **Android:** [GitHub Releases から APK をダウンロード](https://github.com/stablyai/orca/releases/download/mobile-v0.0.10/app-release.apk)
+- **iOS:** [App Store からダウンロード](https://apps.apple.com/us/app/korca-ide/id6766130217)
+- **Android:** [GitHub Releases から APK をダウンロード](https://github.com/stablyai/korca/releases/download/mobile-v0.0.10/app-release.apk)
 
 ---
 
@@ -120,19 +120,19 @@ yay -S stably-orca-git
 各タイルをクリックすると、そのワークフローを確認できます。
 
 <p align="center">
-  <a href="https://www.onorca.dev/docs/model/worktrees"><kbd><strong>並列ワークツリー</strong><br/><br/><picture><source srcset="../assets/feature-wall/parallel-worktrees.gif" type="image/gif"><img src="../assets/feature-wall/parallel-worktrees.jpg" alt="並列ワークツリーのオーケストレーション" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/terminal"><kbd><strong>ターミナル分割</strong><br/><br/><picture><source srcset="../assets/feature-wall/terminal-splits.gif" type="image/gif"><img src="../assets/feature-wall/terminal-splits.jpg" alt="Ghostty クラスのターミナル分割" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/browser/design-mode"><kbd><strong>デザインモード</strong><br/><br/><picture><source srcset="../assets/feature-wall/design-mode.gif" type="image/gif"><img src="../assets/feature-wall/design-mode.jpg" alt="組み込みブラウザとデザインモード" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/review/linear"><kbd><strong>GitHub と Linear をネイティブに</strong><br/><br/><picture><source srcset="../assets/feature-wall/github-linear.gif" type="image/gif"><img src="../assets/feature-wall/github-linear.jpg" alt="Orca の GitHub と Linear ワークフロー" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/agents/supported"><kbd><strong>任意の CLI エージェント</strong><br/><br/><picture><source srcset="../assets/feature-wall/cli-agents.gif" type="image/gif"><img src="../assets/feature-wall/cli-agents.jpg" alt="任意の CLI エージェントに対応" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/ssh"><kbd><strong>SSH ワークツリー</strong><br/><br/><picture><source srcset="../assets/feature-wall/ssh-worktrees.gif" type="image/gif"><img src="../assets/feature-wall/ssh-worktrees.jpg" alt="SSH 経由のリモートワークツリー" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/editing/file-explorer"><kbd><strong>ファイルをエージェントへ</strong><br/><br/><picture><source srcset="../assets/feature-wall/file-drag.gif" type="image/gif"><img src="../assets/feature-wall/file-drag.jpg" alt="ファイルや画像をエージェントのプロンプトへドラッグ" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/review/annotate-ai-diff"><kbd><strong>AI Diff 注釈</strong><br/><br/><picture><source srcset="../assets/feature-wall/annotate-diff.gif" type="image/gif"><img src="../assets/feature-wall/annotate-diff.jpg" alt="AI が生成した Diff への注釈" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/cli/overview"><kbd><strong>Orca CLI</strong><br/><br/><picture><source srcset="../assets/feature-wall/orca-cli.gif" type="image/gif"><img src="../assets/feature-wall/orca-cli.jpg" alt="CLI から Orca をスクリプト操作" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/settings"><kbd><strong>ネイティブ検索</strong><br/><br/><picture><source srcset="../assets/feature-wall/keyboard-native.gif" type="image/gif"><img src="../assets/feature-wall/keyboard-native.jpg" alt="Orca ワークフロー全体のネイティブ検索" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/agents/usage-tracking"><kbd><strong>アカウント切り替えと使用量トラッキング</strong><br/><br/><picture><source srcset="../assets/feature-wall/codex-accounts.gif" type="image/gif"><img src="../assets/feature-wall/codex-accounts.jpg" alt="アカウント切り替えと使用量トラッキング" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
-  <a href="https://www.onorca.dev/docs/editing/markdown"><kbd><strong>リッチなリポジトリプレビュー</strong><br/><br/><picture><source srcset="../assets/feature-wall/markdown-editor.gif" type="image/gif"><img src="../assets/feature-wall/markdown-editor.jpg" alt="Markdown、画像、PDF、リポジトリ文書のプレビュー" width="390" /></picture><br/></kbd></a><br/><br/>
-  <a href="https://www.onorca.dev/docs/model/tabs-panes-splits"><kbd><strong>何でも分割表示</strong><br/><br/><picture><source srcset="../assets/feature-wall/split-screen.gif" type="image/gif"><img src="../assets/feature-wall/split-screen.jpg" alt="エージェント、ターミナル、ブラウザ、ファイルの分割表示" width="390" /></picture><br/></kbd></a>
+  <a href="https://www.onkorca.dev/docs/model/worktrees"><kbd><strong>並列ワークツリー</strong><br/><br/><picture><source srcset="../assets/feature-wall/parallel-worktrees.gif" type="image/gif"><img src="../assets/feature-wall/parallel-worktrees.jpg" alt="並列ワークツリーのオーケストレーション" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/terminal"><kbd><strong>ターミナル分割</strong><br/><br/><picture><source srcset="../assets/feature-wall/terminal-splits.gif" type="image/gif"><img src="../assets/feature-wall/terminal-splits.jpg" alt="Ghostty クラスのターミナル分割" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/browser/design-mode"><kbd><strong>デザインモード</strong><br/><br/><picture><source srcset="../assets/feature-wall/design-mode.gif" type="image/gif"><img src="../assets/feature-wall/design-mode.jpg" alt="組み込みブラウザとデザインモード" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/review/linear"><kbd><strong>GitHub と Linear をネイティブに</strong><br/><br/><picture><source srcset="../assets/feature-wall/github-linear.gif" type="image/gif"><img src="../assets/feature-wall/github-linear.jpg" alt="Korca の GitHub と Linear ワークフロー" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/agents/supported"><kbd><strong>任意の CLI エージェント</strong><br/><br/><picture><source srcset="../assets/feature-wall/cli-agents.gif" type="image/gif"><img src="../assets/feature-wall/cli-agents.jpg" alt="任意の CLI エージェントに対応" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/ssh"><kbd><strong>SSH ワークツリー</strong><br/><br/><picture><source srcset="../assets/feature-wall/ssh-worktrees.gif" type="image/gif"><img src="../assets/feature-wall/ssh-worktrees.jpg" alt="SSH 経由のリモートワークツリー" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/editing/file-explorer"><kbd><strong>ファイルをエージェントへ</strong><br/><br/><picture><source srcset="../assets/feature-wall/file-drag.gif" type="image/gif"><img src="../assets/feature-wall/file-drag.jpg" alt="ファイルや画像をエージェントのプロンプトへドラッグ" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/review/annotate-ai-diff"><kbd><strong>AI Diff 注釈</strong><br/><br/><picture><source srcset="../assets/feature-wall/annotate-diff.gif" type="image/gif"><img src="../assets/feature-wall/annotate-diff.jpg" alt="AI が生成した Diff への注釈" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/cli/overview"><kbd><strong>Korca CLI</strong><br/><br/><picture><source srcset="../assets/feature-wall/korca-cli.gif" type="image/gif"><img src="../assets/feature-wall/korca-cli.jpg" alt="CLI から Korca をスクリプト操作" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/settings"><kbd><strong>ネイティブ検索</strong><br/><br/><picture><source srcset="../assets/feature-wall/keyboard-native.gif" type="image/gif"><img src="../assets/feature-wall/keyboard-native.jpg" alt="Korca ワークフロー全体のネイティブ検索" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/agents/usage-tracking"><kbd><strong>アカウント切り替えと使用量トラッキング</strong><br/><br/><picture><source srcset="../assets/feature-wall/codex-accounts.gif" type="image/gif"><img src="../assets/feature-wall/codex-accounts.jpg" alt="アカウント切り替えと使用量トラッキング" width="390" /></picture><br/></kbd></a> &nbsp;&nbsp;
+  <a href="https://www.onkorca.dev/docs/editing/markdown"><kbd><strong>リッチなリポジトリプレビュー</strong><br/><br/><picture><source srcset="../assets/feature-wall/markdown-editor.gif" type="image/gif"><img src="../assets/feature-wall/markdown-editor.jpg" alt="Markdown、画像、PDF、リポジトリ文書のプレビュー" width="390" /></picture><br/></kbd></a><br/><br/>
+  <a href="https://www.onkorca.dev/docs/model/tabs-panes-splits"><kbd><strong>何でも分割表示</strong><br/><br/><picture><source srcset="../assets/feature-wall/split-screen.gif" type="image/gif"><img src="../assets/feature-wall/split-screen.jpg" alt="エージェント、ターミナル、ブラウザ、ファイルの分割表示" width="390" /></picture><br/></kbd></a>
 </p>
 
 ---
@@ -140,8 +140,8 @@ yay -S stably-orca-git
 ## コミュニティとサポート
 
 - **Discord:** **[Discord](https://discord.gg/fzjDKHxv8Q)** のコミュニティに参加してください。
-- **Twitter / X:** アップデートやお知らせは **[@orca_build](https://x.com/orca_build)** をフォローしてください。
-- **フィードバックとアイデア:** 私たちは高速にリリースしています。足りない機能がありますか？[機能リクエストを送信](https://github.com/stablyai/orca/issues) してください。
+- **Twitter / X:** アップデートやお知らせは **[@korca_build](https://x.com/korca_build)** をフォローしてください。
+- **フィードバックとアイデア:** 私たちは高速にリリースしています。足りない機能がありますか？[機能リクエストを送信](https://github.com/stablyai/korca/issues) してください。
 - **応援する:** 毎日のリリースを追うために、このリポジトリにスターを付けてください。
 
 ---

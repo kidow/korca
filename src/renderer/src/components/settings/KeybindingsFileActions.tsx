@@ -66,7 +66,7 @@ export function KeybindingsFileActions(): React.JSX.Element {
     return snapshot?.path ?? keybindingSnapshot?.path ?? null
   }
 
-  const editKeybindingsInOrca = async (): Promise<void> => {
+  const editKeybindingsInKorca = async (): Promise<void> => {
     try {
       const filePath = await prepareKeybindingsPath()
       if (!filePath) {
@@ -103,7 +103,7 @@ export function KeybindingsFileActions(): React.JSX.Element {
         }
       })
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to open keybindings in Orca.')
+      toast.error(error instanceof Error ? error.message : 'Failed to open keybindings in Korca.')
     }
   }
 
@@ -134,7 +134,7 @@ export function KeybindingsFileActions(): React.JSX.Element {
             <p className="shrink-0 text-xs font-medium">Keybindings JSON</p>
           </div>
           <p className="truncate font-mono text-[11px] leading-4 text-muted-foreground">
-            {keybindingSnapshot?.path ?? '~/.orca/keybindings.json'}
+            {keybindingSnapshot?.path ?? '~/.korca/keybindings.json'}
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-1.5 sm:justify-end">
@@ -144,10 +144,10 @@ export function KeybindingsFileActions(): React.JSX.Element {
               variant="ghost"
               size="xs"
               className="rounded-none border-0 shadow-none"
-              onClick={() => void editKeybindingsInOrca()}
+              onClick={() => void editKeybindingsInKorca()}
             >
               <FileText className="size-3" />
-              Edit File in Orca
+              Edit File in Korca
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

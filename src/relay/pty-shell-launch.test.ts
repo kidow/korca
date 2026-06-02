@@ -60,39 +60,39 @@ describe('getRelayShellLaunchConfig', () => {
     () => {
       const config = getRelayShellLaunchConfig('/bin/zsh', {
         HOME: homeDir,
-        ORCA_OPENCODE_CONFIG_DIR: '/tmp/orca-opencode-overlay'
+        KORCA_OPENCODE_CONFIG_DIR: '/tmp/korca-opencode-overlay'
       })
-      const zshRoot = join(homeDir, '.orca-relay', 'shell-ready', 'zsh')
+      const zshRoot = join(homeDir, '.korca-relay', 'shell-ready', 'zsh')
 
       expect(config.args).toEqual(['-l'])
       expect(config.env.ZDOTDIR).toBe(zshRoot)
       expect(readFileSync(join(zshRoot, '.zshenv'), 'utf8')).toContain(
-        'export ORCA_USER_ZDOTDIR="${ZDOTDIR:-${ORCA_ORIG_ZDOTDIR:-$HOME}}"'
+        'export KORCA_USER_ZDOTDIR="${ZDOTDIR:-${KORCA_ORIG_ZDOTDIR:-$HOME}}"'
       )
       expect(readFileSync(join(zshRoot, '.zprofile'), 'utf8')).toContain(
-        '_orca_home="${ORCA_USER_ZDOTDIR:-${ORCA_ORIG_ZDOTDIR:-$HOME}}"'
+        '_korca_home="${KORCA_USER_ZDOTDIR:-${KORCA_ORIG_ZDOTDIR:-$HOME}}"'
       )
       expect(readFileSync(join(zshRoot, '.zshrc'), 'utf8')).toContain(
-        '_orca_home="${ORCA_USER_ZDOTDIR:-${ORCA_ORIG_ZDOTDIR:-$HOME}}"'
+        '_korca_home="${KORCA_USER_ZDOTDIR:-${KORCA_ORIG_ZDOTDIR:-$HOME}}"'
       )
       expect(readFileSync(join(zshRoot, '.zlogin'), 'utf8')).toContain(
-        '_orca_home="${ORCA_USER_ZDOTDIR:-${ORCA_ORIG_ZDOTDIR:-$HOME}}"'
+        '_korca_home="${KORCA_USER_ZDOTDIR:-${KORCA_ORIG_ZDOTDIR:-$HOME}}"'
       )
     }
   )
 
   it.skipIf(process.platform === 'win32')('rewrites stale persistent wrapper files', () => {
-    const zshRoot = join(homeDir, '.orca-relay', 'shell-ready', 'zsh')
+    const zshRoot = join(homeDir, '.korca-relay', 'shell-ready', 'zsh')
     mkdirSync(zshRoot, { recursive: true })
     writeFileSync(join(zshRoot, '.zshenv'), '# stale relay wrapper\n')
 
     getRelayShellLaunchConfig('/bin/zsh', {
       HOME: homeDir,
-      ORCA_OPENCODE_CONFIG_DIR: '/tmp/orca-opencode-overlay'
+      KORCA_OPENCODE_CONFIG_DIR: '/tmp/korca-opencode-overlay'
     })
 
     expect(readFileSync(join(zshRoot, '.zshenv'), 'utf8')).toContain(
-      'export ORCA_USER_ZDOTDIR="${ZDOTDIR:-${ORCA_ORIG_ZDOTDIR:-$HOME}}"'
+      'export KORCA_USER_ZDOTDIR="${ZDOTDIR:-${KORCA_ORIG_ZDOTDIR:-$HOME}}"'
     )
   })
 
@@ -100,7 +100,7 @@ describe('getRelayShellLaunchConfig', () => {
     'wraps bash even without overlay env for OSC 133 lifecycle markers',
     () => {
       const config = getRelayShellLaunchConfig('/bin/bash', { HOME: homeDir })
-      const rcfile = join(homeDir, '.orca-relay', 'shell-ready', 'bash', 'rcfile')
+      const rcfile = join(homeDir, '.korca-relay', 'shell-ready', 'bash', 'rcfile')
       const bashRc = readFileSync(rcfile, 'utf8')
 
       expect(config.args).toEqual(['--rcfile', rcfile])

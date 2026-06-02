@@ -29,14 +29,14 @@ import {
 // Codex changes its serialization or normalization rules, this test fails
 // loudly instead of silently shipping bad trust entries that put hooks back
 // into the review pile.
-const REAL_APPROVED_COMMAND = '/bin/sh "/tmp/orca-case-b-mCmCe6/agent-hooks/codex-hook.sh"'
+const REAL_APPROVED_COMMAND = '/bin/sh "/tmp/korca-case-b-mCmCe6/agent-hooks/codex-hook.sh"'
 const REAL_APPROVED_HASH = 'sha256:bc013489dba495431d3790fda62ee5a7d907a7c491e29ad26238c3a5d6d2b163'
 
 let tmpDir: string
 let configPath: string
 
 beforeEach(() => {
-  tmpDir = mkdtempSync(join(tmpdir(), 'orca-codex-trust-test-'))
+  tmpDir = mkdtempSync(join(tmpdir(), 'korca-codex-trust-test-'))
   configPath = join(tmpDir, 'config.toml')
 })
 
@@ -345,9 +345,9 @@ describe('upsertHookTrustEntries', () => {
 
   it('collapses duplicate blocks for the same hook key while preserving unrelated hook state', () => {
     const key =
-      'C:\\Users\\me\\AppData\\Roaming\\orca\\codex-runtime-home\\home\\hooks.json:session_start:0:0'
+      'C:\\Users\\me\\AppData\\Roaming\\korca\\codex-runtime-home\\home\\hooks.json:session_start:0:0'
     const unrelatedKey =
-      'C:\\Users\\me\\AppData\\Roaming\\orca\\codex-runtime-home\\home\\hooks.json:stop:0:0'
+      'C:\\Users\\me\\AppData\\Roaming\\korca\\codex-runtime-home\\home\\hooks.json:stop:0:0'
     const original = [
       `[hooks.state."${escapeTomlString(key)}"]`,
       'enabled = true',
@@ -365,7 +365,7 @@ describe('upsertHookTrustEntries', () => {
     writeFileSync(configPath, original, 'utf-8')
 
     const entry: CodexTrustEntry = {
-      sourcePath: 'C:\\Users\\me\\AppData\\Roaming\\orca\\codex-runtime-home\\home\\hooks.json',
+      sourcePath: 'C:\\Users\\me\\AppData\\Roaming\\korca\\codex-runtime-home\\home\\hooks.json',
       eventLabel: 'session_start',
       groupIndex: 0,
       handlerIndex: 0,
@@ -725,7 +725,7 @@ describe('upsertHookTrustEntries', () => {
   it('preserves `enabled = false` when the user hand-edited it before reinstall', () => {
     // Why: regression — auto-install on app start used to clobber a
     // hand-disabled hook back to enabled = true, removing the only way to
-    // mute Orca's hook short of full uninstall.
+    // mute Korca's hook short of full uninstall.
     const key = '/x/hooks.json:pre_tool_use:0:0'
     const original = `[hooks.state."${key}"]\nenabled = false\ntrusted_hash = "sha256:OLD"\n`
     writeFileSync(configPath, original, 'utf-8')

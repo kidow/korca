@@ -76,7 +76,7 @@ describe('DaemonSpawner', () => {
       const pidPath = getDaemonPidPath(dir)
 
       if (process.platform === 'win32') {
-        expect(socketPath).toContain(`orca-terminal-host-v${PROTOCOL_VERSION}`)
+        expect(socketPath).toContain(`korca-terminal-host-v${PROTOCOL_VERSION}`)
       } else {
         expect(socketPath).toBe(join(dir, `daemon-v${PROTOCOL_VERSION}.sock`))
       }

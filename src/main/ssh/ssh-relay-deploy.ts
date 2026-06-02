@@ -54,7 +54,7 @@ const RELAY_DEPLOY_TIMEOUT_MS = 120_000
  * 2. Check if correct relay version is already deployed
  * 3. If not, SCP the relay package
  * 4. Launch relay via exec channel
- * 5. Wait for ORCA-RELAY sentinel on stdout
+ * 5. Wait for KORCA-RELAY sentinel on stdout
  * 6. Return the transport (relay's stdin/stdout) for multiplexer use
  */
 export async function deployAndLaunchRelay(
@@ -91,7 +91,7 @@ async function deployAndLaunchRelayInner(
   const platform = await detectRemotePlatform(conn)
   if (!platform) {
     throw new Error(
-      'Unsupported remote platform. Orca relay supports: linux-x64, linux-arm64, darwin-x64, darwin-arm64.'
+      'Unsupported remote platform. Korca relay supports: linux-x64, linux-arm64, darwin-x64, darwin-arm64.'
     )
   }
   console.log(`[ssh-relay] Platform: ${platform}`)
@@ -100,7 +100,7 @@ async function deployAndLaunchRelayInner(
   if (!localRelayDir) {
     throw new Error(
       `Relay package for ${platform} not found locally. ` +
-        `This may be a packaging issue — try reinstalling Orca.`
+        `This may be a packaging issue — try reinstalling Korca.`
     )
   }
   // Why: read the content-hashed full version from the local build's .version
@@ -202,7 +202,7 @@ async function uploadRelay(
   if (!localRelayDir || !existsSync(localRelayDir)) {
     throw new Error(
       `Relay package for ${platform} not found. Searched: ${getLocalRelayCandidates(platform).join(', ')}. ` +
-        `This may be a packaging issue — try reinstalling Orca.`
+        `This may be a packaging issue — try reinstalling Korca.`
     )
   }
 
@@ -278,9 +278,9 @@ async function hasRequiredNativeDeps(conn: SshConnection, remoteDir: string): Pr
   try {
     const probe = await execCommand(
       conn,
-      `export PATH=${escapedBinDir}:$PATH && cd ${escapedDir} && (${escapedNode} -e 'require.resolve("node-pty"); require.resolve("@parcel/watcher"); console.log("ORCA-NATIVE-DEPS-OK")' 2>/dev/null || echo MISSING)`
+      `export PATH=${escapedBinDir}:$PATH && cd ${escapedDir} && (${escapedNode} -e 'require.resolve("node-pty"); require.resolve("@parcel/watcher"); console.log("KORCA-NATIVE-DEPS-OK")' 2>/dev/null || echo MISSING)`
     )
-    return probe.includes('ORCA-NATIVE-DEPS-OK')
+    return probe.includes('KORCA-NATIVE-DEPS-OK')
   } catch {
     return false
   }
@@ -340,7 +340,7 @@ async function installNativeDeps(
   // package.json. type:commonjs pins module resolution against Node default
   // flips or a remote ~/.npmrc setting type=module.
   const pkgJson = `${JSON.stringify({
-    name: 'orca-relay',
+    name: 'korca-relay',
     version: '1.0.0',
     private: true,
     type: 'commonjs',
@@ -380,7 +380,7 @@ async function installNativeDeps(
   // [NPTY-MISSING] breadcrumb. MISSING is non-fatal by design — see
   // docs/ssh-relay-versioned-install-dirs.md (relay still serves
   // fs/git/preflight; only pty.spawn fails at runtime).
-  const PROBE_OK = 'ORCA-NPTY-PROBE-OK'
+  const PROBE_OK = 'KORCA-NPTY-PROBE-OK'
   const stderrFile = `${remoteDir}/.npty-probe.stderr`
   const escapedStderr = shellEscape(stderrFile)
   const probeOutput = await execCommand(
@@ -409,8 +409,8 @@ function getLocalRelayPath(platform: RelayPlatform): string | null {
 
 export function getLocalRelayCandidates(platform: RelayPlatform): string[] {
   const candidates: string[] = []
-  if (process.env.ORCA_RELAY_PATH) {
-    candidates.push(join(process.env.ORCA_RELAY_PATH, platform))
+  if (process.env.KORCA_RELAY_PATH) {
+    candidates.push(join(process.env.KORCA_RELAY_PATH, platform))
   }
 
   // Why: electron-builder copies extraResources next to the app bundle, while
@@ -453,7 +453,7 @@ async function launchRelay(
         )
   const escapedDir = shellEscape(remoteDir)
   const escapedNode = shellEscape(nodePath)
-  // Why: remoteRelayDir is shared by every Orca target for the same remote
+  // Why: remoteRelayDir is shared by every Korca target for the same remote
   // account. Hashing the target ID into the socket name prevents one target
   // from attaching to another target's live relay.
   const sockName = relaySocketNameForInstanceId(relayInstanceId)

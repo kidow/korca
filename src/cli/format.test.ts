@@ -16,7 +16,7 @@ let testScreenshotDir: string | null = null
 
 afterEach(() => {
   vi.restoreAllMocks()
-  delete process.env.ORCA_COMPUTER_SCREENSHOT_TMPDIR
+  delete process.env.KORCA_COMPUTER_SCREENSHOT_TMPDIR
   if (testScreenshotDir) {
     rmSync(testScreenshotDir, { recursive: true, force: true })
     testScreenshotDir = null
@@ -66,7 +66,7 @@ describe('formatCliError', () => {
         message: 'Parent workspace was not found.',
         data: {
           nextSteps: [
-            'Run `orca worktree list` and pass a valid --parent-worktree selector.',
+            'Run `korca worktree list` and pass a valid --parent-worktree selector.',
             'Retry with --no-parent to create without lineage.',
             123
           ]
@@ -78,7 +78,7 @@ describe('formatCliError', () => {
     expect(formatCliError(error)).toBe(
       [
         'Parent workspace was not found.',
-        'Next step: Run `orca worktree list` and pass a valid --parent-worktree selector.',
+        'Next step: Run `korca worktree list` and pass a valid --parent-worktree selector.',
         'Next step: Retry with --no-parent to create without lineage.'
       ].join('\n')
     )
@@ -221,7 +221,7 @@ describe('formatComputerAction', () => {
     })
 
     expect(output).toContain(
-      "Use `orca computer get-app-state --app 'Text Editor' --worktree id:repo::/tmp/repo --window-id 99`"
+      "Use `korca computer get-app-state --app 'Text Editor' --worktree id:repo::/tmp/repo --window-id 99`"
     )
   })
 
@@ -246,15 +246,15 @@ describe('formatComputerAction', () => {
     })
 
     expect(output).toContain(
-      'Use `orca computer get-app-state --app com.apple.finder --session manual --window-index 1`'
+      'Use `korca computer get-app-state --app com.apple.finder --session manual --window-index 1`'
     )
   })
 })
 
 describe('printResult computer screenshots', () => {
   it('removes expired screenshot temp files when cleanup is due', () => {
-    testScreenshotDir = mkdtempSync(join(tmpdir(), 'orca-format-test-'))
-    process.env.ORCA_COMPUTER_SCREENSHOT_TMPDIR = testScreenshotDir
+    testScreenshotDir = mkdtempSync(join(tmpdir(), 'korca-format-test-'))
+    process.env.KORCA_COMPUTER_SCREENSHOT_TMPDIR = testScreenshotDir
     const expiredPath = join(testScreenshotDir, 'old-screenshot.png')
     writeFileSync(expiredPath, 'old')
     const expired = new Date(Date.now() - 48 * 60 * 60 * 1000)
@@ -286,13 +286,13 @@ describe('printResult computer screenshots', () => {
   })
 
   it('skips screenshot temp cleanup when the cleanup marker is fresh', () => {
-    testScreenshotDir = mkdtempSync(join(tmpdir(), 'orca-format-test-'))
+    testScreenshotDir = mkdtempSync(join(tmpdir(), 'korca-format-test-'))
     const expiredPath = join(testScreenshotDir, 'old-screenshot.png')
     writeFileSync(expiredPath, 'old')
     const expired = new Date(Date.now() - 48 * 60 * 60 * 1000)
     utimesSync(expiredPath, expired, expired)
     writeFileSync(join(testScreenshotDir, '.last-cleanup'), 'recent\n')
-    process.env.ORCA_COMPUTER_SCREENSHOT_TMPDIR = testScreenshotDir
+    process.env.KORCA_COMPUTER_SCREENSHOT_TMPDIR = testScreenshotDir
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined)
 
     printResult(

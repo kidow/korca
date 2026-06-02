@@ -6,8 +6,8 @@ import { app, ipcMain, net } from 'electron'
 // endpoint rejects. Electron's net module runs in the main process and is not
 // subject to CORS, so we proxy the submission through IPC. This mirrors the
 // same pattern used by updater-changelog.ts and updater-nudge.ts.
-const FEEDBACK_API_URL = 'https://api.onorca.dev/v1/feedback'
-const FEEDBACK_API_FALLBACK_URL = 'https://www.onorca.dev/v1/feedback'
+const FEEDBACK_API_URL = 'https://api.onkorca.dev/v1/feedback'
+const FEEDBACK_API_FALLBACK_URL = 'https://www.onkorca.dev/v1/feedback'
 const FEEDBACK_REQUEST_TIMEOUT_MS = 10_000
 
 export type FeedbackSubmissionType = 'feedback' | 'crash'
@@ -39,7 +39,7 @@ type InternalFeedbackSubmitArgs = FeedbackSubmitArgs & {
 }
 
 // Why: the Slack notification and any follow-up investigation need to know
-// which Orca build and which OS the feedback came from. The main process is
+// which Korca build and which OS the feedback came from. The main process is
 // the only place with trusted access to these values (app.getVersion and the
 // node os module), so we enrich the payload here rather than trusting the
 // renderer.
@@ -114,7 +114,7 @@ export async function submitFeedback(
     if (res.ok) {
       return { ok: true }
     }
-    // Why: DNS for api.onorca.dev can lag behind a deploy. Only fall back on
+    // Why: DNS for api.onkorca.dev can lag behind a deploy. Only fall back on
     // 404/5xx-style results and network errors — don't mask real 4xx responses
     // from a healthy host.
     if (res.status === 404 || res.status >= 500) {

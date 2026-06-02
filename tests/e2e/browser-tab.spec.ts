@@ -5,7 +5,7 @@
  * - Browser works and also retains state when switching tabs etc.
  */
 
-import { test, expect } from './helpers/orca-app'
+import { test, expect } from './helpers/korca-app'
 import {
   waitForSessionReady,
   waitForActiveWorktree,
@@ -81,47 +81,47 @@ async function switchToBrowserTab(
 }
 
 test.describe('Browser Tab', () => {
-  test.beforeEach(async ({ orcaPage }) => {
-    await waitForSessionReady(orcaPage)
-    await waitForActiveWorktree(orcaPage)
-    await ensureTerminalVisible(orcaPage)
+  test.beforeEach(async ({ korcaPage }) => {
+    await waitForSessionReady(korcaPage)
+    await waitForActiveWorktree(korcaPage)
+    await ensureTerminalVisible(korcaPage)
   })
 
   /**
    * User Prompt:
    * - Browser works and also retains state when switching tabs etc.
    */
-  test('creating a browser tab adds it and activates browser view', async ({ orcaPage }) => {
-    const worktreeId = (await getActiveWorktreeId(orcaPage))!
-    const browserTabsBefore = await getBrowserTabs(orcaPage, worktreeId)
+  test('creating a browser tab adds it and activates browser view', async ({ korcaPage }) => {
+    const worktreeId = (await getActiveWorktreeId(korcaPage))!
+    const browserTabsBefore = await getBrowserTabs(korcaPage, worktreeId)
 
-    await createBrowserTab(orcaPage, worktreeId)
+    await createBrowserTab(korcaPage, worktreeId)
 
     // Wait for the browser tab to appear in the store
     await expect
-      .poll(async () => (await getBrowserTabs(orcaPage, worktreeId)).length, { timeout: 5_000 })
+      .poll(async () => (await getBrowserTabs(korcaPage, worktreeId)).length, { timeout: 5_000 })
       .toBe(browserTabsBefore.length + 1)
 
     // The active tab type should switch to 'browser'
-    await expect.poll(async () => getActiveTabType(orcaPage), { timeout: 3_000 }).toBe('browser')
+    await expect.poll(async () => getActiveTabType(korcaPage), { timeout: 3_000 }).toBe('browser')
   })
 
   /**
    * User Prompt:
    * - Browser works and also retains state when switching tabs etc.
    */
-  test('browser tab is created and active in the store', async ({ orcaPage }) => {
-    const worktreeId = (await getActiveWorktreeId(orcaPage))!
+  test('browser tab is created and active in the store', async ({ korcaPage }) => {
+    const worktreeId = (await getActiveWorktreeId(korcaPage))!
 
-    await createBrowserTab(orcaPage, worktreeId)
-    await expect.poll(async () => getActiveTabType(orcaPage), { timeout: 5_000 }).toBe('browser')
+    await createBrowserTab(korcaPage, worktreeId)
+    await expect.poll(async () => getActiveTabType(korcaPage), { timeout: 5_000 }).toBe('browser')
 
     // Verify the browser tab exists in the store
-    const browserTabs = await getBrowserTabs(orcaPage, worktreeId)
+    const browserTabs = await getBrowserTabs(korcaPage, worktreeId)
     expect(browserTabs.length).toBeGreaterThan(0)
 
     // The active browser tab should have a URL (even if it's about:blank or the default)
-    const activeBrowserTabId = await orcaPage.evaluate(() => {
+    const activeBrowserTabId = await korcaPage.evaluate(() => {
       const store = window.__store
       return store?.getState().activeBrowserTabId ?? null
     })
@@ -132,28 +132,28 @@ test.describe('Browser Tab', () => {
    * User Prompt:
    * - Browser works and also retains state when switching tabs etc.
    */
-  test('browser tab retains state when switching to terminal and back', async ({ orcaPage }) => {
-    const worktreeId = (await getActiveWorktreeId(orcaPage))!
+  test('browser tab retains state when switching to terminal and back', async ({ korcaPage }) => {
+    const worktreeId = (await getActiveWorktreeId(korcaPage))!
 
-    await createBrowserTab(orcaPage, worktreeId)
-    await expect.poll(async () => getActiveTabType(orcaPage), { timeout: 5_000 }).toBe('browser')
+    await createBrowserTab(korcaPage, worktreeId)
+    await expect.poll(async () => getActiveTabType(korcaPage), { timeout: 5_000 }).toBe('browser')
 
     // Record the browser tab info
-    const browserTabsBefore = await getBrowserTabs(orcaPage, worktreeId)
+    const browserTabsBefore = await getBrowserTabs(korcaPage, worktreeId)
     expect(browserTabsBefore.length).toBeGreaterThan(0)
     const browserTabId = browserTabsBefore.at(-1)?.id
     expect(browserTabId).toBeTruthy()
 
     // Switch to the terminal view
-    await switchToTerminalTab(orcaPage, worktreeId)
-    await expect.poll(async () => getActiveTabType(orcaPage), { timeout: 3_000 }).toBe('terminal')
+    await switchToTerminalTab(korcaPage, worktreeId)
+    await expect.poll(async () => getActiveTabType(korcaPage), { timeout: 3_000 }).toBe('terminal')
 
     // Switch back to browser tab
-    await switchToBrowserTab(orcaPage, worktreeId, browserTabId!)
-    await expect.poll(async () => getActiveTabType(orcaPage), { timeout: 3_000 }).toBe('browser')
+    await switchToBrowserTab(korcaPage, worktreeId, browserTabId!)
+    await expect.poll(async () => getActiveTabType(korcaPage), { timeout: 3_000 }).toBe('browser')
 
     // The browser tab should still exist with the same ID
-    const browserTabsAfter = await getBrowserTabs(orcaPage, worktreeId)
+    const browserTabsAfter = await getBrowserTabs(korcaPage, worktreeId)
     const tabStillExists = browserTabsAfter.some((tab) => tab.id === browserTabId)
     expect(tabStillExists).toBe(true)
   })
@@ -162,33 +162,33 @@ test.describe('Browser Tab', () => {
    * User Prompt:
    * - Browser works and also retains state when switching tabs etc.
    */
-  test('browser tab retains state when switching worktrees and back', async ({ orcaPage }) => {
-    const allWorktreeIds = await getAllWorktreeIds(orcaPage)
+  test('browser tab retains state when switching worktrees and back', async ({ korcaPage }) => {
+    const allWorktreeIds = await getAllWorktreeIds(korcaPage)
     if (allWorktreeIds.length < 2) {
       test.skip(true, 'Need at least 2 worktrees to test worktree switching')
     }
 
-    const worktreeId = (await getActiveWorktreeId(orcaPage))!
+    const worktreeId = (await getActiveWorktreeId(korcaPage))!
 
-    await createBrowserTab(orcaPage, worktreeId)
-    await expect.poll(async () => getActiveTabType(orcaPage), { timeout: 5_000 }).toBe('browser')
+    await createBrowserTab(korcaPage, worktreeId)
+    await expect.poll(async () => getActiveTabType(korcaPage), { timeout: 5_000 }).toBe('browser')
 
-    const browserTabsBefore = await getBrowserTabs(orcaPage, worktreeId)
+    const browserTabsBefore = await getBrowserTabs(korcaPage, worktreeId)
     expect(browserTabsBefore.length).toBeGreaterThan(0)
 
     // Switch to a different worktree via the store
-    const otherId = await switchToOtherWorktree(orcaPage, worktreeId)
+    const otherId = await switchToOtherWorktree(korcaPage, worktreeId)
     expect(otherId).not.toBeNull()
-    await expect.poll(async () => getActiveWorktreeId(orcaPage), { timeout: 5_000 }).toBe(otherId)
+    await expect.poll(async () => getActiveWorktreeId(korcaPage), { timeout: 5_000 }).toBe(otherId)
 
     // Switch back to the original worktree
-    await switchToWorktree(orcaPage, worktreeId)
+    await switchToWorktree(korcaPage, worktreeId)
     await expect
-      .poll(async () => getActiveWorktreeId(orcaPage), { timeout: 5_000 })
+      .poll(async () => getActiveWorktreeId(korcaPage), { timeout: 5_000 })
       .toBe(worktreeId)
 
     // Browser tabs should still be preserved
-    const browserTabsAfter = await getBrowserTabs(orcaPage, worktreeId)
+    const browserTabsAfter = await getBrowserTabs(korcaPage, worktreeId)
     expect(browserTabsAfter.length).toBe(browserTabsBefore.length)
   })
 })

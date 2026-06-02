@@ -58,8 +58,8 @@ import {
   SSH_RELAY_CONFIGURE_GRACE_TIME_METHOD
 } from '../../shared/ssh-types'
 import type { Store } from '../persistence'
-import type { OrcaRuntimeService } from '../runtime/orca-runtime'
-import { runRemoteOrcaCli } from './ssh-remote-orca-cli'
+import type { KorcaRuntimeService } from '../runtime/korca-runtime'
+import { runRemoteKorcaCli } from './ssh-remote-korca-cli'
 
 export type RelaySessionState = 'idle' | 'deploying' | 'ready' | 'reconnecting' | 'disposed'
 
@@ -111,7 +111,7 @@ export class SshRelaySession {
     private getMainWindow: () => BrowserWindow | null,
     private store: Store,
     private portForwardManager: SshPortForwardManager,
-    private runtime?: OrcaRuntimeService,
+    private runtime?: KorcaRuntimeService,
     private onDetectedPortsChanged?: (
       targetId: string,
       ports: DetectedPort[],
@@ -123,7 +123,7 @@ export class SshRelaySession {
     getMainWindow: () => BrowserWindow | null,
     store: Store,
     portForwardManager: SshPortForwardManager,
-    runtime?: OrcaRuntimeService,
+    runtime?: KorcaRuntimeService,
     onDetectedPortsChanged?: (targetId: string, ports: DetectedPort[], platform: string) => void
   ): void {
     this.getMainWindow = getMainWindow
@@ -197,7 +197,7 @@ export class SshRelaySession {
       this.remoteCliBridgeEnv =
         remoteHome && remoteRelayDir && nodePath && sockPath
           ? {
-              binDir: `${remoteHome}/.orca-relay/bin`,
+              binDir: `${remoteHome}/.korca-relay/bin`,
               relayDir: remoteRelayDir,
               nodePath,
               sockPath
@@ -321,7 +321,7 @@ export class SshRelaySession {
       this.remoteCliBridgeEnv =
         remoteHome && remoteRelayDir && nodePath && sockPath
           ? {
-              binDir: `${remoteHome}/.orca-relay/bin`,
+              binDir: `${remoteHome}/.korca-relay/bin`,
               relayDir: remoteRelayDir,
               nodePath,
               sockPath
@@ -457,7 +457,7 @@ export class SshRelaySession {
     this.stopPortScanning()
     this.broadcastEmptyLists()
     // Why: app/window disconnect is non-destructive for remote PTYs. The relay
-    // owns the grace timer, so Orca must unregister local providers without
+    // owns the grace timer, so Korca must unregister local providers without
     // clearing PTY ownership needed for reattach.
     this.teardownProviders('connection_lost')
     this.store.markSshRemotePtyLeases(this.targetId, 'detached')
@@ -505,12 +505,12 @@ export class SshRelaySession {
       return false
     }
 
-    await this.installRemoteOrcaCliShim()
+    await this.installRemoteKorcaCliShim()
     if (shouldContinue && !shouldContinue()) {
       return false
     }
 
-    this.wireUpRemoteOrcaCli(mux)
+    this.wireUpRemoteKorcaCli(mux)
 
     const ptyProvider = new SshPtyProvider(this.targetId, mux, this.remoteCliBridgeEnv ?? undefined)
     registerSshPtyProvider(this.targetId, ptyProvider)
@@ -538,9 +538,9 @@ export class SshRelaySession {
     })
   }
 
-  // Why: the relay can inject ORCA_AGENT_HOOK_* env into SSH PTYs, but
+  // Why: the relay can inject KORCA_AGENT_HOOK_* env into SSH PTYs, but
   // hook-script agents (Claude/Codex/Gemini/etc.) still need their config
-  // files on the remote host to call Orca's managed script. Install those
+  // files on the remote host to call Korca's managed script. Install those
   // configs before registering the PTY provider so newly spawned agent panes
   // report status from their first prompt.
   private async installManagedHooksOnRemote(mux: SshChannelMultiplexer): Promise<void> {
@@ -584,23 +584,23 @@ export class SshRelaySession {
     }
   }
 
-  private async installRemoteOrcaCliShim(): Promise<void> {
+  private async installRemoteKorcaCliShim(): Promise<void> {
     if (!this.remoteCliBridgeEnv) {
       return
     }
     const { binDir, relayDir, nodePath, sockPath } = this.remoteCliBridgeEnv
-    const shimPath = `${binDir}/orca`
+    const shimPath = `${binDir}/korca`
     const shim = [
       '#!/usr/bin/env sh',
       'set -eu',
-      `ORCA_RELAY_NODE_PATH=\${ORCA_RELAY_NODE_PATH:-${quoteSh(nodePath)}}`,
-      `ORCA_RELAY_DIR=\${ORCA_RELAY_DIR:-${quoteSh(relayDir)}}`,
-      `ORCA_RELAY_SOCKET_PATH=\${ORCA_RELAY_SOCKET_PATH:-${quoteSh(sockPath)}}`,
-      'if [ ! -S "$ORCA_RELAY_SOCKET_PATH" ]; then',
-      '  echo "Orca SSH CLI bridge cannot find the relay socket: $ORCA_RELAY_SOCKET_PATH" >&2',
+      `KORCA_RELAY_NODE_PATH=\${KORCA_RELAY_NODE_PATH:-${quoteSh(nodePath)}}`,
+      `KORCA_RELAY_DIR=\${KORCA_RELAY_DIR:-${quoteSh(relayDir)}}`,
+      `KORCA_RELAY_SOCKET_PATH=\${KORCA_RELAY_SOCKET_PATH:-${quoteSh(sockPath)}}`,
+      'if [ ! -S "$KORCA_RELAY_SOCKET_PATH" ]; then',
+      '  echo "Korca SSH CLI bridge cannot find the relay socket: $KORCA_RELAY_SOCKET_PATH" >&2',
       '  exit 1',
       'fi',
-      'exec "$ORCA_RELAY_NODE_PATH" "$ORCA_RELAY_DIR/relay.js" --sock-path "$ORCA_RELAY_SOCKET_PATH" --orca-cli "$@"',
+      'exec "$KORCA_RELAY_NODE_PATH" "$KORCA_RELAY_DIR/relay.js" --sock-path "$KORCA_RELAY_SOCKET_PATH" --korca-cli "$@"',
       ''
     ].join('\n')
 
@@ -625,10 +625,10 @@ export class SshRelaySession {
     await execCommand(conn, `chmod 755 ${shellEscape(shimPath)}`)
   }
 
-  private wireUpRemoteOrcaCli(mux: SshChannelMultiplexer): void {
-    mux.onRequest('orca.cli', async (params) => {
+  private wireUpRemoteKorcaCli(mux: SshChannelMultiplexer): void {
+    mux.onRequest('korca.cli', async (params) => {
       if (!this.runtime) {
-        throw new Error('Orca runtime is unavailable')
+        throw new Error('Korca runtime is unavailable')
       }
       const argv = Array.isArray(params.argv)
         ? params.argv.filter((item): item is string => typeof item === 'string')
@@ -644,7 +644,7 @@ export class SshRelaySession {
               )
             )
           : {}
-      return await runRemoteOrcaCli(this.runtime, { argv, cwd, env })
+      return await runRemoteKorcaCli(this.runtime, { argv, cwd, env })
     })
   }
 
@@ -652,7 +652,7 @@ export class SshRelaySession {
   // so it can materialize per-PTY overlay dirs and inject OPENCODE_CONFIG_DIR
   // / PI_CODING_AGENT_DIR into spawn env. The strings change as we add agent
   // events (recent additions: cursor, pi); pinning them to the relay binary
-  // would force a relay redeploy on every Orca update. See
+  // would force a relay redeploy on every Korca update. See
   // docs/design/agent-status-over-ssh.md §4 + §8 (commit #7).
   //
   // Best-effort: a -32601 from an older relay (no handler installed) is
@@ -701,15 +701,15 @@ export class SshRelaySession {
     })
   }
 
-  // Why: route the relay's `agent.hook` JSON-RPC notification into Orca's
+  // Why: route the relay's `agent.hook` JSON-RPC notification into Korca's
   // shared `agentHookServer` via `ingestRemote`. The wire envelope carries
-  // `connectionId: null` (the relay does not know Orca's local handle); we
+  // `connectionId: null` (the relay does not know Korca's local handle); we
   // stamp the real value here from `this.targetId` so the renderer can drop
   // in-flight events for connections that have torn down. After wiring is
   // in place we kick off a request-driven replay so any cached payload from
   // before the channel was up survives the reconnect — see §5 Path 3.
   //
-  // The Orca-side mux's `notificationHandlers` is a flat array — each
+  // The Korca-side mux's `notificationHandlers` is a flat array — each
   // handler must filter by method name itself.
   private wireUpAgentHookEvents(mux: SshChannelMultiplexer): void {
     if (!isRemoteAgentHooksEnabled()) {
@@ -743,7 +743,7 @@ export class SshRelaySession {
       if (typeof envelope.paneKey !== 'string') {
         return
       }
-      // Why: forward env/version verbatim so Orca's warn-once cross-build /
+      // Why: forward env/version verbatim so Korca's warn-once cross-build /
       // dev-vs-prod diagnostics fire on remote events the same as on local
       // ones — see docs/design/agent-status-over-ssh.md §3 ("Replay /
       // version mismatch") and the relay's wire envelope at

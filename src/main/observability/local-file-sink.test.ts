@@ -22,7 +22,7 @@ import {
 let dir: string
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), 'orca-sink-'))
+  dir = mkdtempSync(join(tmpdir(), 'korca-sink-'))
 })
 afterEach(() => {
   rmSync(dir, { recursive: true, force: true })

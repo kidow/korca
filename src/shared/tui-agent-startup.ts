@@ -54,7 +54,7 @@ function resolveBaseCommand(args: {
     return override
   }
   const command = TUI_AGENT_CONFIG[args.agent].launchCmd
-  // Why: Codex status hooks live in Orca's runtime CODEX_HOME; adding
+  // Why: Codex status hooks live in Korca's runtime CODEX_HOME; adding
   // --profile-v2 makes Codex load a second hook representation and warn.
   return command
 }

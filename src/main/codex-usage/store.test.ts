@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { CodexUsagePersistedState } from './types'
 
 const { getPathMock } = vi.hoisted(() => ({
-  getPathMock: vi.fn(() => '/tmp/orca-test-userdata')
+  getPathMock: vi.fn(() => '/tmp/korca-test-userdata')
 }))
 
 vi.mock('electron', () => ({
@@ -44,7 +44,7 @@ describe('CodexUsageStore', () => {
     vi.setSystemTime(new Date('2026-04-10T12:00:00.000-04:00'))
   })
 
-  it('reports no data for Orca scope when only non-Orca Codex usage exists', async () => {
+  it('reports no data for Korca scope when only non-Korca Codex usage exists', async () => {
     const store = createStoreWithState({
       sessions: [
         {
@@ -129,7 +129,7 @@ describe('CodexUsageStore', () => {
       ]
     })
 
-    const summary = await store.getSummary('orca', '30d')
+    const summary = await store.getSummary('korca', '30d')
 
     expect(summary.hasAnyCodexData).toBe(false)
     expect(summary.sessions).toBe(0)
@@ -157,7 +157,7 @@ describe('CodexUsageStore', () => {
       ]
     })
 
-    const summary = await store.getSummary('orca', '30d')
+    const summary = await store.getSummary('korca', '30d')
 
     expect(summary.estimatedCostUsd).toBeCloseTo(0.0014)
     expect(summary.totalTokens).toBe(1250)
@@ -230,8 +230,8 @@ describe('CodexUsageStore', () => {
       ]
     })
 
-    const summary = await store.getSummary('orca', '30d')
-    const breakdown = await store.getBreakdown('orca', '30d', 'model')
+    const summary = await store.getSummary('korca', '30d')
+    const breakdown = await store.getBreakdown('korca', '30d', 'model')
 
     expect(summary.estimatedCostUsd).toBeCloseTo(107.486)
     expect(breakdown.find((row) => row.key === 'gpt-5.2-codex')?.estimatedCostUsd).toBeCloseTo(
@@ -295,7 +295,7 @@ describe('CodexUsageStore', () => {
       ]
     })
 
-    const breakdown = await store.getBreakdown('orca', '30d', 'model')
+    const breakdown = await store.getBreakdown('korca', '30d', 'model')
 
     expect(breakdown.find((row) => row.key === 'gpt-5.4-mini-high')?.estimatedCostUsd).toBeCloseTo(
       4.9125
@@ -329,7 +329,7 @@ describe('CodexUsageStore', () => {
       ]
     })
 
-    const summary = await store.getSummary('orca', '30d')
+    const summary = await store.getSummary('korca', '30d')
 
     expect(summary.estimatedCostUsd).toBeCloseTo(858.929724)
   })
@@ -459,13 +459,13 @@ describe('CodexUsageStore', () => {
       ]
     })
 
-    const breakdown = await store.getBreakdown('orca', '30d', 'model')
+    const breakdown = await store.getBreakdown('korca', '30d', 'model')
 
     expect(breakdown.find((row) => row.key === 'gpt-5')?.sessions).toBe(1)
     expect(breakdown.find((row) => row.key === 'gpt-5.2-codex')?.sessions).toBe(1)
   })
 
-  it('uses only Orca-scoped models when projecting mixed-scope sessions', async () => {
+  it('uses only Korca-scoped models when projecting mixed-scope sessions', async () => {
     const store = createStoreWithState({
       sessions: [
         {
@@ -603,8 +603,8 @@ describe('CodexUsageStore', () => {
       ]
     })
 
-    const breakdown = await store.getBreakdown('orca', '30d', 'model')
-    const recentSessions = await store.getRecentSessions('orca', '30d', 10)
+    const breakdown = await store.getBreakdown('korca', '30d', 'model')
+    const recentSessions = await store.getRecentSessions('korca', '30d', 10)
 
     expect(breakdown.find((row) => row.key === 'gpt-5')?.sessions).toBe(1)
     expect(breakdown.find((row) => row.key === 'gpt-5.2-codex')).toBeUndefined()

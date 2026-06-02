@@ -18,15 +18,15 @@ describe('web pairing input', () => {
   }
 
   it('parses query-form pairing URLs', () => {
-    expect(parseWebPairingInput(`orca://pair?code=${encodeOffer()}`)).toEqual(offer)
+    expect(parseWebPairingInput(`korca://pair?code=${encodeOffer()}`)).toEqual(offer)
   })
 
   it('still parses legacy hash-form pairing URLs', () => {
-    expect(parseWebPairingInput(`orca://pair#${encodeOffer()}`)).toEqual(offer)
+    expect(parseWebPairingInput(`korca://pair#${encodeOffer()}`)).toEqual(offer)
   })
 
-  it('rejects orca URLs outside the exact pairing route', () => {
-    expect(parseWebPairingInput(`orca://pairing?code=${encodeOffer()}`)).toBeNull()
-    expect(parseWebPairingInput(`orca://pair-extra?code=${encodeOffer()}`)).toBeNull()
+  it('rejects korca URLs outside the exact pairing route', () => {
+    expect(parseWebPairingInput(`korca://pairing?code=${encodeOffer()}`)).toBeNull()
+    expect(parseWebPairingInput(`korca://pair-extra?code=${encodeOffer()}`)).toBeNull()
   })
 })

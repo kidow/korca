@@ -87,7 +87,7 @@ import {
 
 type GhExecOptions = ReturnType<typeof ghRepoExecOptions>
 
-const ORCA_REPO = 'stablyai/orca'
+const KORCA_REPO = 'stablyai/korca'
 const PR_CHECK_LOG_TAIL_LINES = 200
 const PR_CHECK_LOG_TAIL_BYTES = 16 * 1024
 const PR_CHECK_LOG_TAIL_JOB_LIMIT = 5
@@ -215,13 +215,13 @@ function isNoPullRequestError(err: unknown): boolean {
 }
 
 /**
- * Check if the authenticated user has starred the Orca repo.
+ * Check if the authenticated user has starred the Korca repo.
  * Returns true if starred, false if not, null if unable to determine (gh unavailable).
  */
-export async function checkOrcaStarred(): Promise<boolean | null> {
+export async function checkKorcaStarred(): Promise<boolean | null> {
   await acquire()
   try {
-    await execFileAsync('gh', ['api', `user/starred/${ORCA_REPO}`], { encoding: 'utf-8' })
+    await execFileAsync('gh', ['api', `user/starred/${KORCA_REPO}`], { encoding: 'utf-8' })
     return true
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
@@ -345,12 +345,12 @@ export async function getPullRequestPushTarget(
 }
 
 /**
- * Star the Orca repo for the authenticated user.
+ * Star the Korca repo for the authenticated user.
  */
-export async function starOrca(): Promise<boolean> {
+export async function starKorca(): Promise<boolean> {
   await acquire()
   try {
-    await execFileAsync('gh', ['api', '-X', 'PUT', `user/starred/${ORCA_REPO}`], {
+    await execFileAsync('gh', ['api', '-X', 'PUT', `user/starred/${KORCA_REPO}`], {
       encoding: 'utf-8'
     })
     return true
@@ -1301,7 +1301,7 @@ async function countWorkItemsForQuery(
 
 function sameOwnerRepo(left: OwnerRepo | null, right: OwnerRepo | null): boolean {
   // Why: GitHub treats owner and repo names as case-insensitive, so remotes
-  // with different casing (StablyAI/Orca vs stablyai/orca) point at the same
+  // with different casing (StablyAI/Korca vs stablyai/korca) point at the same
   // repo and should not split into two search queries.
   return (
     left?.owner.toLowerCase() === right?.owner.toLowerCase() &&
@@ -1594,7 +1594,7 @@ export async function createGitHubPullRequest(
     }
   }
 
-  const tempDir = await mkdtemp(join(tmpdir(), 'orca-pr-body-'))
+  const tempDir = await mkdtemp(join(tmpdir(), 'korca-pr-body-'))
   await acquire()
   const bodyPath = join(tempDir, 'body.md')
   try {

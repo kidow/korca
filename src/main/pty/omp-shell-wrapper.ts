@@ -1,5 +1,5 @@
 // Why: OMP 15.x discovers built-in user extensions from ~/.omp/agent, not
-// PI_CODING_AGENT_DIR/extensions. Orca's per-PTY status extension must be
+// PI_CODING_AGENT_DIR/extensions. Korca's per-PTY status extension must be
 // passed explicitly when users type `omp` in an existing terminal.
 
 const OMP_SUBCOMMANDS = [
@@ -26,102 +26,102 @@ const OMP_SUBCOMMANDS = [
 
 export function getPosixOmpShellWrapper(): string {
   const subcommands = OMP_SUBCOMMANDS.join('|')
-  return `# Why: OMP does not auto-load Orca's PTY overlay extensions; wrap only
+  return `# Why: OMP does not auto-load Korca's PTY overlay extensions; wrap only
 # interactive launch invocations so subcommands such as \`omp config\` keep
 # their normal argv shape.
-__orca_omp_is_subcommand() {
+__korca_omp_is_subcommand() {
   case "\${1:-}" in
     ${subcommands}) return 0 ;;
   esac
   return 1
 }
-__orca_omp_should_skip_extension() {
+__korca_omp_should_skip_extension() {
   case "\${1:-}" in
     help|--help|-h|--version|-v) return 0 ;;
   esac
-  __orca_omp_is_subcommand "\${1:-}"
+  __korca_omp_is_subcommand "\${1:-}"
 }
-__orca_omp() {
-  local __orca_prev_pi="\${PI_CODING_AGENT_DIR-}"
-  local __orca_had_pi=0
-  [[ -n "\${PI_CODING_AGENT_DIR+x}" ]] && __orca_had_pi=1
-  [[ -n "\${ORCA_OMP_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${ORCA_OMP_CODING_AGENT_DIR}"
+__korca_omp() {
+  local __korca_prev_pi="\${PI_CODING_AGENT_DIR-}"
+  local __korca_had_pi=0
+  [[ -n "\${PI_CODING_AGENT_DIR+x}" ]] && __korca_had_pi=1
+  [[ -n "\${KORCA_OMP_CODING_AGENT_DIR:-}" ]] && export PI_CODING_AGENT_DIR="\${KORCA_OMP_CODING_AGENT_DIR}"
 
-  local __orca_status=0
-  if [[ -n "\${ORCA_OMP_STATUS_EXTENSION:-}" && -f "\${ORCA_OMP_STATUS_EXTENSION}" ]] && ! __orca_omp_should_skip_extension "\${1:-}"; then
+  local __korca_status=0
+  if [[ -n "\${KORCA_OMP_STATUS_EXTENSION:-}" && -f "\${KORCA_OMP_STATUS_EXTENSION}" ]] && ! __korca_omp_should_skip_extension "\${1:-}"; then
     if [[ "\${1:-}" == "launch" ]]; then
       shift
-      command omp launch --extension "\${ORCA_OMP_STATUS_EXTENSION}" "$@"
+      command omp launch --extension "\${KORCA_OMP_STATUS_EXTENSION}" "$@"
     else
-      command omp --extension "\${ORCA_OMP_STATUS_EXTENSION}" "$@"
+      command omp --extension "\${KORCA_OMP_STATUS_EXTENSION}" "$@"
     fi
   else
     command omp "$@"
   fi
-  __orca_status=$?
+  __korca_status=$?
 
-  if [[ $__orca_had_pi -eq 1 ]]; then
-    export PI_CODING_AGENT_DIR="$__orca_prev_pi"
+  if [[ $__korca_had_pi -eq 1 ]]; then
+    export PI_CODING_AGENT_DIR="$__korca_prev_pi"
   else
     unset PI_CODING_AGENT_DIR
   fi
-  return $__orca_status
+  return $__korca_status
 }
-if [[ -n "\${ORCA_OMP_CODING_AGENT_DIR:-}" || -n "\${ORCA_OMP_STATUS_EXTENSION:-}" ]]; then
-  omp() { __orca_omp "$@"; }
+if [[ -n "\${KORCA_OMP_CODING_AGENT_DIR:-}" || -n "\${KORCA_OMP_STATUS_EXTENSION:-}" ]]; then
+  omp() { __korca_omp "$@"; }
 fi
 `
 }
 
 export function getPowerShellOmpShellWrapper(): string {
   const subcommands = OMP_SUBCOMMANDS.map((value) => `'${value}'`).join(', ')
-  return `# Why: OMP does not auto-load Orca's PTY overlay extensions; wrap only
+  return `# Why: OMP does not auto-load Korca's PTY overlay extensions; wrap only
 # interactive launch invocations so subcommands such as \`omp config\` keep
 # their normal argv shape.
-function Global:__OrcaOmpIsSubcommand {
+function Global:__KorcaOmpIsSubcommand {
     param([string]$Name)
     $subcommands = @(${subcommands})
     return $subcommands -contains $Name
 }
-function Global:__OrcaOmpShouldSkipExtension {
+function Global:__KorcaOmpShouldSkipExtension {
     param([string]$Name)
     if (@("help", "--help", "-h", "--version", "-v") -contains $Name) { return $true }
-    return __OrcaOmpIsSubcommand -Name $Name
+    return __KorcaOmpIsSubcommand -Name $Name
 }
-if ($env:ORCA_OMP_CODING_AGENT_DIR -or $env:ORCA_OMP_STATUS_EXTENSION) {
+if ($env:KORCA_OMP_CODING_AGENT_DIR -or $env:KORCA_OMP_STATUS_EXTENSION) {
     function Global:omp {
-        $orcaPrevPi = $env:PI_CODING_AGENT_DIR
-        $orcaHadPi = Test-Path Env:PI_CODING_AGENT_DIR
-        if ($env:ORCA_OMP_CODING_AGENT_DIR) {
-            $env:PI_CODING_AGENT_DIR = $env:ORCA_OMP_CODING_AGENT_DIR
+        $korcaPrevPi = $env:PI_CODING_AGENT_DIR
+        $korcaHadPi = Test-Path Env:PI_CODING_AGENT_DIR
+        if ($env:KORCA_OMP_CODING_AGENT_DIR) {
+            $env:PI_CODING_AGENT_DIR = $env:KORCA_OMP_CODING_AGENT_DIR
         }
 
-        $orcaStatus = 0
-        $orcaCommand = Get-Command omp -CommandType Application,ExternalScript -ErrorAction SilentlyContinue | Select-Object -First 1
-        if (-not $orcaCommand) {
+        $korcaStatus = 0
+        $korcaCommand = Get-Command omp -CommandType Application,ExternalScript -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $korcaCommand) {
             Write-Error "omp executable not found"
-            $orcaStatus = 127
-        } elseif ($env:ORCA_OMP_STATUS_EXTENSION -and
-            (Test-Path -LiteralPath $env:ORCA_OMP_STATUS_EXTENSION) -and
-            -not (__OrcaOmpShouldSkipExtension -Name ([string]($args[0])))) {
+            $korcaStatus = 127
+        } elseif ($env:KORCA_OMP_STATUS_EXTENSION -and
+            (Test-Path -LiteralPath $env:KORCA_OMP_STATUS_EXTENSION) -and
+            -not (__KorcaOmpShouldSkipExtension -Name ([string]($args[0])))) {
             if ($args.Count -gt 0 -and $args[0] -eq "launch") {
-                $orcaLaunchArgs = @($args | Select-Object -Skip 1)
-                & $orcaCommand.Source launch --extension $env:ORCA_OMP_STATUS_EXTENSION @orcaLaunchArgs
+                $korcaLaunchArgs = @($args | Select-Object -Skip 1)
+                & $korcaCommand.Source launch --extension $env:KORCA_OMP_STATUS_EXTENSION @korcaLaunchArgs
             } else {
-                & $orcaCommand.Source --extension $env:ORCA_OMP_STATUS_EXTENSION @args
+                & $korcaCommand.Source --extension $env:KORCA_OMP_STATUS_EXTENSION @args
             }
-            $orcaStatus = $LASTEXITCODE
+            $korcaStatus = $LASTEXITCODE
         } else {
-            & $orcaCommand.Source @args
-            $orcaStatus = $LASTEXITCODE
+            & $korcaCommand.Source @args
+            $korcaStatus = $LASTEXITCODE
         }
 
-        if ($orcaHadPi) {
-            $env:PI_CODING_AGENT_DIR = $orcaPrevPi
+        if ($korcaHadPi) {
+            $env:PI_CODING_AGENT_DIR = $korcaPrevPi
         } else {
             Remove-Item Env:PI_CODING_AGENT_DIR -ErrorAction SilentlyContinue
         }
-        $global:LASTEXITCODE = $orcaStatus
+        $global:LASTEXITCODE = $korcaStatus
     }
 }
 `

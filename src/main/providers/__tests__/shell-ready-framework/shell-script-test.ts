@@ -108,7 +108,7 @@ export async function shellScriptTest(
 }
 
 const TEMP_PATH_PATTERN =
-  /\/(?:var\/folders|tmp)\/[^\s]+?\/(?:shell-test|orca|shell-ready)-[a-z]+-[a-z0-9-]+/g
+  /\/(?:var\/folders|tmp)\/[^\s]+?\/(?:shell-test|korca|shell-ready)-[a-z]+-[a-z0-9-]+/g
 const PID_PATTERN = /\bpid:\s*\d+/gi
 
 function normalizeOutput(

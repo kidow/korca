@@ -9,11 +9,11 @@ import {
   findRoleIndex,
   killTextEdit,
   parseJsonOutput,
-  runOrcaCli
+  runKorcaCli
 } from './helpers/computer-driver'
 
 const isMac = process.platform === 'darwin'
-const e2eOptIn = process.env.ORCA_COMPUTER_E2E === '1'
+const e2eOptIn = process.env.KORCA_COMPUTER_E2E === '1'
 
 describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => {
   beforeAll(async () => {
@@ -25,14 +25,14 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
   })
 
   test('list-apps includes TextEdit', async () => {
-    const result = await runOrcaCli(['computer', 'list-apps', '--json'])
+    const result = await runKorcaCli(['computer', 'list-apps', '--json'])
     const envelope = parseJsonOutput<{ result: ComputerListAppsResult }>(result.stdout)
 
     expect(envelope.result.apps.some((app) => app.name === 'TextEdit')).toBe(true)
   })
 
   test('get-app-state returns TextEdit state', async () => {
-    const result = await runOrcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])
+    const result = await runKorcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])
     const envelope = parseJsonOutput<{ result: ComputerSnapshotResult }>(result.stdout)
 
     expect(envelope.result.snapshot.app.name).toBe('TextEdit')
@@ -42,7 +42,7 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
 
   test('click, type-text, and re-observe show inserted text', async () => {
     const before = parseJsonOutput<{ result: ComputerSnapshotResult }>(
-      (await runOrcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])).stdout
+      (await runKorcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])).stdout
     )
     const textTarget = findRoleIndex(
       before.result.snapshot.treeText,
@@ -50,7 +50,7 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
     )
     expect(textTarget).toBeGreaterThanOrEqual(0)
 
-    await runOrcaCli([
+    await runKorcaCli([
       'computer',
       'click',
       '--app',
@@ -59,11 +59,11 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
       String(textTarget)
     ])
 
-    const marker = `orca computer e2e ${Date.now()}`
-    await runOrcaCli(['computer', 'type-text', '--app', 'TextEdit', '--text', marker])
+    const marker = `korca computer e2e ${Date.now()}`
+    await runKorcaCli(['computer', 'type-text', '--app', 'TextEdit', '--text', marker])
 
     const after = parseJsonOutput<{ result: ComputerSnapshotResult }>(
-      (await runOrcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])).stdout
+      (await runKorcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])).stdout
     )
     expect(after.result.snapshot.treeText).toContain(marker)
   })
@@ -71,13 +71,13 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
   test('paste-text and hotkey verify TextEdit text replacement', async () => {
     const first = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'paste-text',
           '--app',
           'TextEdit',
           '--text',
-          'orca paste first',
+          'korca paste first',
           '--no-screenshot',
           '--json'
         ])
@@ -88,7 +88,7 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
 
     const selectAll = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'hotkey',
           '--app',
@@ -103,10 +103,10 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
     expect(selectAll.result.action?.actionName).toBe('AXSelectAll')
     expect(selectAll.result.action?.verification?.state).toBe('verified')
 
-    const marker = `orca paste final ${Date.now()}`
+    const marker = `korca paste final ${Date.now()}`
     const second = parseJsonOutput<{ result: ComputerActionResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'paste-text',
           '--app',
@@ -127,7 +127,7 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
 
     const after = parseJsonOutput<{ result: ComputerSnapshotResult }>(
       (
-        await runOrcaCli([
+        await runKorcaCli([
           'computer',
           'get-app-state',
           '--app',
@@ -138,17 +138,17 @@ describe.skipIf(!isMac || !e2eOptIn)('computer-use macOS e2e (TextEdit)', () => 
       ).stdout
     )
     expect(after.result.snapshot.treeText).toContain(marker)
-    expect(after.result.snapshot.treeText).not.toContain('orca paste first')
+    expect(after.result.snapshot.treeText).not.toContain('korca paste first')
   })
 
   test('screenshot capture returns image metadata', async () => {
-    const result = await runOrcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])
+    const result = await runKorcaCli(['computer', 'get-app-state', '--app', 'TextEdit', '--json'])
     const envelope = parseJsonOutput<{ result: ComputerSnapshotResult }>(result.stdout)
 
     expect(envelope.result.screenshotStatus.state).toBe('captured')
     expect(envelope.result.screenshot?.format).toBe('png')
     expect(envelope.result.screenshot?.data).toBeUndefined()
     expect(envelope.result.screenshot?.dataOmitted).toBe(true)
-    expect(envelope.result.screenshot?.path).toContain('orca-computer-use-')
+    expect(envelope.result.screenshot?.path).toContain('korca-computer-use-')
   })
 })

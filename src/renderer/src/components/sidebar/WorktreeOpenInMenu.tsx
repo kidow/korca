@@ -61,7 +61,7 @@ function showOpenFailureToast(reason: ShellOpenLocalPathFailureReason): void {
   }
   if (reason === 'not-found') {
     toast.error('작업공간 폴더를 찾을 수 없습니다.', {
-      description: '이동되었거나 삭제되었을 수 있습니다. 작업공간을 새로고침하거나 Orca에서 제거하세요.'
+      description: '이동되었거나 삭제되었을 수 있습니다. 작업공간을 새로고침하거나 Korca에서 제거하세요.'
     })
     return
   }
