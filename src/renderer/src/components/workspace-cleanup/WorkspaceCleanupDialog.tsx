@@ -75,17 +75,17 @@ function formatRelativeTime(timestamp: number): string {
   }
   const deltaMs = Date.now() - timestamp
   if (deltaMs < 60_000) {
-    return 'Just now'
+    return '방금 전'
   }
   const minutes = Math.floor(deltaMs / 60_000)
   if (minutes < 60) {
-    return `${minutes}m ago`
+    return `${minutes}분 전`
   }
   const hours = Math.floor(minutes / 60)
   if (hours < 48) {
-    return `${hours}h ago`
+    return `${hours}시간 전`
   }
-  return `${Math.floor(hours / 24)}d ago`
+  return `${Math.floor(hours / 24)}일 전`
 }
 
 function isDisconnectedRemoteScanError(message: string): boolean {
@@ -115,7 +115,7 @@ function formatScanNoticeMessage(
     .map((error) => formatScanErrorRepoName(error, repoNameById))
     .join(', ')
   const moreCount = visibleErrors.length - 3
-  const suffix = moreCount > 0 ? `, +${moreCount} more` : ''
+  const suffix = moreCount > 0 ? `, +${moreCount}개 더` : ''
   return `저장소 ${visibleErrors.length}개(${repoNames}${suffix})를 확인하지 못했습니다. 일부 비활성 작업 공간이 빠졌을 수 있습니다. 다시 새로고침하세요.`
 }
 
@@ -128,15 +128,15 @@ function formatScanErrorRepoName(
     return repoName
   }
   const fallback = error.repoId ? repoNameById.get(error.repoId)?.trim() : ''
-  return fallback || 'a repository'
+  return fallback || '저장소'
 }
 
 function formatScanErrorReason(message: string | undefined): string {
   if (!message) {
-    return 'Git could not list worktrees'
+    return 'git이 작업 공간 목록을 가져오지 못했습니다'
   }
   if (message === 'Could not scan workspace cleanup for this repository.') {
-    return 'Git could not list worktrees'
+    return 'git이 작업 공간 목록을 가져오지 못했습니다'
   }
   return message.replace(/\.$/, '')
 }
@@ -385,7 +385,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
         })
         .catch((err: unknown) => {
           if (mountedRef.current) {
-            toast.error('Could not ignore cleanup suggestion', {
+            toast.error('정리 제안을 무시하지 못했습니다', {
               description: err instanceof Error ? err.message : String(err)
             })
           }
@@ -624,7 +624,7 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                     filteredCandidates.length === 0 ? (
                       <EmptyState
                         title="선택한 저장소와 일치하는 비활성 작업 공간이 없습니다."
-                        actionLabel="Show all repos"
+                        actionLabel="모든 저장소 보기"
                         onAction={() => setRepoSelection(new Set(eligibleRepoIds))}
                       />
                     ) : null}
@@ -633,13 +633,13 @@ export default function WorkspaceCleanupDialog(): React.JSX.Element {
                     filteredCandidates.length > 0 &&
                     visibleCandidates.length === 0 ? (
                       <EmptyState
-                        title="All cleanup suggestions are ignored."
-                        actionLabel="Review ignored workspaces"
+                        title="모든 정리 제안을 무시했습니다."
+                        actionLabel="무시한 작업 공간 검토"
                         onAction={() => setActiveView('hidden')}
                       />
                     ) : null}
                     {!loading && scan && activeRows.length === 0 && visibleCandidates.length > 0 ? (
-                      <EmptyState title="No workspaces in this cleanup set." />
+                      <EmptyState title="이 정리 집합에 작업 공간이 없습니다." />
                     ) : null}
                     {activeRows.map((candidate, index) => (
                       <CandidateRow
@@ -782,7 +782,7 @@ function CandidateRow({
             type="button"
             role="checkbox"
             aria-checked={selected}
-            aria-label={`Select ${candidate.displayName}`}
+            aria-label={`${candidate.displayName} 선택`}
             onClick={() => onToggleSelected(candidate.worktreeId)}
             className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border border-border bg-background text-primary hover:bg-accent"
           >
@@ -933,37 +933,27 @@ function formatContextDetails(candidate: WorkspaceCleanupCandidate): string | nu
   const parts: string[] = []
   if (candidate.localContext.terminalTabCount > 0) {
     parts.push(
-      `${candidate.localContext.terminalTabCount}개 터미널 탭${
-        candidate.localContext.terminalTabCount === 1 ? '' : 's'
-      }`
+      `${candidate.localContext.terminalTabCount}개 터미널 탭`
     )
   }
   if (candidate.localContext.cleanEditorTabCount > 0) {
     parts.push(
-      `${candidate.localContext.cleanEditorTabCount}개 에디터 탭${
-        candidate.localContext.cleanEditorTabCount === 1 ? '' : 's'
-      }`
+      `${candidate.localContext.cleanEditorTabCount}개 에디터 탭`
     )
   }
   if (candidate.localContext.browserTabCount > 0) {
     parts.push(
-      `${candidate.localContext.browserTabCount}개 브라우저 탭${
-        candidate.localContext.browserTabCount === 1 ? '' : 's'
-      }`
+      `${candidate.localContext.browserTabCount}개 브라우저 탭`
     )
   }
   if (candidate.localContext.diffCommentCount > 0) {
     parts.push(
-      `${candidate.localContext.diffCommentCount}개 차이점 메모${
-        candidate.localContext.diffCommentCount === 1 ? '' : 's'
-      }`
+      `${candidate.localContext.diffCommentCount}개 차이점 메모`
     )
   }
   if (candidate.localContext.retainedDoneAgentCount > 0) {
     parts.push(
-      `${candidate.localContext.retainedDoneAgentCount}개 완료된 에이전트${
-        candidate.localContext.retainedDoneAgentCount === 1 ? '' : 's'
-      }`
+      `${candidate.localContext.retainedDoneAgentCount}개 완료된 에이전트`
     )
   }
   return parts.length > 0 ? parts.join(', ') : null
@@ -1064,15 +1054,15 @@ function ConfirmRemoveRow({
 
 function getDirtyGitLabel(candidate: WorkspaceCleanupCandidate): string | null {
   if (candidate.git.upstreamAhead && candidate.git.upstreamAhead > 0) {
-    return `${candidate.git.upstreamAhead} unpushed commit${
+    return `${candidate.git.upstreamAhead}개의 푸시되지 않은 커밋${
       candidate.git.upstreamAhead === 1 ? '' : 's'
     }`
   }
   if (candidate.git.clean === false) {
-    return 'Uncommitted changes'
+    return '저장되지 않은 변경 사항'
   }
   if (candidate.git.clean == null) {
-    return 'Git status unknown'
+    return 'git 상태 알 수 없음'
   }
   return null
 }

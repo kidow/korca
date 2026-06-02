@@ -1922,7 +1922,7 @@ function PRFilesCombinedDiffViewer({
       }
     ) => {
       if (!headSha) {
-        toast.error('Unable to comment without the PR head SHA.')
+        toast.error('PR head SHA 없이는 댓글을 달 수 없습니다.')
         return false
       }
       const result = await addPRReviewCommentForRepo({
@@ -3275,7 +3275,7 @@ function buildFixBrokenChecksPrompt(item: GitHubWorkItem, checks: PRCheckDetail[
             .join(', ')
           return `- ${check.name}${details ? ` (${details})` : ''}`
         })
-      : ['- No failing check is currently listed; refresh PR checks first, then inspect CI.']
+      : ['- 현재 실패한 체크가 없습니다. 먼저 PR 체크를 새로고침한 뒤 CI를 확인하세요.']
 
   return [
     `Fix the broken checks for PR #${item.number}: ${item.title}`,
@@ -3460,20 +3460,20 @@ function ChecksTab({
           launchSource: 'task_page',
           telemetrySource: 'sidebar',
           openModalFallback: () => {
-            toast.error('Unable to create a fix workspace automatically.')
+        toast.error('수정용 작업 공간을 자동으로 만들 수 없습니다.')
           }
         })
         return
       }
 
       if (!activateAndRevealWorktree(attachedWorkspace.id)) {
-        toast.error('Unable to open the workspace attached to this pull request.')
+        toast.error('이 풀 리퀘스트에 연결된 작업 공간을 열 수 없습니다.')
         return
       }
 
       const connectionId = getConnectionId(attachedWorkspace.id)
       if (connectionId === undefined) {
-        toast.error('Unable to resolve the workspace connection.')
+        toast.error('작업 공간 연결을 확인할 수 없습니다.')
         return
       }
 
@@ -3623,7 +3623,7 @@ function ChecksTab({
             ) : (
               <RefreshCw className="size-3" />
             )}
-            Rerun
+            다시 실행
             <ChevronDown className="size-3 opacity-60" />
           </Button>
         </DropdownMenuTrigger>
@@ -4042,7 +4042,7 @@ async function runIssueUpdate(args: {
     return
   }
   if (!args.repoPath) {
-    throw new Error('No repo context available for this edit.')
+    throw new Error('이 편집에 사용할 저장소 문맥이 없습니다.')
   }
   const res = await window.api.gh.updateIssue({
     repoPath: args.repoPath,
@@ -4067,7 +4067,7 @@ async function runWorkItemBodyUpdate(args: {
       ? { owner: args.projectOrigin.owner, repo: args.projectOrigin.repo }
       : args.parsedSlug
     if (!targetSlug) {
-      throw new Error('No GitHub repository context available for this pull request.')
+      throw new Error('이 풀 리퀘스트에 사용할 GitHub 저장소 문맥이 없습니다.')
     }
     const target = getActiveRuntimeTarget(useAppStore.getState().settings)
     const updateArgs = {
@@ -5168,7 +5168,7 @@ export default function GitHubItemDialog({
 
       const result = activateAndRevealWorktree(currentAttached.id)
       if (result === false) {
-        toast.error('Unable to open the workspace attached to this issue.')
+        toast.error('이 이슈에 연결된 작업 공간을 열 수 없습니다.')
       }
     },
     [effectiveRepoId, onUse]
