@@ -44,6 +44,9 @@ const winSpeechNativeResource = {
 module.exports = {
   appId: 'com.stablyai.korca',
   productName: 'Korca',
+  // Why: local builds run without network access, but electron-builder
+  // otherwise tries to download the Electron zip from GitHub again.
+  electronDist: 'node_modules/electron/dist',
   directories: {
     buildResources: 'resources/build'
   },

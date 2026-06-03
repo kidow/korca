@@ -114,10 +114,10 @@ function findEntry(title: string): SettingsSearchEntry {
 }
 
 export const EXPERIMENTAL_SEARCH_ENTRY = {
-  pet: findEntry('Pet'),
-  activity: findEntry('Agents View'),
-  terminalAttention: findEntry('Terminal attention'),
-  compactWorktreeCards: findEntry('Compact worktree cards'),
-  symlinks: findEntry('Symlinks on worktrees'),
+  pet: findEntry('펫'),
+  activity: findEntry('에이전트 보기'),
+  terminalAttention: findEntry('터미널 주의'),
+  compactWorktreeCards: findEntry('압축된 워크트리 카드'),
+  symlinks: findEntry('워크트리의 심볼릭 링크'),
   unifiedNewTabLauncher: findEntry('스마트 새 탭 메뉴')
 } as const

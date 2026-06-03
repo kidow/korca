@@ -43,11 +43,11 @@ export const FEATURE_TIPS = [
     id: 'voice-dictation',
     priority: 'unseen',
     eyebrow: 'Tip',
-    title: 'Voice Dictation is here',
+    title: '음성 받아쓰기를 사용할 수 있습니다',
     description:
-      'Speak into any focused pane and Korca will transcribe it. Press the dictation shortcut to start and stop.',
+      '포커스된 패널 어디에든 말하면 Korca가 받아씁니다. 받아쓰기 단축키를 누르면 시작하고 다시 누르면 멈춥니다.',
     action: 'enable-voice',
-    ctaLabel: 'Set Up Voice',
+    ctaLabel: '음성 설정',
     completedByFeatureInteractions: ['voice-dictation']
   }
 ] as const satisfies readonly FeatureTip[]

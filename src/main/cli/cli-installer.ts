@@ -890,7 +890,9 @@ function quoteShell(value: string): string {
 }
 
 async function runMacPrivilegedCommand(command: string): Promise<void> {
-  await execFileAsync('osascript', [
+  // Why: packaged app launches can inherit a minimal PATH. Use the system
+  // binary directly so CLI registration does not depend on PATH hydration.
+  await execFileAsync('/usr/bin/osascript', [
     '-e',
     `do shell script ${quoteAppleScript(command)} with administrator privileges`
   ])

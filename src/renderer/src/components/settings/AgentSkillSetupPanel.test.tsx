@@ -8,7 +8,7 @@ function renderPanel(overrides: Partial<ComponentProps<typeof AgentSkillSetupPan
     <AgentSkillSetupPanel
       title="CLI skill"
       description="Enables agents to use Korca workflows."
-      command="npx skills add https://github.com/stablyai/korca --skill korca-cli --global"
+      command="npx skills add https://github.com/stablyai/orca --skill korca-cli --global"
       terminalTitle="CLI skill setup"
       terminalAriaLabel="CLI skill install terminal"
       terminalWorktreeId="settings-cli-skill-terminal"
@@ -40,29 +40,29 @@ describe('AgentSkillSetupPanel', () => {
   it('keeps the install action visible after the skill is detected', () => {
     const html = renderPanel({ installed: true })
 
-    expect(html).toContain('Installed')
-    expect(buttonLabels(html)).toContain('Install')
-    expect(buttonLabels(html)).toContain('Re-check')
+    expect(html).toContain('설치됨')
+    expect(buttonLabels(html)).toContain('설치')
+    expect(buttonLabels(html)).toContain('다시 확인')
   })
 
   it('hides only re-check when installed re-checks are disabled', () => {
     const html = renderPanel({ installed: true, showRecheckWhenInstalled: false })
 
-    expect(html).toContain('Installed')
-    expect(buttonLabels(html)).toContain('Install')
-    expect(buttonLabels(html)).not.toContain('Re-check')
+    expect(html).toContain('설치됨')
+    expect(buttonLabels(html)).toContain('설치')
+    expect(buttonLabels(html)).not.toContain('다시 확인')
   })
 
   it('keeps re-check visible before install when installed re-checks are disabled', () => {
     const html = renderPanel({ installed: false, showRecheckWhenInstalled: false })
 
-    expect(buttonLabels(html)).toContain('Install')
-    expect(buttonLabels(html)).toContain('Re-check')
+    expect(buttonLabels(html)).toContain('설치')
+    expect(buttonLabels(html)).toContain('다시 확인')
   })
 
   it('keeps install visible but disabled when parent setup is disabled', () => {
     const html = renderPanel({ installDisabled: true })
 
-    expect(buttonMarkupByLabel(html, 'Install')).toContain('disabled=""')
+    expect(buttonMarkupByLabel(html, '설치')).toContain('disabled=""')
   })
 })

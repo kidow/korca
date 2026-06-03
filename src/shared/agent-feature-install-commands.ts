@@ -1,4 +1,4 @@
-export const KORCA_SKILLS_REPOSITORY_URL = 'https://github.com/stablyai/korca'
+export const KORCA_SKILLS_REPOSITORY_URL = 'https://github.com/stablyai/orca'
 
 export const KORCA_CLI_SKILL_NAME = 'korca-cli'
 export const COMPUTER_USE_SKILL_NAME = 'computer-use'

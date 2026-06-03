@@ -85,7 +85,7 @@ function FeatureTipActions({
     <>
       {showSkip ? (
         <Button variant="ghost" onClick={onSkip} disabled={primaryBusy}>
-          Maybe Later
+          나중에
         </Button>
       ) : null}
       <Button
@@ -96,7 +96,7 @@ function FeatureTipActions({
         {primaryBusy ? (
           <>
             <Loader2 className="size-4 animate-spin" />
-            Installing...
+            설치 중...
           </>
         ) : (
           currentTip.ctaLabel
@@ -210,7 +210,7 @@ export default function FeatureTipsModal(): JSX.Element | null {
               return
             }
             enableOrchestrationSkillSetup()
-            toast.success('Registered `korca` in PATH.')
+            toast.success('`korca`를 PATH에 등록했습니다.')
             setSkillTerminalOpen(true)
             return
           }
@@ -235,7 +235,7 @@ export default function FeatureTipsModal(): JSX.Element | null {
               return
             }
             enableOrchestrationSkillSetup()
-            toast.info('Development preview: opening skills setup terminal.')
+            toast.info('개발 미리보기: 스킬 설정 터미널을 엽니다.')
             setSkillTerminalOpen(true)
             return
           }

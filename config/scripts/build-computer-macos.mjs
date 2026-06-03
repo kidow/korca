@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process'
 import { chmodSync, copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -15,6 +16,14 @@ const entitlementsPath = path.join(
   'build',
   'entitlements.computer-use.mac.plist'
 )
+const swiftBuildScratch = path.join(os.tmpdir(), 'korca-computer-use-swift-scratch')
+const swiftBuildCache = path.join(os.tmpdir(), 'korca-computer-use-swift-cache')
+const swiftBuildClangModuleCache = path.join(swiftBuildScratch, 'clang-module-cache')
+const swiftBuildSwiftModuleCache = path.join(swiftBuildScratch, 'swift-module-cache')
+mkdirSync(swiftBuildScratch, { recursive: true })
+mkdirSync(swiftBuildCache, { recursive: true })
+mkdirSync(swiftBuildClangModuleCache, { recursive: true })
+mkdirSync(swiftBuildSwiftModuleCache, { recursive: true })
 const bundleId = process.env.KORCA_COMPUTER_MACOS_BUNDLE_ID ?? 'com.stablyai.korca.computer-use'
 const displayName = 'Korca Computer Use'
 const signingIdentity = resolveSigningIdentity()
@@ -30,10 +39,43 @@ createHelperApp()
 
 function buildUniversalBinary() {
   const builtBinaries = universalTriples.map((triple) => {
-    run('swift', ['build', '-c', 'release', '--package-path', packagePath, '--triple', triple])
+    run(
+      'swift',
+      [
+        'build',
+        '-c',
+        'release',
+        '--package-path',
+        packagePath,
+        '--triple',
+        triple,
+        '--scratch-path',
+        swiftBuildScratch,
+        '--cache-path',
+        swiftBuildCache,
+        '--manifest-cache',
+        'local',
+        '-Xcc',
+        `-fmodules-cache-path=${swiftBuildClangModuleCache}`,
+        '-Xswiftc',
+        '-module-cache-path',
+        '-Xswiftc',
+        swiftBuildSwiftModuleCache
+      ]
+    )
     return path.join(packagePath, '.build', triple, 'release', 'korca-computer-use-macos')
   })
   mkdirSync(path.dirname(binaryPath), { recursive: true })
+  const archSets = builtBinaries.map((binary) => getBinaryArchs(binary).split(' ').filter(Boolean))
+  const combinedArchKey = toArchKey(archSets.flat())
+  const matchingBinary = builtBinaries.find((_, index) => toArchKey(archSets[index]) === combinedArchKey)
+  if (matchingBinary) {
+    // Why: the local Swift toolchain may already emit a fat helper binary for
+    // one of the requested triples. Reusing the exact match avoids a duplicate
+    // architecture `lipo` failure while still producing a usable app bundle.
+    copyFileSync(matchingBinary, binaryPath)
+    return
+  }
   run('lipo', ['-create', ...builtBinaries, '-output', binaryPath])
 }
 
@@ -92,6 +134,18 @@ function run(command, args) {
   if (result.status !== 0) {
     process.exit(result.status ?? 1)
   }
+}
+
+function getBinaryArchs(binaryFile) {
+  const result = spawnSync('lipo', ['-archs', binaryFile], { encoding: 'utf8' })
+  if (result.status !== 0 || !result.stdout) {
+    return ''
+  }
+  return result.stdout.trim().replace(/\s+/g, ' ')
+}
+
+function toArchKey(archs) {
+  return [...new Set(archs)].sort().join(' ')
 }
 
 function infoPlist() {
